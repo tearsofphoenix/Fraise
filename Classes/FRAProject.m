@@ -30,7 +30,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAFileMenuController.h"
 #import "FRAAdvancedFindController.h"
 #import "FRAProject+DocumentViewsController.h"
-#import "FRAProject+ToolbarController.h"
+
 #import "FRALineNumbers.h"
 #import "FRAPrintViewController.h"
 #import "FRAPrintTextView.h"
@@ -87,43 +87,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	[documentsTableView setDataSource:[FRADragAndDropController sharedInstance]];
 	[documentsTableView registerForDraggedTypes:@[NSFilenamesPboardType, NSStringPboardType, @"FRAMovedDocumentType"]];
 	[documentsTableView setDraggingSourceOperationMask:(NSDragOperationCopy | NSDragOperationMove) forLocal:NO];
-	
-	
-//	splitWindowImage = [[NSImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"FRASplitWindowIcon" ofType:@"pdf" inDirectory:@"Toolbar Icons"]];
-//	[[[splitWindowImage representations] objectAtIndex:0] setAlpha:YES];
-//	closeSplitImage = [[NSImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"FRACloseSplitIcon" ofType:@"pdf" inDirectory:@"Toolbar Icons"]];
-//	[[[closeSplitImage representations] objectAtIndex:0] setAlpha:YES];
-//	lineWrapImage = [[NSImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"FRALineWrapIcon" ofType:@"pdf" inDirectory:@"Toolbar Icons"]];
-//	[[[lineWrapImage representations] objectAtIndex:0] setAlpha:YES];
-//	dontLineWrapImage = [[NSImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"FRADontLineWrapIcon" ofType:@"pdf" inDirectory:@"Toolbar Icons"]];
-//	[[[dontLineWrapImage representations] objectAtIndex:0] setAlpha:YES];
-	saveImage = [[NSImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"FRASaveIcon" ofType:@"pdf" inDirectory:@"Toolbar Icons"]];
-	//[[[saveImage representations] objectAtIndex:0] setAlpha:YES];
-	openDocumentImage = [[NSImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"FRAOpenIcon" ofType:@"pdf" inDirectory:@"Toolbar Icons"]];
-	//[[[openDocumentImage representations] objectAtIndex:0] setAlpha:YES];
-	newImage = [[NSImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"FRANewIcon" ofType:@"pdf" inDirectory:@"Toolbar Icons"]];
-	//[[[newImage representations] objectAtIndex:0] setAlpha:YES];
-	closeImage = [[NSImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"FRACloseIcon" ofType:@"pdf" inDirectory:@"Toolbar Icons"]];
-	//[[[closeImage representations] objectAtIndex:0] setAlpha:YES];
-	//preferencesImage = [[NSImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"FRAPreferencesIcon" ofType:@"pdf" inDirectory:@"Toolbar Icons"]];
-	//[[[preferencesImage representations] objectAtIndex:0] setAlpha:YES];
-	advancedFindImage = [[NSImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"FRAAdvancedFindIcon" ofType:@"pdf" inDirectory:@"Toolbar Icons"]];
-	[[advancedFindImage representations][0] setAlpha:YES];
-	previewImage = [[NSImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"FRAPreviewIcon" ofType:@"pdf" inDirectory:@"Toolbar Icons"]];
-	//[[[previewImage representations] objectAtIndex:0] setAlpha:YES];
-	functionImage = [[NSImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"FRAFunctionIcon" ofType:@"pdf" inDirectory:@"Toolbar Icons"]];
-	//[[[functionImage representations] objectAtIndex:0] setAlpha:YES];
-	infoImage = [[NSImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"FRAInfoIcon" ofType:@"pdf" inDirectory:@"Toolbar Icons"]];
-	//[[[infoImage representations] objectAtIndex:0] setAlpha:YES];
-	
-	NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"ToolbarIdentifier"];
-    [toolbar setShowsBaselineSeparator:YES];
-	[toolbar setAllowsUserCustomization:YES];
-    [toolbar setAutosavesConfiguration:YES];
-    [toolbar setDisplayMode:NSToolbarDisplayModeDefault];
-    [toolbar setDelegate:self];
-	//[toolbar setSizeMode:NSToolbarSizeModeSmall];
-    [[self window] setToolbar:toolbar];
 	
 	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"sortOrder" ascending:YES];
 	[documentsArrayController setSortDescriptors:@[sortDescriptor]];
@@ -217,7 +180,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 		[self updateWindowTitleBarForDocument:nil];
 	}
 	
-	[self extraToolbarValidation];
+//	[self extraToolbarValidation];
 }
 
 
@@ -705,8 +668,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
 		
 	[self reloadData];
 	
-	if ([[FRAApplicationDelegate sharedInstance] hasFinishedLaunching] == YES) { // Do this toolbar validation here so it doesn't need to be updated all the time as it would have been in validateToolbarItem
-		[self extraToolbarValidation];
+	if ([[FRAApplicationDelegate sharedInstance] hasFinishedLaunching] == YES)
+    { // Do this toolbar validation here so it doesn't need to be updated all the time as it would have been in validateToolbarItem
+//		[self extraToolbarValidation];
 	}
 }
 

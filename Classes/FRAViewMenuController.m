@@ -22,7 +22,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRALineNumbers.h"
 #import "FRAProject.h"
 #import "FRASyntaxColouring.h"
-#import "FRAProject+ToolbarController.h"
+
 #import "FRAProject+DocumentViewsController.h"
 #import "FRALayoutManager.h"
 

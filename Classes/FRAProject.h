@@ -22,7 +22,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 @class FRASplitViewDelegate;
 @class PSMTabBarControl;
 
-@interface FRAProject : NSDocument <NSTableViewDelegate,NSSplitViewDelegate,NSWindowDelegate,NSToolbarDelegate,NSMenuDelegate>
+@interface FRAProject : NSDocument <NSTableViewDelegate,NSSplitViewDelegate,NSWindowDelegate,NSMenuDelegate>
 {
 	NSManagedObject *__unsafe_unretained project;
 	
@@ -48,17 +48,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	FRADocumentManagedObject *__unsafe_unretained secondDocument;
 	
 	BOOL shouldWindowClose;
-	
-	// FRAToolbarController category
-	NSToolbarItem *liveFindToolbarItem;
-	NSToolbarItem *functionToolbarItem;
-	NSToolbarItem *saveToolbarItem;
-	NSToolbarItem *advancedFindToolbarItem;
-	NSToolbarItem *closeToolbarItem;
-	NSToolbarItem *infoToolbarItem;
-	NSToolbarItem *previewToolbarItem;
-	
-	IBOutlet NSSearchField *liveFindSearchField;
+		
 	IBOutlet NSButton *functionButton;
 	IBOutlet NSPopUpButton *functionPopUpButton;
 	
@@ -66,10 +56,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	NSInteger originalPosition;
 	
 	NSMenuItem *menuFormRepresentation;
-	
-	//NSImage *splitWindowImage, *closeSplitImage, *lineWrapImage, *dontLineWrapImage, *saveImage, *openDocumentImage, *newImage, *closeImage, *preferencesImage, *advancedFindImage, *previewImage, *functionImage, *infoImage;
-	NSImage *saveImage, *openDocumentImage, *newImage, *closeImage, *advancedFindImage, *previewImage, *functionImage, *infoImage;
-	
+		
 	// FRADocumentViewsControllerCategory
 	IBOutlet NSView *viewSelectionView;
 	IBOutlet NSSlider *viewSelectionSizeSlider;

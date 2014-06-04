@@ -28,7 +28,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRACommandsController.h"
 #import "FRALineNumbers.h"
 #import "FRAProject.h"
-#import "FRAProject+ToolbarController.h"
+
 #import "FRASearchField.h"
 
 @implementation FRAApplication
@@ -50,17 +50,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
 			
 			if (flags == 1703936) { // Command, Option, Shift
 				keyCode = [event keyCode];
-				if (keyCode == 3) { // 3 is F
-					if ([[FRACurrentProject projectWindowToolbar] isVisible] && [[FRACurrentProject projectWindowToolbar] displayMode] != NSToolbarDisplayModeLabelOnly) {
-						NSArray *array = [[FRACurrentProject projectWindowToolbar] visibleItems];
-						for (id item in array) {
-							if ([[item itemIdentifier] isEqualToString:@"FunctionToolbarItem"]) {
-								[FRACurrentProject functionToolbarItemAction:[FRACurrentProject functionButton]];
-								return;
-							}
-						}
-						
-					}
+				if (keyCode == 3)
+                { // 3 is F
+
 				}
 			} else if (flags == 12058624) { // Command, Option
 				keyCode = [event keyCode];
