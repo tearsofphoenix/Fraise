@@ -90,7 +90,7 @@ static id sharedInstance = nil;
 	NSDictionary *fileAttributes = [document valueForKey:@"fileAttributes"];
 	
 	if (fileAttributes != nil) {
-		[fileSizeTextField setStringValue:[NSString stringWithFormat:@"%@ %@", [FRABasic thousandFormatedStringFromNumber:[NSNumber numberWithLongLong:[fileAttributes fileSize]]], NSLocalizedString(@"bytes", @"The name for bytes in the info window")]];
+		[fileSizeTextField setStringValue:[NSString stringWithFormat:@"%@ %@", [FRABasic thousandFormatedStringFromNumber: @([fileAttributes fileSize])], NSLocalizedString(@"bytes", @"The name for bytes in the info window")]];
 		[whereTextField setStringValue:[[document valueForKey:@"path"] stringByDeletingLastPathComponent]];
 		[createdTextField setStringValue:[NSString dateStringForDate:(NSCalendarDate *)[fileAttributes fileCreationDate] formatIndex:[[FRADefaults valueForKey:@"StatusBarLastSavedFormatPopUp"] integerValue]]];
 		[modifiedTextField setStringValue:[NSString dateStringForDate:(NSCalendarDate *)[fileAttributes fileModificationDate] formatIndex:[[FRADefaults valueForKey:@"StatusBarLastSavedFormatPopUp"] integerValue]]];
@@ -128,7 +128,7 @@ static id sharedInstance = nil;
 	} else {
 		selectionRange = [textView selectedRange];
 	}
-	[positionTextField setStringValue:[NSString stringWithFormat:@"%@\\%@", [FRABasic thousandFormatedStringFromNumber:[NSNumber numberWithInteger:(selectionRange.location - [text lineRangeForRange:selectionRange].location)]], [FRABasic thousandFormatedStringFromNumber:[NSNumber numberWithInteger:selectionRange.location]]]];
+	[positionTextField setStringValue:[NSString stringWithFormat:@"%@\\%@", [FRABasic thousandFormatedStringFromNumber: @((selectionRange.location - [text lineRangeForRange:selectionRange].location))], [FRABasic thousandFormatedStringFromNumber: @(selectionRange.location)]]];
 	
 	NSInteger index;
 	NSInteger lineNumber;

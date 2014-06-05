@@ -380,8 +380,10 @@
             closeButtonRect.origin.y += closeButtonRect.size.height;
         }
         
-        [closeButton compositeToPoint:closeButtonRect.origin operation:NSCompositeSourceOver fraction:1.0];
-        
+        [closeButton drawAtPoint: closeButtonRect.origin
+                        fromRect: closeButtonRect
+                       operation: NSCompositeSourceOver
+                        fraction: 1.0];
         // scoot label over
         labelPosition += closeButtonSize.width + kPSMTabBarCellPadding;
     }
@@ -393,8 +395,10 @@
         if ([controlView isFlipped]) {
             iconRect.origin.y = cellFrame.size.height - iconRect.origin.y;
         }
-        [icon compositeToPoint:iconRect.origin operation:NSCompositeSourceOver fraction:1.0];
-        
+        [icon drawAtPoint: iconRect.origin
+                 fromRect: iconRect
+                operation: NSCompositeSourceOver
+                 fraction: 1.0];
         // scoot label over
         labelPosition += iconRect.size.width + kPSMTabBarCellPadding;
     }

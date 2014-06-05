@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="5056" systemVersion="13D65" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
-        <deployment version="1050" defaultVersion="1060" identifier="macosx"/>
+        <deployment version="1070" defaultVersion="1060" identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="5056"/>
     </dependencies>
     <objects>
@@ -29,6 +29,7 @@
         <customObject id="-3" userLabel="Application"/>
         <window title="Fraise" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="SmultronProjectWindow" animationBehavior="default" id="5" userLabel="ProjectWindow" customClass="FRAProjectWindow">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" unifiedTitleAndToolbar="YES"/>
+            <windowCollectionBehavior key="collectionBehavior" fullScreenPrimary="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="612" y="390" width="593" height="544"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1028"/>
@@ -121,8 +122,8 @@
                 <string>name</string>
             </declaredKeys>
             <connections>
-                <binding destination="-2" name="contentObject" keyPath="project" id="100"/>
                 <binding destination="-2" name="managedObjectContext" keyPath="managedObjectContext" id="83"/>
+                <binding destination="-2" name="contentObject" keyPath="project" id="100"/>
             </connections>
         </objectController>
         <customView id="180" userLabel="SecondContentViewNavigationBar" customClass="FRAGradientBackgroundView">

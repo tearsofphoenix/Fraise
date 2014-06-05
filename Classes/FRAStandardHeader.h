@@ -159,11 +159,3 @@ typedef NSUInteger FRAErrors;
 #define FRACurrentWindow [[[FRACurrentProject windowControllers] objectAtIndex:0] window]
 
 
-
-
-
-@interface FRAStandardHeader : NSObject
-{
-}
-
-@end

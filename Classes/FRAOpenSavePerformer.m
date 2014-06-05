@@ -71,9 +71,7 @@ static id sharedInstance = nil;
 	id projectPath;
 	for (projectPath in projectsArray) { // Do it this way so all normal documents are opened in the front window and not in any coming project, and then the projects are opened one by one
 		[[FRAProjectsController sharedDocumentController] performOpenProjectWithPath:projectPath];
-	}
-	
-//	[[NSGarbageCollector defaultCollector] collectExhaustively];
+	}	
 }
 
 
@@ -308,7 +306,7 @@ static id sharedInstance = nil;
 	[[FRAApplicationDelegate sharedInstance] setAppleEventDescriptor:nil];
 	
 	
-	[document setValue:[NSNumber numberWithInteger:encoding] forKey:@"encoding"];
+	[document setValue: @(encoding) forKey:@"encoding"];
 	[document setValue:[NSString localizedNameOfStringEncoding:[[document valueForKey:@"encoding"] integerValue]] forKey:@"encodingName"];
 	[document setValue:path forKey:@"path"];
 	[FRACurrentProject updateWindowTitleBarForDocument:document];
@@ -432,8 +430,8 @@ static id sharedInstance = nil;
 			}
 			
 			if ([[FRADefaults valueForKey:@"AssignDocumentToFraiseWhenSaving"] boolValue] == YES || [[document valueForKey:@"isNewDocument"] boolValue]) {
-				[attributes setValue:[NSNumber numberWithUnsignedLong:'SMUL'] forKey:@"NSFileHFSCreatorCode"];
-				[attributes setValue:[NSNumber numberWithUnsignedLong:'FRAd'] forKey:@"NSFileHFSTypeCode"];
+				[attributes setValue: @('SMUL') forKey:@"NSFileHFSCreatorCode"];
+				[attributes setValue: @('FRAd') forKey:@"NSFileHFSTypeCode"];
 			}
 			
 			[fileManager setAttributes:attributes ofItemAtPath:path error:nil];
@@ -453,8 +451,8 @@ static id sharedInstance = nil;
 		NSDictionary *extraMetaData = [self getExtraMetaDataFromPath:path];
 		attributes = [NSMutableDictionary dictionaryWithDictionary:[fileManager attributesOfItemAtPath:path error:nil]];
 		if ([[FRADefaults valueForKey:@"AssignDocumentToFraiseWhenSaving"] boolValue] == YES) {
-			attributes[@"NSFileHFSCreatorCode"] = [NSNumber numberWithUnsignedLong:'SMUL'];
-			attributes[@"NSFileHFSTypeCode"] = [NSNumber numberWithUnsignedLong:'FRAd'];
+			attributes[@"NSFileHFSCreatorCode"] =  @('SMUL');
+			attributes[@"NSFileHFSTypeCode"] =  @('FRAd');
 		}
 		[attributes removeObjectForKey:@"NSFileSize"]; // Remove those values which has to be updated 
 		[attributes removeObjectForKey:@"NSFileModificationDate"];

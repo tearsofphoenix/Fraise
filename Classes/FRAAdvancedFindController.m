@@ -101,15 +101,18 @@ static id sharedInstance = nil;
 	NSEnumerator *enumerator = [self scopeEnumerator];
 
 	NSInteger documentIndex = 0;
-	for (id document in enumerator) {
+	for (id document in enumerator)
+    {
 		node = [NSMutableDictionary dictionary];
-		if ([[FRADefaults valueForKey:@"ShowFullPathInWindowTitle"] boolValue] == YES) {
-			[node setValue:[document valueForKey:@"nameWithPath"] forKey:@"displayString"];
-		} else {
-			[node setValue:[document valueForKey:@"name"] forKey:@"displayString"];
+		if ([[FRADefaults valueForKey:@"ShowFullPathInWindowTitle"] boolValue] == YES)
+        {
+			node[@"displayString"] = [document valueForKey:@"nameWithPath"];
+		} else
+        {
+			node[@"displayString"] = [document valueForKey:@"name"];
 		}
-		[node setValue:@NO forKey:@"isLeaf"];
-		[node setValue:[FRABasic uriFromObject:document] forKey:@"document"];
+		node[@"isLeaf"] = @NO;
+		node[@"document"] = [FRABasic uriFromObject:document];
 		folderIndexPath = [[NSIndexPath alloc] initWithIndex:documentIndex];
 		[findResultsTreeController insertObject:node atArrangedObjectIndexPath:folderIndexPath];
 		
@@ -233,9 +236,7 @@ static id sharedInstance = nil;
 		[findResultsOutlineView expandItem:item expandChildren:NO];
 	}
 	
-	[findResultsOutlineView setDelegate:self];
-	
-//	[[NSGarbageCollector defaultCollector] collectIfNeeded];
+	[findResultsOutlineView setDelegate:self];	
 }
 
 
@@ -775,7 +776,7 @@ static id sharedInstance = nil;
 		[parentDirectoryScope setState:NSOnState];
 	}
 	
-	[FRADefaults setValue:[NSNumber numberWithInteger:searchScope] forKey:@"AdvancedFindScope"];
+	[FRADefaults setValue: @(searchScope) forKey:@"AdvancedFindScope"];
 	
 	if (![[findSearchField stringValue] isEqualToString:@""]) {
 		[self findAction:nil];

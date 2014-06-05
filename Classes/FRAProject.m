@@ -318,7 +318,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	[document setValue:syntaxColouring forKey:@"syntaxColouring"];
 	
 	[[document valueForKey:@"lineNumbers"] updateLineNumbersForClipView:[[document valueForKey:@"firstTextScrollView"] contentView] checkWidth:NO recolour:YES];
-	[document setValue:[NSNumber numberWithInteger:[[documentsArrayController arrangedObjects] count]] forKey:@"sortOrder"];
+	[document setValue: @([[documentsArrayController arrangedObjects] count]) forKey:@"sortOrder"];
 	[self documentsListHasUpdated];
 	
 	[documentsArrayController setSelectedObjects:@[document]];
@@ -518,9 +518,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 		}
 	}
 	
-	[FRAVarious resetSortOrderNumbersForArrayController:documentsArrayController];
-	
-//	[[NSGarbageCollector defaultCollector] collectExhaustively];
+	[FRAVarious resetSortOrderNumbersForArrayController:documentsArrayController];	
 }
 
 

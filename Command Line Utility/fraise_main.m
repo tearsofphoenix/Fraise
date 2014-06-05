@@ -31,10 +31,10 @@ int main (int argc, const char * argv[]) {
 			path = [[NSString alloc] initWithUTF8String:argv[i]];
 			if (![fileManager fileExistsAtPath:path]) { // Check if file exists, otherwise create it
 				NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
-				NSNumber *creatorCode = [NSNumber numberWithUnsignedLong:'SMUL'];
-				NSNumber *typeCode = [NSNumber numberWithUnsignedLong:'FRAd'];
-				[attributes setObject:creatorCode forKey:@"NSFileHFSCreatorCode"];
-				[attributes setObject:typeCode forKey:@"NSFileHFSTypeCode"];
+				NSNumber *creatorCode =  @('SMUL');
+				NSNumber *typeCode =  @('FRAd');
+				attributes[@"NSFileHFSCreatorCode"] = creatorCode;
+				attributes[@"NSFileHFSTypeCode"] = typeCode;
 				[fileManager createFileAtPath:path contents:nil attributes:attributes];
 			}
 
