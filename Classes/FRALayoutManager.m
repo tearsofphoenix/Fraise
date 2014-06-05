@@ -18,12 +18,10 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 @implementation FRALayoutManager
 
-@synthesize showInvisibleCharacters;
-
 - (id)init
 {
-	if (self = [super init]) {
-		
+	if (self = [super init])
+    {
 		attributes = @{NSFontAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextFont"]], NSForegroundColorAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"InvisibleCharactersColourWell"]]};
 		unichar tabUnichar = 0x00AC;
 		tabCharacter = [[NSString alloc] initWithCharacters:&tabUnichar length:1];
@@ -42,12 +40,17 @@ Unless required by applicable law or agreed to in writing, software distributed 
 }
 
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+- (void)observeValueForKeyPath: (NSString *)keyPath
+                      ofObject: (id)object
+                        change: (NSDictionary *)change
+                       context: (void *)context
 {
-	if ([(__bridge NSString *)context isEqualToString:@"FontOrColourValueChanged"]) {
+	if ([(__bridge NSString *)context isEqualToString:@"FontOrColourValueChanged"])
+    {
 		attributes = @{NSFontAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextFont"]], NSForegroundColorAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"InvisibleCharactersColourWell"]]};
 		[[self firstTextView] setNeedsDisplay:YES];
-	} else {
+	} else
+    {
 		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 	}
 }
@@ -55,20 +58,24 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (void)drawGlyphsForGlyphRange:(NSRange)glyphRange atPoint:(NSPoint)containerOrigin
 {
-    if (showInvisibleCharacters) {
+    if (_showInvisibleCharacters)
+    {
 		completeString = [[self textStorage] string];
 		lengthToRedraw = NSMaxRange(glyphRange);	
 		
-		for (index = glyphRange.location; index < lengthToRedraw; index++) {
+		for (index = glyphRange.location; index < lengthToRedraw; index++)
+        {
 			characterToCheck = [completeString characterAtIndex:index];
-			if (characterToCheck == '\t') {
+			if (characterToCheck == '\t')
+            {
 				pointToDrawAt = [self locationForGlyphAtIndex:index];
 				glyphFragment = [self lineFragmentRectForGlyphAtIndex:index effectiveRange:NULL];
 				pointToDrawAt.x += glyphFragment.origin.x;
 				pointToDrawAt.y = glyphFragment.origin.y;
 				[tabCharacter drawAtPoint:pointToDrawAt withAttributes:attributes];
 				
-			} else if (characterToCheck == '\n' || characterToCheck == '\r') {
+			} else if (characterToCheck == '\n' || characterToCheck == '\r')
+            {
 				pointToDrawAt = [self locationForGlyphAtIndex:index];
 				glyphFragment = [self lineFragmentRectForGlyphAtIndex:index effectiveRange:NULL];
 				pointToDrawAt.x += glyphFragment.origin.x;
@@ -78,14 +85,15 @@ Unless required by applicable law or agreed to in writing, software distributed 
 		}
     } 
 	
-    [super drawGlyphsForGlyphRange:glyphRange atPoint:containerOrigin];
+    [super drawGlyphsForGlyphRange: glyphRange
+                           atPoint: containerOrigin];
 }
 
 
 - (void)setShowInvisibleCharacters:(BOOL)flag
 {
-	showInvisibleCharacters = flag;
-	[self setShowsInvisibleCharacters:flag];
+	_showInvisibleCharacters = flag;
+	[self setShowsInvisibleCharacters: flag];
 }
 
 

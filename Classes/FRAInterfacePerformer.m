@@ -15,7 +15,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAStandardHeader.h"
 
 #import "FRAInterfacePerformer.h"
-#import "FRAGutterTextView.h"
 #import "FRATextView.h"
 #import "FRATextMenuController.h"
 #import "FRAProjectsController.h"
@@ -30,6 +29,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAFullScreenWindow.h"
 
 #import <VAFoundation/VAFoundation.h>
+#import <VADevUIKit/VADevUIKit.h>
 
 @implementation FRAInterfacePerformer
 
@@ -41,6 +41,8 @@ VASingletonIMPDefault(FRAInterfacePerformer)
 {
     if ((self = [super init]))
     {
+        [VAGutterTextView setDefaultFont: [NSUnarchiver unarchiveObjectWithData: [FRADefaults valueForKey: @"TextFont"]]];
+        
 		statusBarBetweenString = [[NSString alloc] initWithFormat:@"  %C  ", 0x00B7];
 		statusBarLastSavedString = NSLocalizedString(@"Saved", @"Saved, in the status bar");
 		statusBarDocumentLengthString = NSLocalizedString(@"Length", @"Length, in the status bar");
@@ -104,7 +106,7 @@ VASingletonIMPDefault(FRAInterfacePerformer)
 	[gutterScrollView setAutoresizingMask:NSViewHeightSizable];
 	[[gutterScrollView contentView] setAutoresizesSubviews:YES];
 	
-	FRAGutterTextView *gutterTextView = [[FRAGutterTextView alloc] initWithFrame:NSMakeRect(0, 0, [[FRADefaults valueForKey:@"GutterWidth"] integerValue], contentSize.height - 50)];
+	VAGutterTextView *gutterTextView = [[VAGutterTextView alloc] initWithFrame:NSMakeRect(0, 0, [[FRADefaults valueForKey:@"GutterWidth"] integerValue], contentSize.height - 50)];
 	[gutterScrollView setDocumentView:gutterTextView];
 	
 	[document setValue:textView forKey:@"firstTextView"];
@@ -170,7 +172,7 @@ VASingletonIMPDefault(FRAInterfacePerformer)
 	[gutterScrollView setAutoresizingMask:NSViewHeightSizable];
 	[[gutterScrollView contentView] setAutoresizesSubviews:YES];
 	
-	FRAGutterTextView *gutterTextView = [[FRAGutterTextView alloc] initWithFrame:NSMakeRect(0, secondContentViewNavigationBarHeight, gutterWidth, contentSize.height)];
+	VAGutterTextView *gutterTextView = [[VAGutterTextView alloc] initWithFrame:NSMakeRect(0, secondContentViewNavigationBarHeight, gutterWidth, contentSize.height)];
 	[gutterScrollView setDocumentView:gutterTextView];
 	
 	[secondContentView addSubview:textScrollView];
@@ -265,7 +267,7 @@ VASingletonIMPDefault(FRAInterfacePerformer)
 	[gutterScrollView setAutoresizingMask:NSViewHeightSizable];
 	[[gutterScrollView contentView] setAutoresizesSubviews:YES];
 	
-	FRAGutterTextView *gutterTextView = [[FRAGutterTextView alloc] initWithFrame:NSMakeRect(0, 0, gutterWidth, contentSize.height)];
+	VAGutterTextView *gutterTextView = [[VAGutterTextView alloc] initWithFrame:NSMakeRect(0, 0, gutterWidth, contentSize.height)];
 	[gutterScrollView setDocumentView:gutterTextView];
 	
 	[thirdContentView addSubview:textScrollView];
@@ -336,7 +338,7 @@ VASingletonIMPDefault(FRAInterfacePerformer)
 	[gutterScrollView setAutoresizingMask:NSViewHeightSizable];
 	[[gutterScrollView contentView] setAutoresizesSubviews:YES];
 	
-	FRAGutterTextView *gutterTextView = [[FRAGutterTextView alloc] initWithFrame:NSMakeRect(0, 0, gutterWidth, contentSize.height)];
+	VAGutterTextView *gutterTextView = [[VAGutterTextView alloc] initWithFrame:NSMakeRect(0, 0, gutterWidth, contentSize.height)];
 	[gutterScrollView setDocumentView:gutterTextView];
 	
 	[fourthContentView addSubview:textScrollView];

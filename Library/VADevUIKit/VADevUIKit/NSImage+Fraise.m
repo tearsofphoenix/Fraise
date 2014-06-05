@@ -13,16 +13,21 @@ Unless required by applicable law or agreed to in writing, software distributed 
 */
 
 #import "NSImage+Fraise.h"
-#import "FRAStandardHeader.h"
-#import "FRAVariousPerformer.h"
+@import QuickLook;
+@import QuartzCore;
+
+#define ICON_MAX_SIZE 256.0
 
 @implementation NSImage (NSImageFraise)
 
-+ (NSArray *)iconsForPath:(NSString *)path
++ (NSArray *)iconsForPath: (NSString *)path
+         useQuickLookIcon: (BOOL)flag
 {
 	NSArray *iconsArray;
-	if ([[FRADefaults valueForKey:@"UseQuickLookIcon"] boolValue] == YES) {
-		iconsArray = [NSImage quickLookIconForPath:path];
+	
+    if (flag)
+    {
+		iconsArray = [NSImage quickLookIconForPath: path];
 		if (iconsArray != nil && [iconsArray count] > 0)
         {
 			return iconsArray;
@@ -30,19 +35,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	}
 	
 	NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFile:path];
-
-	//NSImageRep *imageRep = [temporaryIcon bestRepresentationForRect:NSMakeRect(0.0, 0.0, 128, 128) context:nil hints:nil];
-//
-//	unsigned char *bitmapData = [imageRep bitmapData];
-//	
-//	NSBitmapImageRep *imageRep2 = [NSBitmapImageRep imageRepWithData:[NSData dataWithBytes:bitmapData length:sizeof(bitmapData)]];									   
-												   
-	//NSSize iconSize = NSMakeSize([icon pixelsWide], [icon pixelsHigh]);
-	//NSImage *icon = [[NSImage alloc] initWithSize:iconSize];
-
-	//[icon addRepresentation:imageRep];
 	
-	[icon setSize:NSMakeSize(ICON_MAX_SIZE, ICON_MAX_SIZE)]; // This makes sure that unsavedIcon will not get "fuzzy"
+	[icon setSize: NSMakeSize(ICON_MAX_SIZE, ICON_MAX_SIZE)]; // This makes sure that unsavedIcon will not get "fuzzy"
 	
 	NSImage *unsavedIcon = [[NSImage alloc] initWithSize:[icon size]];
 	//Log(imageRep);
@@ -63,12 +57,13 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	
     NSDictionary *options = @{(NSString *)kQLThumbnailOptionIconModeKey: @YES};
     CGImageRef imageRef = QLThumbnailImageCreate(kCFAllocatorDefault, (__bridge CFURLRef)[NSURL fileURLWithPath:path], CGSizeMake(ICON_MAX_SIZE, ICON_MAX_SIZE), (__bridge CFDictionaryRef)options);
-//	NSMakeCollectable(imageRef);
     
-	if (imageRef != NULL) {
+	if (imageRef != NULL)
+    {
 		NSBitmapImageRep *bitmapImageRep = [[NSBitmapImageRep alloc] initWithCGImage:imageRef];
 		
-		if (bitmapImageRep != nil) {
+		if (bitmapImageRep != nil)
+        {
 
 			NSSize iconSize = NSMakeSize([bitmapImageRep pixelsWide], [bitmapImageRep pixelsHigh]);
 			NSImage *icon = [[NSImage alloc] initWithSize:iconSize];

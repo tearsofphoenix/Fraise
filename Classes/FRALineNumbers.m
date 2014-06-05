@@ -20,6 +20,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAProject.h"
 #import "FRATextView.h"
 
+#import <VADevUIKit/VADevUIKit.h>
+
 @implementation FRALineNumbers
 
 - (id)init
@@ -37,29 +39,23 @@ Unless required by applicable law or agreed to in writing, software distributed 
 		
 		attributes = @{ NSFontAttributeName : [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextFont"]]};
         
-		NSUserDefaultsController *defaultsController = [NSUserDefaultsController sharedUserDefaultsController];
-		[defaultsController addObserver: self
-                             forKeyPath: @"values.TextFont"
-                                options: NSKeyValueObservingOptionNew
-                                context: @"TextFontChanged"];
+        [[NSNotificationCenter defaultCenter] addObserver: self
+                                                 selector: @selector(_notificationForTextFontChanged:)
+                                                     name: VATextFontChangedNotification
+                                                   object: nil];
 	}
-	
-    return self;
+	return self;
 }
 
-
-- (void)observeValueForKeyPath: (NSString *)keyPath
-                      ofObject: (id)object
-                        change: (NSDictionary *)change
-                       context: (void *)context
+- (void)dealloc
 {
-	if ([(__bridge NSString *)context isEqualToString:@"TextFontChanged"])
-    {
-		attributes = @{NSFontAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextFont"]]};
-	} else
-    {
-		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
-	}
+    [[NSNotificationCenter defaultCenter] removeObserver: self];
+}
+
+- (void)_notificationForTextFontChanged: (NSNotification *)notification
+{
+    NSFont *font = [notification userInfo][VAFontKey];
+    attributes = @{NSFontAttributeName: font};
 }
 
 
@@ -200,7 +196,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	
 	[[gutterScrollView documentView] setString:lineNumbersString];
 	
-    NSLog(@"%s %@ %@", __FUNCTION__, [clipView superview], NSStringFromRect([[clipView superview] frame]));
+    //NSLog(@"%s %@ %@", __FUNCTION__, [clipView superview], NSStringFromRect([[clipView superview] frame]));
     
 	[[gutterScrollView contentView] setBoundsOrigin:zeroPoint]; // To avert an occasional bug which makes the line numbers disappear
 	currentLineHeight = (NSInteger)[textView lineHeight];

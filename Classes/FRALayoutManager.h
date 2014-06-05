@@ -14,8 +14,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 #import <Cocoa/Cocoa.h>
 
-@interface FRALayoutManager : NSLayoutManager {
-	
+@interface FRALayoutManager : NSLayoutManager
+{	
 	NSDictionary *attributes;
 	NSString *tabCharacter;
 	NSString *newLineCharacter;
@@ -26,11 +26,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	unichar characterToCheck;
 	NSPoint pointToDrawAt;
 	NSRect glyphFragment;
-
-	BOOL showInvisibleCharacters;
 }
-
-//-(void)setShowInvisibleCharacters:(BOOL)flag;
 
 @property (nonatomic) BOOL showInvisibleCharacters;
 

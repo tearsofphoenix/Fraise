@@ -15,7 +15,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAStandardHeader.h"
 
 #import "FRAOpenSavePerformer.h"
-#import "NSImage+Fraise.h"
 
 #import "FRAVariousPerformer.h"
 #import "FRAProjectsController.h"
@@ -30,6 +29,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAProject.h"
 
 #import "ODBEditorSuite.h"
+#import <VADevUIKit/VADevUIKit.h>
 
 @implementation FRAOpenSavePerformer
 

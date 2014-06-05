@@ -14,7 +14,6 @@
 
 #import "FRAStandardHeader.h"
 
-#import "NSToolbarItem+Fraise.h"
 #import "FRACommandsController.h"
 #import "FRADocumentsListCell.h"
 #import "FRAApplicationDelegate.h"
@@ -26,6 +25,8 @@
 #import "FRAVariousPerformer.h"
 #import "FRAOpenSavePerformer.h"
 #import "FRATextView.h"
+
+#import <VADevUIKit/VADevUIKit.h>
 
 @implementation FRACommandsController
 

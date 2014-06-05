@@ -32,7 +32,7 @@
 
 @implementation FRASyntaxColouring
 
-@synthesize reactToChanges, functionDefinition, removeFromFunction, secondLayoutManager, thirdLayoutManager, fourthLayoutManager, undoManager;
+@synthesize undoManager;
 
 - (id)init
 {
@@ -46,9 +46,10 @@
     {
 		document = theDocument;
 		firstLayoutManager = (FRALayoutManager *)[[document valueForKey:@"firstTextView"] layoutManager];
-		secondLayoutManager = nil;
-		thirdLayoutManager = nil;
-		fourthLayoutManager = nil;
+		_secondLayoutManager = nil;
+		_thirdLayoutManager = nil;
+		_fourthLayoutManager = nil;
+        
 		[self setColours];
 		
 		letterCharacterSet = [NSCharacterSet letterCharacterSet];
@@ -71,7 +72,7 @@
 		completeString = [[document valueForKey:@"firstTextView"] string];
 		textContainer = [[document valueForKey:@"firstTextView"] textContainer];
 		
-		reactToChanges = YES;
+		_reactToChanges = YES;
         
 		[[document valueForKey:@"firstTextView"] setDelegate:self];
 		[[[document valueForKey:@"firstTextView"] textStorage] setDelegate:self];
@@ -391,44 +392,37 @@
 - (void)removeAllColours
 {
 	NSRange wholeRange = NSMakeRange(0, [completeString length]);
+    
 	[firstLayoutManager removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:wholeRange];
-	if (secondLayoutManager != nil) {
-		[secondLayoutManager removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:wholeRange];
-	}
-	if (thirdLayoutManager != nil) {
-		[thirdLayoutManager removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:wholeRange];
-	}
-	if (fourthLayoutManager != nil) {
-		[fourthLayoutManager removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:wholeRange];
-	}
+    [_secondLayoutManager removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:wholeRange];
+    [_thirdLayoutManager removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:wholeRange];
+    [_fourthLayoutManager removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:wholeRange];
 }
 
 
 - (void)removeColoursFromRange:(NSRange)range
 {
 	[firstLayoutManager removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:range];
-	if (secondLayoutManager != nil) {
-		[secondLayoutManager removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:range];
-	}
-	if (thirdLayoutManager != nil) {
-		[thirdLayoutManager removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:range];
-	}
-	if (fourthLayoutManager != nil) {
-		[fourthLayoutManager removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:range];
-	}
+    
+    [_secondLayoutManager removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:range];
+    [_thirdLayoutManager removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:range];
+    [_fourthLayoutManager removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:range];
 }
 
 
 - (void)pageRecolour
 {
 	[self pageRecolourTextView:[document valueForKey:@"firstTextView"]];
-	if (secondLayoutManager != nil) {
+	if (_secondLayoutManager != nil)
+    {
 		[self pageRecolourTextView:[document valueForKey:@"secondTextView"]];
 	}
-	if (thirdLayoutManager != nil) {
+	if (_thirdLayoutManager != nil)
+    {
 		[self pageRecolourTextView:[document valueForKey:@"thirdTextView"]];
 	}
-	if (fourthLayoutManager != nil) {
+	if (_fourthLayoutManager != nil)
+    {
 		[self pageRecolourTextView:[document valueForKey:@"fourthTextView"]];
 	}
 }
@@ -454,7 +448,8 @@
 
 - (void)recolourRange:(NSRange)range
 {
-	if (reactToChanges == NO) {
+	if (_reactToChanges == NO)
+    {
 		return;
 	}
 	
@@ -977,15 +972,10 @@
 - (void)setColour:(NSDictionary *)colourDictionary range:(NSRange)range
 {
 	[firstLayoutManager setTemporaryAttributes:colourDictionary forCharacterRange:range];
-	if (secondLayoutManager != nil) {
-		[secondLayoutManager setTemporaryAttributes:colourDictionary forCharacterRange:range];
-	}
-	if (thirdLayoutManager != nil) {
-		[thirdLayoutManager setTemporaryAttributes:colourDictionary forCharacterRange:range];
-	}
-	if (fourthLayoutManager != nil) {
-		[fourthLayoutManager setTemporaryAttributes:colourDictionary forCharacterRange:range];
-	}
+    
+    [_secondLayoutManager setTemporaryAttributes:colourDictionary forCharacterRange:range];
+    [_thirdLayoutManager setTemporaryAttributes:colourDictionary forCharacterRange:range];
+    [_fourthLayoutManager setTemporaryAttributes:colourDictionary forCharacterRange:range];
 }
 
 
@@ -996,28 +986,20 @@
 	}
 	
 	[firstLayoutManager removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:lastLineHighlightRange];
-	if (secondLayoutManager != nil) {
-		[secondLayoutManager removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:lastLineHighlightRange];
-	}
-	if (thirdLayoutManager != nil) {
-		[thirdLayoutManager removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:lastLineHighlightRange];
-	}
-	if (fourthLayoutManager != nil) {
-		[fourthLayoutManager removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:lastLineHighlightRange];
-	}
+    
+    [_secondLayoutManager removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:lastLineHighlightRange];
+    
+    [_thirdLayoutManager removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:lastLineHighlightRange];
+    [_fourthLayoutManager removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:lastLineHighlightRange];
 	
 	[self pageRecolour];
 	
 	[firstLayoutManager addTemporaryAttributes:lineHighlightColour forCharacterRange:lineRange];
-	if (secondLayoutManager != nil) {
-		[secondLayoutManager addTemporaryAttributes:lineHighlightColour forCharacterRange:lineRange];
-	}
-	if (thirdLayoutManager != nil) {
-		[thirdLayoutManager addTemporaryAttributes:lineHighlightColour forCharacterRange:lineRange];
-	}
-	if (fourthLayoutManager != nil) {
-		[fourthLayoutManager addTemporaryAttributes:lineHighlightColour forCharacterRange:lineRange];
-	}
+
+    [_secondLayoutManager addTemporaryAttributes:lineHighlightColour forCharacterRange:lineRange];
+
+    [_thirdLayoutManager addTemporaryAttributes:lineHighlightColour forCharacterRange:lineRange];
+    [_fourthLayoutManager addTemporaryAttributes:lineHighlightColour forCharacterRange:lineRange];
 	
 	lastLineHighlightRange = lineRange;
 }
@@ -1028,7 +1010,8 @@
 
 - (void)textDidChange:(NSNotification *)notification
 {
-	if (reactToChanges == NO) {
+	if (_reactToChanges == NO)
+    {
 		return;
 	}
 	
@@ -1066,7 +1049,8 @@
 
 - (void)textViewDidChangeSelection:(NSNotification *)aNotification
 {
-	if (reactToChanges == NO) {
+	if (_reactToChanges == NO)
+    {
 		return;
 	}
 	

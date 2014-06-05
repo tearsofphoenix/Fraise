@@ -23,16 +23,16 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAFileMenuController.h"
 #import "FRALineNumbers.h"
 
+#import <VADevUIKit/VADevUIKit.h>
 
 @implementation FRATextView
 
-@synthesize colouredIBeamCursor, inCompleteMethod;
-
 - (id)initWithFrame:(NSRect)frame
 {
-	if (self = [super initWithFrame:frame]) {
+	if (self = [super initWithFrame:frame])
+    {
 		FRALayoutManager *layoutManager = [[FRALayoutManager alloc] init];
-		[[self textContainer] replaceLayoutManager:layoutManager];
+		[[self textContainer] replaceLayoutManager: layoutManager];
 		
 		[self setDefaults];		
 	}
@@ -42,7 +42,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (void)setDefaults
 {
-	inCompleteMethod = NO;
+	_inCompleteMethod = NO;
 	
 	[self setTabWidth];
 	
@@ -78,7 +78,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	[self addTrackingArea:trackingArea];
 	
 	NSUserDefaultsController *defaultsController = [NSUserDefaultsController sharedUserDefaultsController];
-	[defaultsController addObserver:self forKeyPath:@"values.TextFont" options:NSKeyValueObservingOptionNew context:@"TextFontChanged"];
+
 	[defaultsController addObserver:self forKeyPath:@"values.TextColourWell" options:NSKeyValueObservingOptionNew context:@"TextColourChanged"];
 	[defaultsController addObserver:self forKeyPath:@"values.BackgroundColourWell" options:NSKeyValueObservingOptionNew context:@"BackgroundColourChanged"];
 	[defaultsController addObserver:self forKeyPath:@"values.SmartInsertDelete" options:NSKeyValueObservingOptionNew context:@"SmartInsertDeleteChanged"];
@@ -87,33 +87,56 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	[defaultsController addObserver:self forKeyPath:@"values.ShowPageGuideAtColumn" options:NSKeyValueObservingOptionNew context:@"PageGuideChanged"];
 	[defaultsController addObserver:self forKeyPath:@"values.SmartInsertDelete" options:NSKeyValueObservingOptionNew context:@"SmartInsertDeleteChanged"];
 	
-	_lineHeight = [[[self textContainer] layoutManager] defaultLineHeightForFont:[NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextFont"]]];
+	_lineHeight = [[[self textContainer] layoutManager] defaultLineHeightForFont: [self font]];
+    
+    [[NSNotificationCenter defaultCenter] addObserver: self
+                                             selector: @selector(_notificationForTextFontChanged:)
+                                                 name: VATextFontChangedNotification
+                                               object: nil];
+
 }
 
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver: self];
+}
+
+- (void)_notificationForTextFontChanged: (NSNotification *)notification
+{
+    NSFont *font = [notification userInfo][VAFontKey];
+    
+    [self setFont: font];
+    
+    _lineHeight = [[[self textContainer] layoutManager] defaultLineHeightForFont: font];
+    [[FRACurrentDocument valueForKey:@"lineNumbers"] updateLineNumbersForClipView:[[self enclosingScrollView] contentView] checkWidth:NO recolour:YES];
+    [self setPageGuideValues];
+}
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-	if ([(__bridge NSString *)context isEqualToString:@"TextFontChanged"]) {
-		[self setFont:[NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextFont"]]];
-		_lineHeight = [[[self textContainer] layoutManager] defaultLineHeightForFont:[NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextFont"]]];
-		[[FRACurrentDocument valueForKey:@"lineNumbers"] updateLineNumbersForClipView:[[self enclosingScrollView] contentView] checkWidth:NO recolour:YES];
-		[self setPageGuideValues];
-	} else if ([(__bridge NSString *)context isEqualToString:@"TextColourChanged"]) {
+	if ([(__bridge NSString *)context isEqualToString:@"TextColourChanged"])
+    {
 		[self setTextColor:[NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextColourWell"]]];
 		[self setInsertionPointColor:[NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextColourWell"]]];
 		[self setPageGuideValues];
 		[self updateIBeamCursor];
-	} else if ([(__bridge NSString *)context isEqualToString:@"BackgroundColourChanged"]) {
+	} else if ([(__bridge NSString *)context isEqualToString:@"BackgroundColourChanged"])
+    {
 		[self setBackgroundColor:[NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"BackgroundColourWell"]]];
-	} else if ([(__bridge NSString *)context isEqualToString:@"SmartInsertDeleteChanged"]) {
+	} else if ([(__bridge NSString *)context isEqualToString:@"SmartInsertDeleteChanged"])
+    {
 		[self setSmartInsertDeleteEnabled:[[FRADefaults valueForKey:@"SmartInsertDelete"] boolValue]];
-	} else if ([(__bridge NSString *)context isEqualToString:@"TabWidthChanged"]) {
+	} else if ([(__bridge NSString *)context isEqualToString:@"TabWidthChanged"])
+    {
 		[self setTabWidth];
-	} else if ([(__bridge NSString *)context isEqualToString:@"PageGuideChanged"]) {
+	} else if ([(__bridge NSString *)context isEqualToString:@"PageGuideChanged"])
+    {
 		[self setPageGuideValues];
-	} else if ([(__bridge NSString *)context isEqualToString:@"SmartInsertDeleteChanged"]) {
+	} else if ([(__bridge NSString *)context isEqualToString:@"SmartInsertDeleteChanged"])
+    {
 		[self setSmartInsertDeleteEnabled:[[FRADefaults valueForKey:@"SmartInsertDelete"] boolValue]];
-	} else {
+	} else
+    {
 		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 	}
 }
@@ -404,21 +427,25 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	// Set the width of every tab by first checking the size of the tab in spaces in the current font and then remove all tabs that sets automatically and then set the default tab stop distance
 	NSMutableString *sizeString = [NSMutableString string];
 	NSInteger numberOfSpaces = [[FRADefaults valueForKey:@"TabWidth"] integerValue];
-	while (numberOfSpaces--) {
+	while (numberOfSpaces--)
+    {
 		[sizeString appendString:@" "];
 	}
-	NSDictionary *sizeAttribute = @{NSFontAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextFont"]]};
+    
+	NSDictionary *sizeAttribute = @{NSFontAttributeName: [self font]};
 	CGFloat sizeOfTab = [sizeString sizeWithAttributes:sizeAttribute].width;
 	
 	NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
 	
 	NSArray *array = [style tabStops];
-	for (id item in array) {
-		[style removeTabStop:item];
+	for (id item in array)
+    {
+		[style removeTabStop: item];
 	}
-	[style setDefaultTabInterval:sizeOfTab];
-	NSDictionary *attributes = @{NSParagraphStyleAttributeName: style};
-	[self setTypingAttributes:attributes];
+    
+	[style setDefaultTabInterval: sizeOfTab];
+
+	[self setTypingAttributes: @{NSParagraphStyleAttributeName: style}];
 }
 
 
@@ -426,7 +453,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 {
 	[super drawRect:rect];
 	
-	if (showPageGuide == YES) {
+	if (showPageGuide == YES)
+    {
 		NSRect bounds = [self bounds]; 
 		if ([self needsToDrawRect:NSMakeRect(pageGuideX, 0, 1, bounds.size.height)] == YES) { // So that it doesn't draw the line if only e.g. the cursor updates
 			[pageGuideColour set];
@@ -438,7 +466,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (void)setPageGuideValues
 {
-	NSDictionary *sizeAttribute = @{NSFontAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextFont"]]};
+	NSDictionary *sizeAttribute = @{NSFontAttributeName: [self font]};
 	NSString *sizeString = @" ";
 	CGFloat sizeOfCharacter = [sizeString sizeWithAttributes:sizeAttribute].width;
 	pageGuideX = (sizeOfCharacter * ([[FRADefaults valueForKey:@"ShowPageGuideAtColumn"] integerValue] + 1)) - 1.5; // -1.5 to put it between the two characters and draw only on one pixel and not two (as the system draws it in a special way), and that's also why the width above is set to zero 
@@ -618,30 +646,16 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (void)cursorUpdate:(NSEvent *)event
 {
-	[colouredIBeamCursor set];
+	[_colouredIBeamCursor set];
 }
 	
 
 - (void)mouseMoved:(NSEvent *)theEvent
 {
-	if ([NSCursor currentCursor] == [NSCursor IBeamCursor]) {
-		[colouredIBeamCursor set];
+	if ([NSCursor currentCursor] == [NSCursor IBeamCursor])
+    {
+		[_colouredIBeamCursor set];
 	}
 }
 
-
-- (void)performFindPanelAction:(id)sender
-{
-	[super performFindPanelAction:sender];
-}
-
-
-
-// A workaround for Radar ID 5663445 (the complete menu disappears too soon)
-//- (void)complete:(id)sender
-//{
-//	inCompleteMethod = YES;
-//	[super complete:sender];
-//	inCompleteMethod = NO;
-//}
 @end

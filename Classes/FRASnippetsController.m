@@ -15,7 +15,6 @@
 #import "FRAStandardHeader.h"
 
 #import "FRASnippetsController.h"
-#import "NSToolbarItem+Fraise.h"
 #import "FRADragAndDropController.h"
 #import "FRATextView.h"
 #import "FRAMainController.h"
@@ -26,6 +25,8 @@
 #import "FRAApplicationDelegate.h"
 #import "FRAToolsMenuController.h"
 #import "FRAProjectsController.h"
+
+#import <VADevUIKit/VADevUIKit.h>
 
 @implementation FRASnippetsController
 

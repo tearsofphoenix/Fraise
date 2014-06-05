@@ -14,16 +14,14 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 #import <Cocoa/Cocoa.h>
 
-@interface FRADocumentsListCell : NSTextFieldCell {
-	
+@interface FRADocumentsListCell : NSTextFieldCell
+{	
     NSImage	*image;
-
-	CGFloat heightAndWidth;
 }
 
 @property (copy) NSImage *image;
 
-@property (assign, readwrite) CGFloat heightAndWidth;
+@property CGFloat heightAndWidth;
 
 
 @end

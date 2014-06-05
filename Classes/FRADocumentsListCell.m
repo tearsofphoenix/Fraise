@@ -20,7 +20,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 @implementation FRADocumentsListCell
 
-@synthesize image, heightAndWidth;
+@synthesize image;
 
 - (id)copyWithZone:(NSZone *)zone
 {
@@ -32,14 +32,16 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (NSRect)imageFrameForCellFrame:(NSRect)cellFrame 
 {
-    if (image != nil) {
+    if (image != nil)
+    {
         NSRect imageFrame;
-        imageFrame.size = NSMakeSize(heightAndWidth, heightAndWidth);
+        imageFrame.size = NSMakeSize(_heightAndWidth, _heightAndWidth);
         imageFrame.origin = cellFrame.origin;
         imageFrame.origin.x += 3;
         imageFrame.origin.y += ceil((cellFrame.size.height - imageFrame.size.height) / 2);
         return imageFrame;
-    } else {
+    } else
+    {
         return NSZeroRect;
 	}
 }
@@ -71,8 +73,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
         NSSize imageSize;
         NSRect imageFrame;
 		
-		CGFloat scaleFactor = heightAndWidth / ICON_MAX_SIZE;
-		NSSize iconSize = NSMakeSize(heightAndWidth, heightAndWidth);
+		CGFloat scaleFactor = _heightAndWidth / ICON_MAX_SIZE;
+		NSSize iconSize = NSMakeSize(_heightAndWidth, _heightAndWidth);
 		
         imageSize = iconSize;
         NSDivideRect(cellFrame, &imageFrame, &cellFrame, 3 + imageSize.width, NSMinXEdge);
@@ -103,8 +105,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
     NSSize contentSize = [self cellSize];
     cellFrame.origin.y += ceil((cellFrame.size.height - contentSize.height) / 2);
     cellFrame.size.height = contentSize.height;
-	if (cellFrame.origin.x < heightAndWidth) { // This is to make sure that the text is properly aligned before the icon has been created in a separate thread
-		cellFrame.origin.x += heightAndWidth + 3;
+	if (cellFrame.origin.x < _heightAndWidth)
+    { // This is to make sure that the text is properly aligned before the icon has been created in a separate thread
+		cellFrame.origin.x += _heightAndWidth + 3;
 	}
 	
     [super drawInteriorWithFrame:cellFrame inView:controlView];
@@ -114,7 +117,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 - (NSSize)cellSize 
 {
     NSSize cellSize = [super cellSize];
-    cellSize.width += heightAndWidth + 3;
+    cellSize.width += _heightAndWidth + 3;
     return cellSize;
 }
 

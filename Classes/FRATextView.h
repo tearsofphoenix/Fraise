@@ -14,8 +14,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 #import <Cocoa/Cocoa.h>
 
-@class FRATextView;
-
 @interface FRATextView : NSTextView
 {
 	NSPoint startPoint;
@@ -24,10 +22,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	NSColor *pageGuideColour;
 	
 	BOOL showPageGuide;
-	
-	NSCursor *__unsafe_unretained colouredIBeamCursor;
-	
-	BOOL inCompleteMethod;
 }
 
 @property (unsafe_unretained) NSCursor *colouredIBeamCursor;

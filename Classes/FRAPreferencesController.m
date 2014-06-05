@@ -28,7 +28,8 @@
 #import "FRAApplicationDelegate.h"
 #import "FRAProject.h"
 #import "FRALineNumbers.h"
-#import "NSToolbarItem+Fraise.h"
+
+#import <VADevUIKit/VADevUIKit.h>
 
 @implementation FRAPreferencesController
 
@@ -202,6 +203,11 @@ VASingletonIMPDefault(FRAPreferencesController)
 	[defaultsController addObserver:self forKeyPath:@"values.CheckIfDocumentHasBeenUpdated" options:NSKeyValueObservingOptionNew context:@"CheckIfDocumentHasBeenUpdatedChanged"];
 	[defaultsController addObserver:self forKeyPath:@"values.ShowFullPathInDocumentsList" options:NSKeyValueObservingOptionNew context:@"DocumentsListPathSettingsChanged"];
     
+    [[NSNotificationCenter defaultCenter] postNotificationName: VATextFontChangedNotification
+                                                        object: nil
+                                                      userInfo: (@{
+                                                                   VAFontKey : [NSFont fontWithName:@"Menlo" size:11]
+                                                                })];
 }
 
 
@@ -507,8 +513,13 @@ VASingletonIMPDefault(FRAPreferencesController)
 - (void)changeFont:(id)sender
 {
 	NSFontManager *fontManager = [NSFontManager sharedFontManager];
-	NSFont *panelFont = [fontManager convertFont:[fontManager selectedFont]];
-	[FRADefaults setValue:[NSArchiver archivedDataWithRootObject:panelFont] forKey:@"TextFont"];
+	NSFont *panelFont = [fontManager convertFont: [fontManager selectedFont]];
+	[FRADefaults setValue: [NSArchiver archivedDataWithRootObject:panelFont]
+                   forKey: @"TextFont"];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName: VATextFontChangedNotification
+                                                        object: nil
+                                                      userInfo: (@{ VAFontKey : panelFont})];
 }
 
 

@@ -24,13 +24,12 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAExtraInterfaceController.h"
 #import "FRAProject.h"
 #import "FRAProject+DocumentViewsController.h"
-#import "NSImage+Fraise.h"
 
 #import "ODBEditorSuite.h"
 #import "FRATextView.h"
 
 #import <VAFoundation/VAFoundation.h>
-
+#import <VADevUIKit/VADevUIKit.h>
 
 
 
@@ -604,7 +603,8 @@ VASingletonIMPDefault(FRAVariousPerformer)
 
 - (void)performInsertIcons:(id)array
 {
-	NSArray *icons = [NSImage iconsForPath:array[1]];
+	NSArray *icons = [NSImage iconsForPath: array[1]
+                          useQuickLookIcon: [[FRADefaults valueForKey:@"UseQuickLookIcon"] boolValue]];
 	
 	NSArray *resultArray = @[array[0], icons];
 	

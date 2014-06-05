@@ -19,10 +19,10 @@ Unless required by applicable law or agreed to in writing, software distributed 
 @class ICUPattern;
 @class ICUMatcher;
 
-@interface FRASyntaxColouring : NSObject <NSTextStorageDelegate> {
-	
+@interface FRASyntaxColouring : NSObject <NSTextStorageDelegate>
+{
 	NSUndoManager *undoManager;
-	FRALayoutManager *firstLayoutManager, *__unsafe_unretained secondLayoutManager, *__unsafe_unretained thirdLayoutManager, *__unsafe_unretained fourthLayoutManager;
+	FRALayoutManager *firstLayoutManager;
 	
 	NSTimer *autocompleteWordsTimer;
 	NSInteger currentYOfSelectedCharacter, lastYOfSelectedCharacter, currentYOfLastCharacterInLine, lastYOfLastCharacterInLine, currentYOfLastCharacter, lastYOfLastCharacter, lastCursorLocation;
@@ -47,7 +47,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	unichar firstStringUnichar;
 	NSString *secondString;
 	unichar secondStringUnichar;
-	NSString *firstSingleLineComment, *secondSingleLineComment, *beginFirstMultiLineComment, *endFirstMultiLineComment, *beginSecondMultiLineComment, *endSecondMultiLineComment, *functionDefinition, *removeFromFunction;
+	NSString *firstSingleLineComment, *secondSingleLineComment, *beginFirstMultiLineComment, *endFirstMultiLineComment, *beginSecondMultiLineComment, *endSecondMultiLineComment;
 	
 	NSString *completeString;
 	NSString *searchString;
@@ -80,9 +80,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	NSInteger maxRange;
 	
 	NSTextContainer *textContainer;
-	
-	BOOL reactToChanges;
-	
+		
 	id document;
 	
 	NSCharacterSet *attributesCharacterSet;
@@ -100,21 +98,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	NSRange lastLineHighlightRange;
 }
 
-//@property ICUPattern *firstStringPattern;
-//@property ICUPattern *secondStringPattern;
-//
-//@property ICUMatcher *firstStringMatcher;
-//@property ICUMatcher *secondStringMatcher;
-
-//@property NSSet *keywords;
-//@property NSSet *autocompleteWords;
-//@property NSArray *keywordsAndAutocompleteWords;
-//
-//@property BOOL keywordsCaseSensitive;
-//@property BOOL recolourKeywordIfAlreadyColoured;
 @property BOOL reactToChanges;
-
-//@property NSEnumerator *wordEnumerator;
 
 @property (copy) NSString *functionDefinition;
 @property (copy) NSString *removeFromFunction;
@@ -124,8 +108,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 @property (unsafe_unretained) FRALayoutManager *fourthLayoutManager;
 
 @property (readonly) NSUndoManager *undoManager;
-//@property (readonly) NSDictionary *highlightColour;
-
 
 
 - (id)initWithDocument:(id)document;

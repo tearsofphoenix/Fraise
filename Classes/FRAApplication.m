@@ -30,6 +30,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAProject.h"
 
 #import "FRASearchField.h"
+#import <VADevUIKit/VADevUIKit.h>
 
 @implementation FRAApplication
 
@@ -75,27 +76,43 @@ Unless required by applicable law or agreed to in writing, software distributed 
 						return;
 					}
 				}
-			} else if (flags == 1048576 || flags == 3145728 || flags == 1179648) { // Command, command with a numerical key and command with shift for the keyboards that requires it 
+			} else if (flags == 1048576 || flags == 3145728 || flags == 1179648) { // Command, command with a numerical key and command with shift for the keyboards that requires it
+                
 				character = [event charactersIgnoringModifiers];
-				if ([character isEqualToString:@"+"] || [character isEqualToString:@"="]) {
-					NSFont *oldFont = [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextFont"]];
-					CGFloat size = [oldFont pointSize] + 1;
-					[FRADefaults setValue:[NSArchiver archivedDataWithRootObject:[NSFont fontWithName:[oldFont fontName] size:size]] forKey:@"TextFont"];
-					return;
-				} else if ([character isEqualToString:@"-"]) {
-					NSFont *oldFont = [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextFont"]];
-					CGFloat size = [oldFont pointSize];
-					if (size > 4) {
-						size--;
-						[FRADefaults setValue:[NSArchiver archivedDataWithRootObject:[NSFont fontWithName:[oldFont fontName] size:size]] forKey:@"TextFont"];
-						return;
+                NSFont *oldFont = [NSUnarchiver unarchiveObjectWithData: [FRADefaults valueForKey:@"TextFont"]];
+                NSFont *newFont = nil;
+                CGFloat size = [oldFont pointSize];
+                
+				if ([character isEqualToString:@"+"] || [character isEqualToString:@"="])
+                {
+                    newFont = [NSFont fontWithName: [oldFont fontName]
+                                              size: size + 1];
+                    
+				} else if ([character isEqualToString:@"-"])
+                {
+					if (size > 4)
+                    {
+                        newFont = [NSFont fontWithName: [oldFont fontName]
+                                                  size: size - 1];
 					}
 				}
+                
+                if (newFont)
+                {
+                    [FRADefaults setValue: [NSArchiver archivedDataWithRootObject: newFont]
+                                   forKey: @"TextFont"];
+                    [[NSNotificationCenter defaultCenter] postNotificationName: VATextFontChangedNotification
+                                                                        object: nil
+                                                                      userInfo: (@{ VAFontKey : newFont})];
+                    
+                    return;
+                }
 			}
-			
-			
-		} else if (eventWindow == [FRAInterface fullScreenWindow]) {
-			if ([FRAMain isInFullScreenMode]) {
+            
+		} else if (eventWindow == [FRAInterface fullScreenWindow])
+        {
+			if ([FRAMain isInFullScreenMode])
+            {
 				flags = [event modifierFlags] & NSDeviceIndependentModifierFlagsMask;
 				keyCode = [event keyCode];
 				if (keyCode == 0x35 && flags == 0) { // 35 is Escape,

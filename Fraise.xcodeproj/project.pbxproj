@@ -77,8 +77,6 @@
 		7F5C287E0B73C4AA00D2EDDC /* FRAInterfacePerformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F5C287C0B73C4AA00D2EDDC /* FRAInterfacePerformer.m */; };
 		7F7444C90CF8DDEC00C947C1 /* FRAAdvancedFindPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F7444C80CF8DDEC00C947C1 /* FRAAdvancedFindPanel.m */; };
 		7F79EE370D93D5500034017B /* NSString+Fraise.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F79EE360D93D5500034017B /* NSString+Fraise.m */; };
-		7F79EE3A0D93D5760034017B /* NSImage+Fraise.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F79EE390D93D5760034017B /* NSImage+Fraise.m */; };
-		7F79EE3D0D93D58C0034017B /* NSToolbarItem+Fraise.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F79EE3C0D93D58C0034017B /* NSToolbarItem+Fraise.m */; };
 		7F81FEDC0BA9DDCD00549CDB /* Tab Bar in Resources */ = {isa = PBXBuildFile; fileRef = 7F81FED50BA9DDCD00549CDB /* Tab Bar */; };
 		7F81FF030BA9DDF600549CDB /* PSMOverflowPopUpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F81FEF40BA9DDF600549CDB /* PSMOverflowPopUpButton.m */; };
 		7F81FF050BA9DDF600549CDB /* PSMRolloverButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F81FEF80BA9DDF600549CDB /* PSMRolloverButton.m */; };
@@ -115,7 +113,6 @@
 		7F980B160B73B6A2000A9140 /* FRAFileMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F980AC10B73B6A2000A9140 /* FRAFileMenuController.m */; };
 		7F980B180B73B6A2000A9140 /* FRAFontTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F980AC50B73B6A2000A9140 /* FRAFontTransformer.m */; };
 		7F980B190B73B6A2000A9140 /* FRAFullScreenWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F980AC70B73B6A2000A9140 /* FRAFullScreenWindow.m */; };
-		7F980B1A0B73B6A2000A9140 /* FRAGutterTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F980AC90B73B6A2000A9140 /* FRAGutterTextView.m */; };
 		7F980B1B0B73B6A2000A9140 /* FRAHelpMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F980ACB0B73B6A2000A9140 /* FRAHelpMenuController.m */; };
 		7F980B1C0B73B6A2000A9140 /* FRAInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F980ACD0B73B6A2000A9140 /* FRAInfoController.m */; };
 		7F980B1D0B73B6A2000A9140 /* FRALayoutManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F980ACF0B73B6A2000A9140 /* FRALayoutManager.m */; };
@@ -429,10 +426,6 @@
 		7F7444C80CF8DDEC00C947C1 /* FRAAdvancedFindPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FRAAdvancedFindPanel.m; path = Classes/FRAAdvancedFindPanel.m; sourceTree = "<group>"; };
 		7F79EE350D93D5500034017B /* NSString+Fraise.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+Fraise.h"; path = "Classes/NSString+Fraise.h"; sourceTree = "<group>"; };
 		7F79EE360D93D5500034017B /* NSString+Fraise.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+Fraise.m"; path = "Classes/NSString+Fraise.m"; sourceTree = "<group>"; };
-		7F79EE380D93D5760034017B /* NSImage+Fraise.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSImage+Fraise.h"; path = "Classes/NSImage+Fraise.h"; sourceTree = "<group>"; };
-		7F79EE390D93D5760034017B /* NSImage+Fraise.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSImage+Fraise.m"; path = "Classes/NSImage+Fraise.m"; sourceTree = "<group>"; };
-		7F79EE3B0D93D58C0034017B /* NSToolbarItem+Fraise.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSToolbarItem+Fraise.h"; path = "Classes/NSToolbarItem+Fraise.h"; sourceTree = "<group>"; };
-		7F79EE3C0D93D58C0034017B /* NSToolbarItem+Fraise.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSToolbarItem+Fraise.m"; path = "Classes/NSToolbarItem+Fraise.m"; sourceTree = "<group>"; };
 		7F81FED50BA9DDCD00549CDB /* Tab Bar */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "Tab Bar"; path = "Graphics/Tab Bar"; sourceTree = "<group>"; };
 		7F81FEF30BA9DDF600549CDB /* PSMOverflowPopUpButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSMOverflowPopUpButton.h; path = PSMTabBar/PSMOverflowPopUpButton.h; sourceTree = "<group>"; };
 		7F81FEF40BA9DDF600549CDB /* PSMOverflowPopUpButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSMOverflowPopUpButton.m; path = PSMTabBar/PSMOverflowPopUpButton.m; sourceTree = "<group>"; };
@@ -495,8 +488,6 @@
 		7F980AC50B73B6A2000A9140 /* FRAFontTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FRAFontTransformer.m; path = Classes/FRAFontTransformer.m; sourceTree = "<group>"; };
 		7F980AC60B73B6A2000A9140 /* FRAFullScreenWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FRAFullScreenWindow.h; path = Classes/FRAFullScreenWindow.h; sourceTree = "<group>"; };
 		7F980AC70B73B6A2000A9140 /* FRAFullScreenWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FRAFullScreenWindow.m; path = Classes/FRAFullScreenWindow.m; sourceTree = "<group>"; };
-		7F980AC80B73B6A2000A9140 /* FRAGutterTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FRAGutterTextView.h; path = Classes/FRAGutterTextView.h; sourceTree = "<group>"; };
-		7F980AC90B73B6A2000A9140 /* FRAGutterTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FRAGutterTextView.m; path = Classes/FRAGutterTextView.m; sourceTree = "<group>"; };
 		7F980ACA0B73B6A2000A9140 /* FRAHelpMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FRAHelpMenuController.h; path = Classes/FRAHelpMenuController.h; sourceTree = "<group>"; };
 		7F980ACB0B73B6A2000A9140 /* FRAHelpMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FRAHelpMenuController.m; path = Classes/FRAHelpMenuController.m; sourceTree = "<group>"; };
 		7F980ACC0B73B6A2000A9140 /* FRAInfoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FRAInfoController.h; path = Classes/FRAInfoController.h; sourceTree = "<group>"; };
@@ -782,7 +773,6 @@
 				2F8C9F020B8054E100C6502F /* FRADummyView.m */,
 				7F980AC70B73B6A2000A9140 /* FRAFullScreenWindow.m */,
 				2FF0FC2C0BA6C8FF00B21D83 /* FRAGradientBackgroundView.m */,
-				7F980AC90B73B6A2000A9140 /* FRAGutterTextView.m */,
 				7F980ACF0B73B6A2000A9140 /* FRALayoutManager.m */,
 				7F980ADF0B73B6A2000A9140 /* FRAPrintTextView.m */,
 				7FAD467F0D9E43A600ECD508 /* FRAPrintViewController.m */,
@@ -846,7 +836,6 @@
 				2F8C9F010B8054E100C6502F /* FRADummyView.h */,
 				7F980AC60B73B6A2000A9140 /* FRAFullScreenWindow.h */,
 				2FF0FC2B0BA6C8FF00B21D83 /* FRAGradientBackgroundView.h */,
-				7F980AC80B73B6A2000A9140 /* FRAGutterTextView.h */,
 				7F980ACE0B73B6A2000A9140 /* FRALayoutManager.h */,
 				7F980ADE0B73B6A2000A9140 /* FRAPrintTextView.h */,
 				7FAD467E0D9E43A600ECD508 /* FRAPrintViewController.h */,
@@ -937,12 +926,8 @@
 		7F79EE330D93D4F40034017B /* Categories */ = {
 			isa = PBXGroup;
 			children = (
-				7F79EE380D93D5760034017B /* NSImage+Fraise.h */,
 				7F79EE350D93D5500034017B /* NSString+Fraise.h */,
-				7F79EE3B0D93D58C0034017B /* NSToolbarItem+Fraise.h */,
-				7F79EE390D93D5760034017B /* NSImage+Fraise.m */,
 				7F79EE360D93D5500034017B /* NSString+Fraise.m */,
-				7F79EE3C0D93D58C0034017B /* NSToolbarItem+Fraise.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -1279,7 +1264,6 @@
 				7F980B160B73B6A2000A9140 /* FRAFileMenuController.m in Sources */,
 				7F980B180B73B6A2000A9140 /* FRAFontTransformer.m in Sources */,
 				7F980B190B73B6A2000A9140 /* FRAFullScreenWindow.m in Sources */,
-				7F980B1A0B73B6A2000A9140 /* FRAGutterTextView.m in Sources */,
 				7F980B1B0B73B6A2000A9140 /* FRAHelpMenuController.m in Sources */,
 				7F980B1C0B73B6A2000A9140 /* FRAInfoController.m in Sources */,
 				7F980B1D0B73B6A2000A9140 /* FRALayoutManager.m in Sources */,
@@ -1329,8 +1313,6 @@
 				7FBDDEFC0CF794F8003BAFB5 /* FRAProjectWindow.m in Sources */,
 				7F7444C90CF8DDEC00C947C1 /* FRAAdvancedFindPanel.m in Sources */,
 				7F79EE370D93D5500034017B /* NSString+Fraise.m in Sources */,
-				7F79EE3A0D93D5760034017B /* NSImage+Fraise.m in Sources */,
-				7F79EE3D0D93D58C0034017B /* NSToolbarItem+Fraise.m in Sources */,
 				7F2B7E330D9463A100C60435 /* FRASearchField.m in Sources */,
 				7FAD46800D9E43A600ECD508 /* FRAPrintViewController.m in Sources */,
 			);
