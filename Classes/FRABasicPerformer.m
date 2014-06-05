@@ -19,28 +19,18 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 @implementation FRABasicPerformer
 
-static id sharedInstance = nil;
-
-+ (FRABasicPerformer *)sharedInstance
-{ 
-	if (sharedInstance == nil) { 
-		sharedInstance = [[self alloc] init];
-	}
-	
-	return sharedInstance;
-} 
-
+VASingletonIMPDefault(FRABasicPerformer)
 
 - (id)init 
 {
-    if (sharedInstance == nil) {
-        sharedInstance = [super init];
-		
+    if ((self = [super init]))
+    {
 		thousandFormatter = [[NSNumberFormatter alloc] init];
 		[thousandFormatter setFormatterBehavior:NSNumberFormatterBehavior10_4];
 		[thousandFormatter setFormat:@"#,##0"];	
     }
-    return sharedInstance;
+    
+    return self;
 }
 
 
@@ -188,15 +178,7 @@ static id sharedInstance = nil;
 }
 
 
-- (NSString *)createUUID
-{
-    CFUUIDRef uuid = CFUUIDCreate(NULL);
-    CFStringRef uuidString = CFUUIDCreateString(NULL, uuid);
-//    NSMakeCollectable(uuid);
-//	NSMakeCollectable(uuidString);
 
-    return (__bridge NSString *)uuidString;
-}
 
 
 - (void)insertSortOrderNumbersForArrayController:(NSArrayController *)arrayController

@@ -141,6 +141,17 @@ typedef NSUInteger FRAErrors;
 
 #define ICON_MAX_SIZE 256.0
 
+#define VASingletonIMP(ClassName, methodName) + (ClassName *)methodName \
+                                             { \
+                                                static id sharedInstance = nil; \
+                                                static dispatch_once_t onceToken; \
+                                                dispatch_once(&onceToken, \
+                                                (^{ sharedInstance = [[self alloc] init]; })); \
+                                                return sharedInstance; \
+                                              }
+
+#define VASingletonIMPDefault(ClassName)  VASingletonIMP(ClassName, sharedInstance)
+
 #define FRAMain [FRAMainController sharedInstance]
 #define FRABasic [FRABasicPerformer sharedInstance]
 #define FRAInterface [FRAInterfacePerformer sharedInstance]

@@ -28,28 +28,17 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 @implementation FRADragAndDropController
 
-static id sharedInstance = nil;
-
-+ (FRADragAndDropController *)sharedInstance
-{ 
-	if (sharedInstance == nil) { 
-		sharedInstance = [[self alloc] init];
-	}
-	
-	return sharedInstance;
-} 
-
+VASingletonIMPDefault(FRADragAndDropController)
 
 - (id)init 
 {
-    if (sharedInstance == nil) {
-        sharedInstance = [super init];
-		
+    if ((self = [super init]))
+    {
 		movedDocumentType = @"FRAMovedDocumentType";
 		movedSnippetType = @"FRAMovedSnippetType";
 		movedCommandType = @"FRAMovedCommandType";
     }
-    return sharedInstance;
+    return self;
 }
 
 

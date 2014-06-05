@@ -16,9 +16,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 #import "FRAAdvancedFindController.h"
 
-#import "ICUPattern.h"
-#import "ICUMatcher.h"
-#import "NSStringICUAdditions.h"
 #import "FRAExtraInterfaceController.h"
 #import "FRAProjectsController.h"
 #import "FRABasicPerformer.h"
@@ -29,30 +26,13 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRATextPerformer.h"
 #import "FRAOpenSavePerformer.h"
 
+#import <VAFoundation/VAFoundation.h>
+
 @implementation FRAAdvancedFindController
 
 @synthesize advancedFindWindow, findResultsOutlineView;
 
-static id sharedInstance = nil;
-
-+ (FRAAdvancedFindController *)sharedInstance
-{ 
-	if (sharedInstance == nil) { 
-		sharedInstance = [[self alloc] init];
-	}
-	
-	return sharedInstance;
-} 
-
-
-- (id)init 
-{
-    if (sharedInstance == nil) {
-        sharedInstance = [super init];
-    }
-    return sharedInstance;
-}
-
+VASingletonIMPDefault(FRAAdvancedFindController)
 
 - (IBAction)findAction:(id)sender
 {

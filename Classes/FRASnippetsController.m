@@ -31,26 +31,7 @@
 
 @synthesize snippetsTextView, snippetsWindow, snippetCollectionsArrayController, snippetCollectionsTableView, snippetsTableView, snippetsArrayController;
 
-static id sharedInstance = nil;
-
-+ (FRASnippetsController *)sharedInstance
-{
-	if (sharedInstance == nil) {
-		sharedInstance = [[self alloc] init];
-	}
-	
-	return sharedInstance;
-}
-
-
-- (id)init
-{
-    if (sharedInstance == nil) {
-        sharedInstance = [super init];
-    }
-    return sharedInstance;
-}
-
+VASingletonIMPDefault(FRASnippetsController)
 
 - (void)openSnippetsWindow
 {

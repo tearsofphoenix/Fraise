@@ -21,26 +21,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 @implementation FRASingleDocumentWindowDelegate
 
-static id sharedInstance = nil;
-
-+ (FRASingleDocumentWindowDelegate *)sharedInstance
-{ 
-	if (sharedInstance == nil) { 
-		sharedInstance = [[self alloc] init];
-	}
-	
-	return sharedInstance;
-} 
-
-
-- (id)init 
-{
-    if (sharedInstance == nil) {
-        sharedInstance = [super init];
-    }
-    return sharedInstance;
-}
-
+VASingletonIMPDefault(FRASingleDocumentWindowDelegate)
 
 - (void)windowDidResize:(NSNotification *)aNotification
 {

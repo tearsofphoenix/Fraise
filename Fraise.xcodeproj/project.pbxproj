@@ -53,7 +53,6 @@
 		2F6CF2E20B848515008B0386 /* DefaultCommands.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2F6CF2E10B848515008B0386 /* DefaultCommands.plist */; };
 		2F7040F90BBBE07F00D43CAF /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 2F7040F80BBBE07F00D43CAF /* Credits.rtf */; };
 		2F8C9F030B8054E100C6502F /* FRADummyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F8C9F020B8054E100C6502F /* FRADummyView.m */; };
-		2F8CCC130BA8158E00BA791C /* NSStringICUAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F8CCC110BA8158E00BA791C /* NSStringICUAdditions.m */; };
 		2FC46AFE0BD608C500F209AA /* FRACommandsIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 2FC46AFC0BD608C500F209AA /* FRACommandsIcon.icns */; };
 		2FC46AFF0BD608C500F209AA /* FRASnippetsIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 2FC46AFD0BD608C500F209AA /* FRASnippetsIcon.icns */; };
 		2FCFEBC20B820D0F00E635EE /* FRACommandCollectionManagedObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCFEBC10B820D0F00E635EE /* FRACommandCollectionManagedObject.m */; };
@@ -76,7 +75,6 @@
 		7F5C26B90B73C06D00D2EDDC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F5C26B80B73C06D00D2EDDC /* SystemConfiguration.framework */; };
 		7F5C287A0B73C49700D2EDDC /* FRABasicPerformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F5C28780B73C49700D2EDDC /* FRABasicPerformer.m */; };
 		7F5C287E0B73C4AA00D2EDDC /* FRAInterfacePerformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F5C287C0B73C4AA00D2EDDC /* FRAInterfacePerformer.m */; };
-		7F6C9C680B75F23000531EF9 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F6C9C670B75F23000531EF9 /* libicucore.dylib */; };
 		7F7444C90CF8DDEC00C947C1 /* FRAAdvancedFindPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F7444C80CF8DDEC00C947C1 /* FRAAdvancedFindPanel.m */; };
 		7F79EE370D93D5500034017B /* NSString+Fraise.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F79EE360D93D5500034017B /* NSString+Fraise.m */; };
 		7F79EE3A0D93D5760034017B /* NSImage+Fraise.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F79EE390D93D5760034017B /* NSImage+Fraise.m */; };
@@ -141,8 +139,6 @@
 		7F980B380B73B6A2000A9140 /* FRAVariousPerformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F980B060B73B6A2000A9140 /* FRAVariousPerformer.m */; };
 		7F980B390B73B6A2000A9140 /* FRAViewMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F980B080B73B6A2000A9140 /* FRAViewMenuController.m */; };
 		7F9C38DE0BD29AE200B45805 /* FRADataModel2.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 7F9C38DD0BD29AE200B45805 /* FRADataModel2.xcdatamodel */; };
-		7FA2666E0B7796BE00AEA870 /* ICUMatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FA266690B7796BE00AEA870 /* ICUMatcher.m */; };
-		7FA2666F0B7796BE00AEA870 /* ICUPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FA2666B0B7796BE00AEA870 /* ICUPattern.m */; };
 		7FAD46800D9E43A600ECD508 /* FRAPrintViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FAD467F0D9E43A600ECD508 /* FRAPrintViewController.m */; };
 		7FB41E060B7A2A43006ADB1E /* FRAOpenSavePerformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FB41E050B7A2A43006ADB1E /* FRAOpenSavePerformer.m */; };
 		7FB9116A101E623F008DB1DA /* Fraise-Manual.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 7FD53F120D91A8F30071054F /* Fraise-Manual.pdf */; };
@@ -152,6 +148,10 @@
 		8D15AC310486D014006FF6A4 /* FRAProject.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37F4ACFDCFA73011CA2CEA /* FRAProject.m */; settings = {ATTRIBUTES = (); }; };
 		8D15AC320486D014006FF6A4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37F4B0FDCFA73011CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */; };
+		92A1FEA8194055F40090870B /* VAFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A1FE9D194055270090870B /* VAFoundation.framework */; };
+		92A1FEA9194057770090870B /* VAFoundation.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 92A1FE9D194055270090870B /* VAFoundation.framework */; };
+		92A1FF4019405AF20090870B /* VADevUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A1FEE8194057C30090870B /* VADevUIKit.framework */; };
+		92A1FF4119405B980090870B /* VADevUIKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 92A1FEE8194057C30090870B /* VADevUIKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -169,6 +169,48 @@
 			remoteGlobalIDString = 7F5C26640B73BF2200D2EDDC;
 			remoteInfo = fraise;
 		};
+		92A1FE9C194055270090870B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 92A1FE97194055260090870B /* VAFoundation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 92A1FE69194055260090870B;
+			remoteInfo = VAFoundation;
+		};
+		92A1FE9E194055270090870B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 92A1FE97194055260090870B /* VAFoundation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 92A1FE80194055260090870B;
+			remoteInfo = VAFoundationTests;
+		};
+		92A1FEA6194055E90090870B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 92A1FE97194055260090870B /* VAFoundation.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 92A1FE68194055260090870B;
+			remoteInfo = VAFoundation;
+		};
+		92A1FEE7194057C30090870B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 92A1FEE2194057C20090870B /* VADevUIKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 92A1FEB4194057C20090870B;
+			remoteInfo = VADevUIKit;
+		};
+		92A1FEE9194057C30090870B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 92A1FEE2194057C20090870B /* VADevUIKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 92A1FECB194057C20090870B;
+			remoteInfo = VADevUIKitTests;
+		};
+		92A1FF3E19405AEE0090870B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 92A1FEE2194057C20090870B /* VADevUIKit.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 92A1FEB3194057C20090870B;
+			remoteInfo = VADevUIKit;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -178,6 +220,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				92A1FF4119405B980090870B /* VADevUIKit.framework in CopyFiles */,
+				92A1FEA9194057770090870B /* VAFoundation.framework in CopyFiles */,
 				1F7486DD114F201200767B18 /* Sparkle.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -349,8 +393,6 @@
 		2F7040F80BBBE07F00D43CAF /* Credits.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = Credits.rtf; path = Other/Credits.rtf; sourceTree = "<group>"; };
 		2F8C9F010B8054E100C6502F /* FRADummyView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FRADummyView.h; path = Classes/FRADummyView.h; sourceTree = "<group>"; };
 		2F8C9F020B8054E100C6502F /* FRADummyView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FRADummyView.m; path = Classes/FRADummyView.m; sourceTree = "<group>"; };
-		2F8CCC110BA8158E00BA791C /* NSStringICUAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSStringICUAdditions.m; path = ICU/NSStringICUAdditions.m; sourceTree = "<group>"; };
-		2F8CCC120BA8158E00BA791C /* NSStringICUAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSStringICUAdditions.h; path = ICU/NSStringICUAdditions.h; sourceTree = "<group>"; };
 		2FC46AFC0BD608C500F209AA /* FRACommandsIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = FRACommandsIcon.icns; path = Graphics/FRACommandsIcon.icns; sourceTree = "<group>"; };
 		2FC46AFD0BD608C500F209AA /* FRASnippetsIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = FRASnippetsIcon.icns; path = Graphics/FRASnippetsIcon.icns; sourceTree = "<group>"; };
 		2FCFEBC00B820D0F00E635EE /* FRACommandCollectionManagedObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FRACommandCollectionManagedObject.h; path = Classes/FRACommandCollectionManagedObject.h; sourceTree = "<group>"; };
@@ -501,10 +543,6 @@
 		7F980B070B73B6A2000A9140 /* FRAViewMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FRAViewMenuController.h; path = Classes/FRAViewMenuController.h; sourceTree = "<group>"; };
 		7F980B080B73B6A2000A9140 /* FRAViewMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FRAViewMenuController.m; path = Classes/FRAViewMenuController.m; sourceTree = "<group>"; };
 		7F9C38DD0BD29AE200B45805 /* FRADataModel2.xcdatamodel */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.xcdatamodel; name = FRADataModel2.xcdatamodel; path = Other/FRADataModel2.xcdatamodel; sourceTree = "<group>"; };
-		7FA266680B7796BE00AEA870 /* ICUMatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ICUMatcher.h; path = ICU/ICUMatcher.h; sourceTree = "<group>"; };
-		7FA266690B7796BE00AEA870 /* ICUMatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ICUMatcher.m; path = ICU/ICUMatcher.m; sourceTree = "<group>"; };
-		7FA2666A0B7796BE00AEA870 /* ICUPattern.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ICUPattern.h; path = ICU/ICUPattern.h; sourceTree = "<group>"; };
-		7FA2666B0B7796BE00AEA870 /* ICUPattern.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ICUPattern.m; path = ICU/ICUPattern.m; sourceTree = "<group>"; };
 		7FAD467E0D9E43A600ECD508 /* FRAPrintViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FRAPrintViewController.h; path = Classes/FRAPrintViewController.h; sourceTree = "<group>"; };
 		7FAD467F0D9E43A600ECD508 /* FRAPrintViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FRAPrintViewController.m; path = Classes/FRAPrintViewController.m; sourceTree = "<group>"; };
 		7FB41E040B7A2A43006ADB1E /* FRAOpenSavePerformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FRAOpenSavePerformer.h; path = Classes/FRAOpenSavePerformer.h; sourceTree = "<group>"; };
@@ -515,6 +553,8 @@
 		7FD53F120D91A8F30071054F /* Fraise-Manual.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "Fraise-Manual.pdf"; sourceTree = "<group>"; };
 		8D15AC360486D014006FF6A4 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D15AC370486D014006FF6A4 /* Fraise.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Fraise.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		92A1FE97194055260090870B /* VAFoundation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = VAFoundation.xcodeproj; path = Library/VAFoundation/VAFoundation.xcodeproj; sourceTree = "<group>"; };
+		92A1FEE2194057C20090870B /* VADevUIKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = VADevUIKit.xcodeproj; path = Library/VADevUIKit/VADevUIKit.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -530,12 +570,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				92A1FF4019405AF20090870B /* VADevUIKit.framework in Frameworks */,
+				92A1FEA8194055F40090870B /* VAFoundation.framework in Frameworks */,
 				8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */,
 				7F5C26B10B73C03A00D2EDDC /* Carbon.framework in Frameworks */,
 				7F5C26B30B73C04800D2EDDC /* ApplicationServices.framework in Frameworks */,
 				7F5C26B50B73C05100D2EDDC /* WebKit.framework in Frameworks */,
 				7F5C26B90B73C06D00D2EDDC /* SystemConfiguration.framework in Frameworks */,
-				7F6C9C680B75F23000531EF9 /* libicucore.dylib in Frameworks */,
 				7F51225C0BA72E7E00183863 /* QuartzCore.framework in Frameworks */,
 				7FBDDF360CF79C7D003BAFB5 /* QuickLook.framework in Frameworks */,
 				1FACC99F113FAE1200515523 /* QuartzCore.framework in Frameworks */,
@@ -586,6 +627,8 @@
 		2A37F4AAFDCFA73011CA2CEA /* Smultron */ = {
 			isa = PBXGroup;
 			children = (
+				92A1FEE2194057C20090870B /* VADevUIKit.xcodeproj */,
+				92A1FE97194055260090870B /* VAFoundation.xcodeproj */,
 				7F980A900B73B649000A9140 /* Models */,
 				2A37F4ABFDCFA73011CA2CEA /* Classes */,
 				2A37F4AFFDCFA73011CA2CEA /* Other Sources */,
@@ -619,7 +662,6 @@
 				7F980A860B73B619000A9140 /* Command Line Utility */,
 				7F980A8F0B73B641000A9140 /* ODBEditorSuite.h */,
 				7F81FEDD0BA9DDE100549CDB /* PSMTabBar */,
-				7FD7C3CE0B76561A0097747A /* ICU */,
 				2A37F4B0FDCFA73011CA2CEA /* main.m */,
 			);
 			name = "Other Sources";
@@ -758,7 +800,8 @@
 		7F5C24900B73B87500D2EDDC /* Delegates */ = {
 			isa = PBXGroup;
 			children = (
-				7F5C24930B73B8A700D2EDDC /* Headers */,
+				7F980AAC0B73B6A2000A9140 /* FRAApplicationDelegate.h */,
+				7F980AE80B73B6A2000A9140 /* FRASingleDocumentWindowDelegate.h */,
 				7F980AAD0B73B6A2000A9140 /* FRAApplicationDelegate.m */,
 				7F980AE90B73B6A2000A9140 /* FRASingleDocumentWindowDelegate.m */,
 			);
@@ -790,15 +833,6 @@
 				7F980B030B73B6A2000A9140 /* FRAToolsMenuController.h */,
 				7F980AB80B73B6A2000A9140 /* FRADocumentsMenuController.h */,
 				7F980ACA0B73B6A2000A9140 /* FRAHelpMenuController.h */,
-			);
-			name = Headers;
-			sourceTree = "<group>";
-		};
-		7F5C24930B73B8A700D2EDDC /* Headers */ = {
-			isa = PBXGroup;
-			children = (
-				7F980AAC0B73B6A2000A9140 /* FRAApplicationDelegate.h */,
-				7F980AE80B73B6A2000A9140 /* FRASingleDocumentWindowDelegate.h */,
 			);
 			name = Headers;
 			sourceTree = "<group>";
@@ -862,22 +896,14 @@
 		7F5C24A40B73B9CC00D2EDDC /* Others */ = {
 			isa = PBXGroup;
 			children = (
-				7F5C24A50B73B9EC00D2EDDC /* Headers */,
+				7F980AC40B73B6A2000A9140 /* FRAFontTransformer.h */,
 				7F980AC50B73B6A2000A9140 /* FRAFontTransformer.m */,
+				7F980AD00B73B6A2000A9140 /* FRALineNumbers.h */,
 				7F980AD10B73B6A2000A9140 /* FRALineNumbers.m */,
+				7F980AF30B73B6A2000A9140 /* FRASyntaxColouring.h */,
 				7F980AF40B73B6A2000A9140 /* FRASyntaxColouring.m */,
 			);
 			name = Others;
-			sourceTree = "<group>";
-		};
-		7F5C24A50B73B9EC00D2EDDC /* Headers */ = {
-			isa = PBXGroup;
-			children = (
-				7F980AC40B73B6A2000A9140 /* FRAFontTransformer.h */,
-				7F980AD00B73B6A2000A9140 /* FRALineNumbers.h */,
-				7F980AF30B73B6A2000A9140 /* FRASyntaxColouring.h */,
-			);
-			name = Headers;
 			sourceTree = "<group>";
 		};
 		7F5C24D90B73BCF200D2EDDC /* Xibs */ = {
@@ -911,22 +937,14 @@
 		7F79EE330D93D4F40034017B /* Categories */ = {
 			isa = PBXGroup;
 			children = (
-				7F79EE340D93D5090034017B /* Headers */,
+				7F79EE380D93D5760034017B /* NSImage+Fraise.h */,
+				7F79EE350D93D5500034017B /* NSString+Fraise.h */,
+				7F79EE3B0D93D58C0034017B /* NSToolbarItem+Fraise.h */,
 				7F79EE390D93D5760034017B /* NSImage+Fraise.m */,
 				7F79EE360D93D5500034017B /* NSString+Fraise.m */,
 				7F79EE3C0D93D58C0034017B /* NSToolbarItem+Fraise.m */,
 			);
 			name = Categories;
-			sourceTree = "<group>";
-		};
-		7F79EE340D93D5090034017B /* Headers */ = {
-			isa = PBXGroup;
-			children = (
-				7F79EE380D93D5760034017B /* NSImage+Fraise.h */,
-				7F79EE350D93D5500034017B /* NSString+Fraise.h */,
-				7F79EE3B0D93D58C0034017B /* NSToolbarItem+Fraise.h */,
-			);
-			name = Headers;
 			sourceTree = "<group>";
 		};
 		7F81FEDD0BA9DDE100549CDB /* PSMTabBar */ = {
@@ -1019,17 +1037,22 @@
 			name = Headers;
 			sourceTree = "<group>";
 		};
-		7FD7C3CE0B76561A0097747A /* ICU */ = {
+		92A1FE98194055260090870B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				7FA266680B7796BE00AEA870 /* ICUMatcher.h */,
-				7FA266690B7796BE00AEA870 /* ICUMatcher.m */,
-				7FA2666A0B7796BE00AEA870 /* ICUPattern.h */,
-				7FA2666B0B7796BE00AEA870 /* ICUPattern.m */,
-				2F8CCC120BA8158E00BA791C /* NSStringICUAdditions.h */,
-				2F8CCC110BA8158E00BA791C /* NSStringICUAdditions.m */,
+				92A1FE9D194055270090870B /* VAFoundation.framework */,
+				92A1FE9F194055270090870B /* VAFoundationTests.xctest */,
 			);
-			name = ICU;
+			name = Products;
+			sourceTree = "<group>";
+		};
+		92A1FEE3194057C20090870B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				92A1FEE8194057C30090870B /* VADevUIKit.framework */,
+				92A1FEEA194057C30090870B /* VADevUIKitTests.xctest */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1064,6 +1087,8 @@
 			buildRules = (
 			);
 			dependencies = (
+				92A1FF3F19405AEE0090870B /* PBXTargetDependency */,
+				92A1FEA7194055E90090870B /* PBXTargetDependency */,
 				1F83623411553B55002BBC30 /* PBXTargetDependency */,
 			);
 			name = Fraise;
@@ -1105,6 +1130,16 @@
 			);
 			mainGroup = 2A37F4AAFDCFA73011CA2CEA /* Smultron */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 92A1FEE3194057C20090870B /* Products */;
+					ProjectRef = 92A1FEE2194057C20090870B /* VADevUIKit.xcodeproj */;
+				},
+				{
+					ProductGroup = 92A1FE98194055260090870B /* Products */;
+					ProjectRef = 92A1FE97194055260090870B /* VAFoundation.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				8D15AC270486D014006FF6A4 /* Fraise */,
@@ -1113,6 +1148,37 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		92A1FE9D194055270090870B /* VAFoundation.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = VAFoundation.framework;
+			remoteRef = 92A1FE9C194055270090870B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		92A1FE9F194055270090870B /* VAFoundationTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = VAFoundationTests.xctest;
+			remoteRef = 92A1FE9E194055270090870B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		92A1FEE8194057C30090870B /* VADevUIKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = VADevUIKit.framework;
+			remoteRef = 92A1FEE7194057C30090870B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		92A1FEEA194057C30090870B /* VADevUIKitTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = VADevUIKitTests.xctest;
+			remoteRef = 92A1FEE9194057C30090870B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		8D15AC2B0486D014006FF6A4 /* Resources */ = {
@@ -1239,8 +1305,6 @@
 				7F5C287A0B73C49700D2EDDC /* FRABasicPerformer.m in Sources */,
 				7F5C287E0B73C4AA00D2EDDC /* FRAInterfacePerformer.m in Sources */,
 				7F3443260B74CC3500790653 /* FRADocumentManagedObject.m in Sources */,
-				7FA2666E0B7796BE00AEA870 /* ICUMatcher.m in Sources */,
-				7FA2666F0B7796BE00AEA870 /* ICUPattern.m in Sources */,
 				7F08532F0B77B55D009544AD /* FRAExtraInterfaceController.m in Sources */,
 				7FB41E060B7A2A43006ADB1E /* FRAOpenSavePerformer.m in Sources */,
 				7F961E950B7A7CE1001E9189 /* FRAEncodingManagedObject.m in Sources */,
@@ -1253,7 +1317,6 @@
 				2FCFEBC20B820D0F00E635EE /* FRACommandCollectionManagedObject.m in Sources */,
 				2FE2F8400B985D0500ADCF8A /* FRAProject+DocumentViewsController.m in Sources */,
 				2FF0FC2D0BA6C8FF00B21D83 /* FRAGradientBackgroundView.m in Sources */,
-				2F8CCC130BA8158E00BA791C /* NSStringICUAdditions.m in Sources */,
 				7F81FF030BA9DDF600549CDB /* PSMOverflowPopUpButton.m in Sources */,
 				7F81FF050BA9DDF600549CDB /* PSMRolloverButton.m in Sources */,
 				7F81FF060BA9DDF600549CDB /* PSMTabBarCell.m in Sources */,
@@ -1285,6 +1348,16 @@
 			isa = PBXTargetDependency;
 			target = 7F5C26640B73BF2200D2EDDC /* fraise */;
 			targetProxy = 1F83623311553B55002BBC30 /* PBXContainerItemProxy */;
+		};
+		92A1FEA7194055E90090870B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = VAFoundation;
+			targetProxy = 92A1FEA6194055E90090870B /* PBXContainerItemProxy */;
+		};
+		92A1FF3F19405AEE0090870B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = VADevUIKit;
+			targetProxy = 92A1FF3E19405AEE0090870B /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1625,6 +1698,7 @@
 				GCC_ENABLE_OBJC_GC = unsupported;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				PRODUCT_NAME = Fraise;
@@ -1648,6 +1722,7 @@
 				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)\"";
 				GCC_ENABLE_OBJC_GC = unsupported;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				PRODUCT_NAME = Fraise;
@@ -1665,11 +1740,7 @@
 				GCC_PREFIX_HEADER = "";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_1)",
-					"$(inherited)",
-				);
-				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_1 = "\"$(SRCROOT)/ICU/icu/\"";
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "-DDEVELOPMENT_STYLE_BUILD";
@@ -1688,11 +1759,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_1)",
-					"$(inherited)",
-				);
-				HEADER_SEARCH_PATHS_QUOTED_FOR_PROJECT_1 = "\"$(SRCROOT)/ICU/icu/\"";
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PREBINDING = NO;
 				SDKROOT = macosx;

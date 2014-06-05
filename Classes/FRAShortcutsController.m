@@ -20,27 +20,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 @implementation FRAShortcutsController
 
-static id sharedInstance = nil;
-
-+ (FRAShortcutsController *)sharedInstance
-{ 
-	if (sharedInstance == nil) { 
-		sharedInstance = [[self alloc] init];
-	}
-	
-	return sharedInstance;
-} 
-
-
-- (id)init 
-{
-    if (sharedInstance == nil) {
-        sharedInstance = [super init];
-
-    }
-    return sharedInstance;
-}
-
+VASingletonIMPDefault(FRAShortcutsController)
 
 - (void)registerSnippetShortcutWithEvent:(NSEvent *)event
 {

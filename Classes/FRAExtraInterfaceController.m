@@ -25,29 +25,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 @synthesize openPanelAccessoryView, openPanelEncodingsPopUp, commandResultWindow, commandResultTextView, newProjectWindow;
 
-
-
-static id sharedInstance = nil;
-
-+ (FRAExtraInterfaceController *)sharedInstance
-{ 
-	if (sharedInstance == nil) { 
-		sharedInstance = [[self alloc] init];
-	}
-	
-	return sharedInstance;
-} 
-
-
-- (id)init 
-{
-    if (sharedInstance == nil) {
-        sharedInstance = [super init];
-		
-    }
-    return sharedInstance;
-}
-
+VASingletonIMPDefault(FRAExtraInterfaceController)
 
 - (void)displayEntab
 {

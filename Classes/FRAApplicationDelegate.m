@@ -30,31 +30,19 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	
 @synthesize persistentStoreCoordinator,  managedObjectModel, managedObjectContext, shouldCreateEmptyDocument, hasFinishedLaunching, isTerminatingApplication, filesToOpenArray, appleEventDescriptor;
 
-
-static id sharedInstance = nil;
-
-+ (FRAApplicationDelegate *)sharedInstance
-{ 
-	if (sharedInstance == nil) { 
-		sharedInstance = [[self alloc] init];
-	}
-	
-	return sharedInstance;
-} 
-
+VASingletonIMPDefault(FRAApplicationDelegate)
 
 - (id)init 
 {
-    if (sharedInstance == nil) {
-        sharedInstance = [super init];	
-		
+    if ((self = [super init]))
+    {
 		shouldCreateEmptyDocument = YES;
 		hasFinishedLaunching = NO;
 		isTerminatingApplication = NO;
 		appleEventDescriptor = nil;
     }
 	
-    return sharedInstance;
+    return self;
 }
 
 

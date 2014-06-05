@@ -34,27 +34,15 @@
 
 @synthesize encodingsArrayController, syntaxDefinitionsArrayController, encodingsPopUp, preferencesWindow;
 
-
-static id sharedInstance = nil;
-
-+ (FRAPreferencesController *)sharedInstance
-{
-	if (sharedInstance == nil) {
-		sharedInstance = [[self alloc] init];
-	}
-	
-	return sharedInstance;
-}
-
+VASingletonIMPDefault(FRAPreferencesController)
 
 - (id)init
 {
-    if (sharedInstance == nil) {
-        sharedInstance = [super init];
-		
+    if ((self = [super init]))
+    {
 		hasPreparedAdvancedInterface = NO;
     }
-    return sharedInstance;
+    return self;
 }
 
 

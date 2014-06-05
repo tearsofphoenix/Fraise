@@ -23,26 +23,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 @implementation FRAAuthenticationController
 
-static id sharedInstance = nil;
-
-+ (FRAAuthenticationController *)sharedInstance
-{ 
-	if (sharedInstance == nil) { 
-		sharedInstance = [[self alloc] init];
-	}
-	
-	return sharedInstance;
-} 
-
-
-- (id)init 
-{
-    if (sharedInstance == nil) {
-        sharedInstance = [super init];
-    }
-    return sharedInstance;
-}
-
+VASingletonIMPDefault(FRAAuthenticationController)
 
 - (void)authenticateOpenSheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
 {

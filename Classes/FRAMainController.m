@@ -27,29 +27,17 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 @synthesize isInFullScreenMode, singleDocumentWindowWasOpenBeforeEnteringFullScreen, operationQueue;
 
-
-static id sharedInstance = nil;
-
-+ (FRAMainController *)sharedInstance
-{
-	if (sharedInstance == nil) { 
-		sharedInstance = [[self alloc] init];
-	}
-
-	return sharedInstance;
-} 
-
+VASingletonIMPDefault(FRAMainController)
 
 - (id)init 
 {
-	if (sharedInstance == nil) {
-        sharedInstance = [super init];
-		
+	if ((self = [super init]))
+    {
 		operationQueue = [[NSOperationQueue alloc] init];
     }
-    return sharedInstance;
+    
+    return self;
 }
-
 
 + (void)initialize
 {

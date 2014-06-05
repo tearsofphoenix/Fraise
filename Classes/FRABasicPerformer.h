@@ -32,7 +32,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 - (NSURL *)uriFromObject:(id)object;
 - (id)objectFromURI:(NSURL *)uri;
 - (void)removeAllItemsFromMenu:(NSMenu *)menu;
-- (NSString *)createUUID;
+
 - (void)insertSortOrderNumbersForArrayController:(NSArrayController *)arrayController;
 - (NSString *)genererateTemporaryPath;
 - (NSString *)thousandFormatedStringFromNumber:(NSNumber *)number;

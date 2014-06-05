@@ -16,8 +16,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 @class FRATextView;
 
-@interface FRATextView : NSTextView {
-	NSInteger lineHeight;
+@interface FRATextView : NSTextView
+{
 	NSPoint startPoint;
     NSPoint startOrigin;
 	CGFloat pageGuideX;
@@ -32,10 +32,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 @property (unsafe_unretained) NSCursor *colouredIBeamCursor;
 @property (assign) BOOL inCompleteMethod;
+@property (nonatomic) NSInteger lineHeight;
 
 - (void)setDefaults;
-
-- (NSInteger)lineHeight;
 
 - (void)setTabWidth;
 

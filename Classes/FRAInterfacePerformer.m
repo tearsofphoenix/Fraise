@@ -29,32 +29,18 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRASyntaxColouring.h"
 #import "FRAFullScreenWindow.h"
 
-#import "ICUPattern.h"
-#import "ICUMatcher.h"
-#import "NSStringICUAdditions.h"
-
+#import <VAFoundation/VAFoundation.h>
 
 @implementation FRAInterfacePerformer
 
 @synthesize fullScreenWindow, fullScreenDocument, defaultIcon, defaultUnsavedIcon;
 
-static id sharedInstance = nil;
-
-+ (FRAInterfacePerformer *)sharedInstance
-{ 
-	if (sharedInstance == nil) { 
-		sharedInstance = [[self alloc] init];
-	}
-	
-	return sharedInstance;
-} 
-
+VASingletonIMPDefault(FRAInterfacePerformer)
 
 - (id)init 
 {
-    if (sharedInstance == nil) {
-        sharedInstance = [super init];
-		
+    if ((self = [super init]))
+    {
 		statusBarBetweenString = [[NSString alloc] initWithFormat:@"  %C  ", 0x00B7];
 		statusBarLastSavedString = NSLocalizedString(@"Saved", @"Saved, in the status bar");
 		statusBarDocumentLengthString = NSLocalizedString(@"Length", @"Length, in the status bar");
@@ -66,7 +52,7 @@ static id sharedInstance = nil;
 		defaultIcon = [[NSImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"FRADefaultIcon" ofType:@"png"]];
 		defaultUnsavedIcon = [[NSImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"FRADefaultUnsavedIcon" ofType:@"png"]];
     }
-    return sharedInstance;
+    return self;
 }
 
 

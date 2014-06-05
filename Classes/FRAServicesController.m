@@ -22,26 +22,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 @implementation FRAServicesController
 
-static id sharedInstance = nil;
-
-+ (FRAServicesController *)sharedInstance
-{ 
-	if (sharedInstance == nil) { 
-		sharedInstance = [[self alloc] init];
-	}
-	
-	return sharedInstance;
-} 
-
-
-- (id)init 
-{
-    if (sharedInstance == nil) {
-        sharedInstance = [super init];
-    }
-    return sharedInstance;
-}
-
+VASingletonIMPDefault(FRAServicesController)
 
 - (void)insertSelection:(NSPasteboard *)pboard userData:(NSString *)data error:(NSString **)error 
 {

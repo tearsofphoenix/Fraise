@@ -29,33 +29,25 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "ODBEditorSuite.h"
 #import "FRATextView.h"
 
+#import <VAFoundation/VAFoundation.h>
 
 
 
 
 @implementation FRAVariousPerformer
 
-static id sharedInstance = nil;
-
-+ (FRAVariousPerformer *)sharedInstance
-{ 
-	if (sharedInstance == nil) { 
-		sharedInstance = [[self alloc] init];
-	}
-	
-	return sharedInstance;
-} 
-
+VASingletonIMPDefault(FRAVariousPerformer)
 
 - (id)init 
 {
-    if (sharedInstance == nil) {
-        sharedInstance = [super init];
+    if ((self = [super init]))
+    {
 		untitledNumber = 1;
 		
 		isChangingSyntaxDefinitionsProgrammatically = NO; // So that FRAManagedObject does not need to care about changes when resetting the preferences
     }
-    return sharedInstance;
+    
+    return self;
 }
 
 
@@ -108,8 +100,8 @@ static id sharedInstance = nil;
 	}
 	
 	NSArray *keys = @[@"name", @"file", @"extensions"];
-	NSDictionary *standard = [NSDictionary dictionaryWithObjects:@[@"Standard", @"standard", [NSString string]] forKeys:keys];
-	NSDictionary *none = [NSDictionary dictionaryWithObjects:@[@"None", @"none", [NSString string]] forKeys:keys];
+	NSDictionary *standard = [NSDictionary dictionaryWithObjects:@[@"Standard", @"standard", @""] forKeys:keys];
+	NSDictionary *none = [NSDictionary dictionaryWithObjects:@[@"None", @"none", @""] forKeys:keys];
 	[syntaxDefinitionsArray insertObject:none atIndex:0];
 	[syntaxDefinitionsArray insertObject:standard atIndex:0];
 	
@@ -402,7 +394,7 @@ static id sharedInstance = nil;
 		NSPipe *pipe = [[NSPipe alloc] init];
 		NSPipe *errorPipe = [[NSPipe alloc] init];
 		
-		NSMutableArray *splitArray = [NSMutableArray arrayWithArray:[command divideCommandIntoArray]];
+		NSMutableArray *splitArray = [NSMutableArray arrayWithArray: [command divideCommandIntoArray]];
 		[task setLaunchPath:splitArray[0]];
 		[splitArray removeObjectAtIndex:0];
 		

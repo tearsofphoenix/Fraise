@@ -1,0 +1,471 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		92A1FEB8194057C20090870B /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A1FEB7194057C20090870B /* Cocoa.framework */; };
+		92A1FEC2194057C20090870B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 92A1FEC0194057C20090870B /* InfoPlist.strings */; };
+		92A1FECD194057C20090870B /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A1FECC194057C20090870B /* XCTest.framework */; };
+		92A1FECE194057C20090870B /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A1FEB7194057C20090870B /* Cocoa.framework */; };
+		92A1FED1194057C20090870B /* VADevUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A1FEB4194057C20090870B /* VADevUIKit.framework */; };
+		92A1FED7194057C20090870B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 92A1FED5194057C20090870B /* InfoPlist.strings */; };
+		92A1FED9194057C20090870B /* VADevUIKitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A1FED8194057C20090870B /* VADevUIKitTests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		92A1FECF194057C20090870B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 92A1FEAB194057C20090870B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 92A1FEB3194057C20090870B;
+			remoteInfo = VADevUIKit;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		92A1FEB4194057C20090870B /* VADevUIKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = VADevUIKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		92A1FEB7194057C20090870B /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		92A1FEBA194057C20090870B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		92A1FEBB194057C20090870B /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		92A1FEBC194057C20090870B /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		92A1FEBF194057C20090870B /* VADevUIKit-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "VADevUIKit-Info.plist"; sourceTree = "<group>"; };
+		92A1FEC1194057C20090870B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		92A1FEC3194057C20090870B /* VADevUIKit-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "VADevUIKit-Prefix.pch"; sourceTree = "<group>"; };
+		92A1FEC4194057C20090870B /* VADevUIKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VADevUIKit.h; sourceTree = "<group>"; };
+		92A1FECB194057C20090870B /* VADevUIKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VADevUIKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		92A1FECC194057C20090870B /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		92A1FED4194057C20090870B /* VADevUIKitTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "VADevUIKitTests-Info.plist"; sourceTree = "<group>"; };
+		92A1FED6194057C20090870B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		92A1FED8194057C20090870B /* VADevUIKitTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VADevUIKitTests.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		92A1FEB0194057C20090870B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				92A1FEB8194057C20090870B /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		92A1FEC8194057C20090870B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				92A1FECE194057C20090870B /* Cocoa.framework in Frameworks */,
+				92A1FED1194057C20090870B /* VADevUIKit.framework in Frameworks */,
+				92A1FECD194057C20090870B /* XCTest.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		92A1FEAA194057C20090870B = {
+			isa = PBXGroup;
+			children = (
+				92A1FEBD194057C20090870B /* VADevUIKit */,
+				92A1FED2194057C20090870B /* VADevUIKitTests */,
+				92A1FEB6194057C20090870B /* Frameworks */,
+				92A1FEB5194057C20090870B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		92A1FEB5194057C20090870B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				92A1FEB4194057C20090870B /* VADevUIKit.framework */,
+				92A1FECB194057C20090870B /* VADevUIKitTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		92A1FEB6194057C20090870B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				92A1FEB7194057C20090870B /* Cocoa.framework */,
+				92A1FECC194057C20090870B /* XCTest.framework */,
+				92A1FEB9194057C20090870B /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		92A1FEB9194057C20090870B /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				92A1FEBA194057C20090870B /* Foundation.framework */,
+				92A1FEBB194057C20090870B /* CoreData.framework */,
+				92A1FEBC194057C20090870B /* AppKit.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		92A1FEBD194057C20090870B /* VADevUIKit */ = {
+			isa = PBXGroup;
+			children = (
+				92A1FF2219405AE50090870B /* External */,
+				92A1FEC4194057C20090870B /* VADevUIKit.h */,
+				92A1FEBE194057C20090870B /* Supporting Files */,
+			);
+			path = VADevUIKit;
+			sourceTree = "<group>";
+		};
+		92A1FEBE194057C20090870B /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				92A1FEBF194057C20090870B /* VADevUIKit-Info.plist */,
+				92A1FEC0194057C20090870B /* InfoPlist.strings */,
+				92A1FEC3194057C20090870B /* VADevUIKit-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		92A1FED2194057C20090870B /* VADevUIKitTests */ = {
+			isa = PBXGroup;
+			children = (
+				92A1FED8194057C20090870B /* VADevUIKitTests.m */,
+				92A1FED3194057C20090870B /* Supporting Files */,
+			);
+			path = VADevUIKitTests;
+			sourceTree = "<group>";
+		};
+		92A1FED3194057C20090870B /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				92A1FED4194057C20090870B /* VADevUIKitTests-Info.plist */,
+				92A1FED5194057C20090870B /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		92A1FF2219405AE50090870B /* External */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = External;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		92A1FEB1194057C20090870B /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		92A1FEB3194057C20090870B /* VADevUIKit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 92A1FEDC194057C20090870B /* Build configuration list for PBXNativeTarget "VADevUIKit" */;
+			buildPhases = (
+				92A1FEAF194057C20090870B /* Sources */,
+				92A1FEB0194057C20090870B /* Frameworks */,
+				92A1FEB1194057C20090870B /* Headers */,
+				92A1FEB2194057C20090870B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = VADevUIKit;
+			productName = VADevUIKit;
+			productReference = 92A1FEB4194057C20090870B /* VADevUIKit.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		92A1FECA194057C20090870B /* VADevUIKitTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 92A1FEDF194057C20090870B /* Build configuration list for PBXNativeTarget "VADevUIKitTests" */;
+			buildPhases = (
+				92A1FEC7194057C20090870B /* Sources */,
+				92A1FEC8194057C20090870B /* Frameworks */,
+				92A1FEC9194057C20090870B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				92A1FED0194057C20090870B /* PBXTargetDependency */,
+			);
+			name = VADevUIKitTests;
+			productName = VADevUIKitTests;
+			productReference = 92A1FECB194057C20090870B /* VADevUIKitTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		92A1FEAB194057C20090870B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0510;
+				ORGANIZATIONNAME = Mac003;
+				TargetAttributes = {
+					92A1FECA194057C20090870B = {
+						TestTargetID = 92A1FEB3194057C20090870B;
+					};
+				};
+			};
+			buildConfigurationList = 92A1FEAE194057C20090870B /* Build configuration list for PBXProject "VADevUIKit" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 92A1FEAA194057C20090870B;
+			productRefGroup = 92A1FEB5194057C20090870B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				92A1FEB3194057C20090870B /* VADevUIKit */,
+				92A1FECA194057C20090870B /* VADevUIKitTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		92A1FEB2194057C20090870B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				92A1FEC2194057C20090870B /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		92A1FEC9194057C20090870B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				92A1FED7194057C20090870B /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		92A1FEAF194057C20090870B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		92A1FEC7194057C20090870B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				92A1FED9194057C20090870B /* VADevUIKitTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		92A1FED0194057C20090870B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 92A1FEB3194057C20090870B /* VADevUIKit */;
+			targetProxy = 92A1FECF194057C20090870B /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		92A1FEC0194057C20090870B /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				92A1FEC1194057C20090870B /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		92A1FED5194057C20090870B /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				92A1FED6194057C20090870B /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		92A1FEDA194057C20090870B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		92A1FEDB194057C20090870B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		92A1FEDD194057C20090870B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "VADevUIKit/VADevUIKit-Prefix.pch";
+				INFOPLIST_FILE = "VADevUIKit/VADevUIKit-Info.plist";
+				INSTALL_PATH = "@executable_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Debug;
+		};
+		92A1FEDE194057C20090870B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "VADevUIKit/VADevUIKit-Prefix.pch";
+				INFOPLIST_FILE = "VADevUIKit/VADevUIKit-Info.plist";
+				INSTALL_PATH = "@executable_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Release;
+		};
+		92A1FEE0194057C20090870B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/VADevUIKit.framework/Versions/A/VADevUIKit";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "VADevUIKit/VADevUIKit-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "VADevUIKitTests/VADevUIKitTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		92A1FEE1194057C20090870B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/VADevUIKit.framework/Versions/A/VADevUIKit";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "VADevUIKit/VADevUIKit-Prefix.pch";
+				INFOPLIST_FILE = "VADevUIKitTests/VADevUIKitTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		92A1FEAE194057C20090870B /* Build configuration list for PBXProject "VADevUIKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				92A1FEDA194057C20090870B /* Debug */,
+				92A1FEDB194057C20090870B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		92A1FEDC194057C20090870B /* Build configuration list for PBXNativeTarget "VADevUIKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				92A1FEDD194057C20090870B /* Debug */,
+				92A1FEDE194057C20090870B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		92A1FEDF194057C20090870B /* Build configuration list for PBXNativeTarget "VADevUIKitTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				92A1FEE0194057C20090870B /* Debug */,
+				92A1FEE1194057C20090870B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 92A1FEAB194057C20090870B /* Project object */;
+}

@@ -20,30 +20,20 @@ Unless required by applicable law or agreed to in writing, software distributed 
 @implementation FRATextPerformer
 @synthesize macLineEnding, unixLineEnding, darkSideLineEnding;
 
-static id sharedInstance = nil;
-
-+ (FRATextPerformer *)sharedInstance
-{ 
-	if (sharedInstance == nil) { 
-		sharedInstance = [[self alloc] init];
-	}
-	
-	return sharedInstance;
-} 
-
+VASingletonIMPDefault(FRATextPerformer)
 
 - (id)init 
 {
-    if (sharedInstance == nil) {
-        sharedInstance = [super init];
-
+    if ((self = [super init]))
+    {
 		darkSideLineEnding = [[NSString alloc] initWithFormat:@"%C%C", 0x000D, 0x000A];
 		macLineEnding = [[NSString alloc] initWithFormat:@"%C", 0x000D];
 		unixLineEnding = [[NSString alloc] initWithFormat:@"%C", 0x000A];
 		
 		newLineSymbolString = [[NSString alloc] initWithFormat:@"%C", 0x23CE];
     }
-    return sharedInstance;
+    
+    return self;
 }
 
 

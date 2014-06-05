@@ -87,7 +87,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	[defaultsController addObserver:self forKeyPath:@"values.ShowPageGuideAtColumn" options:NSKeyValueObservingOptionNew context:@"PageGuideChanged"];
 	[defaultsController addObserver:self forKeyPath:@"values.SmartInsertDelete" options:NSKeyValueObservingOptionNew context:@"SmartInsertDeleteChanged"];
 	
-	lineHeight = [[[self textContainer] layoutManager] defaultLineHeightForFont:[NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextFont"]]];
+	_lineHeight = [[[self textContainer] layoutManager] defaultLineHeightForFont:[NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextFont"]]];
 }
 
 
@@ -95,7 +95,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 {
 	if ([(__bridge NSString *)context isEqualToString:@"TextFontChanged"]) {
 		[self setFont:[NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextFont"]]];
-		lineHeight = [[[self textContainer] layoutManager] defaultLineHeightForFont:[NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextFont"]]];
+		_lineHeight = [[[self textContainer] layoutManager] defaultLineHeightForFont:[NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextFont"]]];
 		[[FRACurrentDocument valueForKey:@"lineNumbers"] updateLineNumbersForClipView:[[self enclosingScrollView] contentView] checkWidth:NO recolour:YES];
 		[self setPageGuideValues];
 	} else if ([(__bridge NSString *)context isEqualToString:@"TextColourChanged"]) {
@@ -396,12 +396,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 - (void)mouseUp:(NSEvent *)theEvent
 {
 	[[self enclosingScrollView] setDocumentCursor:[NSCursor IBeamCursor]];
-}
-
-
-- (NSInteger)lineHeight
-{
-    return lineHeight;
 }
 
 

@@ -19,13 +19,16 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAToolsMenuController.h"
 #import "FRABasicPerformer.h"
 
+#import <VAFoundation/VAFoundation.h>
+
 @implementation FRASnippetManagedObject
 
 - (void)awakeFromInsert
 {
 	[super awakeFromInsert];
 	
-	[self setValue:[FRABasic createUUID] forKey:@"uuid"];
+	[self setValue: [NSString UUIDString]
+            forKey: @"uuid"];
 }
 
 

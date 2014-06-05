@@ -743,7 +743,7 @@ static id sharedInstance = nil;
 			
 			NSScanner *selfClosingScanner = [NSScanner scannerWithString:[completeString substringWithRange:NSMakeRange(location, locationOfClosingBrace - location)]];
 			[selfClosingScanner setCharactersToBeSkipped:nil];
-			NSString *selfClosingScanString = [NSString string];
+			NSString *selfClosingScanString = @"";
 			[selfClosingScanner scanUpToCharactersFromSet:[NSCharacterSet characterSetWithCharactersInString:@">"] intoString:&selfClosingScanString]; 
 			
 			if ([selfClosingScanString length] != 0) {
@@ -773,7 +773,7 @@ static id sharedInstance = nil;
 	
 	NSScanner *scanner = [NSScanner scannerWithString:[completeString substringWithRange:NSMakeRange(location, locationOfClosingBrace - location)]];
 	[scanner setCharactersToBeSkipped:nil];
-	NSString *scanString = [NSString string];
+	NSString *scanString = @"";
 	[scanner scanUpToCharactersFromSet:[NSCharacterSet characterSetWithCharactersInString:@" >/"] intoString:&scanString]; // Set the string to everything up to any of the characters (space),> or / so that it will catch things like <a href... as well as <br>
 	
 	NSMutableString *tagString = [NSMutableString stringWithString:scanString];

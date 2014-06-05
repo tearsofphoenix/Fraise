@@ -28,9 +28,7 @@
 #import "FRALineNumbers.h"
 #import "FRAProject.h"
 
-#import "ICUPattern.h"
-#import "ICUMatcher.h"
-#import "NSStringICUAdditions.h"
+#import <VAFoundation/VAFoundation.h>
 
 @implementation FRASyntaxColouring
 
@@ -38,16 +36,14 @@
 
 - (id)init
 {
-	if (!(self = [self initWithDocument:nil])) return nil;
-	
-	return self;
+    return [self initWithDocument: nil];
 }
 
 
 - (id)initWithDocument:(id)theDocument
 {
-	if (self = [super init]) {
-		
+	if ((self = [super init]))
+    {
 		document = theDocument;
 		firstLayoutManager = (FRALayoutManager *)[[document valueForKey:@"firstTextView"] layoutManager];
 		secondLayoutManager = nil;
@@ -210,14 +206,17 @@
 			
 			id item;
 			index = 0;
-			for (item in syntaxDefinitions) {
+			for (item in syntaxDefinitions)
+            {
 				NSString *name = [item valueForKey:@"name"];
-				if ([name isEqualToString:@"Standard"] || [name isEqualToString:@"None"] || [item valueForKey:@"extensions"] == nil) {
+				if ([name isEqualToString:@"Standard"] || [name isEqualToString:@"None"] || [item valueForKey:@"extensions"] == nil)
+                {
 					continue;
 				}
 				NSMutableString *extensionsString = [NSMutableString stringWithString:[item valueForKey:@"extensions"]];
 				[extensionsString replaceOccurrencesOfString:@"." withString:@"" options:NSLiteralSearch range:NSMakeRange(0, [extensionsString length])];
-				if ([[extensionsString componentsSeparatedByString:@" "] containsObject:lowercaseExtension]) {
+				if ([[extensionsString componentsSeparatedByString:@" "] containsObject:lowercaseExtension])
+                {
 					fileToUse = [item valueForKey:@"file"];
 					[document setValue:name forKey:@"syntaxDefinition"];
 					break;
@@ -239,46 +238,54 @@
 	NSDictionary *syntaxDictionary;
 	syntaxDictionary = [[NSDictionary alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:fileToUse ofType:@"plist" inDirectory:@"Syntax Definitions"]];
 	
-	if (!syntaxDictionary) { // If it can't find it in the bundle try in Application Support
+	if (!syntaxDictionary)
+    { // If it can't find it in the bundle try in Application Support
 		NSString *path = [[[[[NSHomeDirectory() stringByAppendingPathComponent:@"Library"] stringByAppendingPathComponent:@"Application Support"] stringByAppendingPathComponent:@"Fraise"] stringByAppendingPathComponent:fileToUse] stringByAppendingString:@".plist"];
 		syntaxDictionary = [[NSDictionary alloc] initWithContentsOfFile:path];
 	}
 	
-	if (!syntaxDictionary) {
-		syntaxDictionary = @{@"name": @"Standard", @"file": @"standard", @"extensions": [NSString string]}; // If it can't find a syntax file use Standard
+	if (!syntaxDictionary)
+    {
+		syntaxDictionary = @{@"name": @"Standard", @"file": @"standard", @"extensions": @""}; // If it can't find a syntax file use Standard
 	}
 	
 	NSMutableArray *keywordsAndAutocompleteWordsTemporary = [NSMutableArray array];
 	
 	// If the plist file is malformed be sure to set the values to something
-	if ([syntaxDictionary valueForKey:@"keywords"]) {
-		keywords = [[NSSet alloc] initWithArray:[syntaxDictionary valueForKey:@"keywords"]];
-		[keywordsAndAutocompleteWordsTemporary addObjectsFromArray:[syntaxDictionary valueForKey:@"keywords"]];
+	if (syntaxDictionary[@"keywords"])
+    {
+		keywords = [[NSSet alloc] initWithArray:syntaxDictionary[@"keywords"]];
+		[keywordsAndAutocompleteWordsTemporary addObjectsFromArray:syntaxDictionary[@"keywords"]];
 	}
 	
-	if ([syntaxDictionary valueForKey:@"autocompleteWords"]) {
-		autocompleteWords = [[NSSet alloc] initWithArray:[syntaxDictionary valueForKey:@"autocompleteWords"]];
+	if (syntaxDictionary[@"autocompleteWords"]) {
+		autocompleteWords = [[NSSet alloc] initWithArray:syntaxDictionary[@"autocompleteWords"]];
 		
-		[keywordsAndAutocompleteWordsTemporary addObjectsFromArray:[syntaxDictionary valueForKey:@"autocompleteWords"]];
+		[keywordsAndAutocompleteWordsTemporary addObjectsFromArray:syntaxDictionary[@"autocompleteWords"]];
 	}
 	
-	if ([[FRADefaults valueForKey:@"ColourAutocompleteWordsAsKeywords"] boolValue] == YES) {
+	if ([[FRADefaults valueForKey:@"ColourAutocompleteWordsAsKeywords"] boolValue] == YES)
+    {
 		keywords = [NSSet setWithArray:keywordsAndAutocompleteWordsTemporary];
 	}
 	
 	keywordsAndAutocompleteWords = [keywordsAndAutocompleteWordsTemporary sortedArrayUsingSelector:@selector(compare:)];
 	
-	if ([syntaxDictionary valueForKey:@"recolourKeywordIfAlreadyColoured"]) {
-		recolourKeywordIfAlreadyColoured = [[syntaxDictionary valueForKey:@"recolourKeywordIfAlreadyColoured"] boolValue];
+	if (syntaxDictionary[@"recolourKeywordIfAlreadyColoured"])
+    {
+		recolourKeywordIfAlreadyColoured = [syntaxDictionary[@"recolourKeywordIfAlreadyColoured"] boolValue];
 	}
 	
-	if ([syntaxDictionary valueForKey:@"keywordsCaseSensitive"]) {
-		keywordsCaseSensitive = [[syntaxDictionary valueForKey:@"keywordsCaseSensitive"] boolValue];
+	if (syntaxDictionary[@"keywordsCaseSensitive"])
+    {
+		keywordsCaseSensitive = [syntaxDictionary[@"keywordsCaseSensitive"] boolValue];
 	}
 	
-	if (keywordsCaseSensitive == NO) {
+	if (keywordsCaseSensitive == NO)
+    {
 		NSMutableArray *lowerCaseKeywords = [[NSMutableArray alloc] init];
-		for (id item in keywords) {
+		for (id item in keywords)
+        {
 			[lowerCaseKeywords addObject:[item lowercaseString]];
 		}
 		
@@ -286,129 +293,74 @@
 		keywords = lowerCaseKeywordsSet;
 	}
 	
-	if ([syntaxDictionary valueForKey:@"beginCommand"]) {
-		beginCommand = [syntaxDictionary valueForKey:@"beginCommand"];
-	} else {
-		beginCommand = @"";
-	}
-	
-	if ([syntaxDictionary valueForKey:@"endCommand"]) {
-		endCommand = [syntaxDictionary valueForKey:@"endCommand"];
-	} else {
-		endCommand = @"";
-	}
-	
-	if ([syntaxDictionary valueForKey:@"beginInstruction"])
+    beginCommand = syntaxDictionary[@"beginCommand"] ?: @"";
+    endCommand = syntaxDictionary[@"endCommand"] ?: @"";
+    beginInstruction = syntaxDictionary[@"beginInstruction"] ?: @"";
+    endInstruction = syntaxDictionary[@"endInstruction"] ?: @"";
+    
+	if (syntaxDictionary[@"beginVariable"])
     {
-		beginInstruction = [syntaxDictionary valueForKey:@"beginInstruction"];
-	} else
-    {
-        //beginInstruction:@"";
+		beginVariable = [NSCharacterSet characterSetWithCharactersInString:syntaxDictionary[@"beginVariable"]];
 	}
 	
-	if ([syntaxDictionary valueForKey:@"endInstruction"]) {
-		endInstruction = [syntaxDictionary valueForKey:@"endInstruction"];
-	} else {
-		endInstruction = @"";
-	}
-	
-	if ([syntaxDictionary valueForKey:@"beginVariable"]) {
-		beginVariable = [NSCharacterSet characterSetWithCharactersInString:[syntaxDictionary valueForKey:@"beginVariable"]];
-	}
-	
-	if ([syntaxDictionary valueForKey:@"endVariable"]) {
-		endVariable = [NSCharacterSet characterSetWithCharactersInString:[syntaxDictionary valueForKey:@"endVariable"]];
+	if (syntaxDictionary[@"endVariable"]) {
+		endVariable = [NSCharacterSet characterSetWithCharactersInString:syntaxDictionary[@"endVariable"]];
 	} else {
 		endVariable = [NSCharacterSet characterSetWithCharactersInString:@""];
 	}
 	
-	if ([syntaxDictionary valueForKey:@"firstString"]) {
-		firstString = [syntaxDictionary valueForKey:@"firstString"];
-		if (![[syntaxDictionary valueForKey:@"firstString"] isEqualToString:@""]) {
-			firstStringUnichar = [[syntaxDictionary valueForKey:@"firstString"] characterAtIndex:0];
+	if (syntaxDictionary[@"firstString"]) {
+		firstString = syntaxDictionary[@"firstString"];
+		if (![syntaxDictionary[@"firstString"] isEqualToString:@""]) {
+			firstStringUnichar = [syntaxDictionary[@"firstString"] characterAtIndex:0];
 		}
 	} else {
 		firstString = @"";
 	}
 	
-	if ([syntaxDictionary valueForKey:@"secondString"]) {
-		secondString = [syntaxDictionary valueForKey:@"secondString"];
-		if (![[syntaxDictionary valueForKey:@"secondString"] isEqualToString:@""]) {
-			secondStringUnichar = [[syntaxDictionary valueForKey:@"secondString"] characterAtIndex:0];
+	if (syntaxDictionary[@"secondString"]) {
+		secondString = syntaxDictionary[@"secondString"];
+		if (![syntaxDictionary[@"secondString"] isEqualToString:@""]) {
+			secondStringUnichar = [syntaxDictionary[@"secondString"] characterAtIndex:0];
 		}
 	} else {
 		secondString = @"";
 	}
 	
-	if ([syntaxDictionary valueForKey:@"firstSingleLineComment"]) {
-		firstSingleLineComment = [syntaxDictionary valueForKey:@"firstSingleLineComment"];
-	} else {
-		firstSingleLineComment = @"";
-	}
+    firstSingleLineComment = syntaxDictionary[@"firstSingleLineComment"] ?: @"";
+    secondSingleLineComment = syntaxDictionary[@"secondSingleLineComment"] ?: @"";
+    beginFirstMultiLineComment = syntaxDictionary[@"beginFirstMultiLineComment"] ?: @"";
 	
-	if ([syntaxDictionary valueForKey:@"secondSingleLineComment"]) {
-		secondSingleLineComment = [syntaxDictionary valueForKey:@"secondSingleLineComment"];
-	} else {
-		secondSingleLineComment = @"";
-	}
-	
-	if ([syntaxDictionary valueForKey:@"beginFirstMultiLineComment"]) {
-		beginFirstMultiLineComment = [syntaxDictionary valueForKey:@"beginFirstMultiLineComment"];
-	} else {
-		beginFirstMultiLineComment = @"";
-	}
-	
-	if ([syntaxDictionary valueForKey:@"endFirstMultiLineComment"]) {
-		endFirstMultiLineComment = [syntaxDictionary valueForKey:@"endFirstMultiLineComment"];
-	} else {
-		endFirstMultiLineComment = @"";
-	}
-	
-	if ([syntaxDictionary valueForKey:@"beginSecondMultiLineComment"]) {
-		beginSecondMultiLineComment = [syntaxDictionary valueForKey:@"beginSecondMultiLineComment"];
-	} else {
-		beginSecondMultiLineComment = @"";
-	}
-	
-	if ([syntaxDictionary valueForKey:@"endSecondMultiLineComment"]) {
-		endSecondMultiLineComment = [syntaxDictionary valueForKey:@"endSecondMultiLineComment"];
-	} else {
-		endSecondMultiLineComment = @"";
-	}
-	
-	if ([syntaxDictionary valueForKey:@"functionDefinition"]) {
-		self.functionDefinition = [syntaxDictionary valueForKey:@"functionDefinition"];
-	} else {
-		self.functionDefinition = @"";
-	}
-	
-	if ([syntaxDictionary valueForKey:@"removeFromFunction"]) {
-		self.removeFromFunction = [syntaxDictionary valueForKey:@"removeFromFunction"];
-	} else {
-		self.removeFromFunction = @"";
-	}
-	
-	if ([syntaxDictionary valueForKey:@"excludeFromKeywordStartCharacterSet"]) {
+    endFirstMultiLineComment = syntaxDictionary[@"endFirstMultiLineComment"] ?: @"";
+    beginSecondMultiLineComment = syntaxDictionary[@"beginSecondMultiLineComment"] ?: @"";
+    
+    endSecondMultiLineComment = syntaxDictionary[@"endSecondMultiLineComment"] ?: @"";
+    self.functionDefinition = syntaxDictionary[@"functionDefinition"] ?: @"";
+    
+    self.removeFromFunction = syntaxDictionary[@"removeFromFunction"] ?: @"";
+    
+	if (syntaxDictionary[@"excludeFromKeywordStartCharacterSet"])
+    {
 		NSMutableCharacterSet *temporaryCharacterSet = [keywordStartCharacterSet mutableCopy];
-		[temporaryCharacterSet removeCharactersInString:[syntaxDictionary valueForKey:@"excludeFromKeywordStartCharacterSet"]];
+		[temporaryCharacterSet removeCharactersInString:syntaxDictionary[@"excludeFromKeywordStartCharacterSet"]];
 		keywordStartCharacterSet = [temporaryCharacterSet copy];
 	}
 	
-	if ([syntaxDictionary valueForKey:@"excludeFromKeywordEndCharacterSet"]) {
+	if (syntaxDictionary[@"excludeFromKeywordEndCharacterSet"]) {
 		NSMutableCharacterSet *temporaryCharacterSet = [keywordEndCharacterSet mutableCopy];
-		[temporaryCharacterSet removeCharactersInString:[syntaxDictionary valueForKey:@"excludeFromKeywordEndCharacterSet"]];
+		[temporaryCharacterSet removeCharactersInString:syntaxDictionary[@"excludeFromKeywordEndCharacterSet"]];
 		keywordEndCharacterSet = [temporaryCharacterSet copy];
 	}
 	
-	if ([syntaxDictionary valueForKey:@"includeInKeywordStartCharacterSet"]) {
+	if (syntaxDictionary[@"includeInKeywordStartCharacterSet"]) {
 		NSMutableCharacterSet *temporaryCharacterSet = [keywordStartCharacterSet mutableCopy];
-		[temporaryCharacterSet addCharactersInString:[syntaxDictionary valueForKey:@"includeInKeywordStartCharacterSet"]];
+		[temporaryCharacterSet addCharactersInString:syntaxDictionary[@"includeInKeywordStartCharacterSet"]];
 		keywordStartCharacterSet = [temporaryCharacterSet copy];
 	}
 	
-	if ([syntaxDictionary valueForKey:@"includeInKeywordEndCharacterSet"]) {
+	if (syntaxDictionary[@"includeInKeywordEndCharacterSet"]) {
 		NSMutableCharacterSet *temporaryCharacterSet = [keywordEndCharacterSet mutableCopy];
-		[temporaryCharacterSet addCharactersInString:[syntaxDictionary valueForKey:@"includeInKeywordEndCharacterSet"]];
+		[temporaryCharacterSet addCharactersInString:syntaxDictionary[@"includeInKeywordEndCharacterSet"]];
 		keywordEndCharacterSet = [temporaryCharacterSet copy];
 	}
     
@@ -418,12 +370,14 @@
 
 - (void)prepareRegularExpressions
 {
-	if ([[FRADefaults valueForKey:@"ColourMultiLineStrings"] boolValue] == NO) {
+	if ([[FRADefaults valueForKey:@"ColourMultiLineStrings"] boolValue] == NO)
+    {
 		firstStringPattern = [[ICUPattern alloc] initWithString:[NSString stringWithFormat:@"\\W%@[^%@\\\\\\r\\n]*+(?:\\\\(?:.|$)[^%@\\\\\\r\\n]*+)*+%@", firstString, firstString, firstString, firstString]];
 		
 		secondStringPattern = [[ICUPattern alloc] initWithString:[NSString stringWithFormat:@"\\W%@[^%@\\\\\\r\\n]*+(?:\\\\(?:.|$)[^%@\\\\]*+)*+%@", secondString, secondString, secondString, secondString]];
         
-	} else {
+	} else
+    {
 		firstStringPattern = [[ICUPattern alloc] initWithString:[NSString stringWithFormat:@"\\W%@[^%@\\\\]*+(?:\\\\(?:.|$)[^%@\\\\]*+)*+%@", firstString, firstString, firstString, firstString]];
 		
 		secondStringPattern = [[ICUPattern alloc] initWithString:[NSString stringWithFormat:@"\\W%@[^%@\\\\]*+(?:\\\\(?:.|$)[^%@\\\\]*+)*+%@", secondString, secondString, secondString, secondString]];

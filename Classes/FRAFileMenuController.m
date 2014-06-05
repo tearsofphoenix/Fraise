@@ -30,28 +30,7 @@
 
 @implementation FRAFileMenuController
 
-
-static id sharedInstance = nil;
-
-+ (FRAFileMenuController *)sharedInstance
-{
-	if (sharedInstance == nil) {
-		sharedInstance = [[self alloc] init];
-	}
-	
-	return sharedInstance;
-}
-
-
-- (id)init
-{
-    if (sharedInstance == nil) {
-        sharedInstance = [super init];
-        
-    }
-    return sharedInstance;
-}
-
+VASingletonIMPDefault(FRAFileMenuController)
 
 - (IBAction)newAction:(id)sender
 {

@@ -29,29 +29,17 @@
 
 @implementation FRACommandsController
 
-static id sharedInstance = nil;
-
 @synthesize commandsTextView, commandsWindow, commandCollectionsArrayController, commandCollectionsTableView, commandsTableView, commandsArrayController;
 
-
-+ (FRACommandsController *)sharedInstance
-{
-	if (sharedInstance == nil) {
-		sharedInstance = [[self alloc] init];
-	}
-	
-	return sharedInstance;
-}
-
+VASingletonIMPDefault(FRACommandsController)
 
 - (id)init
 {
-    if (sharedInstance == nil) {
-        sharedInstance = [super init];
-		
+    if ((self = [super init]))
+    {
 		temporaryFilesArray = [[NSMutableArray alloc] init];
     }
-    return sharedInstance;
+    return self;
 }
 
 

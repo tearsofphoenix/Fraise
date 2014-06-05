@@ -24,33 +24,40 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (id)init
 {
-	if (!(self = [self initWithDocument:nil])) return nil;
-	
-	return self;
+    return [self initWithDocument: nil];
 }
 
 
 - (id)initWithDocument:(id)theDocument
 {
-	if (self = [super init]) {
-		
+	if (self = [super init])
+    {
 		document = theDocument;
 		zeroPoint = NSMakePoint(0, 0);
 		
-		attributes = @{NSFontAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextFont"]]};
+		attributes = @{ NSFontAttributeName : [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextFont"]]};
+        
 		NSUserDefaultsController *defaultsController = [NSUserDefaultsController sharedUserDefaultsController];
-		[defaultsController addObserver:self forKeyPath:@"values.TextFont" options:NSKeyValueObservingOptionNew context:@"TextFontChanged"];
+		[defaultsController addObserver: self
+                             forKeyPath: @"values.TextFont"
+                                options: NSKeyValueObservingOptionNew
+                                context: @"TextFontChanged"];
 	}
 	
     return self;
 }
 
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+- (void)observeValueForKeyPath: (NSString *)keyPath
+                      ofObject: (id)object
+                        change: (NSDictionary *)change
+                       context: (void *)context
 {
-	if ([(__bridge NSString *)context isEqualToString:@"TextFontChanged"]) {
+	if ([(__bridge NSString *)context isEqualToString:@"TextFontChanged"])
+    {
 		attributes = @{NSFontAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextFont"]]};
-	} else {
+	} else
+    {
 		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 	}
 }
@@ -58,25 +65,32 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (void)viewBoundsDidChange:(NSNotification *)notification
 {
-	if (notification != nil && [notification object] != nil && [[notification object] isKindOfClass:[NSClipView class]]) {
+	if (notification != nil && [notification object] != nil && [[notification object] isKindOfClass:[NSClipView class]])
+    {
 		[self updateLineNumbersForClipView:[notification object] checkWidth:YES recolour:YES];
 	}
 }
 
 
-- (void)updateLineNumbersCheckWidth:(BOOL)checkWidth recolour:(BOOL)recolour
+- (void)updateLineNumbersCheckWidth: (BOOL)checkWidth
+                           recolour: (BOOL)recolour
 {
-	[self updateLineNumbersForClipView:[[document valueForKey:@"firstTextScrollView"] contentView] checkWidth:checkWidth recolour:recolour];
+	[self updateLineNumbersForClipView: [[document valueForKey:@"firstTextScrollView"] contentView]
+                            checkWidth: checkWidth
+                              recolour: recolour];
 
-	if ([document valueForKey:@"secondTextScrollView"] != nil) {
+	if ([document valueForKey:@"secondTextScrollView"] != nil)
+    {
 		[self updateLineNumbersForClipView:[[document valueForKey:@"secondTextScrollView"] contentView] checkWidth:checkWidth recolour:recolour];
 	}
 	
-	if ([document valueForKey:@"singleDocumentWindow"] != nil) {
+	if ([document valueForKey:@"singleDocumentWindow"] != nil)
+    {
 		[self updateLineNumbersForClipView:[[document valueForKey:@"thirdTextScrollView"] contentView] checkWidth:checkWidth recolour:recolour];
 	}
 	
-	if ([document valueForKey:@"fourthTextScrollView"] != nil) {
+	if ([document valueForKey:@"fourthTextScrollView"] != nil)
+    {
 		[self updateLineNumbersForClipView:[[document valueForKey:@"fourthTextScrollView"] contentView] checkWidth:checkWidth recolour:recolour];
 	}
 }
@@ -86,8 +100,10 @@ Unless required by applicable law or agreed to in writing, software distributed 
 {
 	textView = [clipView documentView];
 	
-	if ([[document valueForKey:@"showLineNumberGutter"] boolValue] == NO || textView == nil) {
-		if (checkWidth == YES && recolour == YES) {
+	if ([[document valueForKey:@"showLineNumberGutter"] boolValue] == NO || textView == nil)
+    {
+		if (checkWidth == YES && recolour == YES)
+        {
 			[[document valueForKey:@"syntaxColouring"] pageRecolourTextView:textView];
 		}
 		return;
@@ -95,14 +111,18 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	
 	scrollView = (NSScrollView *)[clipView superview];
 	addToScrollPoint = 0;	
-	if (scrollView == [document valueForKey:@"firstTextScrollView"]) {
+	if (scrollView == [document valueForKey:@"firstTextScrollView"])
+    {
 		gutterScrollView = [document valueForKey:@"firstGutterScrollView"];
-	} else if (scrollView == [document valueForKey:@"secondTextScrollView"]) {
+	} else if (scrollView == [document valueForKey:@"secondTextScrollView"])
+    {
 		gutterScrollView = [document valueForKey:@"secondGutterScrollView"];
 		addToScrollPoint = [[FRACurrentProject secondContentViewNavigationBar] bounds].size.height;
-	} else if (scrollView == [document valueForKey:@"thirdTextScrollView"]) {
+	} else if (scrollView == [document valueForKey:@"thirdTextScrollView"])
+    {
 		gutterScrollView = [document valueForKey:@"thirdGutterScrollView"];
-	} else if (scrollView == [document valueForKey:@"fourthTextScrollView"]) {
+	} else if (scrollView == [document valueForKey:@"fourthTextScrollView"])
+    {
 		gutterScrollView = [document valueForKey:@"fourthGutterScrollView"];
 	} else {
 		return;
@@ -122,15 +142,18 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	maxRangeVisibleRange = NSMaxRange([textString lineRangeForRange:NSMakeRange(NSMaxRange(visibleRange), 0)]); // Set it to just after the last glyph on the last visible line 
 	numberOfGlyphsInTextString = [layoutManager numberOfGlyphs];
 	oneMoreTime = NO;
-	if (numberOfGlyphsInTextString != 0) {
+	if (numberOfGlyphsInTextString != 0)
+    {
 		lastGlyph = [textString characterAtIndex:numberOfGlyphsInTextString - 1];
 		if (lastGlyph == '\n' || lastGlyph == '\r') {
 			oneMoreTime = YES; // Continue one more time through the loop if the last glyph isn't newline
 		}
 	}
-	NSMutableString *lineNumbersString = [[NSMutableString alloc] init];
 	
-	while (indexNonWrap <= maxRangeVisibleRange) {
+    NSMutableString *lineNumbersString = [[NSMutableString alloc] init];
+	
+	while (indexNonWrap <= maxRangeVisibleRange)
+    {
 		if (index == indexNonWrap) {
 			lineNumber++;
 			[lineNumbersString appendFormat:@"%ld\n", lineNumber];
@@ -170,15 +193,19 @@ Unless required by applicable law or agreed to in writing, software distributed 
 		}
 	}
 	
-	if (recolour == YES) {
+	if (recolour == YES)
+    {
 		[[document valueForKey:@"syntaxColouring"] pageRecolourTextView:textView];
 	}
 	
 	[[gutterScrollView documentView] setString:lineNumbersString];
 	
+    NSLog(@"%s %@ %@", __FUNCTION__, [clipView superview], NSStringFromRect([[clipView superview] frame]));
+    
 	[[gutterScrollView contentView] setBoundsOrigin:zeroPoint]; // To avert an occasional bug which makes the line numbers disappear
 	currentLineHeight = (NSInteger)[textView lineHeight];
-	if ((NSInteger)visibleRect.origin.y != 0 && currentLineHeight != 0) {
+	if ((NSInteger)visibleRect.origin.y != 0 && currentLineHeight != 0)
+    {
 		[[gutterScrollView contentView] scrollToPoint:NSMakePoint(0, ((NSInteger)visibleRect.origin.y % currentLineHeight) + addToScrollPoint)]; // Move currentGutterScrollView so it aligns with the rows in currentTextView
 	}
 }

@@ -24,9 +24,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 @implementation FRATableView
 
-
-
-
 - (void)keyDown:(NSEvent *)event
 {
 	if (self == [[FRACommandsController sharedInstance] commandCollectionsTableView] || self == [[FRACommandsController sharedInstance] commandsTableView] || self == [[FRASnippetsController sharedInstance] snippetCollectionsTableView] || self == [[FRASnippetsController sharedInstance] snippetsTableView] || self == [FRACurrentProject documentsTableView]) {

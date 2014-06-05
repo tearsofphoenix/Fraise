@@ -18,6 +18,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRABasicPerformer.h"
 #import "FRAApplicationDelegate.h"
 #import "FRAToolsMenuController.h"
+#import <VAFoundation/VAFoundation.h>
 
 @implementation FRACommandManagedObject
 
@@ -26,7 +27,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 {
 	[super awakeFromInsert];
 	
-	[self setValue:[FRABasic createUUID] forKey:@"uuid"];
+	[self setValue: [NSString UUIDString]
+            forKey: @"uuid"];
 }
 
 - (void)didChangeValueForKey:(NSString *)key

@@ -23,26 +23,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 @synthesize previewWindow;
 
-static id sharedInstance = nil;
-
-+ (FRAPreviewController *)sharedInstance
-{ 
-	if (sharedInstance == nil) { 
-		sharedInstance = [[self alloc] init];
-	}
-	
-	return sharedInstance; 
-} 
-
-
-- (id)init 
-{
-    if (sharedInstance == nil) {
-        sharedInstance = [super init];
-    }
-    return sharedInstance;
-}
-
+VASingletonIMPDefault(FRAPreviewController)
 
 - (void)showPreviewWindow
 {	
