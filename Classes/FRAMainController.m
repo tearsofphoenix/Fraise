@@ -21,7 +21,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRATextMenuController.h"
 #import "FRABasicPerformer.h"
 #import "FRAVariousPerformer.h"
-#import "FRAFontTransformer.h"
+
+#import <VAFoundation/VAFoundation.h>
 
 @implementation FRAMainController
 
@@ -57,7 +58,7 @@ VASingletonIMPDefault(FRAMainController)
 	
 	[[FRAPreferencesController sharedInstance] setDefaults];	
 	
-	FRAFontTransformer *fontTransformer = [[FRAFontTransformer alloc] init];
+	VAFontTransformer *fontTransformer = [[VAFontTransformer alloc] init];
     [NSValueTransformer setValueTransformer: fontTransformer
                                     forName: @"FontTransformer"];
 	

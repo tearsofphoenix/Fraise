@@ -17,21 +17,6 @@
     [self setImage:_usualImage];
 }
 
-- (NSImage *)usualImage
-{
-    return _usualImage;
-}
-
-- (void)setRolloverImage:(NSImage *)newImage
-{
-    _rolloverImage = newImage;
-}
-
-- (NSImage *)rolloverImage
-{
-    return _rolloverImage;
-}
-
 - (void)addTrackingRect
 {
     // assign a tracking rect to watch for mouse enter/exit

@@ -10,18 +10,14 @@
 
 @interface PSMRolloverButton : NSButton
 {
-    NSImage             *_rolloverImage;
-    NSImage             *_usualImage;
     NSTrackingRectTag   _myTrackingRectTag;
 }
 
 // the regular image
-- (void)setUsualImage:(NSImage *)newImage;
-- (NSImage *)usualImage;
+@property (nonatomic, strong) NSImage *usualImage;
 
 // the rollover image
-- (void)setRolloverImage:(NSImage *)newImage;
-- (NSImage *)rolloverImage;
+@property (strong) NSImage *rolloverImage;
 
 // tracking rect for mouse events
 - (void)addTrackingRect;

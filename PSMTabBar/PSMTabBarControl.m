@@ -16,7 +16,8 @@
 
 #import "FRAOpenSavePerformer.h"
 
-@interface PSMTabBarControl (Private)
+@interface PSMTabBarControl ()<NSTabViewDelegate>
+
 // characteristics
 - (CGFloat)availableCellWidth;
 - (NSRect)genericCellRect;
@@ -24,9 +25,8 @@
     // constructor/destructor
 - (void)initAddedProperties;
 
-    // accessors
-- (NSEvent *)lastMouseDownEvent;
-- (void)setLastMouseDownEvent:(NSEvent *)event;
+ // keep this for dragging reference
+@property (strong) NSEvent *lastMouseDownEvent;
 
     // contents
 - (void)addTabViewItem:(NSTabViewItem *)item;
@@ -44,16 +44,6 @@
 - (void)windowDidMove:(NSNotification *)aNotification;
 - (void)windowStatusDidChange:(NSNotification *)notification;
 
-    // NSTabView delegate
-- (void)tabView:(NSTabView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem;
-- (BOOL)tabView:(NSTabView *)tabView shouldSelectTabViewItem:(NSTabViewItem *)tabViewItem;
-- (void)tabView:(NSTabView *)tabView willSelectTabViewItem:(NSTabViewItem *)tabViewItem;
-- (void)tabViewDidChangeNumberOfTabViewItems:(NSTabView *)tabView;
-
-    // archiving
-- (void)encodeWithCoder:(NSCoder *)aCoder;
-- (id)initWithCoder:(NSCoder *)aDecoder;
-
     // convenience
 - (id)cellForPoint:(NSPoint)point cellFrame:(NSRectPointer)outFrame;
 - (PSMTabBarCell *)lastVisibleTab;
@@ -62,6 +52,7 @@
 @end
 
 @implementation PSMTabBarControl
+
 #pragma mark -
 #pragma mark Characteristics
 + (NSBundle *)bundle;
@@ -168,7 +159,7 @@
 {
     // build cells from existing tab view items
     //NSArray *existingItems = [tabView tabViewItems];
-	NSArray *array = [NSArray arrayWithArray:[tabView tabViewItems]];
+	NSArray *array = [NSArray arrayWithArray:[_tabView tabViewItems]];
     NSTabViewItem *item;
     for(item in array){
         if(![[self representedTabViewItems] containsObject:item])
@@ -192,36 +183,6 @@
 - (NSMutableArray *)cells
 {
     return _cells;
-}
-
-- (NSEvent *)lastMouseDownEvent
-{
-    return _lastMouseDownEvent;
-}
-
-- (void)setLastMouseDownEvent:(NSEvent *)event
-{
-    _lastMouseDownEvent = event;
-}
-
-- (id)delegate
-{
-    return delegate;
-}
-
-- (void)setDelegate:(id)object
-{
-    delegate = object;
-}
-
-- (NSTabView *)tabView
-{
-    return tabView;
-}
-
-- (void)setTabView:(NSTabView *)view
-{
-    tabView = view;
 }
 
 - (id<PSMTabStyle>)style
@@ -270,32 +231,13 @@
     [self update];
 }
 
-- (BOOL)canCloseOnlyTab
-{
-    return _canCloseOnlyTab;
-}
-
 - (void)setCanCloseOnlyTab:(BOOL)value
 {
     _canCloseOnlyTab = value;
-    if ([_cells count] == 1) {
+    if ([_cells count] == 1)
+    {
         [self update];
     }
-}
-
-- (BOOL)allowsDragBetweenWindows
-{
-	return _allowsDragBetweenWindows;
-}
-
-- (void)setAllowsDragBetweenWindows:(BOOL)flag
-{
-	_allowsDragBetweenWindows = flag;
-}
-
-- (BOOL)hideForSingleTab
-{
-    return _hideForSingleTab;
 }
 
 - (void)setHideForSingleTab:(BOOL)value
@@ -304,20 +246,10 @@
     [self update];
 }
 
-- (BOOL)showAddTabButton
-{
-    return _showAddTabButton;
-}
-
 - (void)setShowAddTabButton:(BOOL)value
 {
     _showAddTabButton = value;
     [self update];
-}
-
-- (NSInteger)cellMinWidth
-{
-    return _cellMinWidth;
 }
 
 - (void)setCellMinWidth:(NSInteger)value
@@ -326,31 +258,16 @@
     [self update];
 }
 
-- (NSInteger)cellMaxWidth
-{
-    return _cellMaxWidth;
-}
-
 - (void)setCellMaxWidth:(NSInteger)value
 {
     _cellMaxWidth = value;
     [self update];
 }
 
-- (NSInteger)cellOptimumWidth
-{
-    return _cellOptimumWidth;
-}
-
 - (void)setCellOptimumWidth:(NSInteger)value
 {
     _cellOptimumWidth = value;
     [self update];
-}
-
-- (BOOL)sizeCellsToFit
-{
-    return _sizeCellsToFit;
 }
 
 - (void)setSizeCellsToFit:(BOOL)value
@@ -420,7 +337,7 @@
     // add to collection
     [_cells addObject:cell];
 
-    if([_cells count] == [tabView numberOfTabViewItems]){
+    if([_cells count] == [_tabView numberOfTabViewItems]){
         [self update]; // don't update unless all are accounted for!
     }
 }
@@ -485,16 +402,17 @@
     // current (original) values
     myOriginalHeight = [self frame].size.height;
     myOriginalY = [self frame].origin.y;
-    if(partnerView){
-        partnerOriginalHeight = [partnerView frame].size.height;
-        partnerOriginalY = [partnerView frame].origin.y;
+    if(_partnerView)
+    {
+        partnerOriginalHeight = [_partnerView frame].size.height;
+        partnerOriginalY = [_partnerView frame].origin.y;
     } else {
         partnerOriginalHeight = [[self window] frame].size.height;
         partnerOriginalY = [[self window] frame].origin.y;
     }
     
     // target values for partner
-    if(partnerView){
+    if(_partnerView){
         // above or below me?
         if((myOriginalY - 22) > partnerOriginalY){
             // partner is below me
@@ -559,10 +477,10 @@
     
     NSRect myNewFrame = NSMakeRect(myFrame.origin.x, myCurrentY, myFrame.size.width, myCurrentHeight);
     
-    if(partnerView){
+    if(_partnerView){
         // resize self and view
-        [partnerView setFrame:NSMakeRect([partnerView frame].origin.x, partnerCurrentY, [partnerView frame].size.width, partnerCurrentHeight)];
-        [partnerView setNeedsDisplay:YES];
+        [_partnerView setFrame:NSMakeRect([_partnerView frame].origin.x, partnerCurrentY, [_partnerView frame].size.width, partnerCurrentHeight)];
+        [_partnerView setNeedsDisplay:YES];
         [self setFrame:myNewFrame];
     } else {
         // resize self and window
@@ -579,16 +497,6 @@
         [self update];
     }
     [[self window] display];
-}
-
-- (id)partnerView
-{
-    return partnerView;
-}
-
-- (void)setPartnerView:(id)view
-{
-    partnerView = view;
 }
 
 #pragma mark -
@@ -610,7 +518,7 @@
     // this method handles all of the cell layout, and is called when something changes to require the refresh.  This method is not called during drag and drop; see the PSMTabDragAssistant's calculateDragAnimationForTabBar: method, which does layout in that case.
    
     // make sure all of our tabs are accounted for before updating
-    if ([tabView numberOfTabViewItems] != [_cells count]) {
+    if ([_tabView numberOfTabViewItems] != [_cells count]) {
         return;
     }
 
@@ -749,7 +657,7 @@
             [cell setEnabled:YES];
             
             // selected? set tab states...
-            if([[cell representedObject] isEqualTo:[tabView selectedTabViewItem]]){
+            if([[cell representedObject] isEqualTo:[_tabView selectedTabViewItem]]){
                 [cell setState:NSOnState];
                 tabState |= PSMTab_SelectedMask;
                 // previous cell
@@ -801,7 +709,7 @@
             [menuItem setRepresentedObject:[cell representedObject]];
             [cell setIsInOverflowMenu:YES];
             [[cell indicator] removeFromSuperview];
-            if ([[cell representedObject] isEqualTo:[tabView selectedTabViewItem]])
+            if ([[cell representedObject] isEqualTo:[_tabView selectedTabViewItem]])
                 [menuItem setState:NSOnState];
             if([cell hasIcon])
                 [menuItem setImage:[[(id)[[cell representedObject] identifier] content] icon]];
@@ -1018,7 +926,7 @@
 
 - (void)overflowMenuAction:(id)sender
 {
-    [tabView selectTabViewItem:[sender representedObject]];
+    [_tabView selectTabViewItem:[sender representedObject]];
     [self update];
 }
 
@@ -1028,7 +936,7 @@
         return;
     
     if(([self delegate]) && ([[self delegate] respondsToSelector:@selector(tabView:shouldCloseTabViewItem:)])){
-        if(![[self delegate] tabView:tabView shouldCloseTabViewItem:[sender representedObject]]){
+        if(![[self delegate] tabView:_tabView shouldCloseTabViewItem:[sender representedObject]]){
             // fix mouse downed close button
             [sender setCloseButtonPressed:NO];
             return;
@@ -1036,19 +944,19 @@
     }
     
     if(([self delegate]) && ([[self delegate] respondsToSelector:@selector(tabView:willCloseTabViewItem:)])){
-        [[self delegate] tabView:tabView willCloseTabViewItem:[sender representedObject]];
+        [[self delegate] tabView:_tabView willCloseTabViewItem:[sender representedObject]];
     }
     
-    [tabView removeTabViewItem:[sender representedObject]];
+    [_tabView removeTabViewItem:[sender representedObject]];
     
     if(([self delegate]) && ([[self delegate] respondsToSelector:@selector(tabView:didCloseTabViewItem:)])){
-        [[self delegate] tabView:tabView didCloseTabViewItem:[sender representedObject]];
+        [[self delegate] tabView:_tabView didCloseTabViewItem:[sender representedObject]];
     }
 }
 
 - (void)tabClick:(id)sender
 {
-    [tabView selectTabViewItem:[sender representedObject]];
+    [_tabView selectTabViewItem:[sender representedObject]];
     [self update];
 }
 
@@ -1100,19 +1008,19 @@
     if(_hideForSingleTab && ([_cells count] <= 1) && !_awakenedFromNib){
         // must adjust frames now before display
         NSRect myFrame = [self frame];
-        if(partnerView){
-            NSRect partnerFrame = [partnerView frame];
+        if(_partnerView){
+            NSRect partnerFrame = [_partnerView frame];
             // above or below me?
-            if(([self frame].origin.y - 22) > [partnerView frame].origin.y){
+            if(([self frame].origin.y - 22) > [_partnerView frame].origin.y){
                 // partner is below me
                 [self setFrame:NSMakeRect(myFrame.origin.x, myFrame.origin.y + 21, myFrame.size.width, myFrame.size.height - 21)];
-                [partnerView setFrame:NSMakeRect(partnerFrame.origin.x, partnerFrame.origin.y, partnerFrame.size.width, partnerFrame.size.height + 21)];
+                [_partnerView setFrame:NSMakeRect(partnerFrame.origin.x, partnerFrame.origin.y, partnerFrame.size.width, partnerFrame.size.height + 21)];
             } else {
                 // partner is above me
                 [self setFrame:NSMakeRect(myFrame.origin.x, myFrame.origin.y, myFrame.size.width, myFrame.size.height - 21)];
-                [partnerView setFrame:NSMakeRect(partnerFrame.origin.x, partnerFrame.origin.y - 21, partnerFrame.size.width, partnerFrame.size.height + 21)];
+                [_partnerView setFrame:NSMakeRect(partnerFrame.origin.x, partnerFrame.origin.y - 21, partnerFrame.size.width, partnerFrame.size.height + 21)];
             }
-            [partnerView setNeedsDisplay:YES];
+            [_partnerView setNeedsDisplay:YES];
             [self setNeedsDisplay:YES];
         } else {
             // for window movement
@@ -1168,7 +1076,7 @@
 
 - (void)tabViewDidChangeNumberOfTabViewItems:(NSTabView *)aTabView
 {
-    NSArray *tabItems = [tabView tabViewItems];
+    NSArray *tabItems = [_tabView tabViewItems];
     // go through cells, remove any whose representedObjects are not in [tabView tabViewItems]
     PSMTabBarCell *cell;
 	NSArray *array = [NSArray arrayWithArray:_cells];

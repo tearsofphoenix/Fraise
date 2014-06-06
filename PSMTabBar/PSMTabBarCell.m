@@ -30,7 +30,7 @@
         [_indicator setStyle:NSProgressIndicatorSpinningStyle];
         [_indicator setAutoresizingMask:NSViewMinYMargin];
         _hasCloseButton = YES;
-        _isCloseButtonSuppressed = NO;
+        _closeButtonSuppressed = NO;
         _count = 0;
         _isPlaceholder = NO;
     }
@@ -52,7 +52,7 @@
         _closeButtonPressed = NO;
         _indicator = nil;
         _hasCloseButton = YES;
-        _isCloseButtonSuppressed = NO;
+        _closeButtonSuppressed = NO;
         _count = 0;
         
         if(value){
@@ -80,40 +80,10 @@
     // no retain release pattern, as this simply switches a tab to another view.
     _controlView = view;
 }
-
-- (NSTrackingRectTag)closeButtonTrackingTag
-{
-    return _closeButtonTrackingTag;
-}
-
-- (void)setCloseButtonTrackingTag:(NSTrackingRectTag)tag
-{
-    _closeButtonTrackingTag = tag;
-}
-
-- (NSTrackingRectTag)cellTrackingTag
-{
-    return _cellTrackingTag;
-}
-
-- (void)setCellTrackingTag:(NSTrackingRectTag)tag
-{
-    _cellTrackingTag = tag;
-}
-
+ 
 - (CGFloat)width
 {
     return _frame.size.width;
-}
-
-- (NSRect)frame
-{
-    return _frame;
-}
-
-- (void)setFrame:(NSRect)rect
-{
-    _frame = rect;
 }
 
 - (void)setStringValue:(NSString *)aString
@@ -134,74 +104,9 @@
     return [[(PSMTabBarControl *)_controlView style] attributedStringValueForTabCell:self];
 }
 
-- (NSInteger)tabState
-{
-    return _tabState;
-}
-
-- (void)setTabState:(NSInteger)state
-{
-    _tabState = state;
-}
-
 - (NSProgressIndicator *)indicator
 { 
     return _indicator;
-}
-
-- (BOOL)isInOverflowMenu
-{
-    return _isInOverflowMenu;
-}
-
-- (void)setIsInOverflowMenu:(BOOL)value
-{
-    _isInOverflowMenu = value;
-}
-
-- (BOOL)closeButtonPressed
-{
-    return _closeButtonPressed;
-}
-
-- (void)setCloseButtonPressed:(BOOL)value
-{
-    _closeButtonPressed = value;
-}
-
-- (BOOL)closeButtonOver
-{
-    return _closeButtonOver;
-}
-
-- (void)setCloseButtonOver:(BOOL)value
-{
-    _closeButtonOver = value;
-}
-
-- (BOOL)hasCloseButton
-{
-    return _hasCloseButton;
-}
-
-- (void)setHasCloseButton:(BOOL)set;
-{
-    _hasCloseButton = set;
-}
-
-- (void)setCloseButtonSuppressed:(BOOL)suppress;
-{
-    _isCloseButtonSuppressed = suppress;
-}
-
-- (BOOL)isCloseButtonSuppressed;
-{
-    return _isCloseButtonSuppressed;
-}
-
-- (BOOL)hasIcon
-{
-    return _hasIcon;
 }
 
 - (void)setHasIcon:(BOOL)value
@@ -210,30 +115,11 @@
     [_controlView update]; // binding notice is too fast
 }
 
-- (NSInteger)count
-{
-    return _count;
-}
 
 - (void)setCount:(NSInteger)value
 {
     _count = value;
     [_controlView update]; // binding notice is too fast
-}
-
-- (BOOL)isPlaceholder
-{
-    return _isPlaceholder;
-}
-
-- (void)setIsPlaceholder:(BOOL)value;
-{
-    _isPlaceholder = value;
-}
-
-- (NSInteger)currentStep
-{
-    return _currentStep;
 }
 
 - (void)setCurrentStep:(NSInteger)value
@@ -327,7 +213,7 @@
     [image addRepresentation:rep];
     NSImage *returnImage = [[NSImage alloc] initWithSize: size];
     [returnImage lockFocus];
-//    [image compositeToPoint:NSMakePoint(0.0, 0.0) operation:NSCompositeSourceOver fraction:0.7];
+
     [image drawAtPoint: NSMakePoint(0.0, 0.0)
               fromRect: NSMakeRect(0, 0, size.width, size.height)
              operation: NSCompositeSourceOver
@@ -366,7 +252,7 @@
         [aCoder encodeObject:_indicator forKey:@"indicator"];
         [aCoder encodeBool:_isInOverflowMenu forKey:@"isInOverflowMenu"];
         [aCoder encodeBool:_hasCloseButton forKey:@"hasCloseButton"];
-        [aCoder encodeBool:_isCloseButtonSuppressed forKey:@"isCloseButtonSuppressed"];
+        [aCoder encodeBool:_closeButtonSuppressed forKey:@"isCloseButtonSuppressed"];
         [aCoder encodeBool:_hasIcon forKey:@"hasIcon"];
         [aCoder encodeInteger:_count forKey:@"count"];
     }
@@ -389,7 +275,7 @@
             _indicator = [aDecoder decodeObjectForKey:@"indicator"];
             _isInOverflowMenu = [aDecoder decodeBoolForKey:@"isInOverflowMenu"];
             _hasCloseButton = [aDecoder decodeBoolForKey:@"hasCloseButton"];
-            _isCloseButtonSuppressed = [aDecoder decodeBoolForKey:@"isCloseButtonSuppressed"];
+            _closeButtonSuppressed = [aDecoder decodeBoolForKey:@"isCloseButtonSuppressed"];
             _hasIcon = [aDecoder decodeBoolForKey:@"hasIcon"];
             _count = [aDecoder decodeIntegerForKey:@"count"];
         }

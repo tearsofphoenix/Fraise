@@ -18,39 +18,27 @@
 #define kPSMTabDragAnimationSteps 8
 #define PI 3.1417
 
-@interface PSMTabDragAssistant : NSObject {
-    PSMTabBarControl            *_sourceTabBar;
-    PSMTabBarControl            *_destinationTabBar;
+@interface PSMTabDragAssistant : NSObject
+{
     NSMutableSet                *_participatingTabBars;
-    PSMTabBarCell               *_draggedCell;
-    NSInteger                         _draggedCellIndex;   // for snap back
-    BOOL                        _isDragging;
     
     // Animation
     NSTimer                     *_animationTimer;
     NSMutableArray              *_sineCurveWidths;
-    NSPoint                     _currentMouseLoc;
-    PSMTabBarCell               *_targetCell;
 }
 
 // Creation/destruction
 + (PSMTabDragAssistant *)sharedDragAssistant;
 
 // Accessors
-- (PSMTabBarControl *)sourceTabBar;
-- (void)setSourceTabBar:(PSMTabBarControl *)tabBar;
-- (PSMTabBarControl *)destinationTabBar;
-- (void)setDestinationTabBar:(PSMTabBarControl *)tabBar;
-- (PSMTabBarCell *)draggedCell;
-- (void)setDraggedCell:(PSMTabBarCell *)cell;
-- (NSInteger)draggedCellIndex;
-- (void)setDraggedCellIndex:(NSInteger)value;
-- (BOOL)isDragging;
-- (void)setIsDragging:(BOOL)value;
-- (NSPoint)currentMouseLoc;
-- (void)setCurrentMouseLoc:(NSPoint)point;
-- (PSMTabBarCell *)targetCell;
-- (void)setTargetCell:(PSMTabBarCell *)cell;
+
+@property (strong) PSMTabBarControl *sourceTabBar;
+@property (strong) PSMTabBarControl *destinationTabBar;
+@property (strong) PSMTabBarCell *draggedCell;
+@property NSInteger draggedCellIndex; // for snap back
+@property BOOL isDragging;
+@property NSPoint currentMouseLoc;
+@property (strong) PSMTabBarCell *targetCell;
 
 // Functionality
 - (void)startDraggingCell:(PSMTabBarCell *)cell fromTabBar:(PSMTabBarControl *)control withMouseDownEvent:(NSEvent *)event;

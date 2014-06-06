@@ -11,3 +11,4 @@
 #import <VAFoundation/ICUMatcher.h>
 #import <VAFoundation/ICUPattern.h>
 #import <VAFoundation/NSStringICUAdditions.h>
+#import <VAFoundation/VAFontTransformer.h>

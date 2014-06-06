@@ -42,7 +42,7 @@
     if([self isFlipped]) {
         rect.origin.y += imageSize.height;
     }
-//    [image compositeToPoint:rect.origin operation:NSCompositeSourceOver];
+
     [image drawAtPoint: rect.origin
               fromRect: rect
              operation: NSCompositeSourceOver

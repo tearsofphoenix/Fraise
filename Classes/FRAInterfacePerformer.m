@@ -479,18 +479,29 @@ VASingletonIMPDefault(FRAInterfacePerformer)
 - (NSString *)whichDirectoryForOpen
 {
 	NSString *directory;
-	if ([[FRADefaults valueForKey:@"OpenMatrix"] integerValue] == FRAOpenSaveRemember) {
+	
+    if ([[FRADefaults valueForKey:@"OpenMatrix"] integerValue] == FRAOpenSaveRemember)
+    {
 		directory = [FRADefaults valueForKey:@"LastOpenDirectory"];
-	} else if ([[FRADefaults valueForKey:@"OpenMatrix"] integerValue] == FRAOpenSaveCurrent) {
-		if ([FRACurrentProject areThereAnyDocuments] == YES) {
+	} else if ([[FRADefaults valueForKey:@"OpenMatrix"] integerValue] == FRAOpenSaveCurrent)
+    {
+		if ([FRACurrentProject areThereAnyDocuments] == YES)
+        {
 			directory = [[FRACurrentDocument valueForKey:@"path"] stringByDeletingLastPathComponent]; 
-		} else { 
+		} else
+        {
 			directory = NSHomeDirectory();
 		}
-	} else {
+	} else
+    {
 		directory = [FRADefaults valueForKey:@"OpenAlwaysUseTextField"];
 	}
 	
+    if (!directory)
+    {
+        directory = NSHomeDirectory();
+    }
+    
 	return [directory stringByExpandingTildeInPath];
 }
 

@@ -7,8 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6044808D1940A53A000E1820 /* VADefaults.h in Headers */ = {isa = PBXBuildFile; fileRef = 6044808B1940A53A000E1820 /* VADefaults.h */; };
+		6044808D1940A53A000E1820 /* VADefaults.h in Headers */ = {isa = PBXBuildFile; fileRef = 6044808B1940A53A000E1820 /* VADefaults.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6044808E1940A53A000E1820 /* VADefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 6044808C1940A53A000E1820 /* VADefaults.m */; };
+		604589861942021F0004DF6B /* VAGradientView.h in Headers */ = {isa = PBXBuildFile; fileRef = 604589841942021F0004DF6B /* VAGradientView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		604589871942021F0004DF6B /* VAGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = 604589851942021F0004DF6B /* VAGradientView.m */; };
+		6045898B194209090004DF6B /* VAEmptyView.h in Headers */ = {isa = PBXBuildFile; fileRef = 60458989194209090004DF6B /* VAEmptyView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6045898C194209090004DF6B /* VAEmptyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6045898A194209090004DF6B /* VAEmptyView.m */; };
 		92A1FEB8194057C20090870B /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A1FEB7194057C20090870B /* Cocoa.framework */; };
 		92A1FEC2194057C20090870B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 92A1FEC0194057C20090870B /* InfoPlist.strings */; };
 		92A1FECD194057C20090870B /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A1FECC194057C20090870B /* XCTest.framework */; };
@@ -62,6 +66,10 @@
 		6044808B1940A53A000E1820 /* VADefaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VADefaults.h; sourceTree = "<group>"; };
 		6044808C1940A53A000E1820 /* VADefaults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VADefaults.m; sourceTree = "<group>"; };
 		604480911940A646000E1820 /* VAFoundation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = VAFoundation.xcodeproj; path = ../VAFoundation/VAFoundation.xcodeproj; sourceTree = "<group>"; };
+		604589841942021F0004DF6B /* VAGradientView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VAGradientView.h; sourceTree = "<group>"; };
+		604589851942021F0004DF6B /* VAGradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VAGradientView.m; sourceTree = "<group>"; };
+		60458989194209090004DF6B /* VAEmptyView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VAEmptyView.h; sourceTree = "<group>"; };
+		6045898A194209090004DF6B /* VAEmptyView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VAEmptyView.m; sourceTree = "<group>"; };
 		92A1FEB4194057C20090870B /* VADevUIKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = VADevUIKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		92A1FEB7194057C20090870B /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		92A1FEBA194057C20090870B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -169,6 +177,10 @@
 				6044808C1940A53A000E1820 /* VADefaults.m */,
 				92A1FF4C194065BC0090870B /* VAGutterTextView.h */,
 				92A1FF4D194065BC0090870B /* VAGutterTextView.m */,
+				604589841942021F0004DF6B /* VAGradientView.h */,
+				604589851942021F0004DF6B /* VAGradientView.m */,
+				60458989194209090004DF6B /* VAEmptyView.h */,
+				6045898A194209090004DF6B /* VAEmptyView.m */,
 				92A1FEBE194057C20090870B /* Supporting Files */,
 			);
 			path = VADevUIKit;
@@ -231,7 +243,9 @@
 				92A1FF51194067730090870B /* VADevUIKitNotifications.h in Headers */,
 				92A1FF4E194065BC0090870B /* VAGutterTextView.h in Headers */,
 				92A1FF47194060990090870B /* NSImage+Fraise.h in Headers */,
+				604589861942021F0004DF6B /* VAGradientView.h in Headers */,
 				6044808D1940A53A000E1820 /* VADefaults.h in Headers */,
+				6045898B194209090004DF6B /* VAEmptyView.h in Headers */,
 				92A1FF4B194060BF0090870B /* VADevUIKit.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -360,6 +374,8 @@
 				92A1FF53194067FD0090870B /* VADevUIKitNotifications.m in Sources */,
 				6044808E1940A53A000E1820 /* VADefaults.m in Sources */,
 				92A1FF4F194065BC0090870B /* VAGutterTextView.m in Sources */,
+				604589871942021F0004DF6B /* VAGradientView.m in Sources */,
+				6045898C194209090004DF6B /* VAEmptyView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

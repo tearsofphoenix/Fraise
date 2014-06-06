@@ -39,71 +39,52 @@ enum {
     PSMTab_PositionSingleMask		= 1 << 7
 };
 
-@interface PSMTabBarControl : NSControl {
-    
+@interface PSMTabBarControl : NSControl
+{
     // control basics
     NSMutableArray              *_cells;                    // the cells that draw the tabs
-    IBOutlet NSTabView          *tabView;                   // the tab view being navigated
     PSMOverflowPopUpButton      *_overflowPopUpButton;      // for too many tabs
     PSMRolloverButton           *_addTabButton;
     
     // drawing style
     id<PSMTabStyle>             style;
-    BOOL                        _canCloseOnlyTab;
-    BOOL                        _hideForSingleTab;
-    BOOL                        _showAddTabButton;
-    BOOL                        _sizeCellsToFit;
     
-    // cell width
-    NSInteger                         _cellMinWidth;
-    NSInteger                         _cellMaxWidth;
-    NSInteger                         _cellOptimumWidth;
     
     // animation for hide/show
     NSInteger                         _currentStep;
     BOOL                        _isHidden;
     BOOL                        _hideIndicators;
-    IBOutlet id                 partnerView;                // gets resized when hide/show
-    BOOL                        _awakenedFromNib;
-    
-    // drag and drop
-    NSEvent                     *_lastMouseDownEvent;      // keep this for dragging reference   
-    BOOL			_allowsDragBetweenWindows;
-    
-    // MVC help
-    IBOutlet id                 delegate;
+    BOOL                        _awakenedFromNib;    
 }
 
 // control characteristics
 + (NSBundle *)bundle;
 
 // control configuration
-- (BOOL)canCloseOnlyTab;
-- (void)setCanCloseOnlyTab:(BOOL)value;
-- (NSString *)styleName;
-- (void)setStyleNamed:(NSString *)name;
-- (BOOL)hideForSingleTab;
-- (void)setHideForSingleTab:(BOOL)value;
-- (BOOL)showAddTabButton;
-- (void)setShowAddTabButton:(BOOL)value;
-- (NSInteger)cellMinWidth;
-- (void)setCellMinWidth:(NSInteger)value;
-- (NSInteger)cellMaxWidth;
-- (void)setCellMaxWidth:(NSInteger)value;
-- (NSInteger)cellOptimumWidth;
-- (void)setCellOptimumWidth:(NSInteger)value;
-- (BOOL)sizeCellsToFit;
-- (void)setSizeCellsToFit:(BOOL)value;
-- (BOOL)allowsDragBetweenWindows;
-- (void)setAllowsDragBetweenWindows:(BOOL)flag;
+@property (nonatomic) BOOL canCloseOnlyTab;
 
-// accessors
-- (NSTabView *)tabView;
-- (void)setTabView:(NSTabView *)view;
-- (id)delegate;
-- (void)setDelegate:(id)object;
-- (id)partnerView;
-- (void)setPartnerView:(id)view;
+@property (nonatomic, getter = styleName, strong) NSString * styleNamed;
+
+@property (nonatomic) BOOL hideForSingleTab;
+
+@property (nonatomic) BOOL showAddTabButton;
+
+@property (nonatomic) NSInteger cellMinWidth;
+
+@property (nonatomic) NSInteger cellMaxWidth;
+
+@property (nonatomic) NSInteger cellOptimumWidth;
+
+@property (nonatomic) BOOL sizeCellsToFit;
+@property (nonatomic) BOOL allowsDragBetweenWindows;
+
+// the tab view being navigated
+@property (assign) IBOutlet NSTabView *tabView;
+
+@property (assign) IBOutlet id delegate;
+
+// gets resized when hide/show
+@property (assign) IBOutlet id partnerView;
 
 // the buttons
 - (PSMRolloverButton *)addTabButton;

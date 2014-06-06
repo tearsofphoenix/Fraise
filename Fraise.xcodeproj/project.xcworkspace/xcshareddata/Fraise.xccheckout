@@ -12,6 +12,8 @@
 	<dict>
 		<key>708E8C03-1DAB-48E2-8378-CC3A320D0AF2</key>
 		<string>https://github.com/tearsofphoenix/Fraise.git</string>
+		<key>E7101F04-A78A-440D-A633-4C7583B5E7B6</key>
+		<string>https://github.com/veritas-shine/bwtoolkit.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>Fraise.xcodeproj/project.xcworkspace</string>
@@ -19,6 +21,8 @@
 	<dict>
 		<key>708E8C03-1DAB-48E2-8378-CC3A320D0AF2</key>
 		<string>../..</string>
+		<key>E7101F04-A78A-440D-A633-4C7583B5E7B6</key>
+		<string>../../bwtoolkit</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>https://github.com/tearsofphoenix/Fraise.git</string>
@@ -28,6 +32,14 @@
 	<string>708E8C03-1DAB-48E2-8378-CC3A320D0AF2</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>E7101F04-A78A-440D-A633-4C7583B5E7B6</string>
+			<key>IDESourceControlWCCName</key>
+			<string>bwtoolkit</string>
+		</dict>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>

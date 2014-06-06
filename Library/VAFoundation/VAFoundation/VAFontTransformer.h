@@ -15,6 +15,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import <Cocoa/Cocoa.h>
 
 
-@interface FRAFontTransformer : NSValueTransformer
+@interface VAFontTransformer : NSValueTransformer
 
 @end

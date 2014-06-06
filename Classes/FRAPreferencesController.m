@@ -42,6 +42,8 @@ VASingletonIMPDefault(FRAPreferencesController)
     if ((self = [super init]))
     {
 		hasPreparedAdvancedInterface = NO;
+        
+        [VAEmptyView setDummyImage: [NSImage imageNamed: @"FRAMainIcon.icns"]];
     }
     return self;
 }

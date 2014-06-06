@@ -9,14 +9,11 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface PSMOverflowPopUpButton : NSPopUpButton {
+@interface PSMOverflowPopUpButton : NSPopUpButton<NSCoding>
+{
     NSImage         *_PSMTabBarOverflowPopUpImage;
     NSImage         *_PSMTabBarOverflowDownPopUpImage;
     BOOL            _down;
 }
-
-// archiving
-- (void)encodeWithCoder:(NSCoder *)aCoder;
-- (id)initWithCoder:(NSCoder *)aDecoder;
-
+ 
 @end

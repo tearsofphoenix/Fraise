@@ -45,7 +45,7 @@
                         <tabViewItems>
                             <tabViewItem label="Tab" identifier="1" id="259">
                                 <view key="view" id="260">
-                                    <rect key="frame" x="10" y="19" width="497" height="0.0"/>
+                                    <rect key="frame" x="10" y="28" width="497" height="-19"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 </view>
                             </tabViewItem>
@@ -58,16 +58,16 @@
                         <rect key="frame" x="0.0" y="521" width="593" height="23"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                     </customView>
-                    <textField focusRingType="none" verticalHuggingPriority="750" id="63">
+                    <textField focusRingType="none" verticalHuggingPriority="750" id="63" customClass="BWStyledTextField">
                         <rect key="frame" x="0.0" y="-4" width="593" height="22"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" focusRingType="none" alignment="center" bezelStyle="round" id="288">
+                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" focusRingType="none" alignment="center" bezelStyle="round" id="288" customClass="BWStyledTextFieldCell">
                             <font key="font" metaFont="smallSystem"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <splitView autosaveName="ProjectSplitView" dividerStyle="thin" vertical="YES" id="228" customClass="FRASplitView">
+                    <splitView autosaveName="ProjectSplitView" dividerStyle="thin" vertical="YES" id="228" customClass="BWSplitView">
                         <rect key="frame" x="-1" y="22" width="595" height="500"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -75,15 +75,15 @@
                                 <rect key="frame" x="0.0" y="0.0" width="236" height="500"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </customView>
-                            <splitView autosaveName="ContentSplitView" id="174" customClass="FRASplitView">
+                            <splitView autosaveName="ContentSplitView" id="174" customClass="BWSplitView">
                                 <rect key="frame" x="237" y="0.0" width="358" height="500"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <subviews>
-                                    <customView id="172" customClass="FRADummyView">
+                                    <customView id="172" customClass="VAEmptyView">
                                         <rect key="frame" x="0.0" y="0.0" width="358" height="222"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     </customView>
-                                    <customView id="173" customClass="FRADummyView">
+                                    <customView id="173" customClass="VAEmptyView">
                                         <rect key="frame" x="0.0" y="231" width="358" height="269"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     </customView>
@@ -126,19 +126,19 @@
                 <binding destination="-2" name="contentObject" keyPath="project" id="100"/>
             </connections>
         </objectController>
-        <customView id="180" userLabel="SecondContentViewNavigationBar" customClass="FRAGradientBackgroundView">
+        <customView id="180" userLabel="SecondContentViewNavigationBar" customClass="VAGradientView">
             <rect key="frame" x="0.0" y="0.0" width="418" height="22"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
             <subviews>
-                <popUpButton verticalHuggingPriority="750" id="181">
+                <popUpButton verticalHuggingPriority="750" id="181" customClass="BWTransparentPopUpButton">
                     <rect key="frame" x="111" y="3" width="196" height="15"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES"/>
-                    <popUpButtonCell key="cell" type="push" title="&lt;do not localise>" bezelStyle="rounded" alignment="left" controlSize="mini" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="184" id="289">
+                    <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" controlSize="mini" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" id="289" customClass="BWTransparentPopUpButtonCell">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="miniSystem"/>
                         <menu key="menu" title="OtherViews" id="182">
                             <items>
-                                <menuItem title="&lt;do not localise>" state="on" id="184"/>
+                                <menuItem title="&lt;do not localise>" id="184"/>
                             </items>
                         </menu>
                     </popUpButtonCell>
@@ -149,7 +149,7 @@
             <rect key="frame" x="0.0" y="0.0" width="215" height="501"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="0.0" verticalLineScroll="19" verticalPageScroll="0.0" usesPredominantAxisScrolling="NO" id="190">
+                <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="0.0" verticalLineScroll="19" verticalPageScroll="0.0" usesPredominantAxisScrolling="NO" id="190" customClass="BWTransparentScrollView">
                     <rect key="frame" x="0.0" y="0.0" width="215" height="501"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <clipView key="contentView" id="WNw-20-wEX">
@@ -169,7 +169,7 @@
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.33333299" alpha="1" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
-                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="294">
+                                        <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="294" customClass="BWTransparentTableViewCell">
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -189,25 +189,25 @@
                         </subviews>
                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </clipView>
-                    <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="296">
+                    <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="296" customClass="BWTransparentScroller">
                         <rect key="frame" x="1" y="-30" width="198" height="15"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
-                    <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="295">
+                    <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="295" customClass="BWTransparentScroller">
                         <rect key="frame" x="-30" y="1" width="15" height="462"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
                 </scrollView>
             </subviews>
         </customView>
-        <customView id="230" userLabel="ViewSelectionView" customClass="FRAGradientBackgroundView">
+        <customView id="230" userLabel="ViewSelectionView" customClass="VAGradientView">
             <rect key="frame" x="0.0" y="0.0" width="224" height="22"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
             <subviews>
-                <slider verticalHuggingPriority="750" id="231">
+                <slider verticalHuggingPriority="750" id="231" customClass="BWTransparentSlider">
                     <rect key="frame" x="10" y="5" width="206" height="12"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
-                    <sliderCell key="cell" controlSize="mini" continuous="YES" alignment="left" minValue="16" maxValue="256" doubleValue="32" tickMarkPosition="above" sliderType="linear" id="293">
+                    <sliderCell key="cell" controlSize="mini" continuous="YES" alignment="left" minValue="16" maxValue="256" doubleValue="32" tickMarkPosition="above" sliderType="linear" id="293" customClass="BWTransparentSliderCell">
                         <font key="font" size="12" name="Helvetica"/>
                     </sliderCell>
                     <connections>

@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		604480901940A5D0000E1820 /* VABase.h in Headers */ = {isa = PBXBuildFile; fileRef = 6044808F1940A5D0000E1820 /* VABase.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6045898F19420A9C0004DF6B /* VAFontTransformer.h in Headers */ = {isa = PBXBuildFile; fileRef = 6045898D19420A9C0004DF6B /* VAFontTransformer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6045899019420A9C0004DF6B /* VAFontTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6045898E19420A9C0004DF6B /* VAFontTransformer.m */; };
 		92A1FE6D194055260090870B /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A1FE6C194055260090870B /* Cocoa.framework */; };
 		92A1FE77194055260090870B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 92A1FE75194055260090870B /* InfoPlist.strings */; };
 		92A1FE82194055260090870B /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A1FE81194055260090870B /* XCTest.framework */; };
@@ -40,6 +42,8 @@
 
 /* Begin PBXFileReference section */
 		6044808F1940A5D0000E1820 /* VABase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VABase.h; sourceTree = "<group>"; };
+		6045898D19420A9C0004DF6B /* VAFontTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VAFontTransformer.h; sourceTree = "<group>"; };
+		6045898E19420A9C0004DF6B /* VAFontTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VAFontTransformer.m; sourceTree = "<group>"; };
 		92A1FE69194055260090870B /* VAFoundation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = VAFoundation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		92A1FE6C194055260090870B /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		92A1FE6F194055260090870B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -134,6 +138,8 @@
 			children = (
 				92A1FEA41940556E0090870B /* Categories */,
 				92A1FE79194055260090870B /* VAFoundation.h */,
+				6045898D19420A9C0004DF6B /* VAFontTransformer.h */,
+				6045898E19420A9C0004DF6B /* VAFontTransformer.m */,
 				6044808F1940A5D0000E1820 /* VABase.h */,
 				92A1FE73194055260090870B /* Supporting Files */,
 			);
@@ -204,6 +210,7 @@
 				92A1FF2019405A100090870B /* ICUMatcher.h in Headers */,
 				92A1FF2119405A100090870B /* ICUPattern.h in Headers */,
 				604480901940A5D0000E1820 /* VABase.h in Headers */,
+				6045898F19420A9C0004DF6B /* VAFontTransformer.h in Headers */,
 				92A1FEA5194055C50090870B /* VAFoundation.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -307,6 +314,7 @@
 				92A1FF1A194058480090870B /* ICUPattern.m in Sources */,
 				92A1FF1D194058480090870B /* NSStringICUAdditions.m in Sources */,
 				92A1FF18194058480090870B /* ICUMatcher.m in Sources */,
+				6045899019420A9C0004DF6B /* VAFontTransformer.m in Sources */,
 				92A1FEA3194055650090870B /* NSString+VAExtensions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

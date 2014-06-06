@@ -25,7 +25,8 @@ static PSMTabDragAssistant *sharedDragAssistant = nil;
 
 + (PSMTabDragAssistant *)sharedDragAssistant
 {
-    if (!sharedDragAssistant){
+    if (!sharedDragAssistant)
+    {
         sharedDragAssistant = [[PSMTabDragAssistant alloc] init];
     }
     
@@ -46,80 +47,6 @@ static PSMTabDragAssistant *sharedDragAssistant = nil;
     }
     
     return self;
-}
-
-
-#pragma mark -
-#pragma mark Accessors
-
-- (PSMTabBarControl *)sourceTabBar
-{
-    return _sourceTabBar;
-}
-
-- (void)setSourceTabBar:(PSMTabBarControl *)tabBar
-{
-    _sourceTabBar = tabBar;
-}
-
-- (PSMTabBarControl *)destinationTabBar
-{
-    return _destinationTabBar;
-}
-
-- (void)setDestinationTabBar:(PSMTabBarControl *)tabBar
-{
-    _destinationTabBar = tabBar;
-}
-
-- (PSMTabBarCell *)draggedCell
-{
-    return _draggedCell;
-}
-
-- (void)setDraggedCell:(PSMTabBarCell *)cell
-{
-    _draggedCell = cell;
-}
-
-- (NSInteger)draggedCellIndex
-{
-    return _draggedCellIndex;
-}
-
-- (void)setDraggedCellIndex:(NSInteger)value
-{
-    _draggedCellIndex = value;
-}
-
-- (BOOL)isDragging
-{
-    return _isDragging;
-}
-
-- (void)setIsDragging:(BOOL)value
-{
-    _isDragging = value;
-}
-
-- (NSPoint)currentMouseLoc
-{
-    return _currentMouseLoc;
-}
-
-- (void)setCurrentMouseLoc:(NSPoint)point
-{
-    _currentMouseLoc = point;
-}
-
-- (PSMTabBarCell *)targetCell
-{
-    return _targetCell;
-}
-
-- (void)setTargetCell:(PSMTabBarCell *)cell
-{
-    _targetCell = cell;
 }
 
 #pragma mark -

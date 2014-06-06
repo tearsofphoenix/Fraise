@@ -135,8 +135,6 @@ typedef NSUInteger FRAErrors;
 #define COMMAND_RESULT_WINDOW_TITLE NSLocalizedStringFromTable(@"Command Result - Fraise", @"Localizable3", @"Command Result - Fraise")
 #define FILE_IS_UNWRITABLE_SAVE_STRING NSLocalizedStringFromTable(@"It seems as if the file is unwritable or that you do not have permission to save the file %@", @"Localizable3", @"It seems as if the file is unwritable or that you do not have permission to save the file %@")
 
-#define NO_DOCUMENT_SELECTED_STRING NSLocalizedString(@"No document selected", @"Indicate that no document is selected for the dummy view")
-
 #define SNIPPET_NAME_LENGTH 26
 
 #define ICON_MAX_SIZE 256.0

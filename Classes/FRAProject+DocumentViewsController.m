@@ -30,7 +30,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 {
 	[tabBarControl setTabView:tabBarTabView];
 	[tabBarControl setCanCloseOnlyTab:YES];
-	[tabBarControl setStyleNamed:@"Unified"];
+	[tabBarControl setStyleNamed: @"Unified"];
 	[tabBarControl setAllowsDragBetweenWindows:YES];
 	[tabBarControl setCellMinWidth:100];
 	[tabBarControl setCellMaxWidth:280];
