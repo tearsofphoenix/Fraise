@@ -33,7 +33,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRALineNumbers.h"
 #import "FRAPrintViewController.h"
 #import "FRAPrintTextView.h"
-#import "PSMTabBarControl.h"
 
 #import <VADevUIKit/VADevUIKit.h>
 

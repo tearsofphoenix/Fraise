@@ -7,12 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6044808D1940A53A000E1820 /* VADefaults.h in Headers */ = {isa = PBXBuildFile; fileRef = 6044808B1940A53A000E1820 /* VADefaults.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6044808E1940A53A000E1820 /* VADefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 6044808C1940A53A000E1820 /* VADefaults.m */; };
 		604589861942021F0004DF6B /* VAGradientView.h in Headers */ = {isa = PBXBuildFile; fileRef = 604589841942021F0004DF6B /* VAGradientView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		604589871942021F0004DF6B /* VAGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = 604589851942021F0004DF6B /* VAGradientView.m */; };
 		6045898B194209090004DF6B /* VAEmptyView.h in Headers */ = {isa = PBXBuildFile; fileRef = 60458989194209090004DF6B /* VAEmptyView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6045898C194209090004DF6B /* VAEmptyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6045898A194209090004DF6B /* VAEmptyView.m */; };
+		604589A0194222800004DF6B /* PSMOverflowPopUpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 60458993194222800004DF6B /* PSMOverflowPopUpButton.m */; };
+		604589A2194222800004DF6B /* PSMRolloverButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 60458995194222800004DF6B /* PSMRolloverButton.m */; };
+		604589A4194222800004DF6B /* PSMTabBarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 60458997194222800004DF6B /* PSMTabBarCell.m */; };
+		604589A5194222800004DF6B /* PSMTabBarControl.h in Headers */ = {isa = PBXBuildFile; fileRef = 60458998194222800004DF6B /* PSMTabBarControl.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		604589A6194222800004DF6B /* PSMTabBarControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 60458999194222800004DF6B /* PSMTabBarControl.m */; };
+		604589A8194222800004DF6B /* PSMTabDragAssistant.m in Sources */ = {isa = PBXBuildFile; fileRef = 6045899B194222800004DF6B /* PSMTabDragAssistant.m */; };
+		604589AB194222800004DF6B /* PSMUnifiedTabStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 6045899E194222800004DF6B /* PSMUnifiedTabStyle.m */; };
+		604589AC194229500004DF6B /* PSMTabBarCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 60458996194222800004DF6B /* PSMTabBarCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		92A1FEB8194057C20090870B /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A1FEB7194057C20090870B /* Cocoa.framework */; };
 		92A1FEC2194057C20090870B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 92A1FEC0194057C20090870B /* InfoPlist.strings */; };
 		92A1FECD194057C20090870B /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A1FECC194057C20090870B /* XCTest.framework */; };
@@ -70,6 +77,19 @@
 		604589851942021F0004DF6B /* VAGradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VAGradientView.m; sourceTree = "<group>"; };
 		60458989194209090004DF6B /* VAEmptyView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VAEmptyView.h; sourceTree = "<group>"; };
 		6045898A194209090004DF6B /* VAEmptyView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VAEmptyView.m; sourceTree = "<group>"; };
+		60458992194222800004DF6B /* PSMOverflowPopUpButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSMOverflowPopUpButton.h; sourceTree = "<group>"; };
+		60458993194222800004DF6B /* PSMOverflowPopUpButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSMOverflowPopUpButton.m; sourceTree = "<group>"; };
+		60458994194222800004DF6B /* PSMRolloverButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSMRolloverButton.h; sourceTree = "<group>"; };
+		60458995194222800004DF6B /* PSMRolloverButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSMRolloverButton.m; sourceTree = "<group>"; };
+		60458996194222800004DF6B /* PSMTabBarCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSMTabBarCell.h; sourceTree = "<group>"; };
+		60458997194222800004DF6B /* PSMTabBarCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSMTabBarCell.m; sourceTree = "<group>"; };
+		60458998194222800004DF6B /* PSMTabBarControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSMTabBarControl.h; sourceTree = "<group>"; };
+		60458999194222800004DF6B /* PSMTabBarControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSMTabBarControl.m; sourceTree = "<group>"; };
+		6045899A194222800004DF6B /* PSMTabDragAssistant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSMTabDragAssistant.h; sourceTree = "<group>"; };
+		6045899B194222800004DF6B /* PSMTabDragAssistant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSMTabDragAssistant.m; sourceTree = "<group>"; };
+		6045899C194222800004DF6B /* PSMTabStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSMTabStyle.h; sourceTree = "<group>"; };
+		6045899D194222800004DF6B /* PSMUnifiedTabStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSMUnifiedTabStyle.h; sourceTree = "<group>"; };
+		6045899E194222800004DF6B /* PSMUnifiedTabStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSMUnifiedTabStyle.m; sourceTree = "<group>"; };
 		92A1FEB4194057C20090870B /* VADevUIKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = VADevUIKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		92A1FEB7194057C20090870B /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		92A1FEBA194057C20090870B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -125,6 +145,26 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		60458991194222800004DF6B /* PSMTabBar */ = {
+			isa = PBXGroup;
+			children = (
+				60458992194222800004DF6B /* PSMOverflowPopUpButton.h */,
+				60458993194222800004DF6B /* PSMOverflowPopUpButton.m */,
+				60458994194222800004DF6B /* PSMRolloverButton.h */,
+				60458995194222800004DF6B /* PSMRolloverButton.m */,
+				60458996194222800004DF6B /* PSMTabBarCell.h */,
+				60458997194222800004DF6B /* PSMTabBarCell.m */,
+				60458998194222800004DF6B /* PSMTabBarControl.h */,
+				60458999194222800004DF6B /* PSMTabBarControl.m */,
+				6045899A194222800004DF6B /* PSMTabDragAssistant.h */,
+				6045899B194222800004DF6B /* PSMTabDragAssistant.m */,
+				6045899C194222800004DF6B /* PSMTabStyle.h */,
+				6045899D194222800004DF6B /* PSMUnifiedTabStyle.h */,
+				6045899E194222800004DF6B /* PSMUnifiedTabStyle.m */,
+			);
+			path = PSMTabBar;
+			sourceTree = "<group>";
+		};
 		92A1FEAA194057C20090870B = {
 			isa = PBXGroup;
 			children = (
@@ -168,6 +208,7 @@
 		92A1FEBD194057C20090870B /* VADevUIKit */ = {
 			isa = PBXGroup;
 			children = (
+				60458991194222800004DF6B /* PSMTabBar */,
 				92A1FF42194060900090870B /* Categories */,
 				92A1FF2219405AE50090870B /* External */,
 				92A1FEC4194057C20090870B /* VADevUIKit.h */,
@@ -243,9 +284,10 @@
 				92A1FF51194067730090870B /* VADevUIKitNotifications.h in Headers */,
 				92A1FF4E194065BC0090870B /* VAGutterTextView.h in Headers */,
 				92A1FF47194060990090870B /* NSImage+Fraise.h in Headers */,
+				604589A5194222800004DF6B /* PSMTabBarControl.h in Headers */,
 				604589861942021F0004DF6B /* VAGradientView.h in Headers */,
-				6044808D1940A53A000E1820 /* VADefaults.h in Headers */,
 				6045898B194209090004DF6B /* VAEmptyView.h in Headers */,
+				604589AC194229500004DF6B /* PSMTabBarCell.h in Headers */,
 				92A1FF4B194060BF0090870B /* VADevUIKit.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -370,12 +412,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				92A1FF48194060990090870B /* NSImage+Fraise.m in Sources */,
+				604589A6194222800004DF6B /* PSMTabBarControl.m in Sources */,
 				92A1FF4A194060990090870B /* NSToolbarItem+Fraise.m in Sources */,
+				604589A8194222800004DF6B /* PSMTabDragAssistant.m in Sources */,
 				92A1FF53194067FD0090870B /* VADevUIKitNotifications.m in Sources */,
 				6044808E1940A53A000E1820 /* VADefaults.m in Sources */,
+				604589A4194222800004DF6B /* PSMTabBarCell.m in Sources */,
+				604589AB194222800004DF6B /* PSMUnifiedTabStyle.m in Sources */,
+				604589A2194222800004DF6B /* PSMRolloverButton.m in Sources */,
 				92A1FF4F194065BC0090870B /* VAGutterTextView.m in Sources */,
 				604589871942021F0004DF6B /* VAGradientView.m in Sources */,
 				6045898C194209090004DF6B /* VAEmptyView.m in Sources */,
+				604589A0194222800004DF6B /* PSMOverflowPopUpButton.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

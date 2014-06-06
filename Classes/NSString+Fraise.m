@@ -44,7 +44,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	} else if (index == 7) {
 		[dateFormatter setDateStyle:NSDateFormatterFullStyle];
 		[dateFormatter setTimeStyle:NSDateFormatterFullStyle];
-	} else if (index == 8) {
+	} else if (index == 8)
+    {
 		[dateFormatter setDateFormat:[FRADefaults valueForKey:@"UserDateFormat"]];
 	} else {
 		[dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm"];

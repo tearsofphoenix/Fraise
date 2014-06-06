@@ -29,7 +29,8 @@
 @class PSMTabBarCell;
 @protocol PSMTabStyle;
 
-enum {
+enum
+{
     PSMTab_SelectedMask                 = 1 << 1,
     PSMTab_LeftIsSelectedMask		= 1 << 2,
     PSMTab_RightIsSelectedMask          = 1 << 3,
@@ -38,6 +39,20 @@ enum {
     PSMTab_PositionRightMask		= 1 << 6,
     PSMTab_PositionSingleMask		= 1 << 7
 };
+
+@class PSMTabBarControl;
+@class PSMTabBarCell;
+
+@protocol PSMTabBarControlDelegate <NSObject>
+
+- (void)tabBarControl: (PSMTabBarControl *)control
+concludeDragOperation: (id<NSDraggingInfo>)sender;
+
+- (void)tabBarControl: (PSMTabBarControl *)control
+performDragWithTarget: (PSMTabBarControl *)target
+           dragedCell: (PSMTabBarCell *)cell;
+
+@end
 
 @interface PSMTabBarControl : NSControl
 {
@@ -93,6 +108,18 @@ enum {
 
 // special effects
 - (void)hideTabBar:(BOOL)hide animate:(BOOL)animate;
+
+@end
+
+@interface PSMTabBarControl (StyleAccessors)
+
+- (NSMutableArray *)cells;
+
+@end
+
+@interface PSMTabBarControl (CellAccessors)
+
+- (id<PSMTabStyle>)style;
 
 @end
 

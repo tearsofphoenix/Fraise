@@ -11,10 +11,7 @@
 #import "PSMTabStyle.h"
 #import "PSMRolloverButton.h"
 #import "PSMOverflowPopUpButton.h"
-#import "FRAStandardHeader.h"
-#import "FRAProjectsController.h"
-#import "FRAProject.h"
-#import "FRAProject+DocumentViewsController.h"
+
 
 @implementation PSMTabDragAssistant
 
@@ -35,7 +32,8 @@ static PSMTabDragAssistant *sharedDragAssistant = nil;
 
 - (id)init
 {
-    if(self = [super init]){
+    if(self = [super init])
+    {
         _sourceTabBar = nil;
         _destinationTabBar = nil;
         _participatingTabBars = [[NSMutableSet alloc] init];
@@ -65,9 +63,10 @@ static PSMTabDragAssistant *sharedDragAssistant = nil;
     // list of widths for animation
     NSInteger i;
     CGFloat cellWidth = cellFrame.size.width;
-    for(i = 0; i < kPSMTabDragAnimationSteps; i++){
+    for(i = 0; i < kPSMTabDragAnimationSteps; i++)
+    {
         NSInteger thisWidth;
-        thisWidth = (NSInteger)(cellWidth - ((cellWidth/2.0) + ((sin((PI/2.0) + ((CGFloat)i/(CGFloat)kPSMTabDragAnimationSteps)*PI) * cellWidth) / 2.0)));
+        thisWidth = (NSInteger)(cellWidth - ((cellWidth/2.0) + ((sin((M_PI_2) + ((CGFloat)i/(CGFloat)kPSMTabDragAnimationSteps)* M_PI) * cellWidth) / 2.0)));
         [_sineCurveWidths addObject:@(thisWidth)];
     }
     
@@ -81,7 +80,7 @@ static PSMTabDragAssistant *sharedDragAssistant = nil;
     NSImage *dragImage = [cell dragImageForRect:cellFrame];
     [[cell indicator] removeFromSuperview];
     [self distributePlaceholdersInTabBar:control withDraggedCell:cell];
-
+    
     if([control isFlipped]){
         cellFrame.origin.y += cellFrame.size.height;
     }
@@ -116,7 +115,7 @@ static PSMTabDragAssistant *sharedDragAssistant = nil;
 {
     [self setDestinationTabBar:nil];
     [self setCurrentMouseLoc:NSMakePoint(-1.0, -1.0)];
-
+    
 }
 
 - (void)performDragOperation
@@ -125,59 +124,29 @@ static PSMTabDragAssistant *sharedDragAssistant = nil;
     [[self destinationTabBar] cells][[[[self destinationTabBar] cells] indexOfObject:[self targetCell]]] = [self draggedCell];
     [[self draggedCell] setControlView:[self destinationTabBar]];
     // move actual NSTabViewItem
-    if([self sourceTabBar] != [self destinationTabBar]){
+    if([self sourceTabBar] != [self destinationTabBar])
+    {
         [[[self sourceTabBar] tabView] removeTabViewItem:[[self draggedCell] representedObject]];
         [[[self destinationTabBar] tabView] addTabViewItem:[[self draggedCell] representedObject]];
-		
-		NSArray *array = [[FRAProjectsController sharedDocumentController] documents];
-		id destinationProject = nil;
-		for (destinationProject in array) {
-			if ([self destinationTabBar] == [destinationProject tabBarControl]) {
-				break;
-			}
-		}
-		
-		if (destinationProject != nil) {
-			//NSArrayController *destinationArrayController = [destinationProject documentsArrayController];
-			
-			id document = [[[self draggedCell] representedObject] identifier];
-			[(NSMutableSet *)[destinationProject documents] addObject:document];
-			[destinationProject updateDocumentOrderFromCells:[[self destinationTabBar] cells]];
-			//[document setValue: @(row) forKey:@"sortOrder"];
-			//[destinationProject documentsListHasUpdated];
-			[destinationProject selectDocument:document];
-		}
-		
-		array = [[FRAProjectsController sharedDocumentController] documents];
-		id sourceProject = nil;
-		for (sourceProject in array) {
-			if ([self sourceTabBar] == [sourceProject tabBarControl]) {
-				
-				break;
-			}
-		}
-		
-		if (sourceProject != nil) {
-			//NSArrayController *destinationArrayController = [sourceProject documentsArrayController];
-			[sourceProject selectionDidChange];//updateDocumentOrderFromCells:[[self sourceTabBar] cells]];
-			//[sourceProject documentsListHasUpdated];
-		}
-		
-    } else {
-		[FRACurrentProject updateDocumentOrderFromCells:[[self destinationTabBar] cells]]; 
-	}
+        
+    }
+    
+    [[[self sourceTabBar] delegate] tabBarControl: [self sourceTabBar]
+                            performDragWithTarget: [self destinationTabBar]
+                                       dragedCell: [self draggedCell]];
 	
     [self finishDrag];
 }
 
 - (void)draggedImageEndedAt:(NSPoint)aPoint operation:(NSDragOperation)operation
 {
-    if([self isDragging]){  // means there was not a successful drop (performDragOperation)
+    if([self isDragging])
+    {  // means there was not a successful drop (performDragOperation)
         // put cell back
         [[[self sourceTabBar] cells] insertObject:[self draggedCell] atIndex:[self draggedCellIndex]];
         [self finishDrag];
     }
-
+    
 }
 
 - (void)finishDrag
@@ -256,7 +225,7 @@ static PSMTabDragAssistant *sharedDragAssistant = nil;
         [self setTargetCell:nil];
     }
     
-layout: 
+layout:
     for(PSMTabBarCell *cell in cells){
         NSRect newRect = [cell frame];
         if(![cell isInOverflowMenu]){
@@ -306,7 +275,7 @@ layout:
 {
     NSInteger i, numVisibleTabs = [control numberOfVisibleTabs];
     for(i = 0; i < numVisibleTabs; i++){
-        PSMTabBarCell *pc = [[PSMTabBarCell alloc] initPlaceholderWithFrame:[[self draggedCell] frame] expanded:NO inControlView:control]; 
+        PSMTabBarCell *pc = [[PSMTabBarCell alloc] initPlaceholderWithFrame:[[self draggedCell] frame] expanded:NO inControlView:control];
         [[control cells] insertObject:pc atIndex:(2 * i)];
     }
     if(numVisibleTabs > 0){

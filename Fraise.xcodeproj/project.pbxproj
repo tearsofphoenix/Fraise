@@ -78,12 +78,6 @@
 		7F7444C90CF8DDEC00C947C1 /* FRAAdvancedFindPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F7444C80CF8DDEC00C947C1 /* FRAAdvancedFindPanel.m */; };
 		7F79EE370D93D5500034017B /* NSString+Fraise.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F79EE360D93D5500034017B /* NSString+Fraise.m */; };
 		7F81FEDC0BA9DDCD00549CDB /* Tab Bar in Resources */ = {isa = PBXBuildFile; fileRef = 7F81FED50BA9DDCD00549CDB /* Tab Bar */; };
-		7F81FF030BA9DDF600549CDB /* PSMOverflowPopUpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F81FEF40BA9DDF600549CDB /* PSMOverflowPopUpButton.m */; };
-		7F81FF050BA9DDF600549CDB /* PSMRolloverButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F81FEF80BA9DDF600549CDB /* PSMRolloverButton.m */; };
-		7F81FF060BA9DDF600549CDB /* PSMTabBarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F81FEFA0BA9DDF600549CDB /* PSMTabBarCell.m */; };
-		7F81FF070BA9DDF600549CDB /* PSMTabBarControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F81FEFC0BA9DDF600549CDB /* PSMTabBarControl.m */; };
-		7F81FF080BA9DDF600549CDB /* PSMTabDragAssistant.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F81FEFE0BA9DDF600549CDB /* PSMTabDragAssistant.m */; };
-		7F81FF090BA9DDF600549CDB /* PSMUnifiedTabStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F81FF010BA9DDF600549CDB /* PSMUnifiedTabStyle.m */; };
 		7F85E0740B7C8A0800DAC8B2 /* FRASnippetCollectionManagedObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F85E0730B7C8A0800DAC8B2 /* FRASnippetCollectionManagedObject.m */; };
 		7F85E07B0B7C8AC900DAC8B2 /* FRASplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F85E07A0B7C8AC900DAC8B2 /* FRASplitView.m */; };
 		7F961E950B7A7CE1001E9189 /* FRAEncodingManagedObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F961E940B7A7CE1001E9189 /* FRAEncodingManagedObject.m */; };
@@ -404,7 +398,6 @@
 		2A37F4B0FDCFA73011CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Classes/main.m; sourceTree = "<group>"; };
 		2A37F4C4FDCFA73011CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		2A37F4C5FDCFA73011CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
-		2F3E1E460BB19C5F00F8AF91 /* PSMTabStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSMTabStyle.h; path = PSMTabBar/PSMTabStyle.h; sourceTree = "<group>"; };
 		2F69A1BC0BB0406800D23876 /* FRADocumentsListCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FRADocumentsListCell.h; path = Classes/FRADocumentsListCell.h; sourceTree = "<group>"; };
 		2F69A1BD0BB0406800D23876 /* FRADocumentsListCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FRADocumentsListCell.m; path = Classes/FRADocumentsListCell.m; sourceTree = "<group>"; };
 		2F6CF2E10B848515008B0386 /* DefaultCommands.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = DefaultCommands.plist; path = Other/DefaultCommands.plist; sourceTree = "<group>"; };
@@ -445,18 +438,6 @@
 		7F79EE350D93D5500034017B /* NSString+Fraise.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+Fraise.h"; path = "Classes/NSString+Fraise.h"; sourceTree = "<group>"; };
 		7F79EE360D93D5500034017B /* NSString+Fraise.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+Fraise.m"; path = "Classes/NSString+Fraise.m"; sourceTree = "<group>"; };
 		7F81FED50BA9DDCD00549CDB /* Tab Bar */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "Tab Bar"; path = "Graphics/Tab Bar"; sourceTree = "<group>"; };
-		7F81FEF30BA9DDF600549CDB /* PSMOverflowPopUpButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSMOverflowPopUpButton.h; path = PSMTabBar/PSMOverflowPopUpButton.h; sourceTree = "<group>"; };
-		7F81FEF40BA9DDF600549CDB /* PSMOverflowPopUpButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSMOverflowPopUpButton.m; path = PSMTabBar/PSMOverflowPopUpButton.m; sourceTree = "<group>"; };
-		7F81FEF70BA9DDF600549CDB /* PSMRolloverButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSMRolloverButton.h; path = PSMTabBar/PSMRolloverButton.h; sourceTree = "<group>"; };
-		7F81FEF80BA9DDF600549CDB /* PSMRolloverButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSMRolloverButton.m; path = PSMTabBar/PSMRolloverButton.m; sourceTree = "<group>"; };
-		7F81FEF90BA9DDF600549CDB /* PSMTabBarCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSMTabBarCell.h; path = PSMTabBar/PSMTabBarCell.h; sourceTree = "<group>"; };
-		7F81FEFA0BA9DDF600549CDB /* PSMTabBarCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSMTabBarCell.m; path = PSMTabBar/PSMTabBarCell.m; sourceTree = "<group>"; };
-		7F81FEFB0BA9DDF600549CDB /* PSMTabBarControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSMTabBarControl.h; path = PSMTabBar/PSMTabBarControl.h; sourceTree = "<group>"; };
-		7F81FEFC0BA9DDF600549CDB /* PSMTabBarControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSMTabBarControl.m; path = PSMTabBar/PSMTabBarControl.m; sourceTree = "<group>"; };
-		7F81FEFD0BA9DDF600549CDB /* PSMTabDragAssistant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSMTabDragAssistant.h; path = PSMTabBar/PSMTabDragAssistant.h; sourceTree = "<group>"; };
-		7F81FEFE0BA9DDF600549CDB /* PSMTabDragAssistant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSMTabDragAssistant.m; path = PSMTabBar/PSMTabDragAssistant.m; sourceTree = "<group>"; };
-		7F81FF000BA9DDF600549CDB /* PSMUnifiedTabStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSMUnifiedTabStyle.h; path = PSMTabBar/PSMUnifiedTabStyle.h; sourceTree = "<group>"; };
-		7F81FF010BA9DDF600549CDB /* PSMUnifiedTabStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSMUnifiedTabStyle.m; path = PSMTabBar/PSMUnifiedTabStyle.m; sourceTree = "<group>"; };
 		7F85E0720B7C8A0800DAC8B2 /* FRASnippetCollectionManagedObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FRASnippetCollectionManagedObject.h; path = Classes/FRASnippetCollectionManagedObject.h; sourceTree = "<group>"; };
 		7F85E0730B7C8A0800DAC8B2 /* FRASnippetCollectionManagedObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FRASnippetCollectionManagedObject.m; path = Classes/FRASnippetCollectionManagedObject.m; sourceTree = "<group>"; };
 		7F85E0790B7C8AC900DAC8B2 /* FRASplitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FRASplitView.h; path = Classes/FRASplitView.h; sourceTree = "<group>"; };
@@ -670,7 +651,6 @@
 			children = (
 				7F980A860B73B619000A9140 /* Command Line Utility */,
 				7F980A8F0B73B641000A9140 /* ODBEditorSuite.h */,
-				7F81FEDD0BA9DDE100549CDB /* PSMTabBar */,
 				2A37F4B0FDCFA73011CA2CEA /* main.m */,
 			);
 			name = "Other Sources";
@@ -951,26 +931,6 @@
 				7F79EE360D93D5500034017B /* NSString+Fraise.m */,
 			);
 			name = Categories;
-			sourceTree = "<group>";
-		};
-		7F81FEDD0BA9DDE100549CDB /* PSMTabBar */ = {
-			isa = PBXGroup;
-			children = (
-				7F81FEF30BA9DDF600549CDB /* PSMOverflowPopUpButton.h */,
-				7F81FEF40BA9DDF600549CDB /* PSMOverflowPopUpButton.m */,
-				7F81FEF70BA9DDF600549CDB /* PSMRolloverButton.h */,
-				7F81FEF80BA9DDF600549CDB /* PSMRolloverButton.m */,
-				7F81FEF90BA9DDF600549CDB /* PSMTabBarCell.h */,
-				7F81FEFA0BA9DDF600549CDB /* PSMTabBarCell.m */,
-				7F81FEFB0BA9DDF600549CDB /* PSMTabBarControl.h */,
-				7F81FEFC0BA9DDF600549CDB /* PSMTabBarControl.m */,
-				7F81FEFD0BA9DDF600549CDB /* PSMTabDragAssistant.h */,
-				7F81FEFE0BA9DDF600549CDB /* PSMTabDragAssistant.m */,
-				2F3E1E460BB19C5F00F8AF91 /* PSMTabStyle.h */,
-				7F81FF000BA9DDF600549CDB /* PSMUnifiedTabStyle.h */,
-				7F81FF010BA9DDF600549CDB /* PSMUnifiedTabStyle.m */,
-			);
-			name = PSMTabBar;
 			sourceTree = "<group>";
 		};
 		7F9809B40B73B4C8000A9140 /* Graphics */ = {
@@ -1330,12 +1290,6 @@
 				7F85E07B0B7C8AC900DAC8B2 /* FRASplitView.m in Sources */,
 				2FCFEBC20B820D0F00E635EE /* FRACommandCollectionManagedObject.m in Sources */,
 				2FE2F8400B985D0500ADCF8A /* FRAProject+DocumentViewsController.m in Sources */,
-				7F81FF030BA9DDF600549CDB /* PSMOverflowPopUpButton.m in Sources */,
-				7F81FF050BA9DDF600549CDB /* PSMRolloverButton.m in Sources */,
-				7F81FF060BA9DDF600549CDB /* PSMTabBarCell.m in Sources */,
-				7F81FF070BA9DDF600549CDB /* PSMTabBarControl.m in Sources */,
-				7F81FF080BA9DDF600549CDB /* PSMTabDragAssistant.m in Sources */,
-				7F81FF090BA9DDF600549CDB /* PSMUnifiedTabStyle.m in Sources */,
 				2F69A1BE0BB0406800D23876 /* FRADocumentsListCell.m in Sources */,
 				7F9C38DE0BD29AE200B45805 /* FRADataModel2.xcdatamodel in Sources */,
 				7F2B7FBD0C27272E0058BC55 /* FRASingleDocumentPanel.m in Sources */,

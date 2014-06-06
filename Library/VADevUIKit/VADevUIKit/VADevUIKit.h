@@ -16,3 +16,8 @@
 #import <VADevUIKit/VAGradientView.h>
 #import <VADevUIKit/VAGutterTextView.h>
 #import <VADevUIKit/VAEmptyView.h>
+
+#pragma mark - tab control
+
+#import <VADevUIKit/PSMTabBarCell.h>
+#import <VADevUIKit/PSMTabBarControl.h>

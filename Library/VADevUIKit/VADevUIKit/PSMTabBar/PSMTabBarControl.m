@@ -14,8 +14,6 @@
 #import "PSMUnifiedTabStyle.h"
 #import "PSMTabDragAssistant.h"
 
-#import "FRAOpenSavePerformer.h"
-
 @interface PSMTabBarControl ()<NSTabViewDelegate>
 
 // characteristics
@@ -295,9 +293,12 @@
     [cell setRepresentedObject:item];
     // bind the indicator to the represented object's status (if it exists)
     [[cell indicator] setHidden:YES];
-    if([item identifier] != nil){
-        if([[item identifier] respondsToSelector:@selector(content)]){
-            if([[(id)[[cell representedObject] identifier] content] respondsToSelector:@selector(isProcessing)]){
+    if([item identifier] != nil)
+    {
+        if([[item identifier] respondsToSelector:@selector(content)])
+        {
+            if([[(id)[[cell representedObject] identifier] content] respondsToSelector: @selector(isProcessing)])
+            {
                 NSMutableDictionary *bindingOptions = [NSMutableDictionary dictionary];
                 bindingOptions[@"NSValueTransformerName"] = NSNegateBooleanTransformerName;
                 [[cell indicator] bind:@"animate" toObject:[item identifier] withKeyPath:@"selection.isProcessing" options:nil];
@@ -322,8 +323,10 @@
     
     // bind for the existence of a counter
     [cell setCount:0];
-    if([item identifier] != nil){
-        if([[item identifier] respondsToSelector:@selector(content)]){
+    if([item identifier] != nil)
+    {
+        if([[item identifier] respondsToSelector:@selector(content)])
+        {
             if([[(id)[[cell representedObject] identifier] content] respondsToSelector:@selector(objectCount)]){
                 [cell bind:@"count" toObject:[item identifier] withKeyPath:@"selection.objectCount" options:nil];
                 [[item identifier] addObserver:self forKeyPath:@"selection.objectCount" options:NSKeyValueObservingOptionNew context:nil];
@@ -915,10 +918,14 @@
 
 - (void)concludeDragOperation:(id <NSDraggingInfo>)sender
 {
-	NSArray *filesToImport = [[sender draggingPasteboard] propertyListForType:NSFilenamesPboardType];
-	if (filesToImport != nil) {
-		[[FRAOpenSavePerformer sharedInstance] openAllTheseFiles:filesToImport];
-	}
+    [_delegate tabBarControl: self
+       concludeDragOperation: sender];
+    
+//	NSArray *filesToImport = [[sender draggingPasteboard] propertyListForType:NSFilenamesPboardType];
+//	if (filesToImport != nil)
+//    {
+//		[[FRAOpenSavePerformer sharedInstance] openAllTheseFiles: filesToImport];
+//	}
 }
 
 #pragma mark -

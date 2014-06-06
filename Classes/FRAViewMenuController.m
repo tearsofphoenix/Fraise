@@ -26,9 +26,10 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAProject+DocumentViewsController.h"
 #import "FRALayoutManager.h"
 
-#import "PSMTabBarControl.h"
 #import "FRADocumentManagedObject.h"
 #import "FRATextView.h"
+
+#import <VADevUIKit/VADevUIKit.h>
 
 @implementation FRAViewMenuController
 

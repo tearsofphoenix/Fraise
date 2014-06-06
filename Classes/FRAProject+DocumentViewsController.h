@@ -14,8 +14,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 #import <Cocoa/Cocoa.h>
 #import "FRAProject.h"
+#import <VADevUIKit/VADevUIKit.h>
 
-@interface FRAProject (DocumentViewsController)
+@interface FRAProject (DocumentViewsController)<PSMTabBarControlDelegate>
 
 - (void)setDefaultViews;
 

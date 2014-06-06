@@ -7,7 +7,6 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "PSMTabBarControl.h"
 
 @class PSMTabBarControl;
 
@@ -73,11 +72,5 @@
 // archiving
 - (void)encodeWithCoder:(NSCoder *)aCoder;
 - (id)initWithCoder:(NSCoder *)aDecoder;
-
-@end
-
-@interface PSMTabBarControl (CellAccessors)
-
-- (id<PSMTabStyle>)style;
 
 @end

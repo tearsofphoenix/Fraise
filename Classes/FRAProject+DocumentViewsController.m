@@ -19,9 +19,10 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAApplicationDelegate.h"
 #import "FRAViewMenuController.h"
 #import "FRALineNumbers.h"
+#import "FRAOpenSavePerformer.h"
 
-#import "PSMTabBarControl.h"
 #import "FRADocumentManagedObject.h"
+#import "FRAProjectsController.h"
 
 @implementation FRAProject (DocumentViewsController)
 
@@ -297,7 +298,61 @@ Unless required by applicable law or agreed to in writing, software distributed 
 }
 
 
+- (void)tabBarControl: (PSMTabBarControl *)control
+concludeDragOperation: (id<NSDraggingInfo>)sender
+{
+    NSArray *filesToImport = [[sender draggingPasteboard] propertyListForType:NSFilenamesPboardType];
+	if (filesToImport != nil)
+    {
+		[[FRAOpenSavePerformer sharedInstance] openAllTheseFiles:filesToImport];
+	}
 
+}
 
+- (void)tabBarControl: (PSMTabBarControl *)control
+performDragWithTarget: (PSMTabBarControl *)target
+           dragedCell: (PSMTabBarCell *)cell
+{
+    if(control != target)
+    {
+		NSArray *array = [[FRAProjectsController sharedDocumentController] documents];
+		id destinationProject = nil;
+		for (destinationProject in array)
+        {
+			if (target == [destinationProject tabBarControl])
+            {
+				break;
+			}
+		}
+		
+		if (destinationProject != nil)
+        {
+			id document = [[cell representedObject] identifier];
+			[(NSMutableSet *)[destinationProject documents] addObject: document];
+			[destinationProject updateDocumentOrderFromCells: [target cells]];
+			[destinationProject selectDocument:document];
+		}
+		
+		array = [[FRAProjectsController sharedDocumentController] documents];
+		id sourceProject = nil;
+		for (sourceProject in array)
+        {
+			if (control == [sourceProject tabBarControl])
+            {
+				
+				break;
+			}
+		}
+		
+		if (sourceProject != nil)
+        {
+			[sourceProject selectionDidChange];
+		}
+		
+    } else
+    {
+		[FRACurrentProject updateDocumentOrderFromCells: [target cells]];
+	}
+}
 
 @end

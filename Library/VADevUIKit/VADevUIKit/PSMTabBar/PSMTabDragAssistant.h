@@ -16,7 +16,6 @@
 @class PSMTabDragWindow;
 
 #define kPSMTabDragAnimationSteps 8
-#define PI 3.1417
 
 @interface PSMTabDragAssistant : NSObject
 {
