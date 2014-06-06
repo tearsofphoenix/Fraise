@@ -15,6 +15,8 @@
 
 #define VATextFontChangedNotification VANotificationPrefix ".text-font-changed"
 
+#define VATextColorChangedNotification VANotificationPrefix ".text-color-changed"
+
 extern NSString * const VAFontNameKey;
 
 extern NSString * const VAFontKey;

@@ -27,6 +27,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 #import "ODBEditorSuite.h"
 #import "FRATextView.h"
+#import "FRACommandManagedObject.h"
 
 #import <VAFoundation/VAFoundation.h>
 #import <VADevUIKit/VADevUIKit.h>
@@ -180,9 +181,11 @@ VASingletonIMPDefault(FRAVariousPerformer)
             NSEnumerator *snippetEnumerator = [defaultCommands[collection] objectEnumerator];
 			for (id command in snippetEnumerator)
             {
-				id newCommand = [FRABasic createNewObjectForEntity:@"Command"];
-				newCommand[@"name"] = command[@"name"];
-				newCommand[@"text"] = command[@"text"];
+				FRACommandManagedObject *newCommand = [FRABasic createNewObjectForEntity:@"Command"];
+				[newCommand setValue: command[@"name"]
+                              forKey: @"name"];
+				[newCommand setValue: command[@"text"]
+                              forKey: @"text"];
 				
                 if (command[@"inline"] != nil)
                 {
@@ -191,7 +194,8 @@ VASingletonIMPDefault(FRAVariousPerformer)
                 
 				if (command[@"interpreter"] != nil)
                 {
-					newCommand[@"interpreter"] = command[@"interpreter"];
+					[newCommand setValue: command[@"interpreter"]
+                                  forKey: @"interpreter"];
 				}
                 
 				[[newCollection mutableSetValueForKey:@"commands"] addObject:newCommand];

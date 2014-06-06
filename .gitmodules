@@ -1,0 +1,3 @@
+[submodule "bwtoolkit"]
+	path = bwtoolkit
+	url = https://github.com/veritas-shine/bwtoolkit.git

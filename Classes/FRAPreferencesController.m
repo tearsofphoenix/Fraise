@@ -505,7 +505,8 @@ VASingletonIMPDefault(FRAPreferencesController)
 - (IBAction)setFontAction:(id)sender
 {
 	NSFontManager *fontManager = [NSFontManager sharedFontManager];
-	[fontManager setSelectedFont:[NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextFont"]] isMultiple:NO];
+	[fontManager setSelectedFont: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextFont"]]
+                      isMultiple: NO];
 	[fontManager orderFrontFontPanel:nil];
 }
 
