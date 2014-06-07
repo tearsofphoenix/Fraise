@@ -25,8 +25,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 #import "FRAProject+DocumentViewsController.h"
 
-#import "FRADocumentManagedObject.h"
+
 #import "FRATextView.h"
+#import "VADocument.h"
 
 #import <VADevUIKit/VADevUIKit.h>
 
@@ -66,9 +67,9 @@ VASingletonIMPDefault(FRAViewMenuController)
 		
 		[splitView adjustSubviews];
 		
-		[FRAInterface insertDocumentIntoSecondContentView:FRACurrentDocument];
+		[FRAInterface insertDocumentIntoSecondContentView:[FRAProjectsController currentDocument]];
 		[FRACurrentProject buildSecondContentViewNavigationBarMenu];
-		[[[FRACurrentProject firstDocument] valueForKey:@"syntaxColouring"] pageRecolour];
+		[[[FRACurrentProject firstDocument] syntaxColouring] pageRecolour];
 	}
 	
 	//[FRACurrentProject updateSplitWindowToolbarItem];
@@ -95,46 +96,46 @@ VASingletonIMPDefault(FRAViewMenuController)
 	[splitView adjustSubviews];
 	
 	[FRAInterface removeAllSubviewsFromView:[FRACurrentProject secondContentView]];	
-	[[[FRACurrentProject firstDocument] valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth: NO];
+	[[[FRACurrentProject firstDocument] lineNumbers] updateLineNumbersCheckWidth: NO];
 
-    [[[FRACurrentProject firstDocument] valueForKey: @"syntaxColouring"] pageRecolour];
+    [[[FRACurrentProject firstDocument] syntaxColouring] pageRecolour];
 
 	[[FRACurrentProject secondDocument] setValue:nil forKey:@"secondTextView"];
 	[[FRACurrentProject secondDocument] setValue:nil forKey:@"secondTextScrollView"];
-	[[[FRACurrentProject secondDocument] valueForKey:@"syntaxColouring"] setSecondLayoutManager:nil];
+	[[[FRACurrentProject secondDocument] syntaxColouring] setSecondLayoutManager:nil];
 	[FRACurrentProject setSecondDocument:nil];
 }
 
 
 - (IBAction)lineWrapTextAction:(id)sender
 {
-	id document = FRACurrentDocument;
+	VADocument *document = [FRAProjectsController currentDocument];
 	
-	FRATextView *textView = [document valueForKey:@"firstTextView"];
-	NSScrollView *textScrollView = [document valueForKey:@"firstTextScrollView"];
-	NSScrollView *gutterScrollView = [document valueForKey:@"firstGutterScrollView"];
+	FRATextView *textView = [document firstTextView];
+	NSScrollView *textScrollView = [document firstTextScrollView];
+	NSScrollView *gutterScrollView = [document firstGutterScrollView];
 	NSInteger viewNumber = 0;
 	while (viewNumber++ < 3) {
 		if (viewNumber == 2) {
-			if ([document valueForKey:@"secondTextView"] != nil) {
-				textView = [document valueForKey:@"secondTextView"];
-				textScrollView = [document valueForKey:@"secondTextScrollView"];
-				gutterScrollView = [document valueForKey:@"secondGutterScrollView"];
+			if ([document secondTextView] != nil) {
+				textView = [document secondTextView];
+				textScrollView = [document secondTextScrollView];
+				gutterScrollView = [document secondGutterScrollView];
 			} else {
 				continue;
 			}
 		}
 		if (viewNumber == 3) {
-			if ([document valueForKey:@"singleDocumentWindow"] != nil) {
-				textView = [document valueForKey:@"thirdTextView"];
-				textScrollView = [document valueForKey:@"thirdTextScrollView"];
-				gutterScrollView = [document valueForKey:@"thirdGutterScrollView"];
+			if ([document singleDocumentWindow] != nil) {
+				textView = [document thirdTextView];
+				textScrollView = [document thirdTextScrollView];
+				gutterScrollView = [document thirdGutterScrollView];
 			} else {
 				continue;
 			}
 		}
 		NSRange selectedRange = [textView selectedRange];
-		if ([[document valueForKey:@"isLineWrapped"] boolValue] == YES) {
+		if ([document isLineWrapped] == YES) {
 			[[textView textContainer] setContainerSize:NSMakeSize(CGFLOAT_MAX, CGFLOAT_MAX)];
 			[[textView textContainer] setWidthTracksTextView:NO];
 			[textView setHorizontallyResizable:YES];
@@ -154,10 +155,12 @@ VASingletonIMPDefault(FRAViewMenuController)
 		[textView scrollRangeToVisible:selectedRange];
 	}
 	
-	if ([[document valueForKey:@"isLineWrapped"] boolValue] == YES) {
-		[document setValue:@NO forKey:@"isLineWrapped"];
-	} else {
-		[document setValue:@YES forKey:@"isLineWrapped"];
+	if ([document isLineWrapped] == YES)
+    {
+		[document setLineWrapped: NO];
+	} else
+    {
+		[document setLineWrapped: YES];
 	}
 	
 	[FRACurrentProject resizeViewsForDocument:document];
@@ -177,13 +180,13 @@ VASingletonIMPDefault(FRAViewMenuController)
 				[anItem setTitle:NSLocalizedStringFromTable(@"Show Size Slider", @"Localizable3", @"Show Size Slider")];
 			}
 		} else if (tag == 11) { // Show Syntax Colours
-			if ([[FRACurrentDocument valueForKey:@"isSyntaxColoured"] boolValue] == YES) {
+			if ([[FRAProjectsController currentDocument] isSyntaxColoured] == YES) {
 				[anItem setTitle:NSLocalizedString(@"Hide Syntax Colours", @"Hide Syntax Colours")];
 				} else {
 				[anItem setTitle:NSLocalizedString(@"Show Syntax Colours", @"Show Syntax Colours")];
 				}
 		} else if (tag == 19) { // Show Line Numbers
-			if ([[FRACurrentDocument valueForKey:@"showLineNumberGutter"] boolValue] == YES) {
+			if ([[[FRAProjectsController currentDocument] valueForKey:@"showLineNumberGutter"] boolValue] == YES) {
 				[anItem setTitle:NSLocalizedString(@"Hide Line Numbers",@"Hide Line Numbers")];
 			} else {
 				[anItem setTitle:NSLocalizedString(@"Show Line Numbers", @"Show Line Numbers")];
@@ -195,13 +198,13 @@ VASingletonIMPDefault(FRAViewMenuController)
 				[anItem setTitle:NSLocalizedString(@"Show Status Bar", @"Show Status Bar in View-menu")];
 			}
 		} else if (tag == 18) { // Show Invisible Characters
-			if ([[FRACurrentDocument valueForKey:@"showInvisibleCharacters"] boolValue] == YES) {
+			if ([[[FRAProjectsController currentDocument] valueForKey:@"showInvisibleCharacters"] boolValue] == YES) {
 				[anItem setTitle:NSLocalizedString(@"Hide Invisible Characters", @"Hide Invisible Characters in View-menu")];
 			} else {
 				[anItem setTitle:NSLocalizedString(@"Show Invisible Characters", @"Show Invisible Characters in View-menu")];
 			}
 		} else if (tag == 10) { // Line Wrap Text
-			if ([[FRACurrentDocument valueForKey:@"isLineWrapped"] boolValue] == YES) {
+			if ([[[FRAProjectsController currentDocument] valueForKey:@"isLineWrapped"] boolValue] == YES) {
 				[anItem setTitle:DONT_LINE_WRAP_STRING];
 			} else {
 				[anItem setTitle:LINE_WRAP_STRING];
@@ -243,13 +246,14 @@ VASingletonIMPDefault(FRAViewMenuController)
 
 - (IBAction)showSyntaxColoursAction:(id)sender
 {
-	id document = FRACurrentDocument;
-	if ([[document valueForKey:@"isSyntaxColoured"] boolValue] == YES) {
-		[[document valueForKey:@"syntaxColouring"] removeAllColours];
-		[document setValue:@NO forKey:@"isSyntaxColoured"];
+	VADocument *document = [FRAProjectsController currentDocument];
+	if ([document isSyntaxColoured] == YES)
+    {
+		[[document syntaxColouring] removeAllColours];
+		[document setIsSyntaxColoured: NO];
 	} else {
-		[document setValue:@YES forKey:@"isSyntaxColoured"];
-		[[document valueForKey:@"syntaxColouring"] pageRecolour];
+		[document setIsSyntaxColoured: YES];
+		[[document syntaxColouring] pageRecolour];
 	}
 
 	[FRAInterface updateStatusBar];
@@ -258,11 +262,13 @@ VASingletonIMPDefault(FRAViewMenuController)
 
 - (IBAction)showLineNumbersAction:(id)sender
 {
-	id document = FRACurrentDocument;
-	if ([[document valueForKey:@"showLineNumberGutter"] boolValue] == YES) {
-		[document setValue:@NO forKey:@"showLineNumberGutter"];
-	} else {
-		[document setValue:@YES forKey:@"showLineNumberGutter"];
+	VADocument *document = [FRAProjectsController currentDocument];
+	if ([document showLineNumberGutter] == YES)
+    {
+        [document setShowLineNumberGutter: NO];
+	} else
+    {
+        [document setShowLineNumberGutter: YES];
 	}
 	
 	[FRACurrentProject resizeViewsForDocument:document];	
@@ -313,22 +319,24 @@ VASingletonIMPDefault(FRAViewMenuController)
 
 - (IBAction)showInvisibleCharactersAction:(id)sender
 {
-	id document = FRACurrentDocument;
-	if ([[document valueForKey:@"showInvisibleCharacters"] boolValue] == YES) {
-		[document setValue:@NO forKey:@"showInvisibleCharacters"];
-	} else {
-		[document setValue:@YES forKey:@"showInvisibleCharacters"];
+	VADocument *document = [FRAProjectsController currentDocument];
+	if ([document showInvisibleCharacters] == YES)
+    {
+        [document setShowInvisibleCharacters: NO];
+	} else
+    {
+        [document setShowInvisibleCharacters: YES];
 	}
 	
 	// To update visible range in all three (possible) views
-	NSArray *array = [[[document valueForKey:@"firstTextView"] textStorage] layoutManagers];
+	NSArray *array = [[[document firstTextView] textStorage] layoutManagers];
 	for (id item in array) {
 		NSTextContainer *textContainer = [item textContainers][0];
 		NSScrollView *scrollView = [[textContainer textView] enclosingScrollView];
 		NSRect visibleRect = [[scrollView contentView] documentVisibleRect];
 		NSRange visibleRange = [item glyphRangeForBoundingRect:visibleRect inTextContainer:textContainer];
 		[item invalidateDisplayForGlyphRange:visibleRange];
-		[item setShowInvisibleCharacters:[[document valueForKey:@"showInvisibleCharacters"] boolValue]];
+		[item setShowInvisibleCharacters:[document showInvisibleCharacters]];
 	}
 }
 

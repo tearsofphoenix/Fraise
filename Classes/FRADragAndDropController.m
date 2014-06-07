@@ -25,6 +25,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAVariousPerformer.h"
 #import "FRAProject.h"
 #import "FRATextView.h"
+#import "VADocument.h"
 
 @implementation FRADragAndDropController
 
@@ -327,9 +328,9 @@ VASingletonIMPDefault(FRADragAndDropController)
 		NSArrayController *destinationArrayController = [destinationProject documentsArrayController];
 		NSArray *pasteboardData = [NSUnarchiver unarchiveObjectWithData:[[info draggingPasteboard] dataForType:movedDocumentType]];
 		NSArray *uriArray = pasteboardData[1];
-		id document = [FRABasic objectFromURI:uriArray[0]];
+		VADocument *document = [FRABasic objectFromURI:uriArray[0]];
 		[(NSMutableSet *)[destinationProject documents] addObject:document];
-		[document setValue:@(row) forKey:@"sortOrder"];
+		[document setSortOrder: row];
 		[FRAVarious fixSortOrderNumbersForArrayController:destinationArrayController overIndex:row];
 		[destinationArrayController rearrangeObjects];
 		[destinationProject selectDocument:document];

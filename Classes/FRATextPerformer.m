@@ -15,7 +15,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAStandardHeader.h"
 
 #import "FRATextPerformer.h"
-
+#import "VADocument.h"
 
 @implementation FRATextPerformer
 @synthesize macLineEnding, unixLineEnding, darkSideLineEnding;
@@ -37,13 +37,13 @@ VASingletonIMPDefault(FRATextPerformer)
 }
 
 
-- (NSString *)convertLineEndings:(NSString *)stringToConvert inDocument:(id)document
+- (NSString *)convertLineEndings:(NSString *)stringToConvert inDocument:(VADocument *)document
 {
 	NSInteger lineEndings;
-	if ([[document valueForKey:@"lineEndings"] integerValue] == 0) { // It hasn't been changed by the user so use the one from the defaults
+	if ([document lineEndings] == 0) { // It hasn't been changed by the user so use the one from the defaults
 		lineEndings = [[FRADefaults valueForKey:@"LineEndingsPopUp"] integerValue] + 1;
 	} else {
-		lineEndings = [[document valueForKey:@"lineEndings"] integerValue];
+		lineEndings = [document lineEndings];
 	}
 
 	if (lineEndings == FRALeaveLineEndingsUnchanged) { 

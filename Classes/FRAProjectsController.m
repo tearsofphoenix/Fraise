@@ -22,6 +22,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAProject.h"
 #import "FRATextView.h"
 #import "FRAProject+DocumentViewsController.h"
+#import "VADocument.h"
 
 @implementation FRAProjectsController
 
@@ -37,40 +38,52 @@ Unless required by applicable law or agreed to in writing, software distributed 
 }
 
 
-- (id)currentFRADocument
+- (VADocument *)currentFRADocument
 {
-	if ([FRACurrentProject areThereAnyDocuments] == NO) {
+	if ([FRACurrentProject areThereAnyDocuments] == NO)
+    {
 		return nil;
 	}
 	
 	NSWindow *mainWindow = [NSApp mainWindow];
 	NSWindow *keyWindow = [NSApp keyWindow];
-	id selectedDocument = [[FRACurrentProject documentsArrayController] selectedObjects][0];
+	VADocument *selectedDocument = [[FRACurrentProject documentsArrayController] selectedObjects][0];
 	
-	if ([keyWindow isKindOfClass:[FRASingleDocumentPanel class]]) {
-		if (keyWindow != nil) { // Loop through all single document windows to see if one of those is the key window
-			NSArray *array = [FRABasic fetchAll:@"Document"];
-			for (id item in array) {
-				if (keyWindow == [item valueForKey:@"singleDocumentWindow"]) {
+	if ([keyWindow isKindOfClass: [FRASingleDocumentPanel class]])
+    {
+		if (keyWindow != nil)
+        { // Loop through all single document windows to see if one of those is the key window
+			NSArray *array = [VADocument allDocuments];
+			for (VADocument *item in array)
+            {
+				if (keyWindow == [item singleDocumentWindow])
+                {
 					return item;
 				}
 			}
 		}
-	} else if (mainWindow == FRACurrentWindow) {
+	} else if (mainWindow == FRACurrentWindow)
+    {
 		id firstResponder = [mainWindow firstResponder];		
-		if (firstResponder == [selectedDocument valueForKey:@"firstTextView"]) { // Guess that it is the firstTextView as it is usually correct
+		if (firstResponder == [selectedDocument firstTextView]) { // Guess that it is the firstTextView as it is usually correct
 			return selectedDocument;
 		}
 		
-		if ([firstResponder isKindOfClass:[FRATextView class]]) {		
-			NSArray *array = [FRABasic fetchAll:@"Document"];
-			for (id item in array) {
-				if (firstResponder == [item valueForKey:@"firstTextView"] || firstResponder == [item valueForKey:@"secondTextView"] || firstResponder == [item valueForKey:@"thirdTextView"]) {
+		if ([firstResponder isKindOfClass:[FRATextView class]])
+        {
+			NSArray *array = [VADocument allDocuments];
+			for (VADocument *item in array)
+            {
+				if (firstResponder == [item firstTextView]
+                    || firstResponder == [item secondTextView]
+                    || firstResponder == [item thirdTextView])
+                {
 					return item;
 				}
 			}
 		}
-	} else {
+	} else
+    {
 		
 	}
 	
@@ -96,14 +109,16 @@ Unless required by applicable law or agreed to in writing, software distributed 
 - (NSString *)currentText
 {
 	NSString *returnString = [[self currentTextView] string];
-	if (returnString == nil) {
+	
+    if (returnString == nil)
+    {
 		if ([FRACurrentProject areThereAnyDocuments] == NO) {
 			return nil;
 		}
 		
-		id selectedDocument = [[FRACurrentProject documentsArrayController] selectedObjects][0];
+		VADocument *selectedDocument = [[FRACurrentProject documentsArrayController] selectedObjects][0];
 		
-		returnString = [[selectedDocument valueForKey:@"firstTextView"] string];
+		returnString = [[selectedDocument firstTextView] string];
 		if (returnString == nil) {
 			returnString = @"";
 		}
@@ -146,11 +161,14 @@ Unless required by applicable law or agreed to in writing, software distributed 
 {
 	[self putInRecentWithPath:path];
 	
-	id item;
+	VADocument *item;
 	NSArray *array = [self documents];
-	for (item in array) {
-		if ([[[item valueForKey:@"project"] valueForKey:@"path"] isEqualToString:path]) {
-			[[item window] makeKeyAndOrderFront:nil];
+	for (item in array)
+    {
+		if ([[[item project] path] isEqualToString:path])
+        {
+            //TODO
+//			[[item window] makeKeyAndOrderFront:nil];
 			return;
 		}
 	}
@@ -210,16 +228,22 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (void)insertDocumentsFromProjectArray:(NSArray *)array
 {
-	id item;
-	for (item in array) {	
-		[FRAOpenSave shouldOpen:[item valueForKey:@"path"] withEncoding:[[item valueForKey:@"encoding"] unsignedIntegerValue]];
-		id document = FRACurrentDocument;
-		if ([item valueForKey:@"selectedRange"] != nil && document != nil) {
-			[[document valueForKey:@"firstTextView"] setSelectedRange:NSRangeFromString([item valueForKey:@"selectedRange"])];
-			[[document valueForKey:@"firstTextView"] scrollRangeToVisible:NSRangeFromString([item valueForKey:@"selectedRange"])];
+	VADocument *item;
+	for (item in array)
+    {
+		[FRAOpenSave shouldOpen: [item path]
+                   withEncoding: [item encoding]];
+		VADocument *document = [FRAProjectsController currentDocument];
+        
+        //TODO
+//		if ([item selectedRange] != nil && document != nil)
+        {
+			[[document firstTextView] setSelectedRange: [item selectedRange]];
+			[[document firstTextView] scrollRangeToVisible: [item selectedRange]];
 		}
 		
-		[FRACurrentDocument setValue:[item valueForKey:@"sortOrder"] forKey:@"sortOrder"];
+		[[FRAProjectsController currentDocument] setValue: @([item sortOrder])
+                              forKey: @"sortOrder"];
 	}
 }
 	
@@ -233,11 +257,17 @@ Unless required by applicable law or agreed to in writing, software distributed 
 			if (item == document) {
 				[[project window] makeKeyAndOrderFront:nil];
 				[[project window] makeMainWindow];
-				[[project window] makeFirstResponder:[document valueForKey:@"firstTextView"]];
+				[[project window] makeFirstResponder:[document firstTextView]];
 				[project selectDocument:document];
 				return;
 			}
 		}
 	}
 }
+
++ (VADocument *)currentDocument
+{
+    return [[self sharedDocumentController] currentFRADocument];
+}
+
 @end

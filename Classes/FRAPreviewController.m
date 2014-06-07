@@ -18,6 +18,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAProjectsController.h"
 #import "FRABasicPerformer.h"
 #import "FRAProject.h"
+#import "VADocument.h"
 
 @implementation FRAPreviewController
 
@@ -51,26 +52,29 @@ VASingletonIMPDefault(FRAPreviewController)
 
 		NSURL *baseURL;
 		if ([[FRADefaults valueForKey:@"BaseURL"] isEqualToString:@""]) { // If no base URL is supplied use the document path
-			if ([[FRACurrentDocument valueForKey:@"isNewDocument"] boolValue] == NO) {
-				NSString *path = [NSString stringWithString:[FRACurrentDocument valueForKey:@"path"]];
+			if ([[FRAProjectsController currentDocument] isNewDocument] == NO)
+            {
+				NSString *path = [NSString stringWithString:[[FRAProjectsController currentDocument] path]];
 				baseURL = [NSURL fileURLWithPath:path];
-			} else {
+			} else
+            {
 				baseURL = [NSURL URLWithString:@""];
 			}
 		} else {
-			baseURL = [NSURL URLWithString:[[FRADefaults valueForKey:@"BaseURL"] stringByAppendingPathComponent:[FRACurrentDocument valueForKey:@"name"]]];
+			baseURL = [NSURL URLWithString:[[FRADefaults valueForKey:@"BaseURL"] stringByAppendingPathComponent:[[FRAProjectsController currentDocument] name]]];
 		}
 		
-		if ([FRACurrentDocument valueForKey:@"path"] != nil) {
+		if ([[FRAProjectsController currentDocument] path] != nil) {
 			NSString *path;
-			if ([[FRACurrentDocument valueForKey:@"fromExternal"] boolValue] == NO) {
-				path = [FRACurrentDocument valueForKey:@"path"];
+			if ([[FRAProjectsController currentDocument] fromExternal] == NO)
+            {
+				path = [[FRAProjectsController currentDocument] path];
 			} else {
-				path = [FRACurrentDocument valueForKey:@"externalPath"];
+				path = [[FRAProjectsController currentDocument] externalPath];
 			}
 			[previewWindow setTitle:[NSString stringWithFormat:@"%@ - %@", path, PREVIEW_STRING]];
 		} else {
-			[previewWindow setTitle:[NSString stringWithFormat:@"%@ - %@", [FRACurrentDocument valueForKey:@"name"], PREVIEW_STRING]];
+			[previewWindow setTitle:[NSString stringWithFormat:@"%@ - %@", [[FRAProjectsController currentDocument] name], PREVIEW_STRING]];
 		}
 		
 		NSData *data;
@@ -78,7 +82,7 @@ VASingletonIMPDefault(FRAPreviewController)
 			data = [FRACurrentText dataUsingEncoding:NSUTF8StringEncoding];
 		} else {
 			NSString *temporaryPathMarkdown = [FRABasic genererateTemporaryPath];
-			[FRACurrentText writeToFile:temporaryPathMarkdown atomically:YES encoding:[[FRACurrentDocument valueForKey:@"encoding"] integerValue] error:nil];
+			[FRACurrentText writeToFile:temporaryPathMarkdown atomically:YES encoding:[[[FRAProjectsController currentDocument] valueForKey:@"encoding"] integerValue] error:nil];
 			NSString *temporaryPathHTML = [FRABasic genererateTemporaryPath];
 			NSString *htmlString;
 			if ([[NSFileManager defaultManager] fileExistsAtPath:temporaryPathMarkdown]) {
@@ -88,7 +92,7 @@ VASingletonIMPDefault(FRAPreviewController)
 					system([[NSString stringWithFormat:@"/usr/bin/perl %@ %@ > %@", [[NSBundle mainBundle] pathForResource:@"MultiMarkdown" ofType:@"pl"], temporaryPathMarkdown, temporaryPathHTML] UTF8String]);
 				}
 				if ([[NSFileManager defaultManager] fileExistsAtPath:temporaryPathMarkdown]) {
-					htmlString = [NSString stringWithContentsOfFile:temporaryPathHTML encoding:[[FRACurrentDocument valueForKey:@"encoding"] integerValue] error:nil];
+					htmlString = [NSString stringWithContentsOfFile:temporaryPathHTML encoding:[[[FRAProjectsController currentDocument] valueForKey:@"encoding"] integerValue] error:nil];
 					[[NSFileManager defaultManager] removeItemAtPath:temporaryPathHTML error:nil];
 				} else {
 					htmlString = FRACurrentText;

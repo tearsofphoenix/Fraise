@@ -28,6 +28,7 @@
 #import "FRAApplicationDelegate.h"
 #import "FRAProject.h"
 
+#import "VADocument.h"
 #import "FRASyntaxColouring.h"
 #import <VADevUIKit/VADevUIKit.h>
 
@@ -219,10 +220,10 @@ VASingletonIMPDefault(FRAPreferencesController)
 		[FRAInterface updateStatusBar];
 		
 	} else if ([(__bridge NSString *)context isEqualToString:@"StatusBarLastSavedFormatChanged"]) {
-		NSArray *array = [FRABasic fetchAll:@"Document"];
+		NSArray *array = [VADocument allDocuments];
 		for (id item in array) {
-			if ([[item valueForKey:@"isNewDocument"] boolValue] == NO) {
-				[FRAVarious setLastSavedDateForDocument:item date:[[item valueForKey:@"fileAttributes"] fileModificationDate]];
+			if ([item isNewDocument] == NO) {
+				[FRAVarious setLastSavedDateForDocument:item date:[[item fileAttributes] fileModificationDate]];
 			}
 		}
 		[FRAInterface updateStatusBar];
@@ -230,7 +231,7 @@ VASingletonIMPDefault(FRAPreferencesController)
 	} else if ([(__bridge NSString *)context isEqualToString:@"ShowFullPathInWindowTitleChanged"]) {
 		NSArray *projectsArray = [[FRAProjectsController sharedDocumentController] documents];
 		for (id project in projectsArray) {
-			NSArray *documentsArray = [FRABasic fetchAll:@"Document"];
+			NSArray *documentsArray = [VADocument allDocuments];
 			for (id document in documentsArray) {
 				[project updateWindowTitleBarForDocument:document];
 			}
@@ -590,11 +591,11 @@ VASingletonIMPDefault(FRAPreferencesController)
 
 - (IBAction)changeGutterWidth:(id)sender {
 	NSEnumerator *documentEnumerator =  [[[FRACurrentProject documentsArrayController] arrangedObjects] objectEnumerator];
-	for (id document in documentEnumerator)
+	for (VADocument *document in documentEnumerator)
     {
 		[FRAInterface updateGutterViewForDocument:document];
-		[[document valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth: YES];
-        [[FRACurrentDocument valueForKey: @"syntaxColouring"] pageRecolour];
+		[[document lineNumbers] updateLineNumbersCheckWidth: YES];
+        [[[FRAProjectsController currentDocument] syntaxColouring] pageRecolour];
 	}
 }
 

@@ -26,6 +26,8 @@
 #import "FRAPreviewController.h"
 
 #import "FRAProject.h"
+#import "VADocument.h"
+#import "FRATextView.h"
 
 #import <VAFoundation/VAFoundation.h>
 #import <VADevUIKit/VADevUIKit.h>
@@ -92,7 +94,7 @@
 	
 	NSTextContainer *textContainer;
     
-	id document;
+	VADocument *document;
 	
 	NSCharacterSet *attributesCharacterSet;
 	
@@ -125,7 +127,7 @@
 	if ((self = [super init]))
     {
 		document = theDocument;
-		firstLayoutManager = (VILayoutManager *)[[document valueForKey:@"firstTextView"] layoutManager];
+		firstLayoutManager = (VILayoutManager *)[[document firstTextView] layoutManager];
 		_secondLayoutManager = nil;
 		_thirdLayoutManager = nil;
 		_fourthLayoutManager = nil;
@@ -149,13 +151,13 @@
 		
 		[self setSyntaxDefinition];
 		
-		completeString = [[document valueForKey:@"firstTextView"] string];
-		textContainer = [[document valueForKey:@"firstTextView"] textContainer];
+		completeString = [[document firstTextView] string];
+		textContainer = [[document firstTextView] textContainer];
 		
 		_reactToChanges = YES;
         
-		[[document valueForKey:@"firstTextView"] setDelegate:self];
-		[[[document valueForKey:@"firstTextView"] textStorage] setDelegate:self];
+		[[document firstTextView] setDelegate:self];
+		[[[document firstTextView] textStorage] setDelegate:self];
 		undoManager = [[NSUndoManager alloc] init];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkIfCanUndo) name:@"NSUndoManagerDidUndoChangeNotification" object:undoManager];
 		
@@ -196,7 +198,7 @@
 		[self setColours];
 		[self pageRecolour];
 		if ([[FRADefaults valueForKey:@"HighlightCurrentLine"] boolValue] == YES) {
-			NSRange range = [completeString lineRangeForRange:[[document valueForKey:@"firstTextView"] selectedRange]];
+			NSRange range = [completeString lineRangeForRange:[[document firstTextView] selectedRange]];
 			[self highlightLineRange:range];
 			lastLineHighlightRange = range;
 		} else {
@@ -252,9 +254,9 @@
 	NSArray *foundSyntaxDefinition = [managedObjectContext executeFetchRequest:request error:nil];
     
 	NSString *fileToUse = nil;
-	NSString *extension = [[document valueForKey:@"name"] pathExtension];
-	if ([[document valueForKey:@"hasManuallyChangedSyntaxDefinition"] boolValue] == YES) { // Once the user has changed the syntax definition always use that one and not the one from the extension
-		request = [[entityDescription managedObjectModel] fetchRequestFromTemplateWithName:@"syntaxDefinitionName" substitutionVariables:@{@"NAME": [document valueForKey:@"syntaxDefinition"]}];
+	NSString *extension = [[document name] pathExtension];
+	if ([document hasManuallyChangedSyntaxDefinition] == YES) { // Once the user has changed the syntax definition always use that one and not the one from the extension
+		request = [[entityDescription managedObjectModel] fetchRequestFromTemplateWithName:@"syntaxDefinitionName" substitutionVariables:@{@"NAME": [document syntaxDefinition]}];
 		NSArray *foundManuallyChangedSyntaxDefinition = [managedObjectContext executeFetchRequest:request error:nil];
 		if ([foundManuallyChangedSyntaxDefinition count] != 0) {
 			fileToUse = [foundManuallyChangedSyntaxDefinition[0] valueForKey:@"file"];
@@ -266,15 +268,15 @@
 		if ([[FRADefaults valueForKey:@"SyntaxColouringMatrix"] integerValue] == 1) { // Always use...
 			if ([foundSyntaxDefinition count] != 0) {
 				fileToUse = [foundSyntaxDefinition[0] valueForKey:@"file"];
-				[document setValue:[foundSyntaxDefinition[0] valueForKey:@"name"] forKey:@"syntaxDefinition"];
+				[document setSyntaxDefinition: [foundSyntaxDefinition[0] valueForKey:@"name"]];
 			} else {
 				fileToUse = [syntaxDefinitions[0] valueForKey:@"file"];
-				[document setValue:[syntaxDefinitions[0] valueForKey:@"name"] forKey:@"syntaxDefinition"];
+				[document setSyntaxDefinition: [syntaxDefinitions[0] valueForKey:@"name"]];
 			}
 		} else {
 			NSString *lowercaseExtension;
 			if ([extension isEqualToString:@""]) { // If there is no extension try to guess it
-				NSString *string = [[[document valueForKey:@"firstTextScrollView"] documentView] string];
+				NSString *string = [[[document firstTextScrollView] documentView] string];
 				NSString *firstLine = [string substringWithRange:[string lineRangeForRange:NSMakeRange(0,0)]];
 				if ([firstLine hasPrefix:@"#!"] || [firstLine hasPrefix:@"%"] || [firstLine hasPrefix:@"<?"]) {
 					lowercaseExtension = [self guessSyntaxDefinitionFromFirstLine:firstLine];
@@ -299,21 +301,22 @@
 				if ([[extensionsString componentsSeparatedByString:@" "] containsObject:lowercaseExtension])
                 {
 					fileToUse = [item valueForKey:@"file"];
-					[document setValue:name forKey:@"syntaxDefinition"];
+					[document setSyntaxDefinition: name];
 					break;
 				}
 				index++;
 			}
-			if (fileToUse == nil && [foundSyntaxDefinition count] != 0) {
+			if (fileToUse == nil && [foundSyntaxDefinition count] != 0)
+            {
 				fileToUse = [foundSyntaxDefinition[0] valueForKey:@"file"];
-				[document setValue:[foundSyntaxDefinition[0] valueForKey:@"name"] forKey:@"syntaxDefinition"];
+				[document setSyntaxDefinition: [foundSyntaxDefinition[0] valueForKey:@"name"]];
 			}
 		}
 	}
 	
 	if (fileToUse == nil) {
 		fileToUse = @"standard"; // Be sure to set it to something
-		[document setValue:@"Standard" forKey:@"syntaxDefinition"];
+		[document setSyntaxDefinition: @"Standard"];
 	}
 	
 	NSDictionary *syntaxDictionary;
@@ -492,25 +495,25 @@
 
 - (void)pageRecolour
 {
-	[self pageRecolourTextView:[document valueForKey:@"firstTextView"]];
+	[self pageRecolourTextView:[document firstTextView]];
 	if (_secondLayoutManager != nil)
     {
-		[self pageRecolourTextView:[document valueForKey:@"secondTextView"]];
+		[self pageRecolourTextView:[document secondTextView]];
 	}
 	if (_thirdLayoutManager != nil)
     {
-		[self pageRecolourTextView:[document valueForKey:@"thirdTextView"]];
+		[self pageRecolourTextView:[document thirdTextView]];
 	}
 	if (_fourthLayoutManager != nil)
     {
-		[self pageRecolourTextView:[document valueForKey:@"fourthTextView"]];
+		[self pageRecolourTextView: [document fourthTextView]];
 	}
 }
 
 
 - (void)pageRecolourTextView:(FRATextView *)textView
 {
-	if ([[document valueForKey:@"isSyntaxColoured"] boolValue] == NO) {
+	if ([document isSyntaxColoured] == NO) {
 		return;
 	}
 	
@@ -1101,13 +1104,13 @@
 	
 	FRATextView *textView = (FRATextView *)[notification object];
 	
-	if ([[document valueForKey:@"isEdited"] boolValue] == NO) {
+	if ([document isEdited] == NO) {
 		[FRAVarious hasChangedDocument:document];
 	}
 	
 	if ([[FRADefaults valueForKey:@"HighlightCurrentLine"] boolValue] == YES) {
 		[self highlightLineRange:[completeString lineRangeForRange:[textView selectedRange]]];
-	} else if ([[document valueForKey:@"isSyntaxColoured"] boolValue] == YES) {
+	} else if ([document isSyntaxColoured] == YES) {
 		[self pageRecolourTextView:textView];
 	}
 	
@@ -1123,7 +1126,7 @@
 		liveUpdatePreviewTimer = [NSTimer scheduledTimerWithTimeInterval:[[FRADefaults valueForKey:@"LiveUpdatePreviewDelay"] doubleValue] target:self selector:@selector(liveUpdatePreviewTimerSelector:) userInfo:textView repeats:NO];
 	}
 	
-	[[document valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth: NO];
+	[[document lineNumbers] updateLineNumbersCheckWidth: NO];
 }
 
 
@@ -1305,7 +1308,7 @@
 - (void)checkIfCanUndo
 {
 	if (![undoManager canUndo]) {
-		[FRACurrentDocument setValue:@NO forKey:@"isEdited"];
+		[[FRAProjectsController currentDocument] setValue:@NO forKey:@"isEdited"];
 		[FRACurrentProject updateEditedBlobStatus];
 		[FRACurrentProject reloadData];
 	}

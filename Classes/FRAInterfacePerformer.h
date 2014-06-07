@@ -15,6 +15,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import <Cocoa/Cocoa.h>
 
 @class FRAFullScreenWindow;
+@class VADocument;
 
 @interface FRAInterfacePerformer : NSObject {
 	
@@ -36,7 +37,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 }
 
 @property (readonly) FRAFullScreenWindow *fullScreenWindow;
-@property (unsafe_unretained, readonly) id fullScreenDocument;
+@property (unsafe_unretained, readonly) VADocument *fullScreenDocument;
 
 @property (strong) NSImage *defaultIcon;
 @property (strong) NSImage *defaultUnsavedIcon;

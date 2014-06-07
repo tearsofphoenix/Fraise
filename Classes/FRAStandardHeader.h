@@ -151,7 +151,6 @@ typedef NSUInteger FRAErrors;
 #define FRADefaults [[NSUserDefaultsController sharedUserDefaultsController] values]
 
 #define FRACurrentProject [[FRAProjectsController sharedDocumentController] currentDocument]
-#define FRACurrentDocument [[FRAProjectsController sharedDocumentController] currentFRADocument]
 #define FRACurrentTextView [[FRAProjectsController sharedDocumentController] currentTextView]
 #define FRACurrentText [[FRAProjectsController sharedDocumentController] currentText]
 #define FRACurrentWindow [[[FRACurrentProject windowControllers] objectAtIndex:0] window]

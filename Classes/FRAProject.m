@@ -33,6 +33,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 #import "FRAPrintViewController.h"
 #import "FRAPrintTextView.h"
+#import "VADocument.h"
+#import "FRATextView.h"
 
 #import <VADevUIKit/VADevUIKit.h>
 
@@ -238,17 +240,17 @@ Unless required by applicable law or agreed to in writing, software distributed 
 		NSInteger extraHeight;
 		NSInteger viewNumber = 0;
 		NSView *view = firstContentView;
-		NSScrollView *textScrollView = [document valueForKey:@"firstTextScrollView"];
-		NSScrollView *gutterScrollView = [document valueForKey:@"firstGutterScrollView"];
+		NSScrollView *textScrollView = [document firstTextScrollView];
+		NSScrollView *gutterScrollView = [document firstGutterScrollView];
 		
 		while (viewNumber++ < 3) {
 			subtractFromY = 0;
 			extraHeight = 0;
 			if (viewNumber == 2) {
-				if ([document valueForKey:@"secondTextView"] != nil) {
+				if ([document secondTextView] != nil) {
 					view = secondContentView;
-					textScrollView = [document valueForKey:@"secondTextScrollView"];
-					gutterScrollView = [document valueForKey:@"secondGutterScrollView"];
+					textScrollView = [document secondTextScrollView];
+					gutterScrollView = [document secondGutterScrollView];
 					subtractFromY = [secondContentViewNavigationBar bounds].size.height * -1;
 					subtractFromHeight = [secondContentViewNavigationBar bounds].size.height;
 				} else {
@@ -256,21 +258,21 @@ Unless required by applicable law or agreed to in writing, software distributed 
 				}
 			}
 			if (viewNumber == 3) {
-				if ([document valueForKey:@"singleDocumentWindow"] != nil) {
-					view = [[document valueForKey:@"singleDocumentWindow"] contentView];
-					textScrollView = [document valueForKey:@"thirdTextScrollView"];
-					gutterScrollView = [document valueForKey:@"thirdGutterScrollView"];
+				if ([document singleDocumentWindow] != nil) {
+					view = [[document singleDocumentWindow] contentView];
+					textScrollView = [document thirdTextScrollView];
+					gutterScrollView = [document thirdGutterScrollView];
 					subtractFromY = 1;
 					extraHeight = 2;
 				} else {
 					continue;
 				}
 			}
-			if ([[document valueForKey:@"showLineNumberGutter"] boolValue] == YES) {
+			if ([document showLineNumberGutter] == YES) {
 				if (![[view subviews] containsObject:gutterScrollView]) {
 					[view addSubview:gutterScrollView];
 				}
-				gutterWidth = [[document valueForKey:@"gutterWidth"] integerValue];
+				gutterWidth = [document gutterWidth];
 				[gutterScrollView setFrame:NSMakeRect(0, 0 - subtractFromY, gutterWidth, [view bounds].size.height + extraHeight - subtractFromHeight)];
 			} else {
 				gutterWidth = 0;
@@ -280,8 +282,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 			[textScrollView setFrame:NSMakeRect(gutterWidth, 0 - subtractFromY, [view bounds].size.width - gutterWidth, [view bounds].size.height + extraHeight - subtractFromHeight)];
 		}
 		
-		[[document valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth: YES];
-        [[document valueForKey: @"syntaxColouring"] pageRecolour];
+		[[document lineNumbers] updateLineNumbersCheckWidth: YES];
+        [[document syntaxColouring] pageRecolour];
 	}
 }
 
@@ -294,9 +296,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (id)createNewDocumentWithContents:(NSString *)textString
 {
-	id document = [self createNewDocumentWithPath:nil andContents:textString];
+	VADocument *document = [self createNewDocumentWithPath:nil andContents:textString];
 	
-	[document setValue:@YES forKey:@"isNewDocument"];
+	[document setNewDocument: YES];
 	[FRAVarious setUnsavedAsLastSavedDateForDocument:document];
 	[FRAInterface updateStatusBar];
 	
@@ -306,29 +308,29 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (id)createNewDocumentWithPath:(NSString *)path andContents:(NSString *)textString
 {
-	id document = [FRABasic createNewObjectForEntity:@"Document"];
+	VADocument *document = [[VADocument alloc] init];
 	
 	[[self documents] addObject:document];
 	
 	[FRAVarious setNameAndPathForDocument:document path:path];
 	[FRAInterface createFirstViewForDocument:document];
 
-	[[document valueForKey:@"firstTextView"] setString:textString];
+	[[document firstTextView] setString:textString];
 	
 	FRASyntaxColouring *syntaxColouring = [[FRASyntaxColouring alloc] initWithDocument:document];
-	[document setValue:syntaxColouring forKey:@"syntaxColouring"];
+	[document setSyntaxColouring: syntaxColouring];
 	
-    NSClipView *clipView = [[document valueForKey:@"firstTextScrollView"] contentView];
-	[[document valueForKey:@"lineNumbers"] updateLineNumbersForClipView: clipView
+    NSClipView *clipView = [[document firstTextScrollView] contentView];
+	[[document lineNumbers] updateLineNumbersForClipView: clipView
                                                              checkWidth: NO];
-    [[document valueForKey: @"syntaxColouring"] pageRecolourTextView: [clipView documentView]];
+    [[document syntaxColouring] pageRecolourTextView: [clipView documentView]];
 
-	[document setValue: @([[documentsArrayController arrangedObjects] count]) forKey:@"sortOrder"];
+	[document setSortOrder: [[documentsArrayController arrangedObjects] count]];
 	[self documentsListHasUpdated];
 	
 	[documentsArrayController setSelectedObjects:@[document]];
 	
-	[document setValue:[NSString localizedNameOfStringEncoding:[[document valueForKey:@"encoding"] integerValue]] forKey:@"encodingName"];
+	[document setEncodingName: [NSString localizedNameOfStringEncoding: [document encoding]]];
 	
 	return document;
 }
@@ -336,16 +338,18 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (void)updateEditedBlobStatus
 {
-	id currentDocument = FRACurrentDocument;
-	if ([[currentDocument valueForKey:@"isEdited"] boolValue] == YES) {
+	id currentDocument = [FRAProjectsController currentDocument];
+	if ([currentDocument isEdited] == YES) {
 		[[self window] setDocumentEdited:YES];
-		if ([currentDocument valueForKey:@"singleDocumentWindow"] != nil) {
-			[[currentDocument valueForKey:@"singleDocumentWindow"] setDocumentEdited:YES];
+		if ([currentDocument singleDocumentWindow] != nil)
+        {
+			[[currentDocument singleDocumentWindow] setDocumentEdited:YES];
 		}
 	} else {
 		[[self window] setDocumentEdited:NO];
-		if ([currentDocument valueForKey:@"singleDocumentWindow"] != nil) {
-			[[currentDocument valueForKey:@"singleDocumentWindow"] setDocumentEdited:NO];
+		if ([currentDocument singleDocumentWindow] != nil)
+        {
+			[[currentDocument singleDocumentWindow] setDocumentEdited:NO];
 		}
 	}
 }
@@ -360,59 +364,59 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	}
 
 	if ([self areThereAnyDocuments] == YES && document != nil) {
-		NSWindow *singleDocumentWindow = [document valueForKey:@"singleDocumentWindow"];
+		NSWindow *singleDocumentWindow = [document singleDocumentWindow];
 		[self updateEditedBlobStatus];
-		if ([document valueForKey:@"path"] != nil && [[FRADefaults valueForKey:@"ShowFullPathInWindowTitle"] boolValue] == YES) {
+		if ([document path] != nil && [[FRADefaults valueForKey:@"ShowFullPathInWindowTitle"] boolValue] == YES) {
 			
-			if ([[document valueForKey:@"fromExternal"] boolValue] == YES) {
+			if ([document fromExternal] == YES) {
 				
 				if (document == [self firstDocument] || document == [self secondDocument]) {
-					[currentWindow setTitleWithRepresentedFilename:[document valueForKey:@"path"]];
+					[currentWindow setTitleWithRepresentedFilename:[document path]];
 					if (projectName != nil) {
-						[currentWindow setTitle:[NSString stringWithFormat:@"%@ - %@ (%@)", [document valueForKey:@"name"], [[document valueForKey:@"externalPath"] stringByDeletingLastPathComponent], projectName]];
+						[currentWindow setTitle:[NSString stringWithFormat:@"%@ - %@ (%@)", [document name], [[document externalPath] stringByDeletingLastPathComponent], projectName]];
 					} else {
-						[currentWindow setTitle:[NSString stringWithFormat:@"%@ - %@", [document valueForKey:@"name"], [[document valueForKey:@"externalPath"] stringByDeletingLastPathComponent]]];
+						[currentWindow setTitle:[NSString stringWithFormat:@"%@ - %@", [document name], [[document externalPath] stringByDeletingLastPathComponent]]];
 					}
 				}
 				if (singleDocumentWindow != nil) {
-					[singleDocumentWindow setTitleWithRepresentedFilename:[document valueForKey:@"path"]];
-					[singleDocumentWindow setTitle:[NSString stringWithFormat:@"%@ - %@", [document valueForKey:@"name"], [[document valueForKey:@"externalPath"] stringByDeletingLastPathComponent]]];
+					[singleDocumentWindow setTitleWithRepresentedFilename:[document path]];
+					[singleDocumentWindow setTitle:[NSString stringWithFormat:@"%@ - %@", [document name], [[document externalPath] stringByDeletingLastPathComponent]]];
 				}
 				
 			} else {
 				if (document == [self firstDocument] || document == [self secondDocument]) {
-					[currentWindow setTitleWithRepresentedFilename:[document valueForKey:@"path"]];
+					[currentWindow setTitleWithRepresentedFilename:[document path]];
 					if (projectName != nil) {
-						[currentWindow setTitle:[NSString stringWithFormat:@"%@ (%@)", [document valueForKey:@"nameWithPath"], projectName]];
+						[currentWindow setTitle:[NSString stringWithFormat:@"%@ (%@)", [document nameWithPath], projectName]];
 					} else {
-						[currentWindow setTitle:[document valueForKey:@"nameWithPath"]];
+						[currentWindow setTitle:[document nameWithPath]];
 					}
 				}
 				if (singleDocumentWindow != nil) {
-					[singleDocumentWindow setTitleWithRepresentedFilename:[document valueForKey:@"path"]];
-					[singleDocumentWindow setTitle:[document valueForKey:@"nameWithPath"]];
+					[singleDocumentWindow setTitleWithRepresentedFilename:[document path]];
+					[singleDocumentWindow setTitle:[document nameWithPath]];
 				}
 			}
 			
 		} else {
-			if ([document valueForKey:@"path"] != nil) {
+			if ([document path] != nil) {
 				if (document == [self firstDocument] || document == [self secondDocument]) {
-					[currentWindow setTitleWithRepresentedFilename:[document valueForKey:@"path"]];
+					[currentWindow setTitleWithRepresentedFilename:[document path]];
 					if (projectName != nil) {
-						[currentWindow setTitle:[NSString stringWithFormat:@"%@ (%@)", [document valueForKey:@"name"], projectName]];
+						[currentWindow setTitle:[NSString stringWithFormat:@"%@ (%@)", [document name], projectName]];
 					}
 				}
 				if (singleDocumentWindow != nil) {
-					[singleDocumentWindow setTitleWithRepresentedFilename:[document valueForKey:@"path"]];
+					[singleDocumentWindow setTitleWithRepresentedFilename:[document path]];
 				}
 				
 			} else {
 				if (document == [self firstDocument] || document == [self secondDocument]) {
 					[currentWindow setRepresentedFilename:[[NSBundle mainBundle] bundlePath]];
 					if (projectName != nil) {
-						[currentWindow setTitle:[NSString stringWithFormat:@"%@ (%@)", [document valueForKey:@"name"], projectName]];
+						[currentWindow setTitle:[NSString stringWithFormat:@"%@ (%@)", [document name], projectName]];
 					} else {
-						[currentWindow setTitle:[document valueForKey:@"name"]];
+						[currentWindow setTitle:[document name]];
 					}
 				}
 				if (singleDocumentWindow != nil) {
@@ -422,13 +426,13 @@ Unless required by applicable law or agreed to in writing, software distributed 
 			
 			if (document == [self firstDocument] || document == [self secondDocument]) {
 				if (projectName != nil) {
-					[currentWindow setTitle:[NSString stringWithFormat:@"%@ (%@)", [document valueForKey:@"name"], projectName]];
+					[currentWindow setTitle:[NSString stringWithFormat:@"%@ (%@)", [document name], projectName]];
 				} else {
-					[currentWindow setTitle:[document valueForKey:@"name"]];
+					[currentWindow setTitle:[document name]];
 				}
 			}
 			if (singleDocumentWindow != nil) {
-				[singleDocumentWindow setTitle:[document valueForKey:@"name"]];
+				[singleDocumentWindow setTitle:[document name]];
 			}
 		}
 	} else {
@@ -441,9 +445,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (void)checkIfDocumentIsUnsaved:(id)document keepOpen:(BOOL)keepOpen
 {	
-	if ([[document valueForKey:@"isEdited"] boolValue] == YES) {
+	if ([document isEdited] == YES) {
 		[self selectDocument:document];
-		NSString *title = [NSString stringWithFormat:NSLocalizedString(@"The document %@ has not been saved", @"Indicate in Close-sheet that the document %@ has not been saved."), [document valueForKey:@"name"]];
+		NSString *title = [NSString stringWithFormat:NSLocalizedString(@"The document %@ has not been saved", @"Indicate in Close-sheet that the document %@ has not been saved."), [document name]];
 		NSBeginAlertSheet(title,
 						  SAVE_STRING,
 						  NSLocalizedString(@"Don't Save", @"Don't Save-button in Close-sheet"),
@@ -473,7 +477,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	if (returnCode == NSAlertDefaultReturn) {
 		[sheet close];
 		[[FRAFileMenuController sharedInstance] saveAction:nil];
-		if ([[document valueForKey:@"isEdited"] boolValue] == NO) { // Save didn't fail
+		if ([document isEdited] == NO) { // Save didn't fail
 			if (keepOpen == NO) {
 				[self performCloseDocument:document];
 			}
@@ -508,7 +512,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 			[[self documentsArrayController] setSelectionIndex:0];
 			[self selectionDidChange]; // Doesn't seem to send this notification otherwise
 		}
-		[self updateWindowTitleBarForDocument:FRACurrentDocument];
+		[self updateWindowTitleBarForDocument:[FRAProjectsController currentDocument]];
 	
 		[self documentsListHasUpdated];
 	} else {
@@ -535,21 +539,21 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (void)cleanUpDocument:(id)document
 {
-	[[NSNotificationCenter defaultCenter] removeObserver:[document valueForKey:@"lineNumbers"]];
+	[[NSNotificationCenter defaultCenter] removeObserver:[document lineNumbers]];
 	
-	if ([self secondDocument] == document && [[document valueForKey:@"secondTextScrollView"] contentView] != nil) {
+	if ([self secondDocument] == document && [[document secondTextScrollView] contentView] != nil) {
 		[[FRAViewMenuController sharedInstance] performCollapse];
 	}
 	
-	if ([document valueForKey:@"singleDocumentWindow"] != nil) {
-		[[document valueForKey:@"singleDocumentWindow"] performClose:nil];
+	if ([document singleDocumentWindow] != nil) {
+		[[document singleDocumentWindow] performClose:nil];
 	}	
 	
 	if ([[FRAAdvancedFindController sharedInstance] currentlyDisplayedDocumentInAdvancedFind] == document) {
 		[[FRAAdvancedFindController sharedInstance] removeCurrentlyDisplayedDocumentInAdvancedFind];
 	}
 	
-	if ([[document valueForKey:@"fromExternal"] boolValue] == YES) {
+	if ([document fromExternal] == YES) {
 		[FRAVarious sendClosedEventToExternalDocument:document];
 	}
 	
@@ -571,23 +575,28 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	NSArray *array = [[self documents] allObjects];
 	NSMutableDictionary *returnDictionary = [NSMutableDictionary dictionary];
 	NSMutableArray *documentsArray = [NSMutableArray array];
-	for (id item in array) {
-		if ([item valueForKey:@"path"] != nil) {
+	
+    for (VADocument *item in array)
+    {
+		if ([item path] != nil)
+        {
 			NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
-			[dictionary setValue:[item valueForKey:@"path"] forKey:@"path"];
-			[dictionary setValue:[item valueForKey:@"encoding"] forKey:@"encoding"];
-			[dictionary setValue:[item valueForKey:@"sortOrder"] forKey:@"sortOrder"];
-			NSRange selectedRange = [[item valueForKey:@"firstTextView"] selectedRange];
-			if (selectedRange.location == NSNotFound) {
-				[dictionary setValue:NSStringFromRange(NSMakeRange(0, 0)) forKey:@"selectedRange"];
-			} else {
-				[dictionary setValue:NSStringFromRange(selectedRange) forKey:@"selectedRange"];
+			[dictionary setObject:[item path] forKey:@"path"];
+			[dictionary setObject: @([item encoding]) forKey:@"encoding"];
+			[dictionary setObject: @([item sortOrder]) forKey:@"sortOrder"];
+			NSRange selectedRange = [[item firstTextView] selectedRange];
+			if (selectedRange.location == NSNotFound)
+            {
+				[dictionary setObject:NSStringFromRange(NSMakeRange(0, 0)) forKey:@"selectedRange"];
+			} else
+            {
+				[dictionary setObject:NSStringFromRange(selectedRange) forKey:@"selectedRange"];
 			}
 			[documentsArray addObject:dictionary];
 		}
 	}
 	
-	[returnDictionary setValue:documentsArray forKey:@"documentsArray"];
+	[returnDictionary setObject:documentsArray forKey:@"documentsArray"];
 	NSString *name;
 	
 	if ([self areThereAnyDocuments] == NO || [[documentsArrayController selectedObjects][0] valueForKey:@"name"] == nil) {
@@ -595,13 +604,13 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	} else {
 		name = [[documentsArrayController selectedObjects][0] valueForKey:@"name"];
 	}
-	[returnDictionary setValue:name forKey:@"selectedDocumentName"];
-	[returnDictionary setValue:NSStringFromRect([[self window] frame]) forKey:@"windowFrame"];
-	[returnDictionary setValue:[project valueForKey:@"view"] forKey:@"view"];
-	[returnDictionary setValue:[project valueForKey:@"viewSize"] forKey:@"viewSize"];
+	[returnDictionary setObject:name forKey:@"selectedDocumentName"];
+	[returnDictionary setObject:NSStringFromRect([[self window] frame]) forKey:@"windowFrame"];
+	[returnDictionary setObject:[project valueForKey:@"view"] forKey:@"view"];
+	[returnDictionary setObject:[project valueForKey:@"viewSize"] forKey:@"viewSize"];
 	[self saveMainSplitViewFraction];
-	[returnDictionary setValue:[project valueForKey:@"dividerPosition"]  forKey:@"dividerPosition"];
-	[returnDictionary setValue:@3 forKey:@"version"];
+	[returnDictionary setObject:[project valueForKey:@"dividerPosition"]  forKey:@"dividerPosition"];
+	[returnDictionary setObject:@3 forKey:@"version"];
 	
 	return returnDictionary;
 }
@@ -629,7 +638,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (void)selectionDidChange
 {
-	[self tableViewSelectionDidChange:[NSNotification notificationWithName:@"NSTableViewSelectionDidChangeNotification" object:documentsTableView]];
+	[self tableViewSelectionDidChange: [NSNotification notificationWithName: NSTableViewSelectionDidChangeNotification
+                                                                     object: documentsTableView]];
 }
 
 
@@ -647,7 +657,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	
 	NSArray *array = [[self documents] allObjects];
 	for (id item in array) {
-		if ([[item valueForKey:@"isEdited"] boolValue] == YES) {	
+		if ([item isEdited] == YES) {	
 			[self checkIfDocumentIsUnsaved:item keepOpen:YES];
 		}
 		if (shouldWindowClose == NO) { // If one has chosen Cancel to review document one should not be asked about other unsaved documents
@@ -753,8 +763,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	NSImage *defaultUnsavedIcon = [FRAInterface defaultUnsavedIcon];
 	[defaultUnsavedIcon setScalesWhenResized:YES];
 	
-	[document setValue:defaultIcon forKey:@"icon"];	
-	[document setValue:defaultUnsavedIcon forKey:@"unsavedIcon"];
+	[document setIcon: defaultIcon];
+	[document setUnsavedIcon: defaultUnsavedIcon];
 }
 
 
@@ -768,7 +778,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 		lastTextViewInFocus = newLastTextViewInFocus;
 	}
 	
-	[self updateWindowTitleBarForDocument:FRACurrentDocument];
+	[self updateWindowTitleBarForDocument:[FRAProjectsController currentDocument]];
 }
 
 

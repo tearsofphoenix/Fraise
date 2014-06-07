@@ -16,15 +16,14 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 @class FRATextView;
 @class FRAProject;
+@class VADocument;
 
 @interface FRAProjectsController : NSDocumentController
-{
-	FRAProject *__unsafe_unretained currentProject;
-}
+
 
 @property (unsafe_unretained) FRAProject *currentProject;
 
-- (id)currentFRADocument;
+- (VADocument *)currentFRADocument;
 - (FRATextView *)currentTextView;
 - (NSString *)currentText;
 - (void)selectDocumentFromTheDock:(id)sender;
@@ -36,4 +35,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 - (void)insertDocumentsFromProjectArray:(NSArray *)array;
 
 - (void)selectDocument:(id)document;
+
++ (VADocument *)currentDocument;
+
 @end

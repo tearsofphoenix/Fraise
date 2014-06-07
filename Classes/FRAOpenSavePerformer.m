@@ -27,6 +27,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAInterfacePerformer.h"
 
 #import "FRAProject.h"
+#import "VADocument.h"
+#import "FRATextView.h"
 
 #import "ODBEditorSuite.h"
 #import <VADevUIKit/VADevUIKit.h>
@@ -99,7 +101,7 @@ VASingletonIMPDefault(FRAOpenSavePerformer)
 	id document;
 	BOOL documentAlreadyOpened = NO;
 	for (document in array) {
-		if ([[document valueForKey:@"path"] isEqualToString:path]) {
+		if ([[document path] isEqualToString:path]) {
 			documentAlreadyOpened = YES;
 			break;
 		}
@@ -107,7 +109,7 @@ VASingletonIMPDefault(FRAOpenSavePerformer)
 	
 	if (documentAlreadyOpened) {
 		[FRACurrentProject selectDocument:document];
-		[[FRAProjectsController sharedDocumentController] putInRecentWithPath:[document valueForKey:@"path"]];
+		[[FRAProjectsController sharedDocumentController] putInRecentWithPath:[document path]];
 	} else {
 		if (![fileManager fileExistsAtPath:path]) {
 			NSString *title = [NSString stringWithFormat:NSLocalizedString(@"The file %@ does not exist", @"Indicate that the file %@ does not exist Open-file-does-not-exist sheet"), path];
@@ -156,8 +158,8 @@ VASingletonIMPDefault(FRAOpenSavePerformer)
 			if (lineNumber > -1) {
 				[[FRATextMenuController sharedInstance] performGoToLine:lineNumber];
 			} else {
-				[[FRACurrentDocument valueForKey:@"firstTextView"] setSelectedRange:NSMakeRange((NSInteger)selectionRange.startRange, (NSInteger)selectionRange.endRange - (NSInteger)selectionRange.startRange)];
-				[[FRACurrentDocument valueForKey:@"firstTextView"] scrollRangeToVisible:NSMakeRange((NSInteger)selectionRange.startRange, (NSInteger)selectionRange.endRange - (NSInteger)selectionRange.startRange)];
+				[[[FRAProjectsController currentDocument]  firstTextView] setSelectedRange:NSMakeRange((NSInteger)selectionRange.startRange, (NSInteger)selectionRange.endRange - (NSInteger)selectionRange.startRange)];
+				[[[FRAProjectsController currentDocument]  firstTextView] scrollRangeToVisible:NSMakeRange((NSInteger)selectionRange.startRange, (NSInteger)selectionRange.endRange - (NSInteger)selectionRange.startRange)];
 			}
 		}
 	}
@@ -223,7 +225,7 @@ VASingletonIMPDefault(FRAOpenSavePerformer)
 		}
 	}
 	
-	id document;
+	VADocument *document;
 	
 	NSAppleEventDescriptor *appleEventDescriptor;
 	if ([[FRAApplicationDelegate sharedInstance] appleEventDescriptor] != nil) {
@@ -259,23 +261,23 @@ VASingletonIMPDefault(FRAOpenSavePerformer)
 		}
 		
 		document = [FRACurrentProject createNewDocumentWithPath:externalPath andContents:textString];
-		[document setValue:@YES forKey:@"fromExternal"];
+		[document setFromExternal: YES];
 		
 		if (!isKeyAEPropData) {
-			[document setValue:[appleEventDescriptor paramDescriptorForKeyword:keyFileSender] forKey:@"externalSender"];
+			[document setExternalSender: [appleEventDescriptor paramDescriptorForKeyword:keyFileSender]];
 		} else {
-			[document setValue:[keyAEPropDataDescriptor paramDescriptorForKeyword:keyFileSender] forKey:@"externalSender"];
+			[document setExternalSender: [keyAEPropDataDescriptor paramDescriptorForKeyword:keyFileSender]];
 		}
 		
-		[document setValue:externalPath forKey:@"externalPath"];
+		[document setExternalPath: externalPath];
 		//Log(appleEventDescriptor);
 		if (!isKeyAEPropData) {
 			if ([appleEventDescriptor paramDescriptorForKeyword:keyFileSenderToken]) {
-				[document setValue:[appleEventDescriptor paramDescriptorForKeyword:keyFileSenderToken] forKey:@"externalToken"];
+				[document setExternalToken: [appleEventDescriptor paramDescriptorForKeyword:keyFileSenderToken]];
 			}
 		} else {
 			if ([appleEventDescriptor paramDescriptorForKeyword:keyFileSenderToken]) {
-				[document setValue:[keyAEPropDataDescriptor paramDescriptorForKeyword:keyFileSenderToken] forKey:@"externalToken"];
+				[document setExternalToken: [keyAEPropDataDescriptor paramDescriptorForKeyword:keyFileSenderToken]];
 			}
 		}
 		
@@ -287,23 +289,24 @@ VASingletonIMPDefault(FRAOpenSavePerformer)
 	[[FRAApplicationDelegate sharedInstance] setAppleEventDescriptor:nil];
 	
 	
-	[document setValue: @(encoding) forKey:@"encoding"];
-	[document setValue:[NSString localizedNameOfStringEncoding:[[document valueForKey:@"encoding"] integerValue]] forKey:@"encodingName"];
-	[document setValue:path forKey:@"path"];
+	[document setEncoding: encoding];
+	[document setEncodingName: [NSString localizedNameOfStringEncoding: encoding]];
+	[document setPath: path];
 	[FRACurrentProject updateWindowTitleBarForDocument:document];
 	
-	[[document valueForKey:@"firstTextView"] setSelectedRange:NSMakeRange(0,0)];
+	[[document firstTextView] setSelectedRange:NSMakeRange(0,0)];
 	
 	[FRAVarious insertIconsInBackground:@[document, path]];
-	//NSArray *icons = [NSImage iconsForPath:path];
-//	[document setValue:[icons objectAtIndex:0] forKey:@"icon"];
-//	[document setValue:[icons objectAtIndex:1] forKey:@"unsavedIcon"];
+	NSArray *icons = [NSImage iconsForPath: path
+                          useQuickLookIcon: NO];
+    [document setIcon: [icons objectAtIndex:0]];
+	[document setUnsavedIcon: [icons objectAtIndex:1]];
 	
 	NSDictionary *fileAttributes = [NSDictionary dictionaryWithDictionary:[[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil]];
-	[document setValue:fileAttributes forKey:@"fileAttributes"];
+	[document setFileAttributes: fileAttributes];
 	[FRAVarious setLastSavedDateForDocument:document date:[fileAttributes fileModificationDate]];
 	[FRAInterface updateStatusBar];
-	[FRACurrentWindow makeFirstResponder:[document valueForKey:@"firstTextView"]];
+	[FRACurrentWindow makeFirstResponder:[document firstTextView]];
 	[FRACurrentProject selectionDidChange];
 	
 	[self performSelector:@selector(updateLineNumbers) withObject:nil afterDelay:0.0];
@@ -317,7 +320,7 @@ VASingletonIMPDefault(FRAOpenSavePerformer)
 
 - (void)updateLineNumbers // Slight hack to make sure that the line numbers are correct under certain circumstances when opening a document as the line numbers are updated before the view has decided whether to include a scrollbar or not 
 {
-	[[FRACurrentDocument valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth: NO];
+	[[[FRAProjectsController currentDocument] lineNumbers] updateLineNumbersCheckWidth: NO];
 	[[FRAProjectsController sharedDocumentController] setCurrentProject:nil];
 }
 
@@ -325,23 +328,25 @@ VASingletonIMPDefault(FRAOpenSavePerformer)
 
 - (void)performSaveOfDocument:(id)document fromSaveAs:(BOOL)fromSaveAs
 {
-	[self performSaveOfDocument:document path:[document valueForKey:@"path"] fromSaveAs:fromSaveAs aCopy:NO];
+	[self performSaveOfDocument:document path:[document path] fromSaveAs:fromSaveAs aCopy:NO];
 }
 
 
-- (void)performSaveOfDocument:(id)document path:(NSString *)path fromSaveAs:(BOOL)fromSaveAs aCopy:(BOOL)aCopy
+- (void)performSaveOfDocument: (VADocument *)document
+                         path: (NSString *)path
+                   fromSaveAs: (BOOL)fromSaveAs aCopy:(BOOL)aCopy
 {
-	NSString *string = [FRAText convertLineEndings:[[[document valueForKey:@"firstTextScrollView"] documentView] string] inDocument:document];
+	NSString *string = [FRAText convertLineEndings:[[[document firstTextScrollView] documentView] string] inDocument:document];
 	if ([[FRADefaults valueForKey:@"AlwaysEndFileWithLineFeed"] boolValue] == YES) {
 		if ([string characterAtIndex:[string length] - 1] != '\n') {
-			[[[document valueForKey:@"firstTextScrollView"] documentView] replaceCharactersInRange:NSMakeRange([string length], 0) withString:@"\n"];
-			string = [FRAText convertLineEndings:[[[document valueForKey:@"firstTextScrollView"] documentView] string] inDocument:document];
-			[[document valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth: NO];
+			[[[document firstTextScrollView] documentView] replaceCharactersInRange:NSMakeRange([string length], 0) withString:@"\n"];
+			string = [FRAText convertLineEndings:[[[document firstTextScrollView] documentView] string] inDocument:document];
+			[[document lineNumbers] updateLineNumbersCheckWidth: NO];
 		}
 	}
 	
-	if (![string canBeConvertedToEncoding:[[document valueForKey:@"encoding"] integerValue]]) {
-		NSError *error = [NSError errorWithDomain:FRAISE_ERROR_DOMAIN code:FraiseSaveErrorEncodingInapplicable userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:NSLocalizedStringFromTable(@"This document can no longer be saved using its original %@ encoding.", @"Localizable3", @"Title of alert panel informing user that the file's string encoding needs to be changed."), [NSString localizedNameOfStringEncoding:[[document valueForKey:@"encoding"] integerValue]]], NSLocalizedRecoverySuggestionErrorKey: NSLocalizedStringFromTable(@"Please choose another encoding (such as UTF-8).", @"Localizable3", @"Subtitle of alert panel informing user that the file's string encoding needs to be changed")}];
+	if (![string canBeConvertedToEncoding:[document encoding]]) {
+		NSError *error = [NSError errorWithDomain:FRAISE_ERROR_DOMAIN code:FraiseSaveErrorEncodingInapplicable userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:NSLocalizedStringFromTable(@"This document can no longer be saved using its original %@ encoding.", @"Localizable3", @"Title of alert panel informing user that the file's string encoding needs to be changed."), [NSString localizedNameOfStringEncoding:[document encoding]]], NSLocalizedRecoverySuggestionErrorKey: NSLocalizedStringFromTable(@"Please choose another encoding (such as UTF-8).", @"Localizable3", @"Subtitle of alert panel informing user that the file's string encoding needs to be changed")}];
 		[FRACurrentProject presentError:error modalForWindow:FRACurrentWindow delegate:self didPresentSelector:nil contextInfo:NULL];
 		return;
 	}
@@ -363,7 +368,7 @@ VASingletonIMPDefault(FRAOpenSavePerformer)
 	if (fileAlreadyExists) {
 		hasWritePermission = [fileManager isWritableFileAtPath:path];
 	} else {
-		if ([[document valueForKey:@"isNewDocument"] boolValue] == YES) { // Check only if it's anew file as if it's an old file but the path does not exist, the folder e.g. has changed name so it will be caught later
+		if ([document isNewDocument] == YES) { // Check only if it's anew file as if it's an old file but the path does not exist, the folder e.g. has changed name so it will be caught later
 			hasWritePermission = [fileManager isWritableFileAtPath:[path stringByDeletingLastPathComponent]];
 		}
 	}		
@@ -373,7 +378,7 @@ VASingletonIMPDefault(FRAOpenSavePerformer)
 			[[FRACurrentWindow attachedSheet] close];
 		}
 		NSString *title = [NSString stringWithFormat:FILE_IS_UNWRITABLE_SAVE_STRING, path];
-		NSData *data = [[NSData alloc] initWithData:[string dataUsingEncoding:[[document valueForKey:@"encoding"] integerValue] allowLossyConversion:YES]];
+		NSData *data = [[NSData alloc] initWithData:[string dataUsingEncoding:[document encoding] allowLossyConversion:YES]];
 		NSArray *saveArray = @[document, data, path, @(fromSaveAs), @(aCopy)];
 		NSBeginAlertSheet(title,
 						  AUTHENTICATE_STRING,
@@ -392,25 +397,25 @@ VASingletonIMPDefault(FRAOpenSavePerformer)
 	BOOL error = NO;
 	NSMutableDictionary *attributes;
 	
-	if ([[document valueForKey:@"isNewDocument"] boolValue] == YES || fromSaveAs || !folderIsWritable) { // If it's a new file
+	if ([document isNewDocument] == YES || fromSaveAs || !folderIsWritable) { // If it's a new file
 		
-		if (![string writeToURL:[NSURL fileURLWithPath:path] atomically:folderIsWritable encoding:[[document valueForKey:@"encoding"] integerValue] error:nil]) {
-			if (![string writeToURL:[NSURL fileURLWithPath:path] atomically:NO encoding:[[document valueForKey:@"encoding"] integerValue] error:nil]) { // Try it again without backup file
+		if (![string writeToURL:[NSURL fileURLWithPath:path] atomically:folderIsWritable encoding:[document encoding] error:nil]) {
+			if (![string writeToURL:[NSURL fileURLWithPath:path] atomically:NO encoding:[document encoding] error:nil]) { // Try it again without backup file
 				error = YES;
 			}
 		}
 		
 		if (!error) {
-			if ([[document valueForKey:@"isNewDocument"] boolValue] == YES) {
+			if ([document isNewDocument] == YES) {
 				attributes = [NSMutableDictionary dictionary];
 			} else {
-				attributes = [NSMutableDictionary dictionaryWithDictionary:[document valueForKey:@"fileAttributes"]];
+				attributes = [NSMutableDictionary dictionaryWithDictionary:[document fileAttributes]];
 				[attributes removeObjectForKey:@"NSFileSize"]; // Remove those values which has to be updated 
 				[attributes removeObjectForKey:@"NSFileModificationDate"];
 				[attributes removeObjectForKey:@"NSFilePosixPermissions"];
 			}
 			
-			if ([[FRADefaults valueForKey:@"AssignDocumentToFraiseWhenSaving"] boolValue] == YES || [[document valueForKey:@"isNewDocument"] boolValue]) {
+			if ([[FRADefaults valueForKey:@"AssignDocumentToFraiseWhenSaving"] boolValue] == YES || [document isNewDocument]) {
 				[attributes setValue: @('SMUL') forKey:@"NSFileHFSCreatorCode"];
 				[attributes setValue: @('FRAd') forKey:@"NSFileHFSTypeCode"];
 			}
@@ -438,8 +443,8 @@ VASingletonIMPDefault(FRAOpenSavePerformer)
 		[attributes removeObjectForKey:@"NSFileSize"]; // Remove those values which has to be updated 
 		[attributes removeObjectForKey:@"NSFileModificationDate"];
 		
-		if (![string writeToURL:[NSURL fileURLWithPath:path] atomically:folderIsWritable encoding:[[document valueForKey:@"encoding"] integerValue] error:nil]) {
-			if (![string writeToURL:[NSURL fileURLWithPath:path] atomically:NO encoding:[[document valueForKey:@"encoding"] integerValue] error:nil]) { // Try it again without backup file as e.g. sshfs seems to object otherwise when overwriting a file
+		if (![string writeToURL:[NSURL fileURLWithPath:path] atomically:folderIsWritable encoding:[document encoding] error:nil]) {
+			if (![string writeToURL:[NSURL fileURLWithPath:path] atomically:NO encoding:[document encoding] error:nil]) { // Try it again without backup file as e.g. sshfs seems to object otherwise when overwriting a file
 				error = YES;
 			}
 		}
@@ -486,32 +491,31 @@ VASingletonIMPDefault(FRAOpenSavePerformer)
 - (void)updateAfterSaveForDocument:(id)document path:(NSString *)path
 {
 	[FRAVarious setNameAndPathForDocument:document path:path];
-	if ([[document valueForKey:@"fromExternal"] boolValue] == YES) {
+	if ([document fromExternal] == YES) {
 		[FRAVarious sendModifiedEventToExternalDocument:document path:path];
 	} 
 	
-	[document setValue:@NO forKey:@"isEdited"];
-	[document setValue:@NO forKey:@"isNewDocument"];
+	[document setEdited: NO];
+	[document setNewDocument: NO];
 	[FRACurrentProject updateEditedBlobStatus];
 	
-	[FRACurrentProject updateWindowTitleBarForDocument:FRACurrentDocument];
+	[FRACurrentProject updateWindowTitleBarForDocument:[FRAProjectsController currentDocument]];
 	[FRAVarious setLastSavedDateForDocument:document date:[NSDate date]];
 	
 	if ([[FRADefaults valueForKey:@"UpdateIconForEverySave"] boolValue] == YES && [[FRADefaults valueForKey:@"UseQuickLookIcon"] boolValue] == YES) {
 		[FRAVarious insertIconsInBackground:@[document, path]];
 		
-		//NSArray *icons = [NSImage iconsForPath:path];
-//		[document setValue:[icons objectAtIndex:0] forKey:@"icon"];
-//		[document setValue:[icons objectAtIndex:1] forKey:@"unsavedIcon"];
+		NSArray *icons = [NSImage iconsForPath: path
+                              useQuickLookIcon: NO];
+		[document setIcon: [icons objectAtIndex:0]];
+		[document setUnsavedIcon: [icons objectAtIndex:1]];
 	}
 	
 	[[NSWorkspace sharedWorkspace] noteFileSystemChanged:path];
 	[FRAInterface updateStatusBar];
-	[document setValue:[[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil] forKey:@"fileAttributes"];
+	[document setFileAttributes: [[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil]];
 	
 	[FRACurrentProject documentsListHasUpdated];
-	
-//	[[NSGarbageCollector defaultCollector] collectExhaustively];
 }
 
 
@@ -530,7 +534,7 @@ VASingletonIMPDefault(FRAOpenSavePerformer)
 			NSMutableData *value = [NSMutableData dataWithLength:valueSize];
 			getxattr([path fileSystemRepresentation], key, [value mutableBytes], valueSize, 0, 0);
 			
-			[dictionary setValue:value forKey:@(key)];
+			[dictionary setObject:value forKey:@(key)];
 		}
 	}
 	@catch (NSException *exception) {

@@ -17,7 +17,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 @class FRATextView;
 @class FRAProjectManagedObject;
-@class FRADocumentManagedObject;
+@class VADocument;
 @class FRATableViewDelegate;
 @class FRASplitViewDelegate;
 @class PSMTabBarControl;
@@ -43,10 +43,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	IBOutlet NSTabView *__unsafe_unretained tabBarTabView;
 	
 	FRATextView *__unsafe_unretained lastTextViewInFocus;
-	
-	FRADocumentManagedObject *__unsafe_unretained firstDocument;
-	FRADocumentManagedObject *__unsafe_unretained secondDocument;
-	
+		
 	BOOL shouldWindowClose;
 		
 	IBOutlet NSButton *functionButton;
@@ -69,8 +66,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 @property (nonatomic, unsafe_unretained) FRATextView *lastTextViewInFocus;
 
-@property (unsafe_unretained) FRADocumentManagedObject *firstDocument;
-@property (unsafe_unretained) FRADocumentManagedObject *secondDocument;
+@property (strong) VADocument *firstDocument;
+@property (strong) VADocument *secondDocument;
 
 @property (unsafe_unretained, readonly) IBOutlet NSManagedObject *project;
 @property (unsafe_unretained, readonly) IBOutlet NSArrayController *documentsArrayController;

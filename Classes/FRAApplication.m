@@ -28,7 +28,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRACommandsController.h"
 
 #import "FRAProject.h"
-
+#import "VADocument.h"
 #import "FRASearchField.h"
 #import "FRASyntaxColouring.h"
 #import <VADevUIKit/VADevUIKit.h>
@@ -212,39 +212,39 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #pragma mark AppleScript
 - (NSString *)name
 {
-	return [FRACurrentDocument valueForKey:@"name"];
+	return [[FRAProjectsController currentDocument] name];
 }
 
 
 - (NSString *)path
 {
-	return [FRACurrentDocument valueForKey:@"path"]; 
+	return [[FRAProjectsController currentDocument] path];
 }
 
 
 - (NSString *)content
 {
-    return [[FRACurrentDocument valueForKey:@"firstTextView"] string]; 
+    return [[[FRAProjectsController currentDocument] firstTextView] string];
 }
 
 
 - (void)setContent:(NSString *)newContent
 {
-	FRATextView *textView = [FRACurrentDocument valueForKey:@"firstTextView"];
+	FRATextView *textView = [[FRAProjectsController currentDocument]  firstTextView];
 	if ([textView shouldChangeTextInRange:NSMakeRange(0, [[textView string] length]) replacementString:newContent])
     { // Do it this way to mark it as an Undo
 		[textView replaceCharactersInRange:NSMakeRange(0, [[textView string] length]) withString:newContent];
 		[textView didChangeText];
 	}
     
-    [[FRACurrentDocument valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth: YES];
-    [[FRACurrentDocument valueForKey: @"syntaxColouring"] pageRecolour];
+    [[[FRAProjectsController currentDocument] lineNumbers] updateLineNumbersCheckWidth: YES];
+    [[[FRAProjectsController currentDocument] syntaxColouring] pageRecolour];
 }
 
 
 - (BOOL)edited
 {
-    return [[FRACurrentDocument valueForKey:@"isEdited"] boolValue];
+    return [[FRAProjectsController currentDocument] isEdited];
 }
 
 

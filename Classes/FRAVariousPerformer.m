@@ -28,6 +28,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "ODBEditorSuite.h"
 #import "FRATextView.h"
 #import "FRACommandManagedObject.h"
+#import "VADocument.h"
 
 #import <VAFoundation/VAFoundation.h>
 #import <VADevUIKit/VADevUIKit.h>
@@ -245,10 +246,10 @@ VASingletonIMPDefault(FRAVariousPerformer)
 }
 
 
-- (void)sendModifiedEventToExternalDocument:(id)document path:(NSString *)path
+- (void)sendModifiedEventToExternalDocument:(VADocument *)document path:(NSString *)path
 {
 	BOOL fromSaveAs = NO;
-	NSString *currentPath = [document valueForKey:@"path"];
+	NSString *currentPath = [document path];
 	if ([path isEqualToString:currentPath] == NO) {
 		fromSaveAs = YES;
 	}
@@ -256,17 +257,17 @@ VASingletonIMPDefault(FRAVariousPerformer)
 	NSURL *url = [NSURL fileURLWithPath:currentPath];
 	NSData *data = [[url absoluteString] dataUsingEncoding:NSUTF8StringEncoding];
 	
-	OSType signature = [[document valueForKey:@"externalSender"] typeCodeValue];
+	OSType signature = [[document externalSender] typeCodeValue];
 	NSAppleEventDescriptor *descriptor = [NSAppleEventDescriptor descriptorWithDescriptorType:typeApplSignature bytes:&signature length:sizeof(OSType)];
 	NSAppleEventDescriptor *event = [NSAppleEventDescriptor appleEventWithEventClass:kODBEditorSuite eventID:kAEModifiedFile targetDescriptor:descriptor returnID:kAutoGenerateReturnID transactionID:kAnyTransactionID];
 	[event setParamDescriptor:[NSAppleEventDescriptor descriptorWithDescriptorType:typeFileURL data:data] forKeyword:keyDirectObject];
 	
-	if ([document valueForKey:@"externalToken"]) {
-		[event setParamDescriptor:[document valueForKey:@"externalToken"] forKeyword:keySenderToken];
+	if ([document externalToken]) {
+		[event setParamDescriptor:[document externalToken] forKeyword:keySenderToken];
 	}
 	if (fromSaveAs) {
 		[descriptor setParamDescriptor:[NSAppleEventDescriptor descriptorWithDescriptorType:typeFileURL data:data] forKeyword:keyNewLocation];
-		[document setValue:@NO forKey:@"fromExternal"]; // If it's a Save As it no longer belongs to the external program
+		[document setFromExternal: NO]; // If it's a Save As it no longer belongs to the external program
 	}
 	
 	AppleEvent *eventPointer = (AEDesc *)[event aeDesc];
@@ -279,17 +280,17 @@ VASingletonIMPDefault(FRAVariousPerformer)
 
 - (void)sendClosedEventToExternalDocument:(id)document
 {
-	NSURL *url = [NSURL fileURLWithPath:[document valueForKey:@"path"]];
+	NSURL *url = [NSURL fileURLWithPath:[document path]];
 	NSData *data = [[url absoluteString] dataUsingEncoding:NSUTF8StringEncoding];
 	
-	OSType signature = [[document valueForKey:@"externalSender"] typeCodeValue];
+	OSType signature = [[document externalSender] typeCodeValue];
 	NSAppleEventDescriptor *descriptor = [NSAppleEventDescriptor descriptorWithDescriptorType:typeApplSignature bytes:&signature length:sizeof(OSType)];
 	
 	NSAppleEventDescriptor *event = [NSAppleEventDescriptor appleEventWithEventClass:kODBEditorSuite eventID:kAEClosedFile targetDescriptor:descriptor returnID:kAutoGenerateReturnID transactionID:kAnyTransactionID];
 	[event setParamDescriptor:[NSAppleEventDescriptor descriptorWithDescriptorType:typeFileURL data:data] forKeyword:keyDirectObject];
 
-	if ([document valueForKey:@"externalToken"]) {
-		[event setParamDescriptor:[document valueForKey:@"externalToken"] forKeyword:keySenderToken];
+	if ([document externalToken]) {
+		[event setParamDescriptor:[document externalToken] forKeyword:keySenderToken];
 	}
 	
 	AppleEvent *eventPointer = (AEDesc *)[event aeDesc];
@@ -326,23 +327,30 @@ VASingletonIMPDefault(FRAVariousPerformer)
 
 - (void)checkIfDocumentsHaveBeenUpdatedByAnotherApplication
 {
-	if ([FRACurrentProject areThereAnyDocuments] == NO || [FRAMain isInFullScreenMode] == YES || [[FRADefaults valueForKey:@"CheckIfDocumentHasBeenUpdated"] boolValue] == NO || [FRACurrentWindow attachedSheet] != nil) {
+	if ([FRACurrentProject areThereAnyDocuments] == NO || [FRAMain isInFullScreenMode] == YES || [[FRADefaults valueForKey:@"CheckIfDocumentHasBeenUpdated"] boolValue] == NO || [FRACurrentWindow attachedSheet] != nil)
+    {
 		return;
 	}
 	
-	NSArray *array = [FRABasic fetchAll:@"Document"];
-	for (id item in array) {
-		if ([[item valueForKey:@"isNewDocument"] boolValue] == YES || [[item valueForKey:@"ignoreAnotherApplicationHasUpdatedDocument"] boolValue] == YES) {
+	NSArray *array = [VADocument allDocuments];
+	for (id item in array)
+    {
+		if ([item isNewDocument] == YES || [item ignoreAnotherApplicationHasUpdatedDocument] == YES)
+        {
 			continue;
 		}
-		NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[item valueForKey:@"path"] error:nil];
-		if ([attributes fileModificationDate] == nil) {
+		NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath: [item path]
+                                                                                    error: nil];
+		if ([attributes fileModificationDate] == nil)
+        {
 			continue; // If fileModificationDate is nil the file has been removed or renamed there's no need to check the dates then
 		}
-		if (![[[item valueForKey:@"fileAttributes"] fileModificationDate] isEqualToDate:[attributes fileModificationDate]]) {
-			if ([[FRADefaults valueForKey:@"UpdateDocumentAutomaticallyWithoutWarning"] boolValue] == YES) {
+		if (![[[item fileAttributes] fileModificationDate] isEqualToDate:[attributes fileModificationDate]])
+        {
+			if ([[FRADefaults valueForKey:@"UpdateDocumentAutomaticallyWithoutWarning"] boolValue] == YES)
+            {
 				[[FRAFileMenuController sharedInstance] performRevertOfDocument:item];
-				[item setValue:[[NSFileManager defaultManager] attributesOfItemAtPath:[item valueForKey:@"path"] error:nil] forKey:@"fileAttributes"];
+				[item setFileAttributes: [[NSFileManager defaultManager] attributesOfItemAtPath:[item path] error:nil]];
 			} else {
 				if ([NSApp isHidden]) { // To display the sheet properly if the application is hidden
 					[NSApp activateIgnoringOtherApps:YES]; 
@@ -351,7 +359,7 @@ VASingletonIMPDefault(FRAVariousPerformer)
 				
 				NSString *title = [NSString stringWithFormat:NSLocalizedString(@"The document %@ has been updated by another application", @"Indicate that the document %@ has been updated by another application in Document-has-been-updated-alert sheet"), [item valueForKey:@"path"]];
 				NSString *message;
-				if ([[item valueForKey:@"isEdited"] boolValue] == YES) {
+				if ([item isEdited] == YES) {
 					message = NSLocalizedString(@"Do you want to ignore the updates the other application has made or reload the document and destroy any changes you have made to this document?", @"Ask whether they want to ignore the updates the other application has made or reload the document and destroy any changes you have made to this document Document-has-been-updated-alert sheet");
 				} else {
 					message = NSLocalizedString(@"Do you want to ignore the updates the other application has made or reload the document?", @"Ask whether they want to ignore the updates the other application has made or reload the document Document-has-been-updated-alert sheet");
@@ -378,12 +386,15 @@ VASingletonIMPDefault(FRAVariousPerformer)
 	[sheet close];
 	[FRAVarious stopModalLoop];
 	
-	id document = ((__bridge NSArray *)contextInfo)[0];
-	if (returnCode == NSAlertDefaultReturn) {
-		[document setValue:@YES forKey:@"ignoreAnotherApplicationHasUpdatedDocument"];
-	} else if (returnCode == NSAlertOtherReturn) {
+	VADocument *document = ((__bridge NSArray *)contextInfo)[0];
+	if (returnCode == NSAlertDefaultReturn)
+    {
+		[document setIgnoreAnotherApplicationHasUpdatedDocument: YES];
+        
+	} else if (returnCode == NSAlertOtherReturn)
+    {
 		[[FRAFileMenuController sharedInstance] performRevertOfDocument:document];
-		[document setValue:[[NSFileManager defaultManager] attributesOfItemAtPath:[document valueForKey:@"path"] error:nil] forKey:@"fileAttributes"];
+		[document setFileAttributes: [[NSFileManager defaultManager] attributesOfItemAtPath:[document path] error:nil]];
 	}
 }
 
@@ -429,10 +440,10 @@ VASingletonIMPDefault(FRAVariousPerformer)
 	
 	asynchronousTask = [[NSTask alloc] init];
 	
-	if (FRACurrentDocument != nil && [FRACurrentDocument valueForKey:@"path"] != nil) {
+	if ([FRAProjectsController currentDocument] != nil && [[FRAProjectsController currentDocument] path] != nil) {
 		NSMutableDictionary *defaultEnvironment = [NSMutableDictionary dictionaryWithDictionary:[[NSProcessInfo processInfo] environment]];
 		NSString *envPath = @(getenv("PATH"));
-		NSString *directory = [[FRACurrentDocument valueForKey:@"path"] stringByDeletingLastPathComponent];
+		NSString *directory = [[[FRAProjectsController currentDocument] path] stringByDeletingLastPathComponent];
 		defaultEnvironment[@"PATH"] = [NSString stringWithFormat:@"%@:%@", envPath, directory];
 		defaultEnvironment[@"PWD"] = directory;
 		[asynchronousTask setEnvironment:defaultEnvironment];
@@ -515,27 +526,28 @@ VASingletonIMPDefault(FRAVariousPerformer)
 }
 
 
-- (void)setUnsavedAsLastSavedDateForDocument:(id)document
+- (void)setUnsavedAsLastSavedDateForDocument: (VADocument *)document
 {
-	[document setValue:UNSAVED_STRING forKey:@"lastSaved"];
+	[document setLastSaved: UNSAVED_STRING];
 }
 
 
 - (void)setLastSavedDateForDocument:(id)document date:(NSDate *)lastSavedDate
 {
-	[document setValue:[NSString dateStringForDate:(NSCalendarDate *)lastSavedDate formatIndex:[[FRADefaults valueForKey:@"StatusBarLastSavedFormatPopUp"] integerValue]] forKey:@"lastSaved"];
+	[document setLastSaved: [NSString dateStringForDate: (NSCalendarDate *)lastSavedDate
+                                            formatIndex: [[FRADefaults valueForKey:@"StatusBarLastSavedFormatPopUp"] integerValue]]];
 }
 
 
 - (void)hasChangedDocument:(id)document
 {
-	[document setValue:@YES forKey:@"isEdited"];
+	[document setEdited: YES];
 	[FRACurrentProject reloadData];
-	if (document == FRACurrentDocument) {
+	if (document == [FRAProjectsController currentDocument]) {
 		[FRACurrentWindow setDocumentEdited:YES];
 	}
-	if ([document valueForKey:@"singleDocumentWindow"] != nil) {
-		[[document valueForKey:@"singleDocumentWindow"] setDocumentEdited:YES];
+	if ([document singleDocumentWindow] != nil) {
+		[[document singleDocumentWindow] setDocumentEdited:YES];
 	}
 	
 	[FRACurrentProject updateTabBar];
@@ -548,7 +560,8 @@ VASingletonIMPDefault(FRAVariousPerformer)
 }
 
 
-- (void)setNameAndPathForDocument:(id)document path:(NSString *)path
+- (void)setNameAndPathForDocument: (VADocument *)document
+                             path: (NSString *)path
 {
 	NSString *name;
 	if (path == nil) {
@@ -559,16 +572,16 @@ VASingletonIMPDefault(FRAVariousPerformer)
 			name = [NSString stringWithFormat:@"%@ %ld", untitledName, untitledNumber];
 		}
 		untitledNumber++;
-		[document setValue:name forKey:@"nameWithPath"];
+		[document setNameWithPath: name];
 		
 	} else {
 		
 		name = [path lastPathComponent];
-		[document setValue:[NSString stringWithFormat:@"%@ - %@", name, [path stringByDeletingLastPathComponent]] forKey:@"nameWithPath"];
+		[document setNameWithPath: [NSString stringWithFormat:@"%@ - %@", name, [path stringByDeletingLastPathComponent]]];
 	}
 	
-	[document setValue:name forKey:@"name"];
-	[document setValue:path forKey:@"path"];
+	[document setName: name];
+	[document setPath: path];
 }
 
 
@@ -618,13 +631,13 @@ VASingletonIMPDefault(FRAVariousPerformer)
 
 - (void)performInsertIconsOnMainThread:(id)array
 {
-	id document = array[0];
+	VADocument *document = array[0];
 	
 	NSArray *icons = array[1];
 	
 	if (document != nil) { // Check that the document hasn't been closed etc.
-		[document setValue:icons[0] forKey:@"icon"];
-		[document setValue:icons[1] forKey:@"unsavedIcon"];
+		[document setIcon: icons[0]];
+		[document setUnsavedIcon: icons[1]];
 		
 		[FRACurrentProject reloadData];
 	}

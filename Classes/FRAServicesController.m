@@ -18,7 +18,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAProjectsController.h"
 #import "FRAOpenSavePerformer.h"
 #import "FRAProject.h"
-
+#import "VADocument.h"
+#import "FRATextView.h"
 
 @implementation FRAServicesController
 
@@ -38,7 +39,7 @@ VASingletonIMPDefault(FRAServicesController)
 			[[FRAProjectsController sharedDocumentController] newDocument:nil];
 		}
 	}
-	if (![[FRACurrentDocument valueForKey:@"firstTextView"] readSelectionFromPasteboard:pboard type:NSStringPboardType]) {
+	if (![[[FRAProjectsController currentDocument]  firstTextView] readSelectionFromPasteboard:pboard type:NSStringPboardType]) {
 		NSBeep();
 	}
 }
@@ -61,7 +62,7 @@ VASingletonIMPDefault(FRAServicesController)
 	
 	id document = [FRACurrentProject createNewDocumentWithContents:@""];
 
-	if (![[document valueForKey:@"firstTextView"] readSelectionFromPasteboard:pboard type:NSStringPboardType]) {
+	if (![[document firstTextView] readSelectionFromPasteboard:pboard type:NSStringPboardType]) {
 		NSBeep();
 	}
 }

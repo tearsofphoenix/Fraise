@@ -73,7 +73,7 @@
 	}
 	
     //TODO
-//	[[document valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth: NO];
+//	[[document lineNumbers] updateLineNumbersCheckWidth: NO];
 }
 
 

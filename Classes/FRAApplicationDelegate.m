@@ -25,6 +25,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAVariousPerformer.h"
 
 #import "ODBEditorSuite.h"
+#import "VADocument.h"
 
 @implementation FRAApplicationDelegate
 	
@@ -147,8 +148,8 @@ VASingletonIMPDefault(FRAApplicationDelegate)
 			if ([project fileURL] == nil) {
 				NSArray *documents = [[project documentsArrayController] arrangedObjects];
 				for (id document in documents) {
-					if ([document valueForKey:@"path"] != nil && [[document valueForKey:@"fromExternal"] boolValue] != YES) {
-						[documentsArray addObject:[document valueForKey:@"path"]];
+					if ([document path] != nil && [document fromExternal] != YES) {
+						[documentsArray addObject:[document path]];
 					}
 				}
 			}
@@ -169,9 +170,11 @@ VASingletonIMPDefault(FRAApplicationDelegate)
 		[FRADefaults setValue:projectsArray forKey:@"OpenProjects"];
 	}
 	
-	array = [FRABasic fetchAll:@"Document"]; // Mark any external documents as closed
-	for (item in array) {
-		if ([[item valueForKey:@"fromExternal"] boolValue] == YES) {
+	array = [VADocument allDocuments]; // Mark any external documents as closed
+	for (VADocument *item in array)
+    {
+		if ([item  fromExternal])
+        {
 			[FRAVarious sendClosedEventToExternalDocument:item];
 		}
 	}
@@ -241,7 +244,7 @@ VASingletonIMPDefault(FRAApplicationDelegate)
 - (void)markItAsTrulyFinishedWithLaunching
 {
 	if (filesToOpenArray != nil && [filesToOpenArray count] > 0) {
-		NSArray *openDocument = [FRABasic fetchAll:@"Document"];
+		NSArray *openDocument = [VADocument allDocuments];
 		if ([openDocument count] != 0) {
 			if (FRACurrentProject != nil) {
 				[FRACurrentProject performCloseDocument:openDocument[0]];
@@ -255,7 +258,7 @@ VASingletonIMPDefault(FRAApplicationDelegate)
 		
 		if ([[FRADefaults valueForKey:@"OpenAllDocumentsIHadOpen"] boolValue] == YES && [[FRADefaults valueForKey:@"OpenDocuments"] count] > 0) {
 			shouldCreateEmptyDocument = NO;
-			NSArray *openDocument = [FRABasic fetchAll:@"Document"];
+			NSArray *openDocument = [VADocument allDocuments];
 			if ([openDocument count] != 0) {
 				if (FRACurrentProject != nil) {
 					filesToOpenArray = [[NSMutableArray alloc] init]; // A hack so that -[FRAProject performCloseDocument:] won't close the window
@@ -318,7 +321,7 @@ VASingletonIMPDefault(FRAApplicationDelegate)
 	
 	NSEnumerator *currentProjectEnumerator = [[[FRACurrentProject documentsArrayController] arrangedObjects] reverseObjectEnumerator];
 	for (document in currentProjectEnumerator) {
-		menuItem = [[NSMenuItem alloc] initWithTitle:[document valueForKey:@"name"] action:@selector(selectDocumentFromTheDock:) keyEquivalent:@""];
+		menuItem = [[NSMenuItem alloc] initWithTitle:[document name] action:@selector(selectDocumentFromTheDock:) keyEquivalent:@""];
 		[menuItem setTarget:[FRAProjectsController sharedDocumentController]];
 		[menuItem setRepresentedObject:document];
 		[returnMenu insertItem:menuItem atIndex:0];
@@ -338,7 +341,7 @@ VASingletonIMPDefault(FRAApplicationDelegate)
 		
 		NSEnumerator *documentsEnumerator = [[[(FRAProject *)project documents] allObjects] reverseObjectEnumerator];
 		for (document in documentsEnumerator) {
-			menuItem = [[NSMenuItem alloc] initWithTitle:[document valueForKey:@"name"] action:@selector(selectDocumentFromTheDock:) keyEquivalent:@""];
+			menuItem = [[NSMenuItem alloc] initWithTitle:[document name] action:@selector(selectDocumentFromTheDock:) keyEquivalent:@""];
 			[menuItem setTarget:[FRAProjectsController sharedDocumentController]];
 			[menuItem setRepresentedObject:document];
 			[menu insertItem:menuItem atIndex:0];

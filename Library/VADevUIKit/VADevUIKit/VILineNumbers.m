@@ -96,7 +96,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
     
 	CGFloat addToScrollPoint = 0;
 
-//    if (scrollView == [document valueForKey:@"secondTextScrollView"])
+//    if (scrollView == [document secondTextScrollView])
     {
 //		addToScrollPoint = [[FRACurrentProject secondContentViewNavigationBar] bounds].size.height;
 	}

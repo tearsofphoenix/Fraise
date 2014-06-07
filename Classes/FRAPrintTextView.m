@@ -19,7 +19,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAProject.h"
 #import "FRASyntaxColouring.h"
 #import "FRATextView.h"
-
+#import "VADocument.h"
 #import <VADevUIKit/VADevUIKit.h>
 
 @implementation FRAPrintTextView
@@ -35,14 +35,14 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (NSString *)printJobTitle
 {
-	return [FRACurrentDocument valueForKey:@"name"];
+	return [[FRAProjectsController currentDocument] name];
 }
 
 - (void)drawPageBorderWithSize:(NSSize)borderSize
 {	
 	NSPrintInfo *printInfo = [FRACurrentProject printInfo];
 	if ([printInfo topMargin] != [printInfo bottomMargin]) { // We should print a header
-		NSString *headerString = [NSString stringWithFormat:@"%ld   %C   %@   %C   %@   %C   %@", [[NSPrintOperation currentOperation] currentPage], 0x00B7, [FRACurrentDocument valueForKey:@"name"], 0x00B7, [[NSDate date] descriptionWithCalendarFormat:@"%Y-%m-%d %H:%M" timeZone:nil locale:nil], 0x00B7, NSFullUserName()];
+		NSString *headerString = [NSString stringWithFormat:@"%ld   %C   %@   %C   %@   %C   %@", [[NSPrintOperation currentOperation] currentPage], 0x00B7, [[FRAProjectsController currentDocument] name], 0x00B7, [[NSDate date] descriptionWithCalendarFormat:@"%Y-%m-%d %H:%M" timeZone:nil locale:nil], 0x00B7, NSFullUserName()];
 		
 		NSRect savedTextRect = [self frame];	
 		[self setFrame:NSMakeRect(0, 0, borderSize.width, borderSize.height)];
@@ -113,8 +113,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 			[self setString:FRACurrentText];
 		}
 		
-		if ([[FRACurrentDocument valueForKey:@"isSyntaxColoured"] boolValue] == YES && [[FRADefaults valueForKey:@"PrintSyntaxColours"] boolValue] == YES) {
-			FRATextView *textView = [FRACurrentDocument valueForKey:@"firstTextView"];
+		if ([[FRAProjectsController currentDocument] isSyntaxColoured] == YES && [[FRADefaults valueForKey:@"PrintSyntaxColours"] boolValue] == YES) {
+			FRATextView *textView = [[FRAProjectsController currentDocument]  firstTextView];
 			VILayoutManager *layoutManager = (VILayoutManager *)[textView layoutManager];
 			NSTextStorage *textStorage = [self textStorage];
 			NSInteger lastCharacter = [[textView string] length];
@@ -123,9 +123,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
 			if (printOnlySelection == YES) {
 				index = [FRACurrentTextView selectedRange].location;
 				lastCharacter = NSMaxRange([FRACurrentTextView selectedRange]);
-				[[FRACurrentDocument valueForKey:@"syntaxColouring"] recolourRange:[FRACurrentTextView selectedRange]];
+				[[[FRAProjectsController currentDocument] syntaxColouring] recolourRange:[FRACurrentTextView selectedRange]];
 			} else {
-				[[FRACurrentDocument valueForKey:@"syntaxColouring"] recolourRange:NSMakeRange(0, lastCharacter)];
+				[[[FRAProjectsController currentDocument] syntaxColouring] recolourRange:NSMakeRange(0, lastCharacter)];
 			}
 			NSRange range;
 			NSDictionary *attributes;

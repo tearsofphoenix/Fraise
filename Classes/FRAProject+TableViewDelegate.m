@@ -20,6 +20,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAInterfacePerformer.h"
 #import "FRAVariousPerformer.h"
 #import "FRASyntaxColouring.h"
+#import "VADocument.h"
 
 #import "FRAProject+DocumentViewsController.h"
 
@@ -57,31 +58,31 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	if (aTableView == [self documentsTableView]) {
 		id document = [[self documentsArrayController] arrangedObjects][rowIndex];
 		
-		if ([[document valueForKey:@"isNewDocument"] boolValue] == YES) {
+		if ([document isNewDocument] == YES) {
 			[aTableView addToolTipRect:[aTableView rectOfRow:rowIndex] owner:UNSAVED_STRING userData:nil];
 		} else {
-			if ([[document valueForKey:@"fromExternal"] boolValue]) {
-				[aTableView addToolTipRect:[aTableView rectOfRow:rowIndex] owner:[document valueForKey:@"externalPath"] userData:nil];
+			if ([document fromExternal]) {
+				[aTableView addToolTipRect:[aTableView rectOfRow:rowIndex] owner:[document externalPath] userData:nil];
 			} else {
-				[aTableView addToolTipRect:[aTableView rectOfRow:rowIndex] owner:[document valueForKey:@"path"] userData:nil];
+				[aTableView addToolTipRect:[aTableView rectOfRow:rowIndex] owner:[document path] userData:nil];
 			}
 		}
 		
 		if ([[aTableColumn identifier] isEqualToString:@"name"]) {
 			NSImage *image;
-			if ([[document valueForKey:@"isEdited"] boolValue] == YES) {
-				image = [document valueForKey:@"unsavedIcon"];
+			if ([document isEdited] == YES) {
+				image = [document unsavedIcon];
 			} else {
-				image = [document valueForKey:@"icon"];
+				image = [document icon];
 			}
 
 			[(FRADocumentsListCell *)aCell setHeightAndWidth:[[[self valueForKey:@"project"] valueForKey:@"viewSize"] doubleValue]];
 			[(FRADocumentsListCell *)aCell setImage:image];
 			
 			if ([[FRADefaults valueForKey:@"ShowFullPathInDocumentsList"] boolValue] == YES) {
-				[(FRADocumentsListCell *)aCell setStringValue:[document valueForKey:@"nameWithPath"]];
+				[(FRADocumentsListCell *)aCell setStringValue:[document nameWithPath]];
 			} else {
-				[(FRADocumentsListCell *)aCell setStringValue:[document valueForKey:@"name"]];
+				[(FRADocumentsListCell *)aCell setStringValue:[document name]];
 			}
 		}
 		
@@ -94,20 +95,20 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	[self setFirstDocument:document];
 	
 	[FRAInterface removeAllSubviewsFromView:firstContentView];
-	[firstContentView addSubview:[document valueForKey:@"firstTextScrollView"]];
-	if ([[document valueForKey:@"showLineNumberGutter"] boolValue] == YES) {
-		[firstContentView addSubview:[document valueForKey:@"firstGutterScrollView"]];
+	[firstContentView addSubview:[document firstTextScrollView]];
+	if ([document showLineNumberGutter] == YES) {
+		[firstContentView addSubview:[document firstGutterScrollView]];
 	}
 	
 	[self updateWindowTitleBarForDocument:document];
 	[self resizeViewsForDocument:document]; // If the window has changed since the view was last visible
 	[[self documentsTableView] scrollRowToVisible:[[self documentsTableView] selectedRow]];
 	
-	[[self window] makeFirstResponder:[document valueForKey:@"firstTextView"]];
-    NSClipView *clipView = [[document valueForKey:@"firstTextScrollView"] contentView];
-	[[document valueForKey:@"lineNumbers"] updateLineNumbersForClipView: clipView
+	[[self window] makeFirstResponder:[document firstTextView]];
+    NSClipView *clipView = [[document firstTextScrollView] contentView];
+	[[document lineNumbers] updateLineNumbersForClipView: clipView
                                                              checkWidth: NO]; // If the window has changed since the view was last visible
-    [[document valueForKey: @"syntaxColouring"] pageRecolourTextView: [clipView documentView]];
+    [[document syntaxColouring] pageRecolourTextView: [clipView documentView]];
 
 	[FRAInterface updateStatusBar];
 	

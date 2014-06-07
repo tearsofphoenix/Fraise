@@ -101,14 +101,14 @@ VASingletonIMPDefault(FRAToolsMenuController)
 	}
 	NSString *textPath = [FRABasic genererateTemporaryPath];
 	
-	id document = FRACurrentDocument;
-	NSData *data = [[NSData alloc] initWithData:[[FRAText convertLineEndings:text inDocument:document] dataUsingEncoding:[[document valueForKey:@"encoding"] integerValue] allowLossyConversion:YES]];
+	id document = [FRAProjectsController currentDocument];
+	NSData *data = [[NSData alloc] initWithData:[[FRAText convertLineEndings:text inDocument:document] dataUsingEncoding:[document encoding] allowLossyConversion:YES]];
 	if ([data writeToFile:textPath atomically:YES]) {
 		NSString *result;
 		NSString *resultPath = [FRABasic genererateTemporaryPath];
 		system([[NSString stringWithFormat:@"%@ %@ > %@", [FRADefaults valueForKey:@"RunText"], textPath, resultPath] UTF8String]);
 		if ([[NSFileManager defaultManager] fileExistsAtPath:resultPath]) {
-			result = [NSString stringWithContentsOfFile:resultPath encoding:[[document valueForKey:@"encoding"] integerValue] error:nil];
+			result = [NSString stringWithContentsOfFile:resultPath encoding:[document encoding] error:nil];
 			[[NSFileManager defaultManager] removeItemAtPath:resultPath error:nil];
 			[[[FRAExtraInterfaceController sharedInstance] commandResultWindow] makeKeyAndOrderFront:nil];
 			[[[FRAExtraInterfaceController sharedInstance] commandResultTextView] setString:result];
@@ -411,14 +411,14 @@ VASingletonIMPDefault(FRAToolsMenuController)
 	}
 	NSString *textPath = [FRABasic genererateTemporaryPath];
 	
-	id document = FRACurrentDocument;
-	NSData *data = [[NSData alloc] initWithData:[[FRAText convertLineEndings:text inDocument:document] dataUsingEncoding:[[document valueForKey:@"encoding"] integerValue] allowLossyConversion:YES]];
+	id document = [FRAProjectsController currentDocument];
+	NSData *data = [[NSData alloc] initWithData:[[FRAText convertLineEndings:text inDocument:document] dataUsingEncoding:[document encoding] allowLossyConversion:YES]];
 	if ([data writeToFile:textPath atomically:YES]) {
 		NSString *result;
 		NSString *resultPath = [FRABasic genererateTemporaryPath];
 		system([[NSString stringWithFormat:@"%@ %@ > %@", [FRADefaults valueForKey:@"RunText"], textPath, resultPath] UTF8String]);
 		if ([[NSFileManager defaultManager] fileExistsAtPath:resultPath]) {
-			result = [NSString stringWithContentsOfFile:resultPath encoding:[[document valueForKey:@"encoding"] integerValue] error:nil];
+			result = [NSString stringWithContentsOfFile:resultPath encoding:[document encoding] error:nil];
 			[[NSFileManager defaultManager] removeItemAtPath:resultPath error:nil];
 			[textView insertText:result];
 		}

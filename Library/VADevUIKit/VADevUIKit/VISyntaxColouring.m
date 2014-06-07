@@ -143,12 +143,12 @@
 	NSArray *foundSyntaxDefinition = nil; //[managedObjectContext executeFetchRequest:request error:nil];
     
 	NSString *fileToUse = nil;
-	NSString *extension = nil; //[[document valueForKey:@"name"] pathExtension];
+	NSString *extension = nil; //[[document name] pathExtension];
     NSString *syntaxDefinitionName = nil;
     
-//	if ([[document valueForKey:@"hasManuallyChangedSyntaxDefinition"] boolValue] == YES)
+//	if ([document hasManuallyChangedSyntaxDefinition] == YES)
 //    { // Once the user has changed the syntax definition always use that one and not the one from the extension
-//		request = [[entityDescription managedObjectModel] fetchRequestFromTemplateWithName:@"syntaxDefinitionName" substitutionVariables:@{@"NAME": [document valueForKey:@"syntaxDefinition"]}];
+//		request = [[entityDescription managedObjectModel] fetchRequestFromTemplateWithName:@"syntaxDefinitionName" substitutionVariables:@{@"NAME": [document syntaxDefinition]}];
 //		NSArray *foundManuallyChangedSyntaxDefinition = [managedObjectContext executeFetchRequest:request error:nil];
 //		if ([foundManuallyChangedSyntaxDefinition count] != 0) {
 //			fileToUse = [foundManuallyChangedSyntaxDefinition[0] valueForKey:@"file"];
@@ -173,7 +173,7 @@
 			NSString *lowercaseExtension;
 			if ([extension isEqualToString: @""])
             { // If there is no extension try to guess it
-				NSString *string = nil; //[[[document valueForKey:@"firstTextScrollView"] documentView] string];
+				NSString *string = nil; //[[[document firstTextScrollView] documentView] string];
 				NSString *firstLine = [string substringWithRange:[string lineRangeForRange:NSMakeRange(0,0)]];
 				if ([firstLine hasPrefix:@"#!"] || [firstLine hasPrefix:@"%"] || [firstLine hasPrefix:@"<?"])
                 {
@@ -407,7 +407,7 @@
 
 - (void)pageRecolourTextView: (VITextView *)textView
 {
-//	if ([[document valueForKey:@"isSyntaxColoured"] boolValue] == NO)
+//	if ([document isSyntaxColoured] == NO)
 //    {
 //		return;
 //	}
@@ -1032,7 +1032,7 @@
 {
 	if (![undoManager canUndo])
     {
-//		[FRACurrentDocument setValue:@NO forKey:@"isEdited"];
+//		[[FRAProjectsController currentDocument] setValue:@NO forKey:@"isEdited"];
 //		[FRACurrentProject updateEditedBlobStatus];
 //		[FRACurrentProject reloadData];
 	}

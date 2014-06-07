@@ -27,6 +27,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAOpenSavePerformer.h"
 #import "FRASyntaxColouring.h"
 
+#import "VADocument.h"
+#import "FRATextView.h"
+
 #import <VAFoundation/VAFoundation.h>
 #import <VADevUIKit/VADevUIKit.h>
 
@@ -63,7 +66,7 @@ VASingletonIMPDefault(FRAAdvancedFindController)
 	[findSearchField setRecentSearches:recentSearches];
 	
 	NSInteger searchStringLength = [searchString length];
-	if (!searchStringLength > 0 || FRACurrentDocument == nil || FRACurrentProject == nil) {
+	if (!searchStringLength > 0 || [FRAProjectsController currentDocument] == nil || FRACurrentProject == nil) {
 		NSBeep();
 		return;
 	}
@@ -88,10 +91,10 @@ VASingletonIMPDefault(FRAAdvancedFindController)
 		node = [NSMutableDictionary dictionary];
 		if ([[FRADefaults valueForKey:@"ShowFullPathInWindowTitle"] boolValue] == YES)
         {
-			node[@"displayString"] = [document valueForKey:@"nameWithPath"];
+			node[@"displayString"] = [document nameWithPath];
 		} else
         {
-			node[@"displayString"] = [document valueForKey:@"name"];
+			node[@"displayString"] = [document name];
 		}
 		node[@"isLeaf"] = @NO;
 		node[@"document"] = [FRABasic uriFromObject:document];
@@ -100,8 +103,8 @@ VASingletonIMPDefault(FRAAdvancedFindController)
 		
 		documentIndex++;
 		
-		completeString = [[document valueForKey:@"firstTextView"] string];
-		searchRange = [[document valueForKey:@"firstTextView"] selectedRange];
+		completeString = [[document firstTextView] string];
+		searchRange = [[document firstTextView] selectedRange];
 		completeStringLength = [completeString length];
 		if ([[FRADefaults valueForKey:@"OnlyInSelectionAdvancedFind"] boolValue] == NO || searchRange.length == 0) {
 			searchRange = NSMakeRange(0, completeStringLength);
@@ -255,7 +258,7 @@ VASingletonIMPDefault(FRAAdvancedFindController)
 	[replaceSearchField setRecentSearches:recentReplaces];
 	
 	NSInteger searchStringLength = [searchString length];
-	if (!searchStringLength > 0 || FRACurrentDocument == nil || FRACurrentProject == nil) {
+	if (!searchStringLength > 0 || [FRAProjectsController currentDocument] == nil || FRACurrentProject == nil) {
 		NSBeep();
 		return;
 	}
@@ -270,8 +273,8 @@ VASingletonIMPDefault(FRAAdvancedFindController)
 	
 	NSEnumerator *enumerator = [self scopeEnumerator];
 	for (id document in enumerator) {
-		completeString = [[[document valueForKey:@"firstTextScrollView"] documentView] string];
-		searchRange = [[[document valueForKey:@"firstTextScrollView"] documentView] selectedRange];
+		completeString = [[[document firstTextScrollView] documentView] string];
+		searchRange = [[[document firstTextScrollView] documentView] selectedRange];
 		completeStringLength = [completeString length];
 		if ([[FRADefaults valueForKey:@"OnlyInSelectionAdvancedFind"] boolValue] == NO || searchRange.length == 0) {
 			searchRange = NSMakeRange(0, completeStringLength);
@@ -338,7 +341,7 @@ VASingletonIMPDefault(FRAAdvancedFindController)
 				
 				NSEnumerator *originalDocumentsEnumerator = [originalDocuments objectEnumerator];
 				for (id originalDocument in originalDocumentsEnumerator) {
-					if ([[originalDocument valueForKey:@"nameWithPath"] isEqualToString:[document valueForKey:@"nameWithPath"]]) {
+					if ([[originalDocument valueForKey:@"nameWithPath"] isEqualToString:[document nameWithPath]]) {
 						closing = NO;
 						break;
 					}
@@ -411,12 +414,12 @@ VASingletonIMPDefault(FRAAdvancedFindController)
 	
 	NSEnumerator *enumerator = [self scopeEnumerator];
 	for (id document in enumerator) {
-		NSTextView *textView = [[document valueForKey:@"firstTextScrollView"] documentView];
+		NSTextView *textView = [[document firstTextScrollView] documentView];
 		NSString *originalString = [NSString stringWithString:[textView string]];
 		NSMutableString *completeString = [NSMutableString stringWithString:[textView string]];
-		searchRange = [[[document valueForKey:@"firstTextScrollView"] documentView] selectedRange];
+		searchRange = [[[document firstTextScrollView] documentView] selectedRange];
 		if ([[FRADefaults valueForKey:@"OnlyInSelectionAdvancedFind"] boolValue] == NO || searchRange.length == 0) {
-			searchRange = NSMakeRange(0, [[[[document valueForKey:@"firstTextScrollView"] documentView] string] length]);
+			searchRange = NSMakeRange(0, [[[[document firstTextScrollView] documentView] string] length]);
 		}
 		
 		if ([[FRADefaults valueForKey:@"UseRegularExpressionsAdvancedFind"] boolValue] == YES) {		
@@ -467,7 +470,7 @@ VASingletonIMPDefault(FRAAdvancedFindController)
 			if ([textView shouldChangeTextInRange:NSMakeRange(0, [[textView string] length]) replacementString:completeString]) { // Do it this way to mark it as an Undo
 				[textView replaceCharactersInRange:NSMakeRange(0, [[textView string] length]) withString:completeString];
 				[textView didChangeText];
-				[document setValue:@YES forKey:@"isEdited"];
+				[document setEdited: YES];
 			}
 		}		
 		
@@ -534,7 +537,7 @@ VASingletonIMPDefault(FRAAdvancedFindController)
 	id document = [FRABasic objectFromURI:[object valueForKey:@"document"]];
 	
 	if (document == nil) {
-		NSString *title = [NSString stringWithFormat:NSLocalizedString(@"The document %@ is no longer open", @"Indicate that the document %@ is no longer open in Document-is-no-longer-opened-after-selection-in-advanced-find-sheet"), [document valueForKey:@"name"]];
+		NSString *title = [NSString stringWithFormat:NSLocalizedString(@"The document %@ is no longer open", @"Indicate that the document %@ is no longer open in Document-is-no-longer-opened-after-selection-in-advanced-find-sheet"), [document name]];
 		NSBeginAlertSheet(title,
 						  OK_BUTTON,
 						  nil,
@@ -550,37 +553,37 @@ VASingletonIMPDefault(FRAAdvancedFindController)
 	
 	_currentlyDisplayedDocumentInAdvancedFind = document;
 	
-	if ([document valueForKey:@"fourthTextView"] == nil) {
+	if ([document fourthTextView] == nil) {
 		[FRAInterface insertDocumentIntoFourthContentView:document];
 	}
 	
 	[self removeCurrentlyDisplayedDocumentInAdvancedFind];
-	[resultDocumentContentView addSubview:[document valueForKey:@"fourthTextScrollView"]];
-	if ([[document valueForKey:@"showLineNumberGutter"] boolValue] == YES) {
-		[resultDocumentContentView addSubview:[document valueForKey:@"fourthGutterScrollView"]];
+	[resultDocumentContentView addSubview:[document fourthTextScrollView]];
+	if ([document showLineNumberGutter] == YES) {
+		[resultDocumentContentView addSubview:[document fourthGutterScrollView]];
 	}
 
-    NSClipView *clipView = [[document valueForKey:@"fourthTextScrollView"] contentView];
-	[[document valueForKey:@"lineNumbers"] updateLineNumbersForClipView: clipView
+    NSClipView *clipView = [[document fourthTextScrollView] contentView];
+	[[document lineNumbers] updateLineNumbersForClipView: clipView
                                                              checkWidth: YES]; // If the window has changed since the view was last visible
     FRATextView *textView = [clipView documentView];
-    [[FRACurrentDocument valueForKey: @"syntaxColouring"] pageRecolourTextView: textView];
+    [[[FRAProjectsController currentDocument] syntaxColouring] pageRecolourTextView: textView];
 
     
 	NSRange selectRange = NSRangeFromString([[findResultsTreeController selectedObjects][0] valueForKey:@"range"]);
-	NSString *completeString = [[document valueForKey:@"fourthTextView"] string];
+	NSString *completeString = [[document fourthTextView] string];
 	if (NSMaxRange(selectRange) > [completeString length]) {
 		NSBeep();
 		return;
 	}
 	
-	[[document valueForKey:@"fourthTextView"] setSelectedRange:selectRange];
-	[[document valueForKey:@"fourthTextView"] scrollRangeToVisible:selectRange];
-	[[document valueForKey:@"fourthTextView"] showFindIndicatorForRange:selectRange];
-	[findResultsOutlineView setNextKeyView:[document valueForKey:@"fourthTextView"]];
+	[[document fourthTextView] setSelectedRange:selectRange];
+	[[document fourthTextView] scrollRangeToVisible:selectRange];
+	[[document fourthTextView] showFindIndicatorForRange:selectRange];
+	[findResultsOutlineView setNextKeyView:[document fourthTextView]];
 	
 	if ([[FRADefaults valueForKey:@"FocusOnTextInAdvancedFind"] boolValue] == YES) {
-		[advancedFindWindow makeFirstResponder:[document valueForKey:@"fourthTextView"]];
+		[advancedFindWindow makeFirstResponder:[document fourthTextView]];
 	}
 }
 
@@ -600,7 +603,7 @@ VASingletonIMPDefault(FRAAdvancedFindController)
 	} else if (searchScope == FRAParentDirectoryScope){
 		enumerator = [self documentsInFolderEnumerator];
 	} else {
-		enumerator = [@[FRACurrentDocument] objectEnumerator];
+		enumerator = [@[[FRAProjectsController currentDocument]] objectEnumerator];
 	}
 	
 	return enumerator;
@@ -614,7 +617,7 @@ VASingletonIMPDefault(FRAAdvancedFindController)
 {
 	NSEnumerator *enumerator;
 	
-	NSString *parentDirectory = [[FRACurrentDocument path] stringByDeletingLastPathComponent];
+	NSString *parentDirectory = [[[FRAProjectsController currentDocument] path] stringByDeletingLastPathComponent];
 	NSFileManager *fileManager = [NSFileManager defaultManager];
     BOOL isDir;
 	
@@ -649,7 +652,7 @@ VASingletonIMPDefault(FRAAdvancedFindController)
     {
 		// Log the failure and return an enumerator for the current document.
         NSLog(@"%@ must be directory and must exist.\n", parentDirectory);
-		enumerator = [@[FRACurrentDocument] objectEnumerator];;
+		enumerator = [@[[FRAProjectsController currentDocument]] objectEnumerator];;
     }
 	
 	return enumerator;

@@ -25,6 +25,7 @@
 #import "FRAApplicationDelegate.h"
 #import "FRAToolsMenuController.h"
 #import "FRAProjectsController.h"
+#import "VADocument.h"
 
 #import <VADevUIKit/VADevUIKit.h>
 
@@ -131,8 +132,9 @@ VASingletonIMPDefault(FRASnippetsController)
 - (void)insertSnippet:(id)snippet
 {
 	FRATextView *textView = FRACurrentTextView;
-	if ([FRAMain isInFullScreenMode]) {
-		textView = [[FRAInterface fullScreenDocument] valueForKey:@"thirdTextView"];
+	if ([FRAMain isInFullScreenMode])
+    {
+		textView = [[FRAInterface fullScreenDocument] thirdTextView];
 	}
 	if (textView == nil) {
 		NSBeep();
