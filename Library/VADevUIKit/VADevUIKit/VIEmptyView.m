@@ -12,11 +12,11 @@ http://www.apache.org/licenses/LICENSE-2.0
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 */
 
-#import "VAEmptyView.h"
+#import "VIEmptyView.h"
 
 #define NO_DOCUMENT_SELECTED_STRING NSLocalizedString(@"No document selected", @"Indicate that no document is selected for the dummy view")
 
-@implementation VAEmptyView
+@implementation VIEmptyView
 
 static NSImage *fraiseImage = nil;
 static NSDictionary *attributes = nil;

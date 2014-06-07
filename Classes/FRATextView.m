@@ -15,7 +15,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAStandardHeader.h"
 
 #import "FRATextView.h"
-#import "FRALayoutManager.h"
 #import "FRATextMenuController.h"
 #import "FRAProjectsController.h"
 #import "FRABasicPerformer.h"
@@ -31,7 +30,15 @@ Unless required by applicable law or agreed to in writing, software distributed 
 {
 	if (self = [super initWithFrame:frame])
     {
-		FRALayoutManager *layoutManager = [[FRALayoutManager alloc] init];
+        NSDictionary *attributes = (@{
+                                      NSFontAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextFont"]],
+                                      NSForegroundColorAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"InvisibleCharactersColourWell"]]
+                                      });
+        BOOL showInvisibleCharacters = [[FRADefaults valueForKey:@"ShowInvisibleCharacters"] boolValue];
+        
+        VILayoutManager *layoutManager = [[VILayoutManager alloc] init];
+        [layoutManager setAttributes: attributes];
+        [layoutManager setShowInvisibleCharacters: showInvisibleCharacters];
 		[[self textContainer] replaceLayoutManager: layoutManager];
 		
 		[self setDefaults];		

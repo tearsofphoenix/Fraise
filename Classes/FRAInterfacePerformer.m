@@ -19,7 +19,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRATextMenuController.h"
 #import "FRAProjectsController.h"
 #import "FRALineNumbers.h"
-#import "FRALayoutManager.h"
 #import "FRASingleDocumentWindowDelegate.h"
 #import "FRAAdvancedFindController.h"
 #import "FRABasicPerformer.h"
@@ -41,7 +40,7 @@ VASingletonIMPDefault(FRAInterfacePerformer)
 {
     if ((self = [super init]))
     {
-        [VAGutterTextView setDefaultFont: [NSUnarchiver unarchiveObjectWithData: [FRADefaults valueForKey: @"TextFont"]]];
+        [VIGutterTextView setDefaultFont: [NSUnarchiver unarchiveObjectWithData: [FRADefaults valueForKey: @"TextFont"]]];
         
 		statusBarBetweenString = [[NSString alloc] initWithFormat:@"  %C  ", 0x00B7];
 		statusBarLastSavedString = NSLocalizedString(@"Saved", @"Saved, in the status bar");
@@ -106,7 +105,7 @@ VASingletonIMPDefault(FRAInterfacePerformer)
 	[gutterScrollView setAutoresizingMask:NSViewHeightSizable];
 	[[gutterScrollView contentView] setAutoresizesSubviews:YES];
 	
-	VAGutterTextView *gutterTextView = [[VAGutterTextView alloc] initWithFrame:NSMakeRect(0, 0, [[FRADefaults valueForKey:@"GutterWidth"] integerValue], contentSize.height - 50)];
+	VIGutterTextView *gutterTextView = [[VIGutterTextView alloc] initWithFrame:NSMakeRect(0, 0, [[FRADefaults valueForKey:@"GutterWidth"] integerValue], contentSize.height - 50)];
 	[gutterScrollView setDocumentView:gutterTextView];
 	
 	[document setValue:textView forKey:@"firstTextView"];
@@ -122,8 +121,18 @@ VASingletonIMPDefault(FRAInterfacePerformer)
 	[self removeAllSubviewsFromView:secondContentView];
 	
 	NSTextStorage *textStorage = [[[document valueForKey:@"firstTextScrollView"] documentView] textStorage];
-	FRALayoutManager *layoutManager = [[FRALayoutManager alloc] init];
-	[textStorage addLayoutManager:layoutManager];
+    
+    NSDictionary *attributes = (@{
+                                  NSFontAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextFont"]],
+                                  NSForegroundColorAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"InvisibleCharactersColourWell"]]
+                                  });
+    BOOL showInvisibleCharacters = [[FRADefaults valueForKey:@"ShowInvisibleCharacters"] boolValue];
+    
+	VILayoutManager *layoutManager = [[VILayoutManager alloc] init];
+    [layoutManager setAttributes: attributes];
+    [layoutManager setShowInvisibleCharacters: showInvisibleCharacters];
+    
+	[textStorage addLayoutManager: layoutManager];
 	[[document valueForKey:@"syntaxColouring"] setSecondLayoutManager:layoutManager];
 	
 	u_int16_t gutterWidth = [[document valueForKey:@"firstGutterScrollView"] bounds].size.width;
@@ -172,7 +181,7 @@ VASingletonIMPDefault(FRAInterfacePerformer)
 	[gutterScrollView setAutoresizingMask:NSViewHeightSizable];
 	[[gutterScrollView contentView] setAutoresizesSubviews:YES];
 	
-	VAGutterTextView *gutterTextView = [[VAGutterTextView alloc] initWithFrame:NSMakeRect(0, secondContentViewNavigationBarHeight, gutterWidth, contentSize.height)];
+	VIGutterTextView *gutterTextView = [[VIGutterTextView alloc] initWithFrame:NSMakeRect(0, secondContentViewNavigationBarHeight, gutterWidth, contentSize.height)];
 	[gutterScrollView setDocumentView:gutterTextView];
 	
 	[secondContentView addSubview:textScrollView];
@@ -221,7 +230,17 @@ VASingletonIMPDefault(FRAInterfacePerformer)
 	NSView *thirdContentView = [window contentView];
 	
 	NSTextStorage *textStorage = [[[document valueForKey:@"firstTextScrollView"] documentView] textStorage];
-	FRALayoutManager *layoutManager = [[FRALayoutManager alloc] init];
+    
+    NSDictionary *attributes = (@{
+                                  NSFontAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextFont"]],
+                                  NSForegroundColorAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"InvisibleCharactersColourWell"]]
+                                  });
+    BOOL showInvisibleCharacters = [[FRADefaults valueForKey:@"ShowInvisibleCharacters"] boolValue];
+    
+	VILayoutManager *layoutManager = [[VILayoutManager alloc] init];
+    [layoutManager setAttributes: attributes];
+    [layoutManager setShowInvisibleCharacters: showInvisibleCharacters];
+    
 	[textStorage addLayoutManager:layoutManager];
 	[[document valueForKey:@"syntaxColouring"] setThirdLayoutManager:layoutManager];
 	
@@ -267,7 +286,7 @@ VASingletonIMPDefault(FRAInterfacePerformer)
 	[gutterScrollView setAutoresizingMask:NSViewHeightSizable];
 	[[gutterScrollView contentView] setAutoresizesSubviews:YES];
 	
-	VAGutterTextView *gutterTextView = [[VAGutterTextView alloc] initWithFrame:NSMakeRect(0, 0, gutterWidth, contentSize.height)];
+	VIGutterTextView *gutterTextView = [[VIGutterTextView alloc] initWithFrame:NSMakeRect(0, 0, gutterWidth, contentSize.height)];
 	[gutterScrollView setDocumentView:gutterTextView];
 	
 	[thirdContentView addSubview:textScrollView];
@@ -289,7 +308,17 @@ VASingletonIMPDefault(FRAInterfacePerformer)
 - (void)insertDocumentIntoFourthContentView:(id)document
 {	
 	NSTextStorage *textStorage = [[[document valueForKey:@"firstTextScrollView"] documentView] textStorage];
-	FRALayoutManager *layoutManager = [[FRALayoutManager alloc] init];
+    
+    NSDictionary *attributes = (@{
+                                  NSFontAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextFont"]],
+                                  NSForegroundColorAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"InvisibleCharactersColourWell"]]
+                                  });
+    BOOL showInvisibleCharacters = [[FRADefaults valueForKey:@"ShowInvisibleCharacters"] boolValue];
+    
+	VILayoutManager *layoutManager = [[VILayoutManager alloc] init];
+    [layoutManager setAttributes: attributes];
+    [layoutManager setShowInvisibleCharacters: showInvisibleCharacters];
+    
 	[textStorage addLayoutManager:layoutManager];
 	[[document valueForKey:@"syntaxColouring"] setFourthLayoutManager:layoutManager];
 	
@@ -338,7 +367,7 @@ VASingletonIMPDefault(FRAInterfacePerformer)
 	[gutterScrollView setAutoresizingMask:NSViewHeightSizable];
 	[[gutterScrollView contentView] setAutoresizesSubviews:YES];
 	
-	VAGutterTextView *gutterTextView = [[VAGutterTextView alloc] initWithFrame:NSMakeRect(0, 0, gutterWidth, contentSize.height)];
+	VIGutterTextView *gutterTextView = [[VIGutterTextView alloc] initWithFrame:NSMakeRect(0, 0, gutterWidth, contentSize.height)];
 	[gutterScrollView setDocumentView:gutterTextView];
 	
 	[fourthContentView addSubview:textScrollView];

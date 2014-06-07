@@ -14,11 +14,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 #import <Cocoa/Cocoa.h>
 
-@interface VAGutterTextView : NSTextView
+@interface VIEmptyView : NSView
 
-@property (nonatomic) CGFloat width;
-
-+ (void)setDefaultFont: (NSFont *)font;
-+ (NSFont *)defaultFont;
++ (void)setDummyImage: (NSImage *)image;
 
 @end

@@ -14,20 +14,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 #import <Cocoa/Cocoa.h>
 
-@interface FRALayoutManager : NSLayoutManager
-{	
-	NSDictionary *attributes;
-	NSString *tabCharacter;
-	NSString *newLineCharacter;
-	
-	NSString *completeString;
-	NSInteger lengthToRedraw;
-	NSInteger index;
-	unichar characterToCheck;
-	NSPoint pointToDrawAt;
-	NSRect glyphFragment;
-}
 
-@property (nonatomic) BOOL showInvisibleCharacters;
+@interface VFFontTransformer : NSValueTransformer
 
 @end

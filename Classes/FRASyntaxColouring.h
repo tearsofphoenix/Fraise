@@ -15,7 +15,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import <Cocoa/Cocoa.h>
 
 @class FRATextView;
-@class FRALayoutManager;
+@class VILayoutManager;
 
 @interface FRASyntaxColouring : NSObject <NSTextStorageDelegate>
 
@@ -25,9 +25,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
 @property (copy) NSString *functionDefinition;
 @property (copy) NSString *removeFromFunction;
 
-@property (unsafe_unretained) FRALayoutManager *secondLayoutManager;
-@property (unsafe_unretained) FRALayoutManager *thirdLayoutManager;
-@property (unsafe_unretained) FRALayoutManager *fourthLayoutManager;
+@property (unsafe_unretained) VILayoutManager *secondLayoutManager;
+@property (unsafe_unretained) VILayoutManager *thirdLayoutManager;
+@property (unsafe_unretained) VILayoutManager *fourthLayoutManager;
 
 @property (readonly) NSUndoManager *undoManager;
 

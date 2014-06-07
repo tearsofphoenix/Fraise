@@ -18,7 +18,6 @@
 
 #import "FRASyntaxColouring.h"
 #import "FRATextView.h"
-#import "FRALayoutManager.h"
 #import "FRABasicPerformer.h"
 #import "FRAApplicationDelegate.h"
 #import "FRAInterfacePerformer.h"
@@ -29,11 +28,12 @@
 #import "FRAProject.h"
 
 #import <VAFoundation/VAFoundation.h>
+#import <VADevUIKit/VADevUIKit.h>
 
 @interface FRASyntaxColouring ()
 {
 	NSUndoManager *undoManager;
-	FRALayoutManager *firstLayoutManager;
+	VILayoutManager *firstLayoutManager;
 	
 	NSTimer *autocompleteWordsTimer;
 	NSInteger currentYOfSelectedCharacter, lastYOfSelectedCharacter, currentYOfLastCharacterInLine, lastYOfLastCharacterInLine, currentYOfLastCharacter, lastYOfLastCharacter, lastCursorLocation;
@@ -125,7 +125,7 @@
 	if ((self = [super init]))
     {
 		document = theDocument;
-		firstLayoutManager = (FRALayoutManager *)[[document valueForKey:@"firstTextView"] layoutManager];
+		firstLayoutManager = (VILayoutManager *)[[document valueForKey:@"firstTextView"] layoutManager];
 		_secondLayoutManager = nil;
 		_thirdLayoutManager = nil;
 		_fourthLayoutManager = nil;

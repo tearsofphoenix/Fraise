@@ -43,7 +43,7 @@ VASingletonIMPDefault(FRAPreferencesController)
     {
 		hasPreparedAdvancedInterface = NO;
         
-        [VAEmptyView setDummyImage: [NSImage imageNamed: @"FRAMainIcon.icns"]];
+        [VIEmptyView setDummyImage: [NSImage imageNamed: @"FRAMainIcon.icns"]];
     }
     return self;
 }

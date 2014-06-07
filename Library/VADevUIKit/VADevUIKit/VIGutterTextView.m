@@ -12,10 +12,10 @@
  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-#import "VAGutterTextView.h"
+#import "VIGutterTextView.h"
 #import "VADevUIKitNotifications.h"
 
-@implementation VAGutterTextView
+@implementation VIGutterTextView
 
 static NSFont *gsFont = nil;
 
@@ -46,8 +46,9 @@ static NSFont *gsFont = nil;
 		[self setHorizontallyResizable:YES];
 		[self setAutoresizingMask:NSViewHeightSizable];
 		
-		[self setTextColor:[NSColor textColor]];//[NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextColourWell"]]];
-		[self setInsertionPointColor:[NSColor textColor]];//[NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextColourWell"]]];
+		[self setTextColor:[NSColor textColor]];
+		[self setInsertionPointColor:[NSColor textColor]];
+        
 		[self setBackgroundColor:[NSColor colorWithCalibratedWhite:0.94 alpha:1.0]];
         
         [self setFont: gsFont];

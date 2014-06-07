@@ -8,6 +8,6 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface VAGradientView : NSView
+@interface VIGradientView : NSView
 
 @end

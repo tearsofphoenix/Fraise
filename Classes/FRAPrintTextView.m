@@ -17,9 +17,10 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAPrintTextView.h"
 #import "FRAProjectsController.h"
 #import "FRAProject.h"
-#import "FRALayoutManager.h"
 #import "FRASyntaxColouring.h"
 #import "FRATextView.h"
+
+#import <VADevUIKit/VADevUIKit.h>
 
 @implementation FRAPrintTextView
 
@@ -114,7 +115,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 		
 		if ([[FRACurrentDocument valueForKey:@"isSyntaxColoured"] boolValue] == YES && [[FRADefaults valueForKey:@"PrintSyntaxColours"] boolValue] == YES) {
 			FRATextView *textView = [FRACurrentDocument valueForKey:@"firstTextView"];
-			FRALayoutManager *layoutManager = (FRALayoutManager *)[textView layoutManager];
+			VILayoutManager *layoutManager = (VILayoutManager *)[textView layoutManager];
 			NSTextStorage *textStorage = [self textStorage];
 			NSInteger lastCharacter = [[textView string] length];
 			[layoutManager removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:NSMakeRange(0, lastCharacter)];

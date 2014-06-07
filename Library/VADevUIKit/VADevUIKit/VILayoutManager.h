@@ -14,7 +14,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 #import <Cocoa/Cocoa.h>
 
+@interface VILayoutManager : NSLayoutManager
 
-@interface VAFontTransformer : NSValueTransformer
+@property (nonatomic) BOOL showInvisibleCharacters;
+@property (nonatomic, strong) NSDictionary *attributes;
 
 @end

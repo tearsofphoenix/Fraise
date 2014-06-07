@@ -6,14 +6,14 @@
 //  Copyright (c) 2014年 Mac003. All rights reserved.
 //
 
-#import "VADefaults.h"
+#import "VIDefaults.h"
 #import <VAFoundation/VAFoundation.h>
 
 
 
-@implementation VADefaults
+@implementation VIDefaults
 
-VASingletonIMP(VADefaults, defaults)
+VASingletonIMP(VIDefaults, defaults)
 
 
 @end

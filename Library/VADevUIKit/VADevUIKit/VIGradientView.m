@@ -6,12 +6,12 @@
 //  Copyright (c) 2014年 Mac003. All rights reserved.
 //
 
-#import "VAGradientView.h"
+#import "VIGradientView.h"
 
 static 	NSGradient *gradient = nil;
 static CGFloat scaleFactor = 1;
 
-@implementation VAGradientView
+@implementation VIGradientView
 
 + (void)initialize
 {

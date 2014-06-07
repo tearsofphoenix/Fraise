@@ -6,9 +6,9 @@
 //  Copyright (c) 2014年 Mac003. All rights reserved.
 //
 
-#import <VAFoundation/VABase.h>
+#import <VAFoundation/VFBase.h>
 #import <VAFoundation/NSString+VAExtensions.h>
 #import <VAFoundation/ICUMatcher.h>
 #import <VAFoundation/ICUPattern.h>
 #import <VAFoundation/NSStringICUAdditions.h>
-#import <VAFoundation/VAFontTransformer.h>
+#import <VAFoundation/VFFontTransformer.h>

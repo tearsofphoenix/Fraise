@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface VADefaults : NSObject
+@interface VIDefaults : NSObject
 
 + (instancetype)defaults;
 

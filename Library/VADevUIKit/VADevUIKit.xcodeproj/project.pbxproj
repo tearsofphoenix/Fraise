@@ -7,11 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6044808E1940A53A000E1820 /* VADefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 6044808C1940A53A000E1820 /* VADefaults.m */; };
-		604589861942021F0004DF6B /* VAGradientView.h in Headers */ = {isa = PBXBuildFile; fileRef = 604589841942021F0004DF6B /* VAGradientView.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		604589871942021F0004DF6B /* VAGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = 604589851942021F0004DF6B /* VAGradientView.m */; };
-		6045898B194209090004DF6B /* VAEmptyView.h in Headers */ = {isa = PBXBuildFile; fileRef = 60458989194209090004DF6B /* VAEmptyView.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		6045898C194209090004DF6B /* VAEmptyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6045898A194209090004DF6B /* VAEmptyView.m */; };
+		6034C5531942937300D53431 /* VILayoutManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 6034C5511942937300D53431 /* VILayoutManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6034C5541942937300D53431 /* VILayoutManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6034C5521942937300D53431 /* VILayoutManager.m */; };
+		6044808E1940A53A000E1820 /* VIDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 6044808C1940A53A000E1820 /* VIDefaults.m */; };
+		604589861942021F0004DF6B /* VIGradientView.h in Headers */ = {isa = PBXBuildFile; fileRef = 604589841942021F0004DF6B /* VIGradientView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		604589871942021F0004DF6B /* VIGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = 604589851942021F0004DF6B /* VIGradientView.m */; };
+		6045898B194209090004DF6B /* VIEmptyView.h in Headers */ = {isa = PBXBuildFile; fileRef = 60458989194209090004DF6B /* VIEmptyView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6045898C194209090004DF6B /* VIEmptyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6045898A194209090004DF6B /* VIEmptyView.m */; };
 		604589A0194222800004DF6B /* PSMOverflowPopUpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 60458993194222800004DF6B /* PSMOverflowPopUpButton.m */; };
 		604589A2194222800004DF6B /* PSMRolloverButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 60458995194222800004DF6B /* PSMRolloverButton.m */; };
 		604589A4194222800004DF6B /* PSMTabBarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 60458997194222800004DF6B /* PSMTabBarCell.m */; };
@@ -32,8 +34,8 @@
 		92A1FF49194060990090870B /* NSToolbarItem+Fraise.h in Headers */ = {isa = PBXBuildFile; fileRef = 92A1FF45194060990090870B /* NSToolbarItem+Fraise.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		92A1FF4A194060990090870B /* NSToolbarItem+Fraise.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A1FF46194060990090870B /* NSToolbarItem+Fraise.m */; };
 		92A1FF4B194060BF0090870B /* VADevUIKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 92A1FEC4194057C20090870B /* VADevUIKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		92A1FF4E194065BC0090870B /* VAGutterTextView.h in Headers */ = {isa = PBXBuildFile; fileRef = 92A1FF4C194065BC0090870B /* VAGutterTextView.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		92A1FF4F194065BC0090870B /* VAGutterTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A1FF4D194065BC0090870B /* VAGutterTextView.m */; };
+		92A1FF4E194065BC0090870B /* VIGutterTextView.h in Headers */ = {isa = PBXBuildFile; fileRef = 92A1FF4C194065BC0090870B /* VIGutterTextView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		92A1FF4F194065BC0090870B /* VIGutterTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A1FF4D194065BC0090870B /* VIGutterTextView.m */; };
 		92A1FF51194067730090870B /* VADevUIKitNotifications.h in Headers */ = {isa = PBXBuildFile; fileRef = 92A1FF50194067730090870B /* VADevUIKitNotifications.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		92A1FF53194067FD0090870B /* VADevUIKitNotifications.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A1FF52194067FD0090870B /* VADevUIKitNotifications.m */; };
 /* End PBXBuildFile section */
@@ -70,13 +72,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		6044808B1940A53A000E1820 /* VADefaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VADefaults.h; sourceTree = "<group>"; };
-		6044808C1940A53A000E1820 /* VADefaults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VADefaults.m; sourceTree = "<group>"; };
+		6034C5511942937300D53431 /* VILayoutManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VILayoutManager.h; sourceTree = "<group>"; };
+		6034C5521942937300D53431 /* VILayoutManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VILayoutManager.m; sourceTree = "<group>"; };
+		6044808B1940A53A000E1820 /* VIDefaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VIDefaults.h; sourceTree = "<group>"; };
+		6044808C1940A53A000E1820 /* VIDefaults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VIDefaults.m; sourceTree = "<group>"; };
 		604480911940A646000E1820 /* VAFoundation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = VAFoundation.xcodeproj; path = ../VAFoundation/VAFoundation.xcodeproj; sourceTree = "<group>"; };
-		604589841942021F0004DF6B /* VAGradientView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VAGradientView.h; sourceTree = "<group>"; };
-		604589851942021F0004DF6B /* VAGradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VAGradientView.m; sourceTree = "<group>"; };
-		60458989194209090004DF6B /* VAEmptyView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VAEmptyView.h; sourceTree = "<group>"; };
-		6045898A194209090004DF6B /* VAEmptyView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VAEmptyView.m; sourceTree = "<group>"; };
+		604589841942021F0004DF6B /* VIGradientView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VIGradientView.h; sourceTree = "<group>"; };
+		604589851942021F0004DF6B /* VIGradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VIGradientView.m; sourceTree = "<group>"; };
+		60458989194209090004DF6B /* VIEmptyView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VIEmptyView.h; sourceTree = "<group>"; };
+		6045898A194209090004DF6B /* VIEmptyView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VIEmptyView.m; sourceTree = "<group>"; };
 		60458992194222800004DF6B /* PSMOverflowPopUpButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSMOverflowPopUpButton.h; sourceTree = "<group>"; };
 		60458993194222800004DF6B /* PSMOverflowPopUpButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSMOverflowPopUpButton.m; sourceTree = "<group>"; };
 		60458994194222800004DF6B /* PSMRolloverButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSMRolloverButton.h; sourceTree = "<group>"; };
@@ -108,8 +112,8 @@
 		92A1FF44194060990090870B /* NSImage+Fraise.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSImage+Fraise.m"; sourceTree = "<group>"; };
 		92A1FF45194060990090870B /* NSToolbarItem+Fraise.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSToolbarItem+Fraise.h"; sourceTree = "<group>"; };
 		92A1FF46194060990090870B /* NSToolbarItem+Fraise.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSToolbarItem+Fraise.m"; sourceTree = "<group>"; };
-		92A1FF4C194065BC0090870B /* VAGutterTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VAGutterTextView.h; sourceTree = "<group>"; };
-		92A1FF4D194065BC0090870B /* VAGutterTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VAGutterTextView.m; sourceTree = "<group>"; };
+		92A1FF4C194065BC0090870B /* VIGutterTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VIGutterTextView.h; sourceTree = "<group>"; };
+		92A1FF4D194065BC0090870B /* VIGutterTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VIGutterTextView.m; sourceTree = "<group>"; };
 		92A1FF50194067730090870B /* VADevUIKitNotifications.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VADevUIKitNotifications.h; sourceTree = "<group>"; };
 		92A1FF52194067FD0090870B /* VADevUIKitNotifications.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VADevUIKitNotifications.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -214,14 +218,16 @@
 				92A1FEC4194057C20090870B /* VADevUIKit.h */,
 				92A1FF50194067730090870B /* VADevUIKitNotifications.h */,
 				92A1FF52194067FD0090870B /* VADevUIKitNotifications.m */,
-				6044808B1940A53A000E1820 /* VADefaults.h */,
-				6044808C1940A53A000E1820 /* VADefaults.m */,
-				92A1FF4C194065BC0090870B /* VAGutterTextView.h */,
-				92A1FF4D194065BC0090870B /* VAGutterTextView.m */,
-				604589841942021F0004DF6B /* VAGradientView.h */,
-				604589851942021F0004DF6B /* VAGradientView.m */,
-				60458989194209090004DF6B /* VAEmptyView.h */,
-				6045898A194209090004DF6B /* VAEmptyView.m */,
+				6044808B1940A53A000E1820 /* VIDefaults.h */,
+				6044808C1940A53A000E1820 /* VIDefaults.m */,
+				92A1FF4C194065BC0090870B /* VIGutterTextView.h */,
+				92A1FF4D194065BC0090870B /* VIGutterTextView.m */,
+				604589841942021F0004DF6B /* VIGradientView.h */,
+				604589851942021F0004DF6B /* VIGradientView.m */,
+				60458989194209090004DF6B /* VIEmptyView.h */,
+				6045898A194209090004DF6B /* VIEmptyView.m */,
+				6034C5511942937300D53431 /* VILayoutManager.h */,
+				6034C5521942937300D53431 /* VILayoutManager.m */,
 				92A1FEBE194057C20090870B /* Supporting Files */,
 			);
 			path = VADevUIKit;
@@ -282,12 +288,13 @@
 			files = (
 				92A1FF49194060990090870B /* NSToolbarItem+Fraise.h in Headers */,
 				92A1FF51194067730090870B /* VADevUIKitNotifications.h in Headers */,
-				92A1FF4E194065BC0090870B /* VAGutterTextView.h in Headers */,
+				92A1FF4E194065BC0090870B /* VIGutterTextView.h in Headers */,
 				92A1FF47194060990090870B /* NSImage+Fraise.h in Headers */,
 				604589A5194222800004DF6B /* PSMTabBarControl.h in Headers */,
-				604589861942021F0004DF6B /* VAGradientView.h in Headers */,
-				6045898B194209090004DF6B /* VAEmptyView.h in Headers */,
+				604589861942021F0004DF6B /* VIGradientView.h in Headers */,
+				6045898B194209090004DF6B /* VIEmptyView.h in Headers */,
 				604589AC194229500004DF6B /* PSMTabBarCell.h in Headers */,
+				6034C5531942937300D53431 /* VILayoutManager.h in Headers */,
 				92A1FF4B194060BF0090870B /* VADevUIKit.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -412,17 +419,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				92A1FF48194060990090870B /* NSImage+Fraise.m in Sources */,
+				6034C5541942937300D53431 /* VILayoutManager.m in Sources */,
 				604589A6194222800004DF6B /* PSMTabBarControl.m in Sources */,
 				92A1FF4A194060990090870B /* NSToolbarItem+Fraise.m in Sources */,
 				604589A8194222800004DF6B /* PSMTabDragAssistant.m in Sources */,
 				92A1FF53194067FD0090870B /* VADevUIKitNotifications.m in Sources */,
-				6044808E1940A53A000E1820 /* VADefaults.m in Sources */,
+				6044808E1940A53A000E1820 /* VIDefaults.m in Sources */,
 				604589A4194222800004DF6B /* PSMTabBarCell.m in Sources */,
 				604589AB194222800004DF6B /* PSMUnifiedTabStyle.m in Sources */,
 				604589A2194222800004DF6B /* PSMRolloverButton.m in Sources */,
-				92A1FF4F194065BC0090870B /* VAGutterTextView.m in Sources */,
-				604589871942021F0004DF6B /* VAGradientView.m in Sources */,
-				6045898C194209090004DF6B /* VAEmptyView.m in Sources */,
+				92A1FF4F194065BC0090870B /* VIGutterTextView.m in Sources */,
+				604589871942021F0004DF6B /* VIGradientView.m in Sources */,
+				6045898C194209090004DF6B /* VIEmptyView.m in Sources */,
 				604589A0194222800004DF6B /* PSMOverflowPopUpButton.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

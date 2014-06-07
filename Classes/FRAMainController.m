@@ -58,7 +58,7 @@ VASingletonIMPDefault(FRAMainController)
 	
 	[[FRAPreferencesController sharedInstance] setDefaults];	
 	
-	VAFontTransformer *fontTransformer = [[VAFontTransformer alloc] init];
+	VFFontTransformer *fontTransformer = [[VFFontTransformer alloc] init];
     [NSValueTransformer setValueTransformer: fontTransformer
                                     forName: @"FontTransformer"];
 	

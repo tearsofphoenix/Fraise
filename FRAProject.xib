@@ -45,7 +45,7 @@
                         <tabViewItems>
                             <tabViewItem label="Tab" identifier="1" id="259">
                                 <view key="view" id="260">
-                                    <rect key="frame" x="10" y="19" width="497" height="0.0"/>
+                                    <rect key="frame" x="10" y="28" width="497" height="-19"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 </view>
                             </tabViewItem>
@@ -79,11 +79,11 @@
                                 <rect key="frame" x="237" y="0.0" width="358" height="500"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <subviews>
-                                    <customView id="172" customClass="VAEmptyView">
+                                    <customView id="172" customClass="VIEmptyView">
                                         <rect key="frame" x="0.0" y="0.0" width="358" height="222"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     </customView>
-                                    <customView id="173" customClass="VAEmptyView">
+                                    <customView id="173" customClass="VIEmptyView">
                                         <rect key="frame" x="0.0" y="231" width="358" height="269"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     </customView>
@@ -126,7 +126,7 @@
                 <binding destination="-2" name="contentObject" keyPath="project" id="100"/>
             </connections>
         </objectController>
-        <customView id="180" userLabel="SecondContentViewNavigationBar" customClass="VAGradientView">
+        <customView id="180" userLabel="SecondContentViewNavigationBar" customClass="VIGradientView">
             <rect key="frame" x="0.0" y="0.0" width="418" height="22"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
             <subviews>
@@ -200,7 +200,7 @@
                 </scrollView>
             </subviews>
         </customView>
-        <customView id="230" userLabel="ViewSelectionView" customClass="VAGradientView">
+        <customView id="230" userLabel="ViewSelectionView" customClass="VIGradientView">
             <rect key="frame" x="0.0" y="0.0" width="224" height="22"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
             <subviews>

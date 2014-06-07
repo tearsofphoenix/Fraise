@@ -22,11 +22,11 @@
 #import "FRAInterfacePerformer.h"
 #import "FRAVariousPerformer.h"
 #import "FRAPrintTextView.h"
-#import "FRALayoutManager.h"
 #import "FRASyntaxColouring.h"
 #import "FRAProject.h"
 #import "FRALineNumbers.h"
 
+#import <VADevUIKit/VADevUIKit.h>
 
 @implementation FRAFileMenuController
 

@@ -12,47 +12,75 @@ http://www.apache.org/licenses/LICENSE-2.0
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 */
 
-#import "FRAStandardHeader.h"
+#import "VILayoutManager.h"
+#import "VADevUIKitNotifications.h"
 
-#import "FRALayoutManager.h"
+@interface VILayoutManager ()
+{
+	
+	NSString *completeString;
+	NSInteger lengthToRedraw;
+	NSInteger index;
+	unichar characterToCheck;
+	NSPoint pointToDrawAt;
+	NSRect glyphFragment;
+}
+@end
 
-@implementation FRALayoutManager
+static 	NSString *tabCharacter = nil;
+static NSString *newLineCharacter = nil;
+
+@implementation VILayoutManager
+
++ (void)initialize
+{
+    unichar tabUnichar = 0x00AC;
+    tabCharacter = [[NSString alloc] initWithCharacters:&tabUnichar length:1];
+    unichar newLineUnichar = 0x00B6;
+    newLineCharacter = [[NSString alloc] initWithCharacters:&newLineUnichar length:1];
+}
 
 - (id)init
 {
 	if (self = [super init])
     {
-		attributes = @{NSFontAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextFont"]], NSForegroundColorAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"InvisibleCharactersColourWell"]]};
-		unichar tabUnichar = 0x00AC;
-		tabCharacter = [[NSString alloc] initWithCharacters:&tabUnichar length:1];
-		unichar newLineUnichar = 0x00B6;
-		newLineCharacter = [[NSString alloc] initWithCharacters:&newLineUnichar length:1];
-		
-		[self setShowInvisibleCharacters:[[FRADefaults valueForKey:@"ShowInvisibleCharacters"] boolValue]];
 		[self setAllowsNonContiguousLayout:YES]; // Setting this to YES sometimes causes "an extra toolbar" and other graphical glitches to sometimes appear in the text view when one sets a temporary attribute, reported as ID #5832329 to Apple
-		
-		NSUserDefaultsController *defaultsController = [NSUserDefaultsController sharedUserDefaultsController];
-		[defaultsController addObserver:self forKeyPath:@"values.TextFont" options:NSKeyValueObservingOptionNew context:@"FontOrColourValueChanged"];
-		[defaultsController addObserver:self forKeyPath:@"values.InvisibleCharactersColourWell" options:NSKeyValueObservingOptionNew context:@"FontOrColourValueChanged"];
+        [[NSNotificationCenter defaultCenter] addObserver: self
+                                                 selector: @selector(_notificationForTextFontChanged:)
+                                                     name: VATextFontChangedNotification
+                                                   object: nil];
 
 	}
 	return self;
 }
 
-
-- (void)observeValueForKeyPath: (NSString *)keyPath
-                      ofObject: (id)object
-                        change: (NSDictionary *)change
-                       context: (void *)context
+- (void)dealloc
 {
-	if ([(__bridge NSString *)context isEqualToString:@"FontOrColourValueChanged"])
+    [[NSNotificationCenter defaultCenter] removeObserver: self];
+}
+
+- (void)_notificationForTextFontChanged: (NSNotification *)notification
+{
+    if (_attributes)
     {
-		attributes = @{NSFontAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextFont"]], NSForegroundColorAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"InvisibleCharactersColourWell"]]};
-		[[self firstTextView] setNeedsDisplay:YES];
-	} else
+        NSFont *font = [notification userInfo][VAFontKey];
+
+        NSDictionary *newAttributes = (@{
+                                         NSFontAttributeName : font,
+                                         NSForegroundColorAttributeName : _attributes[NSForegroundColorAttributeName]
+                                         });
+        [self setAttributes: newAttributes];
+    }
+}
+
+
+- (void)setAttributes: (NSDictionary *)attributes
+{
+    if (_attributes != attributes)
     {
-		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
-	}
+        _attributes = attributes;
+        [[self firstTextView] setNeedsDisplay: YES];
+    }
 }
 
 
@@ -72,7 +100,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 				glyphFragment = [self lineFragmentRectForGlyphAtIndex:index effectiveRange:NULL];
 				pointToDrawAt.x += glyphFragment.origin.x;
 				pointToDrawAt.y = glyphFragment.origin.y;
-				[tabCharacter drawAtPoint:pointToDrawAt withAttributes:attributes];
+				[tabCharacter drawAtPoint:pointToDrawAt
+                           withAttributes: _attributes];
 				
 			} else if (characterToCheck == '\n' || characterToCheck == '\r')
             {
@@ -80,7 +109,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 				glyphFragment = [self lineFragmentRectForGlyphAtIndex:index effectiveRange:NULL];
 				pointToDrawAt.x += glyphFragment.origin.x;
 				pointToDrawAt.y = glyphFragment.origin.y;
-				[newLineCharacter drawAtPoint:pointToDrawAt withAttributes:attributes];
+				[newLineCharacter drawAtPoint: pointToDrawAt
+                               withAttributes: _attributes];
 			}
 		}
     } 
