@@ -14,15 +14,18 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 #import <Cocoa/Cocoa.h>
 
-@interface FRALineNumbers : NSObject
+@interface VILineNumbers : NSObject
 
-- (id)initWithDocument:(id)theDocument;
+@property (nonatomic, strong) NSDictionary *attributes;
+@property BOOL showLineNumberGutter;
+@property NSInteger gutterWidth;
 
-- (void)updateLineNumbersCheckWidth: (BOOL)checkWidth
-                           recolour: (BOOL)recolour;
+- (void)updateLineNumbersCheckWidth: (BOOL)checkWidth;
 
 - (void)updateLineNumbersForClipView: (NSClipView *)clipView
-                          checkWidth: (BOOL)checkWidth
-                            recolour: (BOOL)recolour;
+                          checkWidth: (BOOL)checkWidth;
+
+- (void)addScrollView: (NSScrollView *)scrollView;
+- (void)removeScrollView: (NSScrollView *)scrollView;
 
 @end

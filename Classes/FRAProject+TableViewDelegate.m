@@ -19,7 +19,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRADocumentsListCell.h"
 #import "FRAInterfacePerformer.h"
 #import "FRAVariousPerformer.h"
-#import "FRALineNumbers.h"
+#import "FRASyntaxColouring.h"
+
 #import "FRAProject+DocumentViewsController.h"
 
 @implementation FRAProject (TableViewDelegate)
@@ -103,7 +104,11 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	[[self documentsTableView] scrollRowToVisible:[[self documentsTableView] selectedRow]];
 	
 	[[self window] makeFirstResponder:[document valueForKey:@"firstTextView"]];
-	[[document valueForKey:@"lineNumbers"] updateLineNumbersForClipView:[[document valueForKey:@"firstTextScrollView"] contentView] checkWidth:NO recolour:YES]; // If the window has changed since the view was last visible
+    NSClipView *clipView = [[document valueForKey:@"firstTextScrollView"] contentView];
+	[[document valueForKey:@"lineNumbers"] updateLineNumbersForClipView: clipView
+                                                             checkWidth: NO]; // If the window has changed since the view was last visible
+    [[document valueForKey: @"syntaxColouring"] pageRecolourTextView: [clipView documentView]];
+
 	[FRAInterface updateStatusBar];
 	
 	[self selectSameDocumentInTabBarAsInDocumentsList];

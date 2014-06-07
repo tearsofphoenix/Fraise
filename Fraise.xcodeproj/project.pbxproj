@@ -108,7 +108,6 @@
 		7F980B190B73B6A2000A9140 /* FRAFullScreenWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F980AC70B73B6A2000A9140 /* FRAFullScreenWindow.m */; };
 		7F980B1B0B73B6A2000A9140 /* FRAHelpMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F980ACB0B73B6A2000A9140 /* FRAHelpMenuController.m */; };
 		7F980B1C0B73B6A2000A9140 /* FRAInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F980ACD0B73B6A2000A9140 /* FRAInfoController.m */; };
-		7F980B1E0B73B6A2000A9140 /* FRALineNumbers.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F980AD10B73B6A2000A9140 /* FRALineNumbers.m */; };
 		7F980B1F0B73B6A2000A9140 /* FRAMainController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F980AD30B73B6A2000A9140 /* FRAMainController.m */; };
 		7F980B230B73B6A2000A9140 /* FRAPreferencesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F980ADB0B73B6A2000A9140 /* FRAPreferencesController.m */; };
 		7F980B240B73B6A2000A9140 /* FRAPreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F980ADD0B73B6A2000A9140 /* FRAPreviewController.m */; };
@@ -488,8 +487,6 @@
 		7F980ACB0B73B6A2000A9140 /* FRAHelpMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FRAHelpMenuController.m; path = Classes/FRAHelpMenuController.m; sourceTree = "<group>"; };
 		7F980ACC0B73B6A2000A9140 /* FRAInfoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FRAInfoController.h; path = Classes/FRAInfoController.h; sourceTree = "<group>"; };
 		7F980ACD0B73B6A2000A9140 /* FRAInfoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FRAInfoController.m; path = Classes/FRAInfoController.m; sourceTree = "<group>"; };
-		7F980AD00B73B6A2000A9140 /* FRALineNumbers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FRALineNumbers.h; path = Classes/FRALineNumbers.h; sourceTree = "<group>"; };
-		7F980AD10B73B6A2000A9140 /* FRALineNumbers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FRALineNumbers.m; path = Classes/FRALineNumbers.m; sourceTree = "<group>"; };
 		7F980AD20B73B6A2000A9140 /* FRAMainController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FRAMainController.h; path = Classes/FRAMainController.h; sourceTree = "<group>"; };
 		7F980AD30B73B6A2000A9140 /* FRAMainController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FRAMainController.m; path = Classes/FRAMainController.m; sourceTree = "<group>"; };
 		7F980ADA0B73B6A2000A9140 /* FRAPreferencesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FRAPreferencesController.h; path = Classes/FRAPreferencesController.h; sourceTree = "<group>"; };
@@ -883,8 +880,6 @@
 		7F5C24A40B73B9CC00D2EDDC /* Others */ = {
 			isa = PBXGroup;
 			children = (
-				7F980AD00B73B6A2000A9140 /* FRALineNumbers.h */,
-				7F980AD10B73B6A2000A9140 /* FRALineNumbers.m */,
 				7F980AF30B73B6A2000A9140 /* FRASyntaxColouring.h */,
 				7F980AF40B73B6A2000A9140 /* FRASyntaxColouring.m */,
 			);
@@ -1252,7 +1247,6 @@
 				7F980B190B73B6A2000A9140 /* FRAFullScreenWindow.m in Sources */,
 				7F980B1B0B73B6A2000A9140 /* FRAHelpMenuController.m in Sources */,
 				7F980B1C0B73B6A2000A9140 /* FRAInfoController.m in Sources */,
-				7F980B1E0B73B6A2000A9140 /* FRALineNumbers.m in Sources */,
 				7F980B1F0B73B6A2000A9140 /* FRAMainController.m in Sources */,
 				7F980B230B73B6A2000A9140 /* FRAPreferencesController.m in Sources */,
 				7F980B240B73B6A2000A9140 /* FRAPreviewController.m in Sources */,

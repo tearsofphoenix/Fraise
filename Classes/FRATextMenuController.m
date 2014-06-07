@@ -22,10 +22,12 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAExtraInterfaceController.h"
 #import "FRAFileMenuController.h"
 #import "FRATextPerformer.h"
-#import "FRALineNumbers.h"
+
 #import "FRASyntaxColouring.h"
 #import "FRATextView.h"
 #import "FRAProject.h"
+
+#import <VADevUIKit/VADevUIKit.h>
 
 @implementation FRATextMenuController
 
@@ -306,7 +308,7 @@ static id sharedInstance = nil;
 		if ([[FRACurrentDocument valueForKey:@"isEdited"] boolValue] == NO) {
 			[FRAVarious hasChangedDocument:FRACurrentDocument];
 		}
-		[[FRACurrentDocument valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth:NO recolour:NO];
+		[[FRACurrentDocument valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth: NO];
 	}
 	
 	if ([updatedSelectionsArray count] > 0) {
@@ -400,7 +402,7 @@ static id sharedInstance = nil;
 		[FRAVarious hasChangedDocument:FRACurrentDocument];
 	}
 	
-	[[FRACurrentDocument valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth:NO recolour:NO];
+	[[FRACurrentDocument valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth: NO];
 	
 	if ([updatedSelectionsArray count] > 0) {
 		[textView setSelectedRanges:updatedSelectionsArray];
@@ -482,7 +484,7 @@ static id sharedInstance = nil;
 		if ([[FRACurrentDocument valueForKey:@"isEdited"] boolValue] == NO) {
 			[FRAVarious hasChangedDocument:FRACurrentDocument];
 		}
-		[[FRACurrentDocument valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth:NO recolour:NO];
+		[[FRACurrentDocument valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth: NO];
 	}
 	
 	if ([updatedSelectionsArray count] > 0) {
@@ -884,7 +886,7 @@ static id sharedInstance = nil;
 		[FRAVarious hasChangedDocument:FRACurrentDocument];
 	}
 	
-	[[FRACurrentDocument valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth:NO recolour:NO];
+	[[FRACurrentDocument valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth: NO];
 	
 	if (selectedRange.length > 0) {
 		[textView setSelectedRanges:updatedSelectionsArray];
@@ -937,8 +939,9 @@ static id sharedInstance = nil;
 		[FRAVarious hasChangedDocument:FRACurrentDocument];
 	}
 	
-	[[FRACurrentDocument valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth:YES recolour:YES];
-	
+	[[FRACurrentDocument valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth: YES];
+    [[FRACurrentDocument valueForKey: @"syntaxColouring"] pageRecolour];
+
 	if ([updatedSelectionsArray count] > 0) {
 		[textView setSelectedRanges:updatedSelectionsArray];
 	}
@@ -1073,7 +1076,7 @@ static id sharedInstance = nil;
 		[FRAVarious hasChangedDocument:FRACurrentDocument];
 	}
 	
-	[[FRACurrentDocument valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth:NO recolour:NO];
+	[[FRACurrentDocument valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth: NO];
 		
 }
 

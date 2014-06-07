@@ -14,18 +14,26 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 #import <Cocoa/Cocoa.h>
 
-@interface FRATextView : NSTextView
-{
-	NSPoint startPoint;
-    NSPoint startOrigin;
-	CGFloat pageGuideX;
-	NSColor *pageGuideColour;
-	
-	BOOL showPageGuide;
-}
+@class VILineNumbers;
+
+@interface VITextView : NSTextView
 
 @property (unsafe_unretained) NSCursor *colouredIBeamCursor;
 @property (assign) BOOL inCompleteMethod;
+@property (nonatomic) NSInteger lineHeight;
+@property (nonatomic, strong) VILineNumbers *lineNumbers;
+
+@property (nonatomic) BOOL indentNewLinesAutomatically;
+@property (nonatomic) BOOL automaticallyIndentBraces;
+@property (nonatomic) BOOL useTabStops;
+@property (nonatomic) NSInteger tabWidth;
+@property (nonatomic) BOOL showPageGuide;
+@property BOOL autoInsertAClosingParenthesis;
+@property BOOL autoInsertAClosingBrace;
+@property BOOL indentWithSpaces;
+@property NSInteger showPageGuideAtColumn;
+
+@property (assign) id menuTarget;
 
 - (void)setDefaults;
 

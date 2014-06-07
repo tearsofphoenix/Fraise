@@ -30,7 +30,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAAdvancedFindController.h"
 #import "FRAProject+DocumentViewsController.h"
 
-#import "FRALineNumbers.h"
+
 #import "FRAPrintViewController.h"
 #import "FRAPrintTextView.h"
 
@@ -280,7 +280,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 			[textScrollView setFrame:NSMakeRect(gutterWidth, 0 - subtractFromY, [view bounds].size.width - gutterWidth, [view bounds].size.height + extraHeight - subtractFromHeight)];
 		}
 		
-		[[document valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth:YES recolour:YES];
+		[[document valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth: YES];
+        [[document valueForKey: @"syntaxColouring"] pageRecolour];
 	}
 }
 
@@ -317,7 +318,11 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	FRASyntaxColouring *syntaxColouring = [[FRASyntaxColouring alloc] initWithDocument:document];
 	[document setValue:syntaxColouring forKey:@"syntaxColouring"];
 	
-	[[document valueForKey:@"lineNumbers"] updateLineNumbersForClipView:[[document valueForKey:@"firstTextScrollView"] contentView] checkWidth:NO recolour:YES];
+    NSClipView *clipView = [[document valueForKey:@"firstTextScrollView"] contentView];
+	[[document valueForKey:@"lineNumbers"] updateLineNumbersForClipView: clipView
+                                                             checkWidth: NO];
+    [[document valueForKey: @"syntaxColouring"] pageRecolourTextView: [clipView documentView]];
+
 	[document setValue: @([[documentsArrayController arrangedObjects] count]) forKey:@"sortOrder"];
 	[self documentsListHasUpdated];
 	

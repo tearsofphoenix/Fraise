@@ -19,7 +19,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAInterfacePerformer.h"
 #import "FRAMainController.h"
 #import "FRAVariousPerformer.h"
-#import "FRALineNumbers.h"
+
 #import "FRAProject.h"
 #import "FRASyntaxColouring.h"
 
@@ -95,8 +95,10 @@ VASingletonIMPDefault(FRAViewMenuController)
 	[splitView adjustSubviews];
 	
 	[FRAInterface removeAllSubviewsFromView:[FRACurrentProject secondContentView]];	
-	[[[FRACurrentProject firstDocument] valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth:NO recolour:YES];
-	
+	[[[FRACurrentProject firstDocument] valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth: NO];
+
+    [[[FRACurrentProject firstDocument] valueForKey: @"syntaxColouring"] pageRecolour];
+
 	[[FRACurrentProject secondDocument] setValue:nil forKey:@"secondTextView"];
 	[[FRACurrentProject secondDocument] setValue:nil forKey:@"secondTextScrollView"];
 	[[[FRACurrentProject secondDocument] valueForKey:@"syntaxColouring"] setSecondLayoutManager:nil];

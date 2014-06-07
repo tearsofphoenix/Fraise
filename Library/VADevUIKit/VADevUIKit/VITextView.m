@@ -12,33 +12,37 @@ http://www.apache.org/licenses/LICENSE-2.0
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 */
 
-#import "FRAStandardHeader.h"
+#import "VITextView.h"
+#import "VILineNumbers.h"
+#import "VILayoutManager.h"
+#import "VADevUIKitNotifications.h"
 
-#import "FRATextView.h"
-#import "FRATextMenuController.h"
-#import "FRAProjectsController.h"
-#import "FRABasicPerformer.h"
-#import "FRAToolsMenuController.h"
-#import "FRAFileMenuController.h"
-#import "FRASyntaxColouring.h"
+@interface VITextView ()
+{
+	NSPoint startPoint;
+    NSPoint startOrigin;
+	CGFloat pageGuideX;
+	NSColor *pageGuideColour;
+	
+}
 
-#import <VADevUIKit/VADevUIKit.h>
+@end
 
-@implementation FRATextView
+@implementation VITextView
 
 - (id)initWithFrame:(NSRect)frame
 {
 	if (self = [super initWithFrame:frame])
     {
-        NSDictionary *attributes = (@{
-                                      NSFontAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextFont"]],
-                                      NSForegroundColorAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"InvisibleCharactersColourWell"]]
-                                      });
-        BOOL showInvisibleCharacters = [[FRADefaults valueForKey:@"ShowInvisibleCharacters"] boolValue];
+//        NSDictionary *attributes = (@{
+//                                      NSFontAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextFont"]],
+//                                      NSForegroundColorAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"InvisibleCharactersColourWell"]]
+//                                      });
+//        BOOL showInvisibleCharacters = [[FRADefaults valueForKey:@"ShowInvisibleCharacters"] boolValue];
         
         VILayoutManager *layoutManager = [[VILayoutManager alloc] init];
-        [layoutManager setAttributes: attributes];
-        [layoutManager setShowInvisibleCharacters: showInvisibleCharacters];
+//        [layoutManager setAttributes: attributes];
+//        [layoutManager setShowInvisibleCharacters: showInvisibleCharacters];
 		[[self textContainer] replaceLayoutManager: layoutManager];
 		
 		[self setDefaults];		
@@ -63,17 +67,17 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	[self setImportsGraphics:NO];
 	[self setUsesFontPanel:NO];
 	
-	[self setContinuousSpellCheckingEnabled:[[FRADefaults valueForKey:@"AutoSpellCheck"] boolValue]];
-	[self setGrammarCheckingEnabled:[[FRADefaults valueForKey:@"AutoGrammarCheck"] boolValue]];
-	
-	[self setSmartInsertDeleteEnabled:[[FRADefaults valueForKey:@"SmartInsertDelete"] boolValue]];
-	[self setAutomaticLinkDetectionEnabled:[[FRADefaults valueForKey:@"AutomaticLinkDetection"] boolValue]];
-	[self setAutomaticQuoteSubstitutionEnabled:[[FRADefaults valueForKey:@"AutomaticQuoteSubstitution"] boolValue]];
-	
-	[self setFont:[NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextFont"]]];
-	[self setTextColor:[NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextColourWell"]]];
-	[self setInsertionPointColor:[NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextColourWell"]]];
-	[self setBackgroundColor:[NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"BackgroundColourWell"]]];
+//	[self setContinuousSpellCheckingEnabled:[[FRADefaults valueForKey:@"AutoSpellCheck"] boolValue]];
+//	[self setGrammarCheckingEnabled:[[FRADefaults valueForKey:@"AutoGrammarCheck"] boolValue]];
+//	
+//	[self setSmartInsertDeleteEnabled:[[FRADefaults valueForKey:@"SmartInsertDelete"] boolValue]];
+//	[self setAutomaticLinkDetectionEnabled:[[FRADefaults valueForKey:@"AutomaticLinkDetection"] boolValue]];
+//	[self setAutomaticQuoteSubstitutionEnabled:[[FRADefaults valueForKey:@"AutomaticQuoteSubstitution"] boolValue]];
+//	
+//	[self setFont:[NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextFont"]]];
+//	[self setTextColor:[NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextColourWell"]]];
+//	[self setInsertionPointColor:[NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextColourWell"]]];
+//	[self setBackgroundColor:[NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"BackgroundColourWell"]]];
 	
 	[self setAutomaticDataDetectionEnabled:YES];
 	[self setAutomaticTextReplacementEnabled:YES];
@@ -81,19 +85,15 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	[self setPageGuideValues];
 	
 	[self updateIBeamCursor];	
-	NSTrackingArea *trackingArea = [[NSTrackingArea alloc] initWithRect:[self frame] options:(NSTrackingMouseEnteredAndExited | NSTrackingActiveWhenFirstResponder) owner:self userInfo:nil];
+	NSTrackingArea *trackingArea = [[NSTrackingArea alloc] initWithRect: [self frame]
+                                                                options: (NSTrackingMouseEnteredAndExited
+                                                                          | NSTrackingActiveWhenFirstResponder)
+                                                                  owner: self
+                                                               userInfo: nil];
 	[self addTrackingArea:trackingArea];
-	
-	NSUserDefaultsController *defaultsController = [NSUserDefaultsController sharedUserDefaultsController];
-
-	[defaultsController addObserver:self forKeyPath:@"values.TextColourWell" options:NSKeyValueObservingOptionNew context:@"TextColourChanged"];
-	[defaultsController addObserver:self forKeyPath:@"values.BackgroundColourWell" options:NSKeyValueObservingOptionNew context:@"BackgroundColourChanged"];
-	[defaultsController addObserver:self forKeyPath:@"values.SmartInsertDelete" options:NSKeyValueObservingOptionNew context:@"SmartInsertDeleteChanged"];
-	[defaultsController addObserver:self forKeyPath:@"values.TabWidth" options:NSKeyValueObservingOptionNew context:@"TabWidthChanged"];
-	[defaultsController addObserver:self forKeyPath:@"values.ShowPageGuide" options:NSKeyValueObservingOptionNew context:@"PageGuideChanged"];
-	[defaultsController addObserver:self forKeyPath:@"values.ShowPageGuideAtColumn" options:NSKeyValueObservingOptionNew context:@"PageGuideChanged"];
-	[defaultsController addObserver:self forKeyPath:@"values.SmartInsertDelete" options:NSKeyValueObservingOptionNew context:@"SmartInsertDeleteChanged"];
-	   
+		
+	_lineHeight = [[[self textContainer] layoutManager] defaultLineHeightForFont: [self font]];
+    
     [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(_notificationForTextFontChanged:)
                                                  name: VATextFontChangedNotification
@@ -112,43 +112,46 @@ Unless required by applicable law or agreed to in writing, software distributed 
     
     [self setFont: font];
     
-    NSClipView *clipView = [[self enclosingScrollView] contentView];
-    [[FRACurrentDocument valueForKey:@"lineNumbers"] updateLineNumbersForClipView: clipView
-                                                                       checkWidth: NO];
-    [[FRACurrentDocument valueForKey: @"syntaxColouring"] pageRecolourTextView: [clipView documentView]];
-
+    _lineHeight = [[[self textContainer] layoutManager] defaultLineHeightForFont: font];
+    [_lineNumbers updateLineNumbersForClipView: [[self enclosingScrollView] contentView]
+                                    checkWidth: NO];
+    //TODO
+    //syntax recolor needed
     [self setPageGuideValues];
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+- (void)_notificationForTextColorChanged: (NSNotification *)notification
 {
-	if ([(__bridge NSString *)context isEqualToString:@"TextColourChanged"])
-    {
-		[self setTextColor:[NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextColourWell"]]];
-		[self setInsertionPointColor:[NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextColourWell"]]];
-		[self setPageGuideValues];
-		[self updateIBeamCursor];
-	} else if ([(__bridge NSString *)context isEqualToString:@"BackgroundColourChanged"])
-    {
-		[self setBackgroundColor:[NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"BackgroundColourWell"]]];
-	} else if ([(__bridge NSString *)context isEqualToString:@"SmartInsertDeleteChanged"])
-    {
-		[self setSmartInsertDeleteEnabled:[[FRADefaults valueForKey:@"SmartInsertDelete"] boolValue]];
-	} else if ([(__bridge NSString *)context isEqualToString:@"TabWidthChanged"])
-    {
-		[self setTabWidth];
-	} else if ([(__bridge NSString *)context isEqualToString:@"PageGuideChanged"])
-    {
-		[self setPageGuideValues];
-	} else if ([(__bridge NSString *)context isEqualToString:@"SmartInsertDeleteChanged"])
-    {
-		[self setSmartInsertDeleteEnabled:[[FRADefaults valueForKey:@"SmartInsertDelete"] boolValue]];
-	} else
-    {
-		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
-	}
+//    [self setTextColor:[NSUnarchiver unarchiveObjectWithData: [FRADefaults valueForKey:@"TextColourWell"]]];
+//    [self setInsertionPointColor:[NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextColourWell"]]];
+    [self setPageGuideValues];
+    [self updateIBeamCursor];
 }
 
+- (void)_notificationForBackgroundColorChanged: (NSNotification *)notification
+{
+    //[self setBackgroundColor:[NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"BackgroundColourWell"]]];
+}
+
+- (void)_notificationForSmartColorChanged: (NSNotification *)notification
+{
+//    [self setSmartInsertDeleteEnabled:[[FRADefaults valueForKey:@"SmartInsertDelete"] boolValue]];
+}
+
+- (void)_notificationForTabWidthChanged: (NSNotification *)notification
+{
+    [self setTabWidth];
+}
+
+- (void)_notificationForPageGuideChanged: (NSNotification *)notification
+{
+    [self setPageGuideValues];
+}
+
+- (void)_notificationForSmartInsertDeleteChanged: (NSNotification *)notification
+{
+//    [self setSmartInsertDeleteEnabled:[[FRADefaults valueForKey:@"SmartInsertDelete"] boolValue]];
+}
 
 - (void)insertNewline:(id)sender
 {
@@ -156,22 +159,30 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	
 	// If we should indent automatically, check the previous line and scan all the whitespace at the beginning of the line into a string and insert that string into the new line
 	NSString *lastLineString = [[self string] substringWithRange:[[self string] lineRangeForRange:NSMakeRange([self selectedRange].location - 1, 0)]];
-	if ([[FRADefaults valueForKey:@"IndentNewLinesAutomatically"] boolValue] == YES) {
+    
+	if (_indentNewLinesAutomatically)
+    {
 		NSString *previousLineWhitespaceString;
 		NSScanner *previousLineScanner = [[NSScanner alloc] initWithString:[[self string] substringWithRange:[[self string] lineRangeForRange:NSMakeRange([self selectedRange].location - 1, 0)]]];
 		[previousLineScanner setCharactersToBeSkipped:nil];		
-		if ([previousLineScanner scanCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&previousLineWhitespaceString]) {
+		
+        if ([previousLineScanner scanCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&previousLineWhitespaceString])
+        {
 			[self insertText:previousLineWhitespaceString];
 		}
 		
-		if ([[FRADefaults valueForKey:@"AutomaticallyIndentBraces"] boolValue] == YES) {
+		if (_automaticallyIndentBraces)
+        {
 			NSCharacterSet *characterSet = [NSCharacterSet whitespaceAndNewlineCharacterSet];
 			NSInteger index = [lastLineString length];
-			while (index--) {
-				if ([characterSet characterIsMember:[lastLineString characterAtIndex:index]]) {
+			while (index--)
+            {
+				if ([characterSet characterIsMember:[lastLineString characterAtIndex:index]])
+                {
 					continue;
 				}
-				if ([lastLineString characterAtIndex:index] == '{') {
+				if ([lastLineString characterAtIndex:index] == '{')
+                {
 					[self insertTab:nil];
 				}
 				break;
@@ -377,19 +388,26 @@ Unless required by applicable law or agreed to in writing, software distributed 
 		}
 	}
 	
-	if (shouldShiftText) {
-		[[FRATextMenuController sharedInstance] shiftRightAction:nil];
-	} else if ([[FRADefaults valueForKey:@"IndentWithSpaces"] boolValue] == YES) {
+	if (shouldShiftText)
+    {
+//		[[FRATextMenuController sharedInstance] shiftRightAction:nil];
+        
+	} else if (_indentWithSpaces)
+    {
 		NSMutableString *spacesString = [NSMutableString string];
-		NSInteger numberOfSpacesPerTab = [[FRADefaults valueForKey:@"TabWidth"] integerValue];
-		if ([[FRADefaults valueForKey:@"UseTabStops"] boolValue] == YES) {
+		NSInteger numberOfSpacesPerTab = _tabWidth;
+        
+		if (_useTabStops)
+        {
 			NSInteger locationOnLine = [self selectedRange].location - [[self string] lineRangeForRange:[self selectedRange]].location;
 			if (numberOfSpacesPerTab != 0) {
 				NSInteger numberOfSpacesLess = locationOnLine % numberOfSpacesPerTab;
 				numberOfSpacesPerTab = numberOfSpacesPerTab - numberOfSpacesLess;
 			}
 		}
-		while (numberOfSpacesPerTab--) {
+		
+        while (numberOfSpacesPerTab--)
+        {
 			[spacesString appendString:@" "];
 		}
 		
@@ -434,7 +452,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 {
 	// Set the width of every tab by first checking the size of the tab in spaces in the current font and then remove all tabs that sets automatically and then set the default tab stop distance
 	NSMutableString *sizeString = [NSMutableString string];
-	NSInteger numberOfSpaces = [[FRADefaults valueForKey:@"TabWidth"] integerValue];
+	NSInteger numberOfSpaces = _tabWidth;
 	while (numberOfSpaces--)
     {
 		[sizeString appendString:@" "];
@@ -461,7 +479,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 {
 	[super drawRect:rect];
 	
-	if (showPageGuide == YES)
+	if (_showPageGuide == YES)
     {
 		NSRect bounds = [self bounds]; 
 		if ([self needsToDrawRect:NSMakeRect(pageGuideX, 0, 1, bounds.size.height)] == YES) { // So that it doesn't draw the line if only e.g. the cursor updates
@@ -477,12 +495,12 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	NSDictionary *sizeAttribute = @{NSFontAttributeName: [self font]};
 	NSString *sizeString = @" ";
 	CGFloat sizeOfCharacter = [sizeString sizeWithAttributes:sizeAttribute].width;
-	pageGuideX = (sizeOfCharacter * ([[FRADefaults valueForKey:@"ShowPageGuideAtColumn"] integerValue] + 1)) - 1.5; // -1.5 to put it between the two characters and draw only on one pixel and not two (as the system draws it in a special way), and that's also why the width above is set to zero 
+	pageGuideX = (sizeOfCharacter * (_showPageGuideAtColumn + 1)) - 1.5; // -1.5 to put it between the two characters and draw only on one pixel and not two (as the system draws it in a special way), and that's also why the width above is set to zero
 	
-	NSColor *color = [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextColourWell"]];
+	NSColor *color = [self textColor];
 	pageGuideColour = [color colorWithAlphaComponent:([color alphaComponent] / 4)]; // Use the same colour as the text but with more transparency
 	
-	showPageGuide = [[FRADefaults valueForKey:@"ShowPageGuide"] boolValue];
+//	_showPageGuide = [[FRADefaults valueForKey:@"ShowPageGuide"] boolValue];
 	
 	[self display]; // To reflect the new values in the view
 }
@@ -490,7 +508,10 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (void)insertText:(NSString *)aString
 {
-	if ([aString isEqualToString:@"}"] && [[FRADefaults valueForKey:@"IndentNewLinesAutomatically"] boolValue] == YES && [[FRADefaults valueForKey:@"AutomaticallyIndentBraces"] boolValue] == YES) {
+	if ([aString isEqualToString:@"}"]
+        && _indentNewLinesAutomatically
+         && _automaticallyIndentBraces)
+    {
 		unichar characterToCheck;
 		NSInteger location = [self selectedRange].location;
 		NSString *completeString = [self string];
@@ -558,18 +579,22 @@ Unless required by applicable law or agreed to in writing, software distributed 
 		if (hasInsertedBrace == NO) {
 			[super insertText:aString];
 		}
-	} else if ([aString isEqualToString:@"("] && [[FRADefaults valueForKey:@"AutoInsertAClosingParenthesis"] boolValue] == YES) {
+	} else if ([aString isEqualToString:@"("] && _autoInsertAClosingParenthesis)
+    {
 		[super insertText:aString];
 		NSRange selectedRange = [self selectedRange];
-		if ([self shouldChangeTextInRange:selectedRange replacementString:@")"]) {
+		if ([self shouldChangeTextInRange:selectedRange replacementString:@")"])
+        {
 			[self replaceCharactersInRange:selectedRange withString:@")"];
 			[self didChangeText];
 			[self setSelectedRange:NSMakeRange(selectedRange.location - 0, 0)];
 		}
-	} else if ([aString isEqualToString:@"{"] && [[FRADefaults valueForKey:@"AutoInsertAClosingBrace"] boolValue] == YES) {
+	} else if ([aString isEqualToString:@"{"] && _autoInsertAClosingBrace)
+    {
 		[super insertText:aString];
 		NSRange selectedRange = [self selectedRange];
-		if ([self shouldChangeTextInRange:selectedRange replacementString:@"}"]) {
+		if ([self shouldChangeTextInRange:selectedRange replacementString:@"}"])
+        {
 			[self replaceCharactersInRange:selectedRange withString:@"}"];
 			[self didChangeText];
 			[self setSelectedRange:NSMakeRange(selectedRange.location - 0, 0)];
@@ -585,17 +610,23 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	NSMenu *menu = [super menuForEvent:theEvent];
 
 	NSArray *array = [menu itemArray];
-	for (id oldMenuItem in array) {
-		if ([oldMenuItem tag] == -123457) {
+	for (id oldMenuItem in array)
+    {
+		if ([oldMenuItem tag] == -123457)
+        {
 			[menu removeItem:oldMenuItem];
 		}		
 	}
 	
 	[menu insertItem:[NSMenuItem separatorItem] atIndex:0];
 	
-	NSEnumerator *collectionEnumerator = [[FRABasic fetchAll:@"SnippetCollectionSortKeyName"] reverseObjectEnumerator];
-	for (id collection in collectionEnumerator) {
-		if ([collection valueForKey:@"name"] == nil) {
+//	NSEnumerator *collectionEnumerator = [[FRABasic fetchAll:@"SnippetCollectionSortKeyName"] reverseObjectEnumerator];
+    NSArray *snippetCollections = nil;
+    
+	for (id collection in snippetCollections)
+    {
+		if ([collection valueForKey:@"name"] == nil)
+        {
 			continue;
 		}
 		NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:[collection valueForKey:@"name"] action:nil keyEquivalent:@""];
@@ -604,20 +635,28 @@ Unless required by applicable law or agreed to in writing, software distributed 
 		
 		NSMutableArray *array = [NSMutableArray arrayWithArray:[[collection mutableSetValueForKey:@"snippets"] allObjects]];
 		[array sortUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
-		for (id snippet in array) {
-			if ([snippet valueForKey:@"name"] == nil) {
+		for (id snippet in array)
+        {
+			if ([snippet valueForKey:@"name"] == nil)
+            {
 				continue;
 			}
 			NSString *keyString;
-			if ([snippet valueForKey:@"shortcutMenuItemKeyString"] != nil) {
+			if ([snippet valueForKey:@"shortcutMenuItemKeyString"] != nil)
+            {
 				keyString = [snippet valueForKey:@"shortcutMenuItemKeyString"];
-			} else {
+			} else
+            {
 				keyString = @"";
 			}
-			NSMenuItem *subMenuItem = [[NSMenuItem alloc] initWithTitle:[snippet valueForKey:@"name"] action:@selector(snippetShortcutFired:) keyEquivalent:@""];
-			[subMenuItem setTarget:[FRAToolsMenuController sharedInstance]];			
-			[subMenuItem setRepresentedObject:snippet];
-			[subMenu insertItem:subMenuItem atIndex:0];
+            
+			NSMenuItem *subMenuItem = [[NSMenuItem alloc] initWithTitle: [snippet valueForKey:@"name"]
+                                                                 action: @selector(snippetShortcutFired:)
+                                                          keyEquivalent: @""];
+			[subMenuItem setTarget: _menuTarget];
+			[subMenuItem setRepresentedObject: snippet];
+			[subMenu insertItem: subMenuItem
+                        atIndex: 0];
 		}
 		
 		[menuItem setSubmenu:subMenu];
@@ -629,22 +668,23 @@ Unless required by applicable law or agreed to in writing, software distributed 
 }
 
 
-- (IBAction)save:(id)sender
+- (IBAction)save: (id)sender
 {
-	[[FRAFileMenuController sharedInstance] saveAction:nil];
+//	[[FRAFileMenuController sharedInstance] saveAction:nil];
 }
 
 
 - (void)updateIBeamCursor
 {
-	NSColor *textColour = [[NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextColourWell"]] colorUsingColorSpaceName:NSCalibratedWhiteColorSpace];
+	NSColor *textColour = [[self textColor] colorUsingColorSpaceName: NSCalibratedWhiteColorSpace];
 	
 	if (textColour != nil && [textColour whiteComponent] == 0.0 && [textColour alphaComponent] == 1.0) { // Keep the original cursor if it's black
 		[self setColouredIBeamCursor:[NSCursor IBeamCursor]];
-	} else {
+	} else
+    {
 		NSImage *cursorImage = [[NSCursor IBeamCursor] image];
 		[cursorImage lockFocus];
-		[(NSColor *)[NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextColourWell"]] set];
+		[[self textColor] set];
 		NSRectFillUsingOperation(NSMakeRect(0, 0, [cursorImage size].width, [cursorImage size].height), NSCompositeSourceAtop);
 		[cursorImage unlockFocus];
 		[self setColouredIBeamCursor:[[NSCursor alloc] initWithImage:cursorImage hotSpot:[[NSCursor IBeamCursor] hotSpot]]];

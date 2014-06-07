@@ -25,7 +25,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRATextMenuController.h"
 #import "FRAApplicationDelegate.h"
 #import "FRAInterfacePerformer.h"
-#import "FRALineNumbers.h"
+
 #import "FRAProject.h"
 
 #import "ODBEditorSuite.h"
@@ -317,7 +317,7 @@ VASingletonIMPDefault(FRAOpenSavePerformer)
 
 - (void)updateLineNumbers // Slight hack to make sure that the line numbers are correct under certain circumstances when opening a document as the line numbers are updated before the view has decided whether to include a scrollbar or not 
 {
-	[[FRACurrentDocument valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth:NO recolour:NO];
+	[[FRACurrentDocument valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth: NO];
 	[[FRAProjectsController sharedDocumentController] setCurrentProject:nil];
 }
 
@@ -336,7 +336,7 @@ VASingletonIMPDefault(FRAOpenSavePerformer)
 		if ([string characterAtIndex:[string length] - 1] != '\n') {
 			[[[document valueForKey:@"firstTextScrollView"] documentView] replaceCharactersInRange:NSMakeRange([string length], 0) withString:@"\n"];
 			string = [FRAText convertLineEndings:[[[document valueForKey:@"firstTextScrollView"] documentView] string] inDocument:document];
-			[[document valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth:NO recolour:NO];
+			[[document valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth: NO];
 		}
 	}
 	

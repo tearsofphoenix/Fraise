@@ -27,8 +27,8 @@
 #import "FRAMainController.h"
 #import "FRAApplicationDelegate.h"
 #import "FRAProject.h"
-#import "FRALineNumbers.h"
 
+#import "FRASyntaxColouring.h"
 #import <VADevUIKit/VADevUIKit.h>
 
 @implementation FRAPreferencesController
@@ -590,9 +590,11 @@ VASingletonIMPDefault(FRAPreferencesController)
 
 - (IBAction)changeGutterWidth:(id)sender {
 	NSEnumerator *documentEnumerator =  [[[FRACurrentProject documentsArrayController] arrangedObjects] objectEnumerator];
-	for (id document in documentEnumerator) {
+	for (id document in documentEnumerator)
+    {
 		[FRAInterface updateGutterViewForDocument:document];
-		[[document valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth:YES recolour:YES];
+		[[document valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth: YES];
+        [[FRACurrentDocument valueForKey: @"syntaxColouring"] pageRecolour];
 	}
 }
 

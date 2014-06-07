@@ -14,23 +14,14 @@
  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-#import "FRAStandardHeader.h"
-
-#import "FRASyntaxColouring.h"
-#import "FRATextView.h"
-#import "FRABasicPerformer.h"
-#import "FRAApplicationDelegate.h"
-#import "FRAInterfacePerformer.h"
-#import "FRAVariousPerformer.h"
-#import "FRAProjectsController.h"
-#import "FRAPreviewController.h"
-
-#import "FRAProject.h"
+#import "VISyntaxColouring.h"
+#import "VITextView.h"
+#import "VILayoutManager.h"
+#import "VILineNumbers.h"
 
 #import <VAFoundation/VAFoundation.h>
-#import <VADevUIKit/VADevUIKit.h>
 
-@interface FRASyntaxColouring ()
+@interface VISyntaxColouring ()
 {
 	NSUndoManager *undoManager;
 	VILayoutManager *firstLayoutManager;
@@ -110,7 +101,7 @@
 }
 @end
 
-@implementation FRASyntaxColouring
+@implementation VISyntaxColouring
 
 @synthesize undoManager;
 
@@ -157,58 +148,37 @@
 		[[document valueForKey:@"firstTextView"] setDelegate:self];
 		[[[document valueForKey:@"firstTextView"] textStorage] setDelegate:self];
 		undoManager = [[NSUndoManager alloc] init];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkIfCanUndo) name:@"NSUndoManagerDidUndoChangeNotification" object:undoManager];
+		[[NSNotificationCenter defaultCenter] addObserver: self
+                                                 selector: @selector(checkIfCanUndo)
+                                                     name: NSUndoManagerDidUndoChangeNotification
+                                                   object: undoManager];
 		
 		lastLineHighlightRange = NSMakeRange(0, 0);
-		
-		NSUserDefaultsController *defaultsController = [NSUserDefaultsController sharedUserDefaultsController];
-        
-		[defaultsController addObserver:self forKeyPath:@"values.CommandsColourWell" options:NSKeyValueObservingOptionNew context:@"ColoursChanged"];
-		[defaultsController addObserver:self forKeyPath:@"values.CommentsColourWell" options:NSKeyValueObservingOptionNew context:@"ColoursChanged"];
-		[defaultsController addObserver:self forKeyPath:@"values.InstructionsColourWell" options:NSKeyValueObservingOptionNew context:@"ColoursChanged"];
-		[defaultsController addObserver:self forKeyPath:@"values.KeywordsColourWell" options:NSKeyValueObservingOptionNew context:@"ColoursChanged"];
-		[defaultsController addObserver:self forKeyPath:@"values.AutocompleteColourWell" options:NSKeyValueObservingOptionNew context:@"ColoursChanged"];
-		[defaultsController addObserver:self forKeyPath:@"values.VariablesColourWell" options:NSKeyValueObservingOptionNew context:@"ColoursChanged"];
-		[defaultsController addObserver:self forKeyPath:@"values.StringsColourWell" options:NSKeyValueObservingOptionNew context:@"ColoursChanged"];
-		[defaultsController addObserver:self forKeyPath:@"values.AttributesColourWell" options:NSKeyValueObservingOptionNew context:@"ColoursChanged"];
-		[defaultsController addObserver:self forKeyPath:@"values.ColourCommands" options:NSKeyValueObservingOptionNew context:@"ColoursChanged"];
-		[defaultsController addObserver:self forKeyPath:@"values.ColourComments" options:NSKeyValueObservingOptionNew context:@"ColoursChanged"];
-		[defaultsController addObserver:self forKeyPath:@"values.ColourInstructions" options:NSKeyValueObservingOptionNew context:@"ColoursChanged"];
-		[defaultsController addObserver:self forKeyPath:@"values.ColourKeywords" options:NSKeyValueObservingOptionNew context:@"ColoursChanged"];
-		[defaultsController addObserver:self forKeyPath:@"values.ColourAutocomplete" options:NSKeyValueObservingOptionNew context:@"ColoursChanged"];
-		[defaultsController addObserver:self forKeyPath:@"values.ColourVariables" options:NSKeyValueObservingOptionNew context:@"ColoursChanged"];
-		[defaultsController addObserver:self forKeyPath:@"values.ColourStrings" options:NSKeyValueObservingOptionNew context:@"ColoursChanged"];
-		[defaultsController addObserver:self forKeyPath:@"values.ColourAttributes" options:NSKeyValueObservingOptionNew context:@"ColoursChanged"];
-		[defaultsController addObserver:self forKeyPath:@"values.ColourMultiLineStrings" options:NSKeyValueObservingOptionNew context:@"ColoursChanged"];
-		[defaultsController addObserver:self forKeyPath:@"values.OnlyColourTillTheEndOfLine" options:NSKeyValueObservingOptionNew context:@"ColoursChanged"];
-		[defaultsController addObserver:self forKeyPath:@"values.HighlightCurrentLine" options:NSKeyValueObservingOptionNew context:@"ColoursChanged"];
-		[defaultsController addObserver:self forKeyPath:@"values.HighlightLineColourWell" options:NSKeyValueObservingOptionNew context:@"ColoursChanged"];
-		[defaultsController addObserver:self forKeyPath:@"values.ColourMultiLineStrings" options:NSKeyValueObservingOptionNew context:@"MultiLineChanged"];
+		 
 		
 	}
     return self;
 }
 
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+- (void)_notificationForColorChanged: (NSNotification *)notification
 {
-	if ([(__bridge NSString *)context isEqualToString:@"ColoursChanged"]) {
-		[self setColours];
-		[self pageRecolour];
-		if ([[FRADefaults valueForKey:@"HighlightCurrentLine"] boolValue] == YES) {
-			NSRange range = [completeString lineRangeForRange:[[document valueForKey:@"firstTextView"] selectedRange]];
-			[self highlightLineRange:range];
-			lastLineHighlightRange = range;
-		} else {
-			[self highlightLineRange:NSMakeRange(0, 0)];
-		}
-	} else if ([(__bridge NSString *)context isEqualToString:@"MultiLineChanged"]) {
-		[self prepareRegularExpressions];
-		[self pageRecolour];
-	} else {
-		[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
-	}
-	
+    [self setColours];
+    [self pageRecolour];
+    if (_highlightCurrentLine)
+    {
+        NSRange range = [completeString lineRangeForRange:[[document valueForKey:@"firstTextView"] selectedRange]];
+        [self highlightLineRange:range];
+        lastLineHighlightRange = range;
+    } else
+    {
+        [self highlightLineRange:NSMakeRange(0, 0)];
+    }
+}
+
+- (void)_notificationForMultiLineChanged: (NSNotification *)notification
+{
+    [self prepareRegularExpressions];
+    [self pageRecolour];
 }
 
 
@@ -222,48 +192,51 @@
 
 - (void)setColours
 {
-	commandsColour = @{NSForegroundColorAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"CommandsColourWell"]]};
-	
-	commentsColour = @{NSForegroundColorAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"CommentsColourWell"]]};
-	
-	instructionsColour = @{NSForegroundColorAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"InstructionsColourWell"]]};
-	
-	keywordsColour = @{NSForegroundColorAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"KeywordsColourWell"]]};
-	
-	autocompleteWordsColour = @{NSForegroundColorAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"AutocompleteColourWell"]]};
-	
-	stringsColour = @{NSForegroundColorAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"StringsColourWell"]]};
-	
-	variablesColour = @{NSForegroundColorAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"VariablesColourWell"]]};
-	
-	attributesColour = @{NSForegroundColorAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"AttributesColourWell"]]};
-	
-	lineHighlightColour = @{NSBackgroundColorAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"HighlightLineColourWell"]]};
+//	commandsColour = @{NSForegroundColorAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"CommandsColourWell"]]};
+//	
+//	commentsColour = @{NSForegroundColorAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"CommentsColourWell"]]};
+//	
+//	instructionsColour = @{NSForegroundColorAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"InstructionsColourWell"]]};
+//	
+//	keywordsColour = @{NSForegroundColorAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"KeywordsColourWell"]]};
+//	
+//	autocompleteWordsColour = @{NSForegroundColorAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"AutocompleteColourWell"]]};
+//	
+//	stringsColour = @{NSForegroundColorAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"StringsColourWell"]]};
+//	
+//	variablesColour = @{NSForegroundColorAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"VariablesColourWell"]]};
+//	
+//	attributesColour = @{NSForegroundColorAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"AttributesColourWell"]]};
+//	
+//	lineHighlightColour = @{NSBackgroundColorAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"HighlightLineColourWell"]]};
 }
 
 
 - (void)setSyntaxDefinition
 {
-	NSArray *syntaxDefinitions = [FRABasic fetchAll:@"SyntaxDefinitionSortKeySortOrder"];
+	NSArray *syntaxDefinitions = nil; //[FRABasic fetchAll:@"SyntaxDefinitionSortKeySortOrder"];
 	
-	NSManagedObjectContext *managedObjectContext = FRAManagedObjectContext;
-	NSEntityDescription *entityDescription = [NSEntityDescription entityForName:@"SyntaxDefinition" inManagedObjectContext:managedObjectContext];
-	NSFetchRequest *request = [[entityDescription managedObjectModel] fetchRequestFromTemplateWithName:@"syntaxDefinitionName" substitutionVariables:@{@"NAME": [FRADefaults valueForKey:@"SyntaxColouringPopUpString"]}];
-	NSArray *foundSyntaxDefinition = [managedObjectContext executeFetchRequest:request error:nil];
+//	NSManagedObjectContext *managedObjectContext = FRAManagedObjectContext;
+//	NSEntityDescription *entityDescription = [NSEntityDescription entityForName:@"SyntaxDefinition" inManagedObjectContext:managedObjectContext];
+//	NSFetchRequest *request = [[entityDescription managedObjectModel] fetchRequestFromTemplateWithName:@"syntaxDefinitionName" substitutionVariables:@{@"NAME": [FRADefaults valueForKey:@"SyntaxColouringPopUpString"]}];
+	NSArray *foundSyntaxDefinition = nil; //[managedObjectContext executeFetchRequest:request error:nil];
     
 	NSString *fileToUse = nil;
 	NSString *extension = [[document valueForKey:@"name"] pathExtension];
-	if ([[document valueForKey:@"hasManuallyChangedSyntaxDefinition"] boolValue] == YES) { // Once the user has changed the syntax definition always use that one and not the one from the extension
-		request = [[entityDescription managedObjectModel] fetchRequestFromTemplateWithName:@"syntaxDefinitionName" substitutionVariables:@{@"NAME": [document valueForKey:@"syntaxDefinition"]}];
-		NSArray *foundManuallyChangedSyntaxDefinition = [managedObjectContext executeFetchRequest:request error:nil];
-		if ([foundManuallyChangedSyntaxDefinition count] != 0) {
-			fileToUse = [foundManuallyChangedSyntaxDefinition[0] valueForKey:@"file"];
-		} else {
-			fileToUse = [syntaxDefinitions[0] valueForKey:@"file"];
-		}
-	} else {
-		
-		if ([[FRADefaults valueForKey:@"SyntaxColouringMatrix"] integerValue] == 1) { // Always use...
+    
+//	if ([[document valueForKey:@"hasManuallyChangedSyntaxDefinition"] boolValue] == YES)
+//    { // Once the user has changed the syntax definition always use that one and not the one from the extension
+//		request = [[entityDescription managedObjectModel] fetchRequestFromTemplateWithName:@"syntaxDefinitionName" substitutionVariables:@{@"NAME": [document valueForKey:@"syntaxDefinition"]}];
+//		NSArray *foundManuallyChangedSyntaxDefinition = [managedObjectContext executeFetchRequest:request error:nil];
+//		if ([foundManuallyChangedSyntaxDefinition count] != 0) {
+//			fileToUse = [foundManuallyChangedSyntaxDefinition[0] valueForKey:@"file"];
+//		} else {
+//			fileToUse = [syntaxDefinitions[0] valueForKey:@"file"];
+//		}
+//	} else
+    {
+		if (_syntaxColouringMatrix == 1)
+        { // Always use...
 			if ([foundSyntaxDefinition count] != 0) {
 				fileToUse = [foundSyntaxDefinition[0] valueForKey:@"file"];
 				[document setValue:[foundSyntaxDefinition[0] valueForKey:@"name"] forKey:@"syntaxDefinition"];
@@ -345,7 +318,7 @@
 		[keywordsAndAutocompleteWordsTemporary addObjectsFromArray:syntaxDictionary[@"autocompleteWords"]];
 	}
 	
-	if ([[FRADefaults valueForKey:@"ColourAutocompleteWordsAsKeywords"] boolValue] == YES)
+	if (_colourAutocompleteWordsAsKeywords)
     {
 		keywords = [NSSet setWithArray:keywordsAndAutocompleteWordsTemporary];
 	}
@@ -451,7 +424,7 @@
 
 - (void)prepareRegularExpressions
 {
-	if ([[FRADefaults valueForKey:@"ColourMultiLineStrings"] boolValue] == NO)
+	if (_colourMultiLineStrings == NO)
     {
 		firstStringPattern = [[ICUPattern alloc] initWithString:[NSString stringWithFormat:@"\\W%@[^%@\\\\\\r\\n]*+(?:\\\\(?:.|$)[^%@\\\\\\r\\n]*+)*+%@", firstString, firstString, firstString, firstString]];
 		
@@ -508,9 +481,10 @@
 }
 
 
-- (void)pageRecolourTextView:(FRATextView *)textView
+- (void)pageRecolourTextView: (VITextView *)textView
 {
-	if ([[document valueForKey:@"isSyntaxColoured"] boolValue] == NO) {
+	if ([[document valueForKey:@"isSyntaxColoured"] boolValue] == NO)
+    {
 		return;
 	}
 	
@@ -533,8 +507,8 @@
 		return;
 	}
 	
-	shouldOnlyColourTillTheEndOfLine = [[FRADefaults valueForKey:@"OnlyColourTillTheEndOfLine"] boolValue];
-	shouldColourMultiLineStrings = [[FRADefaults valueForKey:@"ColourMultiLineStrings"] boolValue];
+//	shouldOnlyColourTillTheEndOfLine = [[FRADefaults valueForKey:@"OnlyColourTillTheEndOfLine"] boolValue];
+//	shouldColourMultiLineStrings = [[FRADefaults valueForKey:@"ColourMultiLineStrings"] boolValue];
 	
 	NSRange effectiveRange = range;
     
@@ -565,10 +539,11 @@
 	[self removeColoursFromRange:range];
 	
 	
-	@try {
-        
+	@try
+    {
         // Commands
-        if (![beginCommand isEqualToString:@""] && [[FRADefaults valueForKey:@"ColourCommands"] boolValue] == YES) {
+        if (![beginCommand isEqualToString:@""] && _colourCommands)
+        {
             searchSyntaxLength = [endCommand length];
             beginCommandCharacter = [beginCommand characterAtIndex:0];
             endCommandCharacter = [endCommand characterAtIndex:0];
@@ -612,7 +587,8 @@
         
         
         // Instructions
-        if (![beginInstruction isEqualToString:@""] && [[FRADefaults valueForKey:@"ColourInstructions"] boolValue] == YES) {
+        if (![beginInstruction isEqualToString:@""] && _colourInstructions)
+        {
             // It takes too long to scan the whole document if it's large, so for instructions, first multi-line comment and second multi-line comment search backwards and begin at the start of the first beginInstruction etc. that it finds from the present position and, below, break the loop if it has passed the scanned range (i.e. after the end instruction)
             
             beginLocationInMultiLine = [completeString rangeOfString:beginInstruction options:NSBackwardsSearch range:NSMakeRange(0, rangeLocation)].location;
@@ -655,7 +631,8 @@
         
         
         // Keywords
-        if ([keywords count] != 0 && [[FRADefaults valueForKey:@"ColourKeywords"] boolValue] == YES) {
+        if ([keywords count] != 0 && _colourKeywords)
+        {
             [scanner setScanLocation:0];
             while (![scanner isAtEnd]) {
                 [scanner scanUpToCharactersFromSet:keywordStartCharacterSet intoString:nil];
@@ -688,7 +665,8 @@
 		
         
         // Autocomplete
-        if ([autocompleteWords count] != 0 && [[FRADefaults valueForKey:@"ColourAutocomplete"] boolValue] == YES) {
+        if ([autocompleteWords count] != 0 && _colourAutocomplete)
+        {
             [scanner setScanLocation:0];
             while (![scanner isAtEnd]) {
                 [scanner scanUpToCharactersFromSet:keywordStartCharacterSet intoString:nil];
@@ -722,7 +700,8 @@
         
         
         // Variables
-        if (beginVariable != nil && [[FRADefaults valueForKey:@"ColourVariables"] boolValue] == YES) {
+        if (beginVariable != nil && _colourVariables)
+        {
             [scanner setScanLocation:0];
             while (![scanner isAtEnd]) {
                 [scanner scanUpToCharactersFromSet:beginVariable intoString:nil];
@@ -752,7 +731,8 @@
         
         
         // Second string, first pass
-        if (![secondString isEqualToString:@""] && [[FRADefaults valueForKey:@"ColourStrings"] boolValue] == YES) {
+        if (![secondString isEqualToString:@""] && _colourStrings)
+        {
             @try {
                 secondStringMatcher = [[ICUMatcher alloc] initWithPattern:secondStringPattern overString:searchString];
             }
@@ -768,7 +748,8 @@
         
         
         // First string
-        if (![firstString isEqualToString:@""] && [[FRADefaults valueForKey:@"ColourStrings"] boolValue] == YES) {
+        if (![firstString isEqualToString:@""] && _colourStrings)
+        {
             @try {
                 firstStringMatcher = [[ICUMatcher alloc] initWithPattern:firstStringPattern overString:searchString];
             }
@@ -787,7 +768,8 @@
         
         
         // Attributes
-        if ([[FRADefaults valueForKey:@"ColourAttributes"] boolValue] == YES) {
+        if (_colourAttributes)
+        {
             [scanner setScanLocation:0];
             while (![scanner isAtEnd]) {
                 [scanner scanUpToString:@" " intoString:nil];
@@ -816,7 +798,8 @@
         
         
         // First single-line comment
-        if (![firstSingleLineComment isEqualToString:@""] && [[FRADefaults valueForKey:@"ColourComments"] boolValue] == YES) {
+        if (![firstSingleLineComment isEqualToString:@""] && _colourComments)
+        {
             [scanner setScanLocation:0];
             searchSyntaxLength = [firstSingleLineComment length];
             while (![scanner isAtEnd]) {
@@ -864,7 +847,8 @@
         
         
         // Second single-line comment
-        if (![secondSingleLineComment isEqualToString:@""] && [[FRADefaults valueForKey:@"ColourComments"] boolValue] == YES) {
+        if (![secondSingleLineComment isEqualToString:@""] && _colourComments)
+        {
             [scanner setScanLocation:0];
             searchSyntaxLength = [secondSingleLineComment length];
             while (![scanner isAtEnd]) {
@@ -906,7 +890,8 @@
         
         
         // First multi-line comment
-        if (![beginFirstMultiLineComment isEqualToString:@""] && [[FRADefaults valueForKey:@"ColourComments"] boolValue] == YES) {
+        if (![beginFirstMultiLineComment isEqualToString:@""] && _colourComments)
+        {
             
             beginLocationInMultiLine = [completeString rangeOfString:beginFirstMultiLineComment options:NSBackwardsSearch range:NSMakeRange(0, rangeLocation)].location;
             endLocationInMultiLine = [completeString rangeOfString:endFirstMultiLineComment options:NSBackwardsSearch range:NSMakeRange(0, rangeLocation)].location;
@@ -967,7 +952,8 @@
         
         
         // Second multi-line comment
-        if (![beginSecondMultiLineComment isEqualToString:@""] && [[FRADefaults valueForKey:@"ColourComments"] boolValue] == YES) {
+        if (![beginSecondMultiLineComment isEqualToString:@""] && _colourComments)
+        {
             
             beginLocationInMultiLine = rangeLocation;
             [completeDocumentScanner setScanLocation:beginLocationInMultiLine];
@@ -1024,7 +1010,8 @@
         
         
         // Second string, second pass
-        if (![secondString isEqualToString:@""] && [[FRADefaults valueForKey:@"ColourStrings"] boolValue] == YES) {
+        if (![secondString isEqualToString:@""] && _colourStrings)
+        {
             @try {
                 [secondStringMatcher reset];
             }
@@ -1095,32 +1082,51 @@
 		return;
 	}
 	
-	if ([completeString length] < 2) {
-		[FRAInterface updateStatusBar]; // One needs to call this from here as well because otherwise it won't update the status bar if one writes one character and deletes it in an empty document, because the textViewDidChangeSelection delegate method won't be called.
+	if ([completeString length] < 2)
+    {
+        //TODO
+//		[FRAInterface updateStatusBar]; // One needs to call this from here as well because otherwise it won't update the status bar if one writes one character and deletes it in an empty document, because the textViewDidChangeSelection delegate method won't be called.
 	}
 	
-	FRATextView *textView = (FRATextView *)[notification object];
+	VITextView *textView = (VITextView *)[notification object];
 	
-	if ([[document valueForKey:@"isEdited"] boolValue] == NO) {
-		[FRAVarious hasChangedDocument:document];
+	if ([[document valueForKey:@"isEdited"] boolValue] == NO)
+    {
+//		[FRAVarious hasChangedDocument:document];
 	}
 	
-	if ([[FRADefaults valueForKey:@"HighlightCurrentLine"] boolValue] == YES) {
+	if (_highlightCurrentLine)
+    {
 		[self highlightLineRange:[completeString lineRangeForRange:[textView selectedRange]]];
-	} else if ([[document valueForKey:@"isSyntaxColoured"] boolValue] == YES) {
+	} else if ([[document valueForKey:@"isSyntaxColoured"] boolValue] == YES)
+    {
 		[self pageRecolourTextView:textView];
 	}
 	
-	if (autocompleteWordsTimer != nil) {
-		[autocompleteWordsTimer setFireDate:[NSDate dateWithTimeIntervalSinceNow:[[FRADefaults valueForKey:@"AutocompleteAfterDelay"] doubleValue]]];
-	} else if ([[FRADefaults valueForKey:@"AutocompleteSuggestAutomatically"] boolValue] == YES) {
-		autocompleteWordsTimer = [NSTimer scheduledTimerWithTimeInterval:[[FRADefaults valueForKey:@"AutocompleteAfterDelay"] doubleValue] target:self selector:@selector(autocompleteWordsTimerSelector:) userInfo:textView repeats:NO];
+	if (autocompleteWordsTimer != nil)
+    {
+		[autocompleteWordsTimer setFireDate:[NSDate dateWithTimeIntervalSinceNow: _autocompleteAfterDelay]];
+        
+	} else if (_autocompleteSuggestAutomatically)
+    {
+		autocompleteWordsTimer = [NSTimer scheduledTimerWithTimeInterval: _autocompleteAfterDelay
+                                                                  target: self
+                                                                selector: @selector(autocompleteWordsTimerSelector:)
+                                                                userInfo: textView
+                                                                 repeats: NO];
 	}
 	
-	if (liveUpdatePreviewTimer != nil) {
-		[liveUpdatePreviewTimer setFireDate:[NSDate dateWithTimeIntervalSinceNow:[[FRADefaults valueForKey:@"LiveUpdatePreviewDelay"] doubleValue]]];
-	} else if ([[FRADefaults valueForKey:@"LiveUpdatePreview"] boolValue] == YES) {
-		liveUpdatePreviewTimer = [NSTimer scheduledTimerWithTimeInterval:[[FRADefaults valueForKey:@"LiveUpdatePreviewDelay"] doubleValue] target:self selector:@selector(liveUpdatePreviewTimerSelector:) userInfo:textView repeats:NO];
+	if (liveUpdatePreviewTimer != nil)
+    {
+		[liveUpdatePreviewTimer setFireDate:[NSDate dateWithTimeIntervalSinceNow: _liveUpdatePreviewDelay]];
+        
+	} else if (_liveUpdatePreview)
+    {
+		liveUpdatePreviewTimer = [NSTimer scheduledTimerWithTimeInterval: _liveUpdatePreviewDelay
+                                                                  target: self
+                                                                selector: @selector(liveUpdatePreviewTimerSelector:)
+                                                                userInfo: textView
+                                                                 repeats: NO];
 	}
 	
 	[[document valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth: NO];
@@ -1139,18 +1145,21 @@
 		return;
 	}
 	
-	FRATextView *textView = [aNotification object];
-	[FRACurrentProject setLastTextViewInFocus:textView];
-	
-	[FRAInterface updateStatusBar];
+	VITextView *textView = [aNotification object];
+    
+    //TODO
+//	[FRACurrentProject setLastTextViewInFocus:textView];
+//	
+//	[FRAInterface updateStatusBar];
 	
 	editedRange = [textView selectedRange];
 	
-	if ([[FRADefaults valueForKey:@"HighlightCurrentLine"] boolValue] == YES) {
+	if (_highlightCurrentLine) {
 		[self highlightLineRange:[completeString lineRangeForRange:editedRange]];
 	}
 	
-	if ([[FRADefaults valueForKey:@"ShowMatchingBraces"] boolValue] == NO) {
+	if (_showMatchingBraces == NO)
+    {
 		return;
 	}
     
@@ -1238,8 +1247,10 @@
 
 - (NSArray *)textView:theTextView completions:(NSArray *)words forPartialWordRange:(NSRange)charRange indexOfSelectedItem:(NSInteger *)index
 {
-	if ([keywordsAndAutocompleteWords count] == 0) {
-		if ([[FRADefaults valueForKey:@"AutocompleteIncludeStandardWords"] boolValue] == NO) {
+	if ([keywordsAndAutocompleteWords count] == 0)
+    {
+		if (_autocompleteIncludeStandardWords == NO)
+        {
 			return @[];
 		} else {
 			return words;
@@ -1248,7 +1259,9 @@
 	
 	NSString *matchString = [[theTextView string] substringWithRange:charRange];
 	NSMutableArray *finalWordsArray = [NSMutableArray arrayWithArray:keywordsAndAutocompleteWords];
-	if ([[FRADefaults valueForKey:@"AutocompleteIncludeStandardWords"] boolValue]) {
+	
+    if (_autocompleteIncludeStandardWords)
+    {
 		[finalWordsArray addObjectsFromArray:words];
 	}
 	
@@ -1260,9 +1273,11 @@
 		}
 	}
 	
-	if ([[FRADefaults valueForKey:@"AutocompleteIncludeStandardWords"] boolValue]) { // If no standard words are added there's no need to sort it again as it has already been sorted
+	if (_autocompleteIncludeStandardWords)
+    { // If no standard words are added there's no need to sort it again as it has already been sorted
 		return [matchArray sortedArrayUsingSelector:@selector(compare:)];
-	} else {
+	} else
+    {
 		return matchArray;
 	}
 }
@@ -1304,20 +1319,23 @@
 
 - (void)checkIfCanUndo
 {
-	if (![undoManager canUndo]) {
-		[FRACurrentDocument setValue:@NO forKey:@"isEdited"];
-		[FRACurrentProject updateEditedBlobStatus];
-		[FRACurrentProject reloadData];
+	if (![undoManager canUndo])
+    {
+//		[FRACurrentDocument setValue:@NO forKey:@"isEdited"];
+//		[FRACurrentProject updateEditedBlobStatus];
+//		[FRACurrentProject reloadData];
 	}
 }
 
 
 - (void)autocompleteWordsTimerSelector:(NSTimer *)theTimer
 {
-	FRATextView *textView = [theTimer userInfo];
+	VITextView *textView = [theTimer userInfo];
 	selectedRange = [textView selectedRange];
 	stringLength = [completeString length];
-	if (selectedRange.location <= stringLength && selectedRange.length == 0 && stringLength != 0) {
+    
+	if (selectedRange.location <= stringLength && selectedRange.length == 0 && stringLength != 0)
+    {
 		if (selectedRange.location == stringLength) { // If we're at the very end of the document
 			[textView complete:nil];
 		} else {
@@ -1337,11 +1355,13 @@
 
 - (void)liveUpdatePreviewTimerSelector:(NSTimer *)theTimer
 {
-	if ([[FRADefaults valueForKey:@"LiveUpdatePreview"] boolValue] == YES) {
-		[[FRAPreviewController sharedInstance] liveUpdate];
+	if (_liveUpdatePreview)
+    {
+//		[[FRAPreviewController sharedInstance] liveUpdate];
 	}
 	
-	if (liveUpdatePreviewTimer) {
+	if (liveUpdatePreviewTimer)
+    {
 		[liveUpdatePreviewTimer invalidate];
 		liveUpdatePreviewTimer = nil;
 	}

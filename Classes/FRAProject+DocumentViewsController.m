@@ -18,9 +18,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAInterfacePerformer.h"
 #import "FRAApplicationDelegate.h"
 #import "FRAViewMenuController.h"
-#import "FRALineNumbers.h"
-#import "FRAOpenSavePerformer.h"
 
+#import "FRAOpenSavePerformer.h"
+#import "FRASyntaxColouring.h"
 #import "FRADocumentManagedObject.h"
 #import "FRAProjectsController.h"
 
@@ -232,10 +232,15 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #pragma mark Split view delegates
 - (void)splitViewDidResizeSubviews:(NSNotification *)aNotification
 {
-	if ([aNotification object] == contentSplitView) {
-		[[[self firstDocument] valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth:NO recolour:YES];
-		if ([self secondDocument] != nil) {
-			[[[self secondDocument] valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth:NO recolour:YES];
+	if ([aNotification object] == contentSplitView)
+    {
+		[[[self firstDocument] valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth: NO];
+        [[[self firstDocument] valueForKey: @"syntaxColouring"] pageRecolour];
+
+		if ([self secondDocument] != nil)
+        {
+			[[[self secondDocument] valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth: NO];
+            [[[self secondDocument] valueForKey: @"syntaxColouring"] pageRecolour];
 		}
 	} else if ([aNotification object] == mainSplitView) {
 		[self resizeViewSizeSlider];		

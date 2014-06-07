@@ -21,12 +21,14 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRABasicPerformer.h"
 #import "FRAApplicationDelegate.h"
 #import "FRAInterfacePerformer.h"
-#import "FRALineNumbers.h"
+
 #import "FRAProject.h"
 #import "FRATextPerformer.h"
 #import "FRAOpenSavePerformer.h"
+#import "FRASyntaxColouring.h"
 
 #import <VAFoundation/VAFoundation.h>
+#import <VADevUIKit/VADevUIKit.h>
 
 @implementation FRAAdvancedFindController
 
@@ -558,8 +560,13 @@ VASingletonIMPDefault(FRAAdvancedFindController)
 		[resultDocumentContentView addSubview:[document valueForKey:@"fourthGutterScrollView"]];
 	}
 
-	[[document valueForKey:@"lineNumbers"] updateLineNumbersForClipView:[[document valueForKey:@"fourthTextScrollView"] contentView] checkWidth:YES recolour:YES]; // If the window has changed since the view was last visible
-		
+    NSClipView *clipView = [[document valueForKey:@"fourthTextScrollView"] contentView];
+	[[document valueForKey:@"lineNumbers"] updateLineNumbersForClipView: clipView
+                                                             checkWidth: YES]; // If the window has changed since the view was last visible
+    FRATextView *textView = [clipView documentView];
+    [[FRACurrentDocument valueForKey: @"syntaxColouring"] pageRecolourTextView: textView];
+
+    
 	NSRange selectRange = NSRangeFromString([[findResultsTreeController selectedObjects][0] valueForKey:@"range"]);
 	NSString *completeString = [[document valueForKey:@"fourthTextView"] string];
 	if (NSMaxRange(selectRange) > [completeString length]) {

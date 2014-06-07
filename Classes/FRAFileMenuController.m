@@ -24,7 +24,7 @@
 #import "FRAPrintTextView.h"
 #import "FRASyntaxColouring.h"
 #import "FRAProject.h"
-#import "FRALineNumbers.h"
+
 
 #import <VADevUIKit/VADevUIKit.h>
 
@@ -251,7 +251,7 @@ VASingletonIMPDefault(FRAFileMenuController)
 	[[[document valueForKey:@"firstTextView"] undoManager] removeAllActions];
 	[[document valueForKey:@"firstTextView"] setString:string];
 	[[document valueForKey:@"syntaxColouring"] pageRecolour];
-	[[document valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth:NO recolour:NO];
+	[[document valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth: NO];
 	[[document valueForKey:@"firstTextView"] setSelectedRange:NSMakeRange(0,0)];
 	[document setValue:@NO forKey:@"isEdited"];
 	[FRACurrentProject updateEditedBlobStatus];

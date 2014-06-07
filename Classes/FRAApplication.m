@@ -26,10 +26,11 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRASnippetsController.h"
 #import "FRAShortcutsController.h"
 #import "FRACommandsController.h"
-#import "FRALineNumbers.h"
+
 #import "FRAProject.h"
 
 #import "FRASearchField.h"
+#import "FRASyntaxColouring.h"
 #import <VADevUIKit/VADevUIKit.h>
 
 @implementation FRAApplication
@@ -234,7 +235,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
 		[textView replaceCharactersInRange:NSMakeRange(0, [[textView string] length]) withString:newContent];
 		[textView didChangeText];
 	}
-    [[FRACurrentDocument valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth:YES recolour:YES];
+    
+    [[FRACurrentDocument valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth: YES];
+    [[FRACurrentDocument valueForKey: @"syntaxColouring"] pageRecolour];
 }
 
 

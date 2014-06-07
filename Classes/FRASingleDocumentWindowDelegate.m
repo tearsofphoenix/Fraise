@@ -17,7 +17,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRASingleDocumentWindowDelegate.h"
 #import "FRABasicPerformer.h"
 #import "FRASyntaxColouring.h"
-#import "FRALineNumbers.h"
+#import <VADevUIKit/VADevUIKit.h>
 
 @implementation FRASingleDocumentWindowDelegate
 
@@ -39,9 +39,14 @@ VASingletonIMPDefault(FRASingleDocumentWindowDelegate)
 	}
 	
 	array = [[window contentView] subviews];
-	for (id view in array) {
-		if (view == [document valueForKey:@"thirdTextScrollView"]) {
-			[[document valueForKey:@"lineNumbers"] updateLineNumbersForClipView:[view contentView] checkWidth:NO recolour:YES];
+	for (id view in array)
+    {
+		if (view == [document valueForKey:@"thirdTextScrollView"])
+        {
+			[[document valueForKey:@"lineNumbers"] updateLineNumbersForClipView: [view contentView] checkWidth: NO];
+            
+            [[document valueForKey: @"syntaxColouring"] pageRecolourTextView: [[view contentView] documentView]];
+
 		}
 	}
 	
