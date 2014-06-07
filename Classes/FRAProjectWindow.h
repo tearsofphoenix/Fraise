@@ -13,9 +13,10 @@ Unless required by applicable law or agreed to in writing, software distributed 
 */
 
 #import <Cocoa/Cocoa.h>
+#import <SNRHUDKit/SNRHUDKit.h>
 
-
-@interface FRAProjectWindow : NSWindow {
+@interface FRAProjectWindow : NSWindow
+{
 
 }
 

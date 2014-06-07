@@ -1,3 +1,6 @@
 [submodule "bwtoolkit"]
 	path = bwtoolkit
 	url = https://github.com/veritas-shine/bwtoolkit.git
+[submodule "Library/SNRHUDKit"]
+	path = Library/SNRHUDKit
+	url = http://github.com/veritas-shine/SNRHUDKit.git

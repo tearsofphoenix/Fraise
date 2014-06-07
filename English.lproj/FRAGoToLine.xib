@@ -13,7 +13,7 @@
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application"/>
-        <window title="Go To Line &lt;do not localise>" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="7" userLabel="GoToLine">
+        <window title="Go To Line &lt;do not localise>" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="7" userLabel="GoToLine" customClass="SNRHUDWindow">
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="556" y="373" width="220" height="139"/>
@@ -33,7 +33,7 @@
                                 <textField verticalHuggingPriority="750" id="11" customClass="BWStyledTextField">
                                     <rect key="frame" x="26" y="61" width="70" height="17"/>
                                     <autoresizingMask key="autoresizingMask"/>
-                                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Go to line:" id="22" customClass="BWTransparentTextFieldCell">
+                                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Go to line:" id="22" customClass="SNRHUDTextFieldCell">
                                         <font key="font" metaFont="system"/>
                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -42,7 +42,7 @@
                                 <textField verticalHuggingPriority="750" id="12" customClass="BWTokenField">
                                     <rect key="frame" x="101" y="59" width="61" height="22"/>
                                     <autoresizingMask key="autoresizingMask"/>
-                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" drawsBackground="YES" id="23" customClass="BWTransparentTextFieldCell">
+                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" drawsBackground="YES" id="23" customClass="SNRHUDTextFieldCell">
                                         <numberFormatter key="formatter" formatterBehavior="10_0" positiveFormat="0" negativeFormat="-0" localizesFormat="NO" hasThousandSeparators="NO" thousandSeparator="," id="13">
                                             <attributedString key="attributedStringForZero">
                                                 <fragment content="0"/>
@@ -58,7 +58,7 @@
                                 <button verticalHuggingPriority="750" id="14" customClass="BWTransparentButton">
                                     <rect key="frame" x="95" y="13" width="73" height="32"/>
                                     <autoresizingMask key="autoresizingMask"/>
-                                    <buttonCell key="cell" type="push" title="Go" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="24" customClass="BWTransparentButtonCell">
+                                    <buttonCell key="cell" type="push" title="Go" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="24" customClass="SNRHUDButtonCell">
                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                         <font key="font" metaFont="system"/>
                                         <string key="keyEquivalent" base64-UTF8="YES">
@@ -72,7 +72,7 @@ DQ
                                 <button verticalHuggingPriority="750" id="15" customClass="BWTransparentButton">
                                     <rect key="frame" x="8" y="13" width="82" height="32"/>
                                     <autoresizingMask key="autoresizingMask"/>
-                                    <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="25" customClass="BWTransparentButtonCell">
+                                    <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="25" customClass="SNRHUDButtonCell">
                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                         <font key="font" metaFont="system"/>
                                         <string key="keyEquivalent" base64-UTF8="YES">
@@ -90,7 +90,6 @@ Gw
                     </box>
                 </subviews>
             </view>
-            <metadata/>
             <connections>
                 <outlet property="initialFirstResponder" destination="12" id="16"/>
             </connections>

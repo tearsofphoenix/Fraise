@@ -231,7 +231,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 - (void)setContent:(NSString *)newContent
 {
 	FRATextView *textView = [FRACurrentDocument valueForKey:@"firstTextView"];
-	if ([textView shouldChangeTextInRange:NSMakeRange(0, [[textView string] length]) replacementString:newContent]) { // Do it this way to mark it as an Undo
+	if ([textView shouldChangeTextInRange:NSMakeRange(0, [[textView string] length]) replacementString:newContent])
+    { // Do it this way to mark it as an Undo
 		[textView replaceCharactersInRange:NSMakeRange(0, [[textView string] length]) withString:newContent];
 		[textView didChangeText];
 	}

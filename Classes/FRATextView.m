@@ -24,6 +24,13 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 #import <VADevUIKit/VADevUIKit.h>
 
+@interface FRATextView ()
+
+@property (nonatomic, strong) FRASyntaxColouring *syntaxColoring;
+@property (nonatomic, strong) VILineNumbers *lineNumbers;
+
+@end
+
 @implementation FRATextView
 
 - (id)initWithFrame:(NSRect)frame
@@ -41,7 +48,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
         [layoutManager setShowInvisibleCharacters: showInvisibleCharacters];
 		[[self textContainer] replaceLayoutManager: layoutManager];
 		
-		[self setDefaults];		
+        _lineNumbers = [[VILineNumbers alloc] init];
+
+		[self setDefaults];
 	}
 	return self;
 }

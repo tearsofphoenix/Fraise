@@ -45,7 +45,7 @@
                         <tabViewItems>
                             <tabViewItem label="Tab" identifier="1" id="259">
                                 <view key="view" id="260">
-                                    <rect key="frame" x="10" y="28" width="497" height="-19"/>
+                                    <rect key="frame" x="10" y="19" width="497" height="0.0"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 </view>
                             </tabViewItem>
@@ -61,7 +61,7 @@
                     <textField focusRingType="none" verticalHuggingPriority="750" id="63" customClass="BWStyledTextField">
                         <rect key="frame" x="0.0" y="-4" width="593" height="22"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" focusRingType="none" alignment="center" bezelStyle="round" id="288" customClass="BWStyledTextFieldCell">
+                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" focusRingType="none" alignment="center" bezelStyle="round" id="288" customClass="SNRHUDTextFieldCell">
                             <font key="font" metaFont="smallSystem"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -149,7 +149,7 @@
             <rect key="frame" x="0.0" y="0.0" width="215" height="501"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="0.0" verticalLineScroll="19" verticalPageScroll="0.0" usesPredominantAxisScrolling="NO" id="190" customClass="BWTransparentScrollView">
+                <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="0.0" verticalLineScroll="19" verticalPageScroll="0.0" usesPredominantAxisScrolling="NO" id="190" customClass="SNRHUDScrollView">
                     <rect key="frame" x="0.0" y="0.0" width="215" height="501"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <clipView key="contentView" id="WNw-20-wEX">

@@ -59,6 +59,8 @@
 		2FEC50CB0B96DB86000CF1AD /* MultiMarkdown.pl in Resources */ = {isa = PBXBuildFile; fileRef = 2FEC50CA0B96DB86000CF1AD /* MultiMarkdown.pl */; };
 		604589821941C0C60004DF6B /* BWTK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6045897B1941C0B20004DF6B /* BWTK.framework */; };
 		604589831941C0CE0004DF6B /* BWTK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6045897B1941C0B20004DF6B /* BWTK.framework */; };
+		60E015761942F4C8002E066E /* SNRHUDKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60E0156F1942F432002E066E /* SNRHUDKit.framework */; };
+		60E015771942F4CD002E066E /* SNRHUDKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 60E0156F1942F432002E066E /* SNRHUDKit.framework */; };
 		7F08532F0B77B55D009544AD /* FRAExtraInterfaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F08532E0B77B55D009544AD /* FRAExtraInterfaceController.m */; };
 		7F2B7E330D9463A100C60435 /* FRASearchField.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F2B7E320D9463A100C60435 /* FRASearchField.m */; };
 		7F2B7FBD0C27272E0058BC55 /* FRASingleDocumentPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F2B7FBB0C27272E0058BC55 /* FRASingleDocumentPanel.m */; };
@@ -178,6 +180,27 @@
 			remoteGlobalIDString = 53DF68FC067E5B5A0090B5B0;
 			remoteInfo = BWTK;
 		};
+		60E0156E1942F432002E066E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 60E015671942F432002E066E /* SNRHUDKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0392857D14CCCBF300D02672;
+			remoteInfo = SNRHUDKit;
+		};
+		60E015701942F432002E066E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 60E015671942F432002E066E /* SNRHUDKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 039285AE14CCD40500D02672;
+			remoteInfo = Catalog;
+		};
+		60E015741942F4C3002E066E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 60E015671942F432002E066E /* SNRHUDKit.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 0392857C14CCCBF300D02672;
+			remoteInfo = SNRHUDKit;
+		};
 		92A1FE9C194055270090870B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 92A1FE97194055260090870B /* VAFoundation.xcodeproj */;
@@ -229,6 +252,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				60E015771942F4CD002E066E /* SNRHUDKit.framework in CopyFiles */,
 				604589831941C0CE0004DF6B /* BWTK.framework in CopyFiles */,
 				92A1FF4119405B980090870B /* VADevUIKit.framework in CopyFiles */,
 				92A1FEA9194057770090870B /* VAFoundation.framework in CopyFiles */,
@@ -408,6 +432,7 @@
 		2FE2F83F0B985D0500ADCF8A /* FRAProject+DocumentViewsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "FRAProject+DocumentViewsController.m"; path = "Classes/FRAProject+DocumentViewsController.m"; sourceTree = "<group>"; };
 		2FEC50CA0B96DB86000CF1AD /* MultiMarkdown.pl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.perl; name = MultiMarkdown.pl; path = Other/MultiMarkdown.pl; sourceTree = "<group>"; };
 		604589741941C0B20004DF6B /* BWToolkit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BWToolkit.xcodeproj; path = bwtoolkit/BWToolkit.xcodeproj; sourceTree = "<group>"; };
+		60E015671942F432002E066E /* SNRHUDKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SNRHUDKit.xcodeproj; path = Library/SNRHUDKit/SNRHUDKit.xcodeproj; sourceTree = "<group>"; };
 		7F08532D0B77B55D009544AD /* FRAExtraInterfaceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FRAExtraInterfaceController.h; path = Classes/FRAExtraInterfaceController.h; sourceTree = "<group>"; };
 		7F08532E0B77B55D009544AD /* FRAExtraInterfaceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FRAExtraInterfaceController.m; path = Classes/FRAExtraInterfaceController.m; sourceTree = "<group>"; };
 		7F1DE27A0BD1984700AD5707 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = /System/Library/Frameworks/CoreFoundation.framework; sourceTree = "<absolute>"; };
@@ -552,6 +577,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				60E015761942F4C8002E066E /* SNRHUDKit.framework in Frameworks */,
 				604589821941C0C60004DF6B /* BWTK.framework in Frameworks */,
 				92A1FF4019405AF20090870B /* VADevUIKit.framework in Frameworks */,
 				92A1FEA8194055F40090870B /* VAFoundation.framework in Frameworks */,
@@ -610,6 +636,7 @@
 		2A37F4AAFDCFA73011CA2CEA /* Smultron */ = {
 			isa = PBXGroup;
 			children = (
+				60E015671942F432002E066E /* SNRHUDKit.xcodeproj */,
 				604589741941C0B20004DF6B /* BWToolkit.xcodeproj */,
 				92A1FEE2194057C20090870B /* VADevUIKit.xcodeproj */,
 				92A1FE97194055260090870B /* VAFoundation.xcodeproj */,
@@ -697,6 +724,15 @@
 			children = (
 				6045897B1941C0B20004DF6B /* BWTK.framework */,
 				6045897D1941C0B20004DF6B /* BWTKMAS.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		60E015681942F432002E066E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				60E0156F1942F432002E066E /* SNRHUDKit.framework */,
+				60E015711942F432002E066E /* Catalog.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1035,6 +1071,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				60E015751942F4C3002E066E /* PBXTargetDependency */,
 				604589811941C0C00004DF6B /* PBXTargetDependency */,
 				92A1FF3F19405AEE0090870B /* PBXTargetDependency */,
 				92A1FEA7194055E90090870B /* PBXTargetDependency */,
@@ -1085,6 +1122,10 @@
 					ProjectRef = 604589741941C0B20004DF6B /* BWToolkit.xcodeproj */;
 				},
 				{
+					ProductGroup = 60E015681942F432002E066E /* Products */;
+					ProjectRef = 60E015671942F432002E066E /* SNRHUDKit.xcodeproj */;
+				},
+				{
 					ProductGroup = 92A1FEE3194057C20090870B /* Products */;
 					ProjectRef = 92A1FEE2194057C20090870B /* VADevUIKit.xcodeproj */;
 				},
@@ -1115,6 +1156,20 @@
 			fileType = wrapper.framework;
 			path = BWTKMAS.framework;
 			remoteRef = 6045897C1941C0B20004DF6B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		60E0156F1942F432002E066E /* SNRHUDKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = SNRHUDKit.framework;
+			remoteRef = 60E0156E1942F432002E066E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		60E015711942F432002E066E /* Catalog.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = Catalog.app;
+			remoteRef = 60E015701942F432002E066E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		92A1FE9D194055270090870B /* VAFoundation.framework */ = {
@@ -1306,6 +1361,11 @@
 			isa = PBXTargetDependency;
 			name = BWTK;
 			targetProxy = 604589801941C0C00004DF6B /* PBXContainerItemProxy */;
+		};
+		60E015751942F4C3002E066E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = SNRHUDKit;
+			targetProxy = 60E015741942F4C3002E066E /* PBXContainerItemProxy */;
 		};
 		92A1FEA7194055E90090870B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

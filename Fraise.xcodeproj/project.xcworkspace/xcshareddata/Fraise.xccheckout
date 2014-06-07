@@ -10,6 +10,8 @@
 	<string>Fraise</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
+		<key>23C3AD8D-D124-4E43-AE76-C936EAFA883F</key>
+		<string>http://github.com/veritas-shine/SNRHUDKit.git</string>
 		<key>708E8C03-1DAB-48E2-8378-CC3A320D0AF2</key>
 		<string>https://github.com/tearsofphoenix/Fraise.git</string>
 		<key>E7101F04-A78A-440D-A633-4C7583B5E7B6</key>
@@ -19,6 +21,8 @@
 	<string>Fraise.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
+		<key>23C3AD8D-D124-4E43-AE76-C936EAFA883F</key>
+		<string>../../Library/SNRHUDKit</string>
 		<key>708E8C03-1DAB-48E2-8378-CC3A320D0AF2</key>
 		<string>../..</string>
 		<key>E7101F04-A78A-440D-A633-4C7583B5E7B6</key>
@@ -47,6 +51,14 @@
 			<string>708E8C03-1DAB-48E2-8378-CC3A320D0AF2</string>
 			<key>IDESourceControlWCCName</key>
 			<string>Fraise</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>23C3AD8D-D124-4E43-AE76-C936EAFA883F</string>
+			<key>IDESourceControlWCCName</key>
+			<string>SNRHUDKit</string>
 		</dict>
 	</array>
 </dict>
