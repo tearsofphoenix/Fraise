@@ -18,88 +18,9 @@
 #import "VITextView.h"
 #import "VILayoutManager.h"
 #import "VILineNumbers.h"
+#import "VISyntaxColouring+TextDelegate.h"
 
 #import <VAFoundation/VAFoundation.h>
-
-@interface VISyntaxColouring ()
-{
-	NSUndoManager *undoManager;
-	VILayoutManager *firstLayoutManager;
-	
-	NSTimer *autocompleteWordsTimer;
-	NSInteger currentYOfSelectedCharacter, lastYOfSelectedCharacter, currentYOfLastCharacterInLine, lastYOfLastCharacterInLine, currentYOfLastCharacter, lastYOfLastCharacter, lastCursorLocation;
-	
-	NSCharacterSet *letterCharacterSet, *keywordStartCharacterSet, *keywordEndCharacterSet;
-	
-	NSDictionary *commandsColour, *commentsColour, *instructionsColour, *keywordsColour, *autocompleteWordsColour, *stringsColour, *variablesColour, *attributesColour, *lineHighlightColour;
-	
-	NSEnumerator *wordEnumerator;
-	NSSet *keywords;
-	NSSet *autocompleteWords;
-	NSArray *keywordsAndAutocompleteWords;
-	BOOL keywordsCaseSensitive;
-	BOOL recolourKeywordIfAlreadyColoured;
-	NSString *beginCommand;
-	NSString *endCommand;
-	NSString *beginInstruction;
-	NSString *endInstruction;
-	NSCharacterSet *beginVariable;
-	NSCharacterSet *endVariable;
-	NSString *firstString;
-	unichar firstStringUnichar;
-	NSString *secondString;
-	unichar secondStringUnichar;
-	NSString *firstSingleLineComment, *secondSingleLineComment, *beginFirstMultiLineComment, *endFirstMultiLineComment, *beginSecondMultiLineComment, *endSecondMultiLineComment;
-	
-	NSString *completeString;
-	NSString *searchString;
-	NSScanner *scanner;
-	NSScanner *completeDocumentScanner;
-	NSInteger beginning, end, endOfLine, index, length, searchStringLength, commandLocation, skipEndCommand, beginLocationInMultiLine, endLocationInMultiLine, searchSyntaxLength, rangeLocation;
-	NSRange rangeOfLine;
-	NSString *keyword;
-	BOOL shouldOnlyColourTillTheEndOfLine;
-	unichar commandCharacterTest;
-	unichar beginCommandCharacter;
-	unichar endCommandCharacter;
-	BOOL shouldColourMultiLineStrings;
-	BOOL foundMatch;
-	NSInteger completeStringLength;
-	unichar characterToCheck;
-	NSRange editedRange;
-	NSInteger cursorLocation;
-	NSInteger differenceBetweenLastAndPresent;
-	NSInteger skipMatchingBrace;
-	NSRect visibleRect;
-	NSRange visibleRange;
-	NSInteger beginningOfFirstVisibleLine;
-	NSInteger endOfLastVisibleLine;
-	NSRange selectedRange;;
-	NSInteger stringLength;
-	NSString *keywordTestString;
-	NSString *autocompleteTestString;
-	NSRange searchRange;
-	NSInteger maxRange;
-	
-	NSTextContainer *textContainer;
-    
-	id document;
-	
-	NSCharacterSet *attributesCharacterSet;
-	
-	ICUPattern *firstStringPattern;
-	ICUPattern *secondStringPattern;
-	
-	ICUMatcher *firstStringMatcher;
-	ICUMatcher *secondStringMatcher;
-	
-	NSRange foundRange;
-	
-	NSTimer *liveUpdatePreviewTimer;
-	
-	NSRange lastLineHighlightRange;
-}
-@end
 
 @implementation VISyntaxColouring
 
@@ -107,19 +28,9 @@
 
 - (id)init
 {
-    return [self initWithDocument: nil];
-}
-
-
-- (id)initWithDocument:(id)theDocument
-{
 	if ((self = [super init]))
     {
-		document = theDocument;
-		firstLayoutManager = (VILayoutManager *)[[document valueForKey:@"firstTextView"] layoutManager];
-		_secondLayoutManager = nil;
-		_thirdLayoutManager = nil;
-		_fourthLayoutManager = nil;
+        _textViews = [[NSMutableArray alloc] init];
         
 		[self setColours];
 		
@@ -140,13 +51,9 @@
 		
 		[self setSyntaxDefinition];
 		
-		completeString = [[document valueForKey:@"firstTextView"] string];
-		textContainer = [[document valueForKey:@"firstTextView"] textContainer];
 		
 		_reactToChanges = YES;
         
-		[[document valueForKey:@"firstTextView"] setDelegate:self];
-		[[[document valueForKey:@"firstTextView"] textStorage] setDelegate:self];
 		undoManager = [[NSUndoManager alloc] init];
 		[[NSNotificationCenter defaultCenter] addObserver: self
                                                  selector: @selector(checkIfCanUndo)
@@ -160,13 +67,27 @@
     return self;
 }
 
+- (void)setFirstTextView: (VITextView *)firstTextView
+{
+    if (_firstTextView != firstTextView)
+    {
+        _firstTextView = firstTextView;
+        
+        [_firstTextView  setDelegate:self];
+		[[_firstTextView  textStorage] setDelegate:self];
+
+        completeString = [_firstTextView  string];
+        textContainer = [_firstTextView  textContainer];
+    }
+}
+
 - (void)_notificationForColorChanged: (NSNotification *)notification
 {
     [self setColours];
     [self pageRecolour];
     if (_highlightCurrentLine)
     {
-        NSRange range = [completeString lineRangeForRange:[[document valueForKey:@"firstTextView"] selectedRange]];
+        NSRange range = [completeString lineRangeForRange:[_firstTextView  selectedRange]];
         [self highlightLineRange:range];
         lastLineHighlightRange = range;
     } else
@@ -222,7 +143,8 @@
 	NSArray *foundSyntaxDefinition = nil; //[managedObjectContext executeFetchRequest:request error:nil];
     
 	NSString *fileToUse = nil;
-	NSString *extension = [[document valueForKey:@"name"] pathExtension];
+	NSString *extension = nil; //[[document valueForKey:@"name"] pathExtension];
+    NSString *syntaxDefinitionName = nil;
     
 //	if ([[document valueForKey:@"hasManuallyChangedSyntaxDefinition"] boolValue] == YES)
 //    { // Once the user has changed the syntax definition always use that one and not the one from the extension
@@ -237,24 +159,31 @@
     {
 		if (_syntaxColouringMatrix == 1)
         { // Always use...
-			if ([foundSyntaxDefinition count] != 0) {
+			if ([foundSyntaxDefinition count] != 0)
+            {
 				fileToUse = [foundSyntaxDefinition[0] valueForKey:@"file"];
-				[document setValue:[foundSyntaxDefinition[0] valueForKey:@"name"] forKey:@"syntaxDefinition"];
-			} else {
+                syntaxDefinitionName = [foundSyntaxDefinition[0] valueForKey:@"name"];
+			} else
+            {
 				fileToUse = [syntaxDefinitions[0] valueForKey:@"file"];
-				[document setValue:[syntaxDefinitions[0] valueForKey:@"name"] forKey:@"syntaxDefinition"];
+                syntaxDefinitionName = [syntaxDefinitions[0] valueForKey:@"name"];
 			}
-		} else {
+		} else
+        {
 			NSString *lowercaseExtension;
-			if ([extension isEqualToString:@""]) { // If there is no extension try to guess it
-				NSString *string = [[[document valueForKey:@"firstTextScrollView"] documentView] string];
+			if ([extension isEqualToString: @""])
+            { // If there is no extension try to guess it
+				NSString *string = nil; //[[[document valueForKey:@"firstTextScrollView"] documentView] string];
 				NSString *firstLine = [string substringWithRange:[string lineRangeForRange:NSMakeRange(0,0)]];
-				if ([firstLine hasPrefix:@"#!"] || [firstLine hasPrefix:@"%"] || [firstLine hasPrefix:@"<?"]) {
+				if ([firstLine hasPrefix:@"#!"] || [firstLine hasPrefix:@"%"] || [firstLine hasPrefix:@"<?"])
+                {
 					lowercaseExtension = [self guessSyntaxDefinitionFromFirstLine:firstLine];
-				} else {
+				} else
+                {
 					lowercaseExtension = @"";
 				}
-			} else {
+			} else
+            {
 				lowercaseExtension = [extension lowercaseString];
 			}
 			
@@ -272,21 +201,24 @@
 				if ([[extensionsString componentsSeparatedByString:@" "] containsObject:lowercaseExtension])
                 {
 					fileToUse = [item valueForKey:@"file"];
-					[document setValue:name forKey:@"syntaxDefinition"];
+                    syntaxDefinitionName = name;
+
 					break;
 				}
 				index++;
 			}
-			if (fileToUse == nil && [foundSyntaxDefinition count] != 0) {
+			if (fileToUse == nil && [foundSyntaxDefinition count] != 0)
+            {
 				fileToUse = [foundSyntaxDefinition[0] valueForKey:@"file"];
-				[document setValue:[foundSyntaxDefinition[0] valueForKey:@"name"] forKey:@"syntaxDefinition"];
+                syntaxDefinitionName = [foundSyntaxDefinition[0] valueForKey:@"name"];
 			}
 		}
 	}
 	
-	if (fileToUse == nil) {
+	if (fileToUse == nil)
+    {
 		fileToUse = @"standard"; // Be sure to set it to something
-		[document setValue:@"Standard" forKey:@"syntaxDefinition"];
+        syntaxDefinitionName = @"Standard";
 	}
 	
 	NSDictionary *syntaxDictionary;
@@ -465,28 +397,20 @@
 
 - (void)pageRecolour
 {
-	[self pageRecolourTextView:[document valueForKey:@"firstTextView"]];
-	if (_secondLayoutManager != nil)
+	[self pageRecolourTextView:_firstTextView ];
+    for (VITextView *tLooper in _textViews)
     {
-		[self pageRecolourTextView:[document valueForKey:@"secondTextView"]];
-	}
-	if (_thirdLayoutManager != nil)
-    {
-		[self pageRecolourTextView:[document valueForKey:@"thirdTextView"]];
-	}
-	if (_fourthLayoutManager != nil)
-    {
-		[self pageRecolourTextView:[document valueForKey:@"fourthTextView"]];
-	}
+        [self pageRecolourTextView: tLooper];
+    }
 }
 
 
 - (void)pageRecolourTextView: (VITextView *)textView
 {
-	if ([[document valueForKey:@"isSyntaxColoured"] boolValue] == NO)
-    {
-		return;
-	}
+//	if ([[document valueForKey:@"isSyntaxColoured"] boolValue] == NO)
+//    {
+//		return;
+//	}
 	
 	if (textView == nil) {
 		return;
@@ -506,10 +430,7 @@
     {
 		return;
 	}
-	
-//	shouldOnlyColourTillTheEndOfLine = [[FRADefaults valueForKey:@"OnlyColourTillTheEndOfLine"] boolValue];
-//	shouldColourMultiLineStrings = [[FRADefaults valueForKey:@"ColourMultiLineStrings"] boolValue];
-	
+		
 	NSRange effectiveRange = range;
     
 	if (shouldColourMultiLineStrings) { // When multiline strings are coloured it needs to go backwards to find where the string might have started if it's "above" the top of the screen
@@ -1072,216 +993,6 @@
 }
 
 
-#pragma mark -
-#pragma mark Delegates
-
-- (void)textDidChange:(NSNotification *)notification
-{
-	if (_reactToChanges == NO)
-    {
-		return;
-	}
-	
-	if ([completeString length] < 2)
-    {
-        //TODO
-//		[FRAInterface updateStatusBar]; // One needs to call this from here as well because otherwise it won't update the status bar if one writes one character and deletes it in an empty document, because the textViewDidChangeSelection delegate method won't be called.
-	}
-	
-	VITextView *textView = (VITextView *)[notification object];
-	
-	if ([[document valueForKey:@"isEdited"] boolValue] == NO)
-    {
-//		[FRAVarious hasChangedDocument:document];
-	}
-	
-	if (_highlightCurrentLine)
-    {
-		[self highlightLineRange:[completeString lineRangeForRange:[textView selectedRange]]];
-	} else if ([[document valueForKey:@"isSyntaxColoured"] boolValue] == YES)
-    {
-		[self pageRecolourTextView:textView];
-	}
-	
-	if (autocompleteWordsTimer != nil)
-    {
-		[autocompleteWordsTimer setFireDate:[NSDate dateWithTimeIntervalSinceNow: _autocompleteAfterDelay]];
-        
-	} else if (_autocompleteSuggestAutomatically)
-    {
-		autocompleteWordsTimer = [NSTimer scheduledTimerWithTimeInterval: _autocompleteAfterDelay
-                                                                  target: self
-                                                                selector: @selector(autocompleteWordsTimerSelector:)
-                                                                userInfo: textView
-                                                                 repeats: NO];
-	}
-	
-	if (liveUpdatePreviewTimer != nil)
-    {
-		[liveUpdatePreviewTimer setFireDate:[NSDate dateWithTimeIntervalSinceNow: _liveUpdatePreviewDelay]];
-        
-	} else if (_liveUpdatePreview)
-    {
-		liveUpdatePreviewTimer = [NSTimer scheduledTimerWithTimeInterval: _liveUpdatePreviewDelay
-                                                                  target: self
-                                                                selector: @selector(liveUpdatePreviewTimerSelector:)
-                                                                userInfo: textView
-                                                                 repeats: NO];
-	}
-	
-	[[document valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth: NO];
-}
-
-
-- (void)textViewDidChangeSelection:(NSNotification *)aNotification
-{
-	if (_reactToChanges == NO)
-    {
-		return;
-	}
-	
-	completeStringLength = [completeString length];
-	if (completeStringLength == 0) {
-		return;
-	}
-	
-	VITextView *textView = [aNotification object];
-    
-    //TODO
-//	[FRACurrentProject setLastTextViewInFocus:textView];
-//	
-//	[FRAInterface updateStatusBar];
-	
-	editedRange = [textView selectedRange];
-	
-	if (_highlightCurrentLine) {
-		[self highlightLineRange:[completeString lineRangeForRange:editedRange]];
-	}
-	
-	if (_showMatchingBraces == NO)
-    {
-		return;
-	}
-    
-	
-	cursorLocation = editedRange.location;
-	differenceBetweenLastAndPresent = cursorLocation - lastCursorLocation;
-	lastCursorLocation = cursorLocation;
-	if (differenceBetweenLastAndPresent != 1 && differenceBetweenLastAndPresent != -1) {
-		return; // If the difference is more than one, they've moved the cursor with the mouse or it has been moved by resetSelectedRange below and we shouldn't check for matching braces then
-	}
-	
-	if (differenceBetweenLastAndPresent == 1) { // Check if the cursor has moved forward
-		cursorLocation--;
-	}
-	
-	if (cursorLocation == completeStringLength) {
-		return;
-	}
-	
-	characterToCheck = [completeString characterAtIndex:cursorLocation];
-	skipMatchingBrace = 0;
-	
-	if (characterToCheck == ')') {
-		while (cursorLocation--) {
-			characterToCheck = [completeString characterAtIndex:cursorLocation];
-			if (characterToCheck == '(') {
-				if (!skipMatchingBrace) {
-					[textView showFindIndicatorForRange:NSMakeRange(cursorLocation, 1)];
-					return;
-				} else {
-					skipMatchingBrace--;
-				}
-			} else if (characterToCheck == ')') {
-				skipMatchingBrace++;
-			}
-		}
-		NSBeep();
-	} else if (characterToCheck == ']') {
-		while (cursorLocation--) {
-			characterToCheck = [completeString characterAtIndex:cursorLocation];
-			if (characterToCheck == '[') {
-				if (!skipMatchingBrace) {
-					[textView showFindIndicatorForRange:NSMakeRange(cursorLocation, 1)];
-					return;
-				} else {
-					skipMatchingBrace--;
-				}
-			} else if (characterToCheck == ']') {
-				skipMatchingBrace++;
-			}
-		}
-		NSBeep();
-	} else if (characterToCheck == '}') {
-		while (cursorLocation--) {
-			characterToCheck = [completeString characterAtIndex:cursorLocation];
-			if (characterToCheck == '{') {
-				if (!skipMatchingBrace) {
-					[textView showFindIndicatorForRange:NSMakeRange(cursorLocation, 1)];
-					return;
-				} else {
-					skipMatchingBrace--;
-				}
-			} else if (characterToCheck == '}') {
-				skipMatchingBrace++;
-			}
-		}
-		NSBeep();
-	} else if (characterToCheck == '>') {
-		while (cursorLocation--) {
-			characterToCheck = [completeString characterAtIndex:cursorLocation];
-			if (characterToCheck == '<') {
-				if (!skipMatchingBrace) {
-					[textView showFindIndicatorForRange:NSMakeRange(cursorLocation, 1)];
-					return;
-				} else {
-					skipMatchingBrace--;
-				}
-			} else if (characterToCheck == '>') {
-				skipMatchingBrace++;
-			}
-		}
-	}
-}
-
-
-- (NSArray *)textView:theTextView completions:(NSArray *)words forPartialWordRange:(NSRange)charRange indexOfSelectedItem:(NSInteger *)index
-{
-	if ([keywordsAndAutocompleteWords count] == 0)
-    {
-		if (_autocompleteIncludeStandardWords == NO)
-        {
-			return @[];
-		} else {
-			return words;
-		}
-	}
-	
-	NSString *matchString = [[theTextView string] substringWithRange:charRange];
-	NSMutableArray *finalWordsArray = [NSMutableArray arrayWithArray:keywordsAndAutocompleteWords];
-	
-    if (_autocompleteIncludeStandardWords)
-    {
-		[finalWordsArray addObjectsFromArray:words];
-	}
-	
-	NSMutableArray *matchArray = [NSMutableArray array];
-	NSString *item;
-	for (item in finalWordsArray) {
-		if ([item rangeOfString:matchString options:NSCaseInsensitiveSearch range:NSMakeRange(0, [item length])].location == 0) {
-			[matchArray addObject:item];
-		}
-	}
-	
-	if (_autocompleteIncludeStandardWords)
-    { // If no standard words are added there's no need to sort it again as it has already been sorted
-		return [matchArray sortedArrayUsingSelector:@selector(compare:)];
-	} else
-    {
-		return matchArray;
-	}
-}
-
 
 #pragma mark -
 #pragma mark Other
@@ -1328,44 +1039,14 @@
 }
 
 
-- (void)autocompleteWordsTimerSelector:(NSTimer *)theTimer
+- (void)addTextView: (VITextView *)textView
 {
-	VITextView *textView = [theTimer userInfo];
-	selectedRange = [textView selectedRange];
-	stringLength = [completeString length];
-    
-	if (selectedRange.location <= stringLength && selectedRange.length == 0 && stringLength != 0)
-    {
-		if (selectedRange.location == stringLength) { // If we're at the very end of the document
-			[textView complete:nil];
-		} else {
-			unichar characterAfterSelection = [completeString characterAtIndex:selectedRange.location];
-			if ([[NSCharacterSet symbolCharacterSet] characterIsMember:characterAfterSelection] || [[NSCharacterSet whitespaceAndNewlineCharacterSet] characterIsMember:characterAfterSelection] || [[NSCharacterSet punctuationCharacterSet] characterIsMember:characterAfterSelection] || selectedRange.location == stringLength) { // Don't autocomplete if we're in the middle of a word
-				[textView complete:nil];
-			}
-		}
-	}
-	
-	if (autocompleteWordsTimer) {
-		[autocompleteWordsTimer invalidate];
-		autocompleteWordsTimer = nil;
-	}
+    [_textViews addObject: textView];
 }
 
-
-- (void)liveUpdatePreviewTimerSelector:(NSTimer *)theTimer
+- (void)removeTextView: (VITextView *)textView
 {
-	if (_liveUpdatePreview)
-    {
-//		[[FRAPreviewController sharedInstance] liveUpdate];
-	}
-	
-	if (liveUpdatePreviewTimer)
-    {
-		[liveUpdatePreviewTimer invalidate];
-		liveUpdatePreviewTimer = nil;
-	}
+    [_textViews removeObject: textView];
 }
-
 
 @end

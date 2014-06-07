@@ -23,7 +23,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
     NSPoint startOrigin;
 	CGFloat pageGuideX;
 	NSColor *pageGuideColour;
-	
 }
 
 @end
@@ -91,9 +90,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
                                                                   owner: self
                                                                userInfo: nil];
 	[self addTrackingArea:trackingArea];
-		
-	_lineHeight = [[[self textContainer] layoutManager] defaultLineHeightForFont: [self font]];
-    
+
     [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(_notificationForTextFontChanged:)
                                                  name: VATextFontChangedNotification
@@ -112,7 +109,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
     
     [self setFont: font];
     
-    _lineHeight = [[[self textContainer] layoutManager] defaultLineHeightForFont: font];
     [_lineNumbers updateLineNumbersForClipView: [[self enclosingScrollView] contentView]
                                     checkWidth: NO];
     //TODO
@@ -122,20 +118,16 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (void)_notificationForTextColorChanged: (NSNotification *)notification
 {
-//    [self setTextColor:[NSUnarchiver unarchiveObjectWithData: [FRADefaults valueForKey:@"TextColourWell"]]];
-//    [self setInsertionPointColor:[NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextColourWell"]]];
+    [self setTextColor: [notification userInfo][VAColorKey]];
+    [self setInsertionPointColor: [notification userInfo][VAColorKey]];
+
     [self setPageGuideValues];
     [self updateIBeamCursor];
 }
 
 - (void)_notificationForBackgroundColorChanged: (NSNotification *)notification
 {
-    //[self setBackgroundColor:[NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"BackgroundColourWell"]]];
-}
-
-- (void)_notificationForSmartColorChanged: (NSNotification *)notification
-{
-//    [self setSmartInsertDeleteEnabled:[[FRADefaults valueForKey:@"SmartInsertDelete"] boolValue]];
+    [self setBackgroundColor: [notification userInfo][VAColorKey]];
 }
 
 - (void)_notificationForTabWidthChanged: (NSNotification *)notification
@@ -146,11 +138,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 - (void)_notificationForPageGuideChanged: (NSNotification *)notification
 {
     [self setPageGuideValues];
-}
-
-- (void)_notificationForSmartInsertDeleteChanged: (NSNotification *)notification
-{
-//    [self setSmartInsertDeleteEnabled:[[FRADefaults valueForKey:@"SmartInsertDelete"] boolValue]];
 }
 
 - (void)insertNewline:(id)sender
@@ -390,8 +377,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	
 	if (shouldShiftText)
     {
-//		[[FRATextMenuController sharedInstance] shiftRightAction:nil];
-        
+        [_delegate textViewTryToShiftContentToRightDirection: self];
 	} else if (_indentWithSpaces)
     {
 		NSMutableString *spacesString = [NSMutableString string];
@@ -670,6 +656,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (IBAction)save: (id)sender
 {
+    [_delegate textViewTryToSaveContent: self];    
 //	[[FRAFileMenuController sharedInstance] saveAction:nil];
 }
 

@@ -17,7 +17,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 @class VITextView;
 @class VILayoutManager;
 
-@interface VISyntaxColouring : NSObject <NSTextStorageDelegate>
+@interface VISyntaxColouring : NSObject
 
 
 @property BOOL reactToChanges;
@@ -54,10 +54,11 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 @property NSInteger syntaxColouringMatrix;
 
-- (id)initWithDocument:(id)document;
+@property (nonatomic, assign) VITextView *firstTextView;
 
-- (void)setColours;
-- (void)setSyntaxDefinition;
+- (void)addTextView: (VITextView *)textView;
+- (void)removeTextView: (VITextView *)textView;
+
 - (void)prepareRegularExpressions;
 - (void)recolourRange:(NSRange)range;
 

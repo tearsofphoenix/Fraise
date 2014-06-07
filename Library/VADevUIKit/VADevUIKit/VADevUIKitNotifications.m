@@ -12,3 +12,5 @@
 NSString * const VAFontNameKey = @"font-name";
 
 NSString * const VAFontKey = @"font";
+
+NSString * const VAColorKey = @"color";

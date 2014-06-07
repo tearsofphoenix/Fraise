@@ -15,12 +15,19 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import <Cocoa/Cocoa.h>
 
 @class VILineNumbers;
+@class VITextView;
+
+@protocol VITextViewDelegate <NSObject>
+
+- (void)textViewTryToSaveContent: (VITextView *)textView;
+- (void)textViewTryToShiftContentToRightDirection: (VITextView *)textView;
+
+@end
 
 @interface VITextView : NSTextView
 
 @property (unsafe_unretained) NSCursor *colouredIBeamCursor;
 @property (assign) BOOL inCompleteMethod;
-@property (nonatomic) NSInteger lineHeight;
 @property (nonatomic, strong) VILineNumbers *lineNumbers;
 
 @property (nonatomic) BOOL indentNewLinesAutomatically;
@@ -34,6 +41,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 @property NSInteger showPageGuideAtColumn;
 
 @property (assign) id menuTarget;
+@property (nonatomic, assign) id<VITextViewDelegate> delegate;
 
 - (void)setDefaults;
 

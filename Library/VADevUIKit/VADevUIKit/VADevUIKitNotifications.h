@@ -20,3 +20,5 @@
 extern NSString * const VAFontNameKey;
 
 extern NSString * const VAFontKey;
+
+extern NSString * const VAColorKey;
