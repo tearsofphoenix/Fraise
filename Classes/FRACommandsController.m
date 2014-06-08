@@ -26,6 +26,8 @@
 #import "FRAOpenSavePerformer.h"
 #import "FRATextView.h"
 #import "VADocument.h"
+#import "VACommandCollection.h"
+#import "VACommand.h"
 
 #import <VADevUIKit/VADevUIKit.h>
 
@@ -91,10 +93,9 @@ VASingletonIMPDefault(FRACommandsController)
 {
 	[commandCollectionsArrayController commitEditing];
 	[commandsArrayController commitEditing];
-	id collection = [FRABasic createNewObjectForEntity:@"CommandCollection"];
-	
-	[FRAManagedObjectContext processPendingChanges];
-	[commandCollectionsArrayController setSelectedObjects:@[collection]];
+    
+	VACommandCollection *collection = [[VACommandCollection alloc] init];
+		[commandCollectionsArrayController setSelectedObjects:@[collection]];
 	
 	[commandsWindow makeFirstResponder:commandCollectionsTableView];
 	[commandCollectionsTableView editColumn:0 row:[commandCollectionsTableView selectedRow] withEvent:nil select:NO];
@@ -103,11 +104,14 @@ VASingletonIMPDefault(FRACommandsController)
 
 - (IBAction)newCommandAction:(id)sender
 {
-	id collection;
-	NSArray *commandCollections = [FRABasic fetchAll:@"CommandCollectionSortKeyName"];
-	if ([commandCollections count] == 0) {
-		collection = [FRABasic createNewObjectForEntity:@"CommandCollection"];
-		[collection setValue:COLLECTION_STRING forKey:@"name"];
+	VACommandCollection *collection;
+	NSArray *commandCollections = [VACommandCollection allCommandCollections];
+
+	if ([commandCollections count] == 0)
+    {
+		collection = [[VACommandCollection alloc] init];
+
+		[collection setName: COLLECTION_STRING];
 	}
 	[commandsArrayController commitEditing];
 	[commandCollectionsArrayController commitEditing];
@@ -120,11 +124,12 @@ VASingletonIMPDefault(FRACommandsController)
 
 - (id)performInsertNewCommand
 {
-	id collection;
-	NSArray *commandCollections = [FRABasic fetchAll:@"CommandCollectionSortKeyName"];
-	if ([commandCollections count] == 0) {
-		collection = [FRABasic createNewObjectForEntity:@"CommandCollection"];
-		[collection setValue:COLLECTION_STRING forKey:@"name"];
+	VACommandCollection *collection;
+	NSArray *commandCollections = [VACommandCollection allCommandCollections];
+	if ([commandCollections count] == 0)
+    {
+		collection = [[VACommandCollection alloc] init];
+		[collection setName: COLLECTION_STRING];
 	} else {
 		if (commandsWindow != nil && [[commandCollectionsArrayController selectedObjects] count] != 0) {
 			collection = [commandCollectionsArrayController selectedObjects][0];
@@ -133,9 +138,9 @@ VASingletonIMPDefault(FRACommandsController)
 		}
 	}
 	
-	id item = [FRABasic createNewObjectForEntity:@"Command"];
-	[[collection mutableSetValueForKey:@"commands"] addObject:item];
-	[FRAManagedObjectContext processPendingChanges];
+	VACommand *item = [[VACommand alloc] init];
+	[[collection commands] addObject:item];
+
 	[commandsArrayController setSelectedObjects:@[item]];
 	
 	return item;
@@ -144,9 +149,9 @@ VASingletonIMPDefault(FRACommandsController)
 
 - (void)performDeleteCollection
 {
-	id collection = [commandCollectionsArrayController selectedObjects][0];
+//	id collection = [commandCollectionsArrayController selectedObjects][0];
 	
-	[FRAManagedObjectContext deleteObject:collection];
+//	[FRAManagedObjectContext deleteObject:collection];
 	
 	[[FRAToolsMenuController sharedInstance] buildRunCommandMenu];
 }
@@ -179,31 +184,32 @@ VASingletonIMPDefault(FRACommandsController)
 		return;
 	}
 	
-	id collection = [FRABasic createNewObjectForEntity:@"CommandCollection"];
-	[collection setValue:[commands[0] valueForKey:@"collectionName"] forKey:@"name"];
+	VACommandCollection *collection = [[VACommandCollection alloc] init];
+
+	[collection setName: [commands[0] collectionName]];
 	
-	id item;
+	NSDictionary *item;
 	for (item in commands)
     {
-		id command = [FRABasic createNewObjectForEntity:@"Command"];
-		[command setValue:[item valueForKey:@"name"] forKey:@"name"];
-		[command setValue:[item valueForKey:@"text"] forKey:@"text"];
-		[command setValue:[item valueForKey:@"collectionName"] forKey:@"collectionName"];
-		[command setValue:[item valueForKey:@"shortcutDisplayString"] forKey:@"shortcutDisplayString"];
-		[command setValue:[item valueForKey:@"shortcutMenuItemKeyString"] forKey:@"shortcutMenuItemKeyString"];
-		[command setValue:[item valueForKey:@"shortcutModifier"] forKey:@"shortcutModifier"];
-		[command setValue:[item valueForKey:@"sortOrder"] forKey:@"sortOrder"];
-		if ([item valueForKey:@"inline"] != nil) {
-			[command setValue:[item valueForKey:@"inline"] forKey:@"inline"];
+		VACommand *command = [[VACommand alloc] init];
+		[command setName: item[@"name"]];
+		[command setText: item[@"text"]];
+		[command setCollectionName: item[@"collectionName"]];
+		[command setShortcutDisplayString: item[@"shortcutDisplayString"]];
+		[command setShortcutMenuItemKeyString: item[@"shortcutMenuItemKeyString"]];
+		[command setShortcutModifier: item[@"shortcutModifier"]];
+		[command setSortOrder: item[@"sortOrder"]];
+		if (item[@"inline"] != nil)
+        {
+			[command setIsInline: item[@"inline"]];
 		}
-		if ([item valueForKey:@"interpreter"] != nil) {
-			[command setValue:[item valueForKey:@"interpreter"] forKey:@"interpreter"];
+		if (item[@"interpreter"] != nil)
+        {
+			[command setInterpreter: item[@"interpreter"]];
 		}
-		[[collection mutableSetValueForKey:@"commands"] addObject:command];
+		[[collection commands] addObject: command];
 	}
-	
-	[FRAManagedObjectContext processPendingChanges];
-	
+		
 	[commandCollectionsArrayController setSelectedObjects:@[collection]];
 }
 
@@ -254,13 +260,6 @@ VASingletonIMPDefault(FRACommandsController)
 	[commandCollectionsArrayController commitEditing];
 	[commandsArrayController commitEditing];
 }
-
-
-- (NSManagedObjectContext *)managedObjectContext
-{
-	return FRAManagedObjectContext;
-}
-
 
 - (IBAction)runAction:(id)sender
 {

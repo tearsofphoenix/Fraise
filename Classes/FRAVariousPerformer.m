@@ -29,6 +29,12 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRATextView.h"
 #import "FRACommandManagedObject.h"
 #import "VADocument.h"
+#import "VAEncoding.h"
+#import "VASyntaxDefinition.h"
+#import "VASnippet.h"
+#import "VASnippetCollection.h"
+#import "VACommandCollection.h"
+#import "VACommand.h"
 
 #import <VAFoundation/VAFoundation.h>
 #import <VADevUIKit/VADevUIKit.h>
@@ -79,13 +85,14 @@ VASingletonIMPDefault(FRAVariousPerformer)
 	NSArray *activeEncodings = [FRADefaults valueForKey:@"ActiveEncodings"];
 	while ((encoding = *availableEncodings++))
     {
-		id item = [FRABasic createNewObjectForEntity:@"Encoding"];
+		VAEncoding *item = [[VAEncoding alloc] init];
 		NSNumber *encodingObject =  @(encoding);
-		if ([activeEncodings containsObject:encodingObject]) {
-			[item setValue:@YES forKey:@"active"];
+		if ([activeEncodings containsObject:encodingObject])
+        {
+			[item setActive: YES];
 		}
-		[item setValue:encodingObject forKey:@"encoding"];
-		[item setValue:[NSString localizedNameOfStringEncoding:encoding] forKey:@"name"];
+		[item setEncoding: encoding];
+		[item setName: [NSString localizedNameOfStringEncoding:encoding]];
 	}
 }
 
@@ -117,11 +124,12 @@ VASingletonIMPDefault(FRAVariousPerformer)
 		if ([[item valueForKey:@"extensions"] isKindOfClass:[NSArray class]]) { // If extensions is an array instead of a string, i.e. an older version
 			continue;
 		}
-		id syntaxDefinition = [FRABasic createNewObjectForEntity:@"SyntaxDefinition"];
+        
+		VASyntaxDefinition *syntaxDefinition = [[VASyntaxDefinition alloc] init];
 		NSString *name = [item valueForKey:@"name"];
-		[syntaxDefinition setValue:name forKey:@"name"];
-		[syntaxDefinition setValue:[item valueForKey:@"file"] forKey:@"file"];
-		[syntaxDefinition setValue:@(index) forKey:@"sortOrder"];
+		[syntaxDefinition setName: name];
+		[syntaxDefinition setFile: [item valueForKey:@"file"]];
+		[syntaxDefinition setSortOrder: index];
 		index++;
 		
 		BOOL hasInsertedAChangedValue = NO;
@@ -146,19 +154,25 @@ VASingletonIMPDefault(FRAVariousPerformer)
 
 - (void)insertDefaultSnippets
 {
-	if ([[FRABasic fetchAll:@"Snippet"] count] == 0 && [[FRADefaults valueForKey:@"HasInsertedDefaultSnippets"] boolValue] == NO) {
+    NSArray *snippets = [VASnippet all];
+    
+	if ([snippets count] == 0 && [[FRADefaults valueForKey:@"HasInsertedDefaultSnippets"] boolValue] == NO)
+    {
 		NSDictionary *defaultSnippets = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"DefaultSnippets" ofType:@"plist"]];
 		
 		NSEnumerator *collectionEnumerator = [defaultSnippets keyEnumerator];
-		for (id collection in collectionEnumerator) {
-			id newCollection = [FRABasic createNewObjectForEntity:@"SnippetCollection"];
-			[newCollection setValue:collection forKey:@"name"];
+		for (id collection in collectionEnumerator)
+        {
+			VASnippetCollection *newCollection = [[VASnippetCollection alloc] init];
+			[newCollection setName: collection];
+            
 			NSArray *array = [defaultSnippets valueForKey:collection];
-			for (id snippet in array) {
-				id newSnippet = [FRABasic createNewObjectForEntity:@"Snippet"];
-				[newSnippet setValue:[snippet valueForKey:@"name"] forKey:@"name"];
-				[newSnippet setValue:[snippet valueForKey:@"text"] forKey:@"text"];
-				[[newCollection mutableSetValueForKey:@"snippets"] addObject:newSnippet];
+			for (NSDictionary *snippet in array)
+            {
+				VASnippet *newSnippet = [[VASnippet alloc] init];
+				[newSnippet setName: snippet[@"name"]];
+				[newSnippet setText: snippet[@"text"]];
+				[[newCollection snippets] addObject: newSnippet];
 			}
 		}
 		
@@ -176,30 +190,27 @@ VASingletonIMPDefault(FRAVariousPerformer)
 		NSEnumerator *collectionEnumerator = [defaultCommands keyEnumerator];
 		for (id collection in collectionEnumerator)
         {
-			id newCollection = [FRABasic createNewObjectForEntity:@"CommandCollection"];
-			[newCollection setValue:collection forKey:@"name"];
+			VACommandCollection *newCollection = [[VACommandCollection alloc] init];
+			[newCollection setName: collection];
 			
             NSEnumerator *snippetEnumerator = [defaultCommands[collection] objectEnumerator];
 			for (id command in snippetEnumerator)
             {
-				FRACommandManagedObject *newCommand = [FRABasic createNewObjectForEntity:@"Command"];
-				[newCommand setValue: command[@"name"]
-                              forKey: @"name"];
-				[newCommand setValue: command[@"text"]
-                              forKey: @"text"];
+				VACommand *newCommand = [[VACommand alloc] init];
+				[newCommand setName: command[@"name"]];
+				[newCommand setText: command[@"text"]];
 				
                 if (command[@"inline"] != nil)
                 {
-					[newCommand setValue:command[@"inline"] forKey:@"inline"];
+					[newCommand setIsInline: [command[@"inline"] boolValue]];
 				}
                 
 				if (command[@"interpreter"] != nil)
                 {
-					[newCommand setValue: command[@"interpreter"]
-                                  forKey: @"interpreter"];
+					[newCommand setInterpreter: command[@"interpreter"]];
 				}
                 
-				[[newCollection mutableSetValueForKey:@"commands"] addObject:newCommand];
+				[[newCollection commands] addObject: newCommand];
 			}
 		}
 		

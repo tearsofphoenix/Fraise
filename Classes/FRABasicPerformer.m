@@ -33,141 +33,15 @@ VASingletonIMPDefault(FRABasicPerformer)
     return self;
 }
 
-
-- (void)insertFetchRequests
-{
-	NSManagedObjectContext *managedObjectContext = FRAManagedObjectContext;
-	NSEntityDescription *entityDescription;
-	NSFetchRequest *request;
-	NSSortDescriptor *sortDescriptor;
-	fetchRequests = [[NSMutableDictionary alloc] init];
-	
-	entityDescription = [NSEntityDescription entityForName:@"Command" inManagedObjectContext:managedObjectContext];
-	request = [[NSFetchRequest alloc] init];
-	[request setEntity:entityDescription];
-	[fetchRequests setValue:request forKey:@"Command"];
-	
-	entityDescription = [NSEntityDescription entityForName:@"CommandCollection" inManagedObjectContext:managedObjectContext];
-	request = [[NSFetchRequest alloc] init];
-	[request setEntity:entityDescription];
-	[fetchRequests setValue:request forKey:@"CommandCollection"];
-	
-	entityDescription = [NSEntityDescription entityForName:@"CommandCollection" inManagedObjectContext:managedObjectContext];
-	request = [[NSFetchRequest alloc] init];
-	[request setEntity:entityDescription];
-	sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
-	[request setSortDescriptors:@[sortDescriptor]];
-	[fetchRequests setValue:request forKey:@"CommandCollectionSortKeyName"];
-	
-	entityDescription = [NSEntityDescription entityForName:@"Document" inManagedObjectContext:managedObjectContext];
-	request = [[NSFetchRequest alloc] init];
-	[request setEntity:entityDescription];
-	[fetchRequests setValue:request forKey:@"Document"];
-	
-	entityDescription = [NSEntityDescription entityForName:@"Document" inManagedObjectContext:managedObjectContext];
-	request = [[NSFetchRequest alloc] init];
-	[request setEntity:entityDescription];
-	sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
-	[request setSortDescriptors:@[sortDescriptor]];
-	[fetchRequests setValue:request forKey:@"DocumentSortKeyName"];	
-	
-	entityDescription = [NSEntityDescription entityForName:@"Encoding" inManagedObjectContext:managedObjectContext];
-	request = [[NSFetchRequest alloc] init];
-	[request setEntity:entityDescription];
-	[fetchRequests setValue:request forKey:@"Encoding"];
-
-	entityDescription = [NSEntityDescription entityForName:@"Encoding" inManagedObjectContext:managedObjectContext];
-	request = [[NSFetchRequest alloc] init];
-	[request setEntity:entityDescription];
-	sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
-	[request setSortDescriptors:@[sortDescriptor]];
-	[fetchRequests setValue:request forKey:@"EncodingSortKeyName"];
-
-	entityDescription = [NSEntityDescription entityForName:@"Project" inManagedObjectContext:managedObjectContext];
-	request = [[NSFetchRequest alloc] init];
-	[request setEntity:entityDescription];
-	[fetchRequests setValue:request forKey:@"Project"];
-	
-	entityDescription = [NSEntityDescription entityForName:@"Snippet" inManagedObjectContext:managedObjectContext];
-	request = [[NSFetchRequest alloc] init];
-	[request setEntity:entityDescription];
-	[fetchRequests setValue:request forKey:@"Snippet"];
-	
-	entityDescription = [NSEntityDescription entityForName:@"SnippetCollection" inManagedObjectContext:managedObjectContext];
-	request = [[NSFetchRequest alloc] init];
-	[request setEntity:entityDescription];
-	[fetchRequests setValue:request forKey:@"SnippetCollection"];
-	
-	entityDescription = [NSEntityDescription entityForName:@"SnippetCollection" inManagedObjectContext:managedObjectContext];
-	request = [[NSFetchRequest alloc] init];
-	[request setEntity:entityDescription];
-	sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
-	[request setSortDescriptors:@[sortDescriptor]];
-	[fetchRequests setValue:request forKey:@"SnippetCollectionSortKeyName"];
-	
-	entityDescription = [NSEntityDescription entityForName:@"SyntaxDefinition" inManagedObjectContext:managedObjectContext];
-	request = [[NSFetchRequest alloc] init];
-	[request setEntity:entityDescription];
-	[fetchRequests setValue:request forKey:@"SyntaxDefinition"];
-	
-	entityDescription = [NSEntityDescription entityForName:@"SyntaxDefinition" inManagedObjectContext:managedObjectContext];
-	request = [[NSFetchRequest alloc] init];
-	[request setEntity:entityDescription];
-	sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"sortOrder" ascending:YES];
-	[request setSortDescriptors:@[sortDescriptor]];
-	[fetchRequests setValue:request forKey:@"SyntaxDefinitionSortKeySortOrder"];
-}
-
-
-- (NSArray *)fetchAll:(NSString *)key
-{
-	return [FRAManagedObjectContext executeFetchRequest:[fetchRequests valueForKey:key] error:nil];
-}
-
-
-- (NSFetchRequest *)fetchRequest:(NSString *)key
-{
-	return [fetchRequests valueForKey:key];
-}
-
-
-- (id)createNewObjectForEntity:(NSString *)entity
-{
-	NSManagedObject *object = [NSEntityDescription insertNewObjectForEntityForName:entity inManagedObjectContext:FRAManagedObjectContext];
-	
-	return object;
-}
-
-
-- (void)removeAllObjectsForEntity:(NSString *)entity
-{
-	NSArray *array = [self fetchAll:entity];
-	for (id item in array) {
-		[FRAManagedObjectContext deleteObject:item];
-	}
-}
-
-
-- (NSURL *)uriFromObject:(id)object
-{
-	if ([[object objectID] isTemporaryID] == YES) {
-		[[FRAApplicationDelegate sharedInstance] saveAction:nil];
-	}
-	
-	return [[object objectID] URIRepresentation];
-}
-
-
-- (id)objectFromURI:(NSURL *)uri
-{
-	NSManagedObjectContext *managedObjectContext = FRAManagedObjectContext;
-	NSManagedObjectID *objectID = [[managedObjectContext persistentStoreCoordinator]
-    managedObjectIDForURIRepresentation:uri];
-	
-	
-	return [managedObjectContext objectWithID:objectID];	
-}
-
+//
+//- (NSURL *)uriFromObject:(id)object
+//{
+//	if ([[object objectID] isTemporaryID] == YES) {
+//		[[FRAApplicationDelegate sharedInstance] saveAction:nil];
+//	}
+//	
+//	return [[object objectID] URIRepresentation];
+//}
 
 - (void)removeAllItemsFromMenu:(NSMenu *)menu
 {
@@ -216,18 +90,20 @@ VASingletonIMPDefault(FRABasicPerformer)
 {
 	NSString *resolvedPath = nil;
 	CFURLRef url = CFURLCreateWithFileSystemPath(NULL, (CFStringRef)path, kCFURLPOSIXPathStyle, NO);
-//	NSMakeCollectable(url);
 	
-	if (url != NULL) {
+	if (url != NULL)
+    {
 		FSRef fsRef;
-		if (CFURLGetFSRef(url, &fsRef)) {
+		if (CFURLGetFSRef(url, &fsRef))
+        {
 			Boolean targetIsFolder, wasAliased;
-			if (FSResolveAliasFile (&fsRef, true, &targetIsFolder, &wasAliased) == noErr && wasAliased) {
+			if (FSResolveAliasFile (&fsRef, true, &targetIsFolder, &wasAliased) == noErr && wasAliased)
+            {
 				CFURLRef resolvedURL = CFURLCreateFromFSRef(NULL, &fsRef);
-//				NSMakeCollectable(resolvedURL);
-				if (resolvedURL != NULL) {
+
+				if (resolvedURL != NULL)
+                {
 					resolvedPath = (NSString*)CFBridgingRelease(CFURLCopyFileSystemPath(resolvedURL, kCFURLPOSIXPathStyle));
-//					NSMakeCollectable(resolvedPath);
 				}
 			}
 		}

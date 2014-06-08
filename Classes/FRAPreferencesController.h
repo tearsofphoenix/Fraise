@@ -64,6 +64,4 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (IBAction)changeGutterWidth:(id)sender;
 
-- (NSManagedObjectContext *)managedObjectContext;
-
 @end

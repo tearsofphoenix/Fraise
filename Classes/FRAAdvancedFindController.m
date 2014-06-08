@@ -97,7 +97,7 @@ VASingletonIMPDefault(FRAAdvancedFindController)
 			node[@"displayString"] = [document name];
 		}
 		node[@"isLeaf"] = @NO;
-		node[@"document"] = [FRABasic uriFromObject:document];
+		node[@"document"] = document;
 		folderIndexPath = [[NSIndexPath alloc] initWithIndex:documentIndex];
 		[findResultsTreeController insertObject:node atArrangedObjectIndexPath:folderIndexPath];
 		
@@ -534,9 +534,10 @@ VASingletonIMPDefault(FRAAdvancedFindController)
 		return;
 	}
 	
-	id document = [FRABasic objectFromURI:[object valueForKey:@"document"]];
+	VADocument *document = [object valueForKey:@"document"];
 	
-	if (document == nil) {
+	if (document == nil)
+    {
 		NSString *title = [NSString stringWithFormat:NSLocalizedString(@"The document %@ is no longer open", @"Indicate that the document %@ is no longer open in Document-is-no-longer-opened-after-selection-in-advanced-find-sheet"), [document name]];
 		NSBeginAlertSheet(title,
 						  OK_BUTTON,
@@ -598,8 +599,10 @@ VASingletonIMPDefault(FRAAdvancedFindController)
 	NSEnumerator *enumerator;
 	if (searchScope == FRACurrentProjectScope) {
 		enumerator = [[[FRACurrentProject documentsArrayController] arrangedObjects] reverseObjectEnumerator];
-	} else if (searchScope == FRAAllDocumentsScope) {
-		enumerator = [[FRABasic fetchAll:@"DocumentSortKeyName"] reverseObjectEnumerator];
+	} else if (searchScope == FRAAllDocumentsScope)
+    {
+        //TODO
+//		enumerator = [[FRABasic fetchAll:@"DocumentSortKeyName"] reverseObjectEnumerator];
 	} else if (searchScope == FRAParentDirectoryScope){
 		enumerator = [self documentsInFolderEnumerator];
 	} else {
@@ -669,13 +672,6 @@ VASingletonIMPDefault(FRAAdvancedFindController)
 	return resultDocumentContentView;
 }
 
-
-- (NSManagedObjectContext *)managedObjectContext
-{
-	return FRAManagedObjectContext;
-}
-
-
 - (void)outlineView:(NSOutlineView *)outlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
 {
 	if ([[FRADefaults valueForKey:@"SizeOfDocumentsListTextPopUp"] integerValue] == 0) {
@@ -695,9 +691,11 @@ VASingletonIMPDefault(FRAAdvancedFindController)
 	[displayString appendString:[FRAText replaceAllNewLineCharactersWithSymbolInString:[completeString substringWithRange:linesRange]]];
 	
 	NSMutableDictionary *node = [NSMutableDictionary dictionary];
-	[node setValue:@YES forKey:@"isLeaf"];
-	[node setValue:NSStringFromRange(foundRange) forKey:@"range"];
-	[node setValue:[FRABasic uriFromObject:document] forKey:@"document"];
+	[node setObject: @YES
+            forKey:@"isLeaf"];
+	[node setObject: NSStringFromRange(foundRange) forKey:@"range"];
+	[node setObject: document
+            forKey: @"document"];
 	NSInteger fontSize;
 	if ([[FRADefaults valueForKey:@"SizeOfDocumentsListTextPopUp"] integerValue] == 0) {
 		fontSize = 11;

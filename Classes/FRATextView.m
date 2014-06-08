@@ -22,6 +22,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAFileMenuController.h"
 #import "FRASyntaxColouring.h"
 #import "VADocument.h"
+#import "VASnippetCollection.h"
+#import "VASnippet.h"
 
 #import <VADevUIKit/VADevUIKit.h>
 
@@ -603,28 +605,35 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	
 	[menu insertItem:[NSMenuItem separatorItem] atIndex:0];
 	
-	NSEnumerator *collectionEnumerator = [[FRABasic fetchAll:@"SnippetCollectionSortKeyName"] reverseObjectEnumerator];
-	for (id collection in collectionEnumerator) {
-		if ([collection valueForKey:@"name"] == nil) {
+	NSArray *collectionEnumerator = [VASnippetCollection allSnippetCollections];
+
+	for (VASnippetCollection *collection in collectionEnumerator)
+    {
+		if ([collection name] == nil)
+        {
 			continue;
 		}
-		NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:[collection valueForKey:@"name"] action:nil keyEquivalent:@""];
+		NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle: [collection name]
+                                                          action: nil
+                                                   keyEquivalent:@""];
 		[menuItem setTag:-123457];
 		NSMenu *subMenu = [[NSMenu alloc] init];
 		
-		NSMutableArray *array = [NSMutableArray arrayWithArray:[[collection mutableSetValueForKey:@"snippets"] allObjects]];
+		NSMutableArray *array = [NSMutableArray arrayWithArray:[[collection snippets] allObjects]];
 		[array sortUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
-		for (id snippet in array) {
-			if ([snippet valueForKey:@"name"] == nil) {
+        
+		for (VASnippet *snippet in array)
+        {
+			if ([snippet name] == nil)
+            {
 				continue;
 			}
-			NSString *keyString;
-			if ([snippet valueForKey:@"shortcutMenuItemKeyString"] != nil) {
-				keyString = [snippet valueForKey:@"shortcutMenuItemKeyString"];
-			} else {
-				keyString = @"";
-			}
-			NSMenuItem *subMenuItem = [[NSMenuItem alloc] initWithTitle:[snippet valueForKey:@"name"] action:@selector(snippetShortcutFired:) keyEquivalent:@""];
+            
+			NSString *keyString = [snippet shortcutMenuItemKeyString] ?: @"";
+
+			NSMenuItem *subMenuItem = [[NSMenuItem alloc] initWithTitle: [snippet name]
+                                                                 action: @selector(snippetShortcutFired:)
+                                                          keyEquivalent: keyString];
 			[subMenuItem setTarget:[FRAToolsMenuController sharedInstance]];			
 			[subMenuItem setRepresentedObject:snippet];
 			[subMenu insertItem:subMenuItem atIndex:0];

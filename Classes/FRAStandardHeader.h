@@ -146,7 +146,6 @@ typedef NSUInteger FRAErrors;
 #define FRAText [FRATextPerformer sharedInstance]
 #define FRAVarious [FRAVariousPerformer sharedInstance]
 #define FRADocumentViews [FRADocumentViewsController sharedInstance]
-#define FRAManagedObjectContext [[FRAApplicationDelegate sharedInstance] managedObjectContext]
 
 #define FRADefaults [[NSUserDefaultsController sharedUserDefaultsController] values]
 

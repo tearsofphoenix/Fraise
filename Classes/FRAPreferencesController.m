@@ -29,6 +29,9 @@
 #import "FRAProject.h"
 
 #import "VADocument.h"
+#import "VASyntaxDefinition.h"
+#import "VAEncoding.h"
+
 #import "FRASyntaxColouring.h"
 #import <VADevUIKit/VADevUIKit.h>
 
@@ -442,10 +445,14 @@ VASingletonIMPDefault(FRAPreferencesController)
 			// Build syntax definitions menu
 			[FRABasic removeAllItemsFromMenu:[syntaxColouringPopUp menu]];
             
-			NSEnumerator *enumerator = [[FRABasic fetchAll:@"SyntaxDefinitionSortKeySortOrder"] reverseObjectEnumerator];
+			NSArray *enumerator = [VASyntaxDefinition allDefinitions];
+
 			NSMenuItem *menuItem;
-			for (id item in enumerator) {
-				menuItem = [[NSMenuItem alloc] initWithTitle:[item valueForKey:@"name"] action:nil keyEquivalent:@""];
+			for (id item in enumerator)
+            {
+				menuItem = [[NSMenuItem alloc] initWithTitle: [item name]
+                                                      action: nil
+                                               keyEquivalent: @""];
 				[[syntaxColouringPopUp menu] insertItem:menuItem atIndex:0];
 			}
 			
@@ -532,7 +539,7 @@ VASingletonIMPDefault(FRAPreferencesController)
 	[[NSUserDefaultsController sharedUserDefaultsController] revertToInitialValues:nil];
 	[FRADefaults setValue:nil forKey:@"ChangedSyntaxDefinitions"];
 	[FRADefaults setValue:@YES forKey:@"HasImportedFromVersion2"];
-	[FRABasic removeAllObjectsForEntity:@"SyntaxDefinition"];
+
 	[FRAVarious insertSyntaxDefinitions];
 }
 
@@ -541,11 +548,14 @@ VASingletonIMPDefault(FRAPreferencesController)
 {
 	[FRABasic removeAllItemsFromMenu:[encodingsPopUp menu]];
 	
-	NSEnumerator *enumerator = [[FRABasic fetchAll:@"EncodingSortKeyName"] reverseObjectEnumerator];
+	NSArray *enumerator = [VAEncoding allEncodings];
+
 	NSMenuItem *menuItem;
-	for (id item in enumerator) {
-		if ([[item valueForKey:@"active"] boolValue] == YES) {
-			NSUInteger encoding = [[item valueForKey:@"encoding"] unsignedIntegerValue];
+	for (VAEncoding *item in enumerator)
+    {
+		if ([item active])
+        {
+			NSUInteger encoding = [item encoding];
 			menuItem = [[NSMenuItem alloc] initWithTitle:[NSString localizedNameOfStringEncoding:encoding] action:nil keyEquivalent:@""];
 			[menuItem setTag:encoding];
 			[menuItem setTarget:self];
@@ -597,11 +607,6 @@ VASingletonIMPDefault(FRAPreferencesController)
 		[[document lineNumbers] updateLineNumbersCheckWidth: YES];
         [[[FRAProjectsController currentDocument] syntaxColouring] pageRecolour];
 	}
-}
-
-- (NSManagedObjectContext *)managedObjectContext
-{
-	return FRAManagedObjectContext;
 }
 
 @end

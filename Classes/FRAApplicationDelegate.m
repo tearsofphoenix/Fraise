@@ -23,13 +23,15 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAToolsMenuController.h"
 #import "FRAProject.h"
 #import "FRAVariousPerformer.h"
+#import "VACommandCollection.h"
+#import "VACommand.h"
 
 #import "ODBEditorSuite.h"
 #import "VADocument.h"
 
 @implementation FRAApplicationDelegate
 	
-@synthesize persistentStoreCoordinator,  managedObjectModel, managedObjectContext, shouldCreateEmptyDocument, hasFinishedLaunching, isTerminatingApplication, filesToOpenArray, appleEventDescriptor;
+@synthesize shouldCreateEmptyDocument, hasFinishedLaunching, isTerminatingApplication, filesToOpenArray, appleEventDescriptor;
 
 VASingletonIMPDefault(FRAApplicationDelegate)
 
@@ -53,75 +55,23 @@ VASingletonIMPDefault(FRAApplicationDelegate)
     NSString *basePath = ([paths count] > 0) ? paths[0] : NSTemporaryDirectory();
     return [basePath stringByAppendingPathComponent:@"Fraise"];
 }
-
-
-- (NSManagedObjectModel *)managedObjectModel
-{
-    if (managedObjectModel != nil) {
-        return managedObjectModel;
-    }
-	
-    managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"FRADataModel3" ofType:@"mom"]]];
-    
-    return managedObjectModel;
-}
-
-
-- (NSPersistentStoreCoordinator *)persistentStoreCoordinator
-{
-    if (persistentStoreCoordinator != nil) {
-        return persistentStoreCoordinator;
-    }
-
-    NSString *applicationSupportFolder = nil;
-    NSError *error;
-	
-	NSFileManager *fileManager = [NSFileManager defaultManager];
-    applicationSupportFolder = [self applicationSupportFolder];
-    if (![fileManager fileExistsAtPath:applicationSupportFolder isDirectory:NULL] ) {
-        [fileManager createDirectoryAtPath:applicationSupportFolder withIntermediateDirectories:YES attributes:nil error:nil];
-    }
-
-	NSString *storePath = [applicationSupportFolder stringByAppendingPathComponent: @"Fraise3.fraise"];
-	
-	NSURL *url = [NSURL fileURLWithPath:storePath];
-    persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
-    if (![persistentStoreCoordinator addPersistentStoreWithType:NSBinaryStoreType configuration:nil URL:url options:nil error:&error]){
-        [[NSApplication sharedApplication] presentError:error];
-    }    
-
-    return persistentStoreCoordinator;
-}
-
- 
-- (NSManagedObjectContext *)managedObjectContext
-{
-    if (managedObjectContext != nil) {
-        return managedObjectContext;
-    }
-
-    NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
-    if (coordinator != nil) {
-        managedObjectContext = [[NSManagedObjectContext alloc] init];
-        [managedObjectContext setPersistentStoreCoordinator: coordinator];
-    }
-    
-    return managedObjectContext;
-}
-
  
 - (NSUndoManager *)windowWillReturnUndoManager:(NSWindow *)window
 {
-	return [[self managedObjectContext] undoManager];
+    //TODO
+    return nil;
+//	return [[self managedObjectContext] undoManager];
 }
 
  
 - (IBAction)saveAction:(id)sender
 {
-    NSError *error = nil;
-    if (![[self managedObjectContext] save:&error]) {
-        [[NSApplication sharedApplication] presentError:error];
-    }
+    //TODO
+//    NSError *error = nil;
+//    if (![[self managedObjectContext] save:&error])
+//    {
+//        [[NSApplication sharedApplication] presentError:error];
+//    }
 }
 
  
@@ -179,33 +129,33 @@ VASingletonIMPDefault(FRAApplicationDelegate)
 		}
 	}
 	
-	[FRABasic removeAllObjectsForEntity:@"Document"];
-	[FRABasic removeAllObjectsForEntity:@"Encoding"];
-	[FRABasic removeAllObjectsForEntity:@"SyntaxDefinition"];
-	[FRABasic removeAllObjectsForEntity:@"Project"];
-	
-	NSError *error;
+//	NSError *error;
     NSInteger reply = NSTerminateNow;
-    
-    if (managedObjectContext != nil) {
-        if ([managedObjectContext commitEditing]) {
-            if ([managedObjectContext hasChanges] && ![managedObjectContext save:&error]) { 
 
-                BOOL errorResult = [[NSApplication sharedApplication] presentError:error];
-				
-                if (errorResult == YES) {
-                    reply = NSTerminateCancel;
-                } else {
-                    NSInteger alertReturn = NSRunAlertPanel(nil, @"Could not save changes while quitting. Quit anyway?" , @"Quit anyway", @"Cancel", nil);
-                    if (alertReturn == NSAlertAlternateReturn) {
-                        reply = NSTerminateCancel;	
-                    }
-                }
-            }
-        } else {
-            reply = NSTerminateCancel;
-        }
-    }
+    //TODO
+//    if ([managedObjectContext commitEditing])
+//    {
+//        if ([managedObjectContext hasChanges] && ![managedObjectContext save:&error])
+//        {
+//            
+//            BOOL errorResult = [[NSApplication sharedApplication] presentError:error];
+//            
+//            if (errorResult == YES)
+//            {
+//                reply = NSTerminateCancel;
+//            } else
+//            {
+//                NSInteger alertReturn = NSRunAlertPanel(nil, @"Could not save changes while quitting. Quit anyway?" , @"Quit anyway", @"Cancel", nil);
+//                if (alertReturn == NSAlertAlternateReturn)
+//                {
+//                    reply = NSTerminateCancel;
+//                }
+//            }
+//        }
+//    } else
+//    {
+//        reply = NSTerminateCancel;
+//    }
     
 	if (reply == NSTerminateCancel) {
 		isTerminatingApplication = NO;
@@ -250,7 +200,7 @@ VASingletonIMPDefault(FRAApplicationDelegate)
 				[FRACurrentProject performCloseDocument:openDocument[0]];
 			}
 		}
-		[FRAManagedObjectContext processPendingChanges];
+
 		[FRAOpenSave openAllTheseFiles:filesToOpenArray];
 		[FRACurrentProject selectionDidChange];
 		filesToOpenArray = nil;
@@ -266,7 +216,7 @@ VASingletonIMPDefault(FRAApplicationDelegate)
 					filesToOpenArray = nil;
 				}
 			}
-			[FRAManagedObjectContext processPendingChanges];
+
 			[FRAOpenSave openAllTheseFiles:[FRADefaults valueForKey:@"OpenDocuments"]];
 			[FRACurrentProject selectionDidChange];
 		}
@@ -283,11 +233,6 @@ VASingletonIMPDefault(FRAApplicationDelegate)
 	// Do this here so that it won't slow down the perceived start-up time
 	[[FRAToolsMenuController sharedInstance] buildInsertSnippetMenu];
 	[[FRAToolsMenuController sharedInstance] buildRunCommandMenu];
-	
-	if ([[FRADefaults valueForKey:@"HasImportedFromVersion2"] boolValue] == NO) {
-		[self importFromVersion2];
-	}
-
 }
 
 
@@ -360,91 +305,6 @@ VASingletonIMPDefault(FRAApplicationDelegate)
 {
 	if ([[FRADefaults valueForKey:@"CheckIfDocumentHasBeenUpdated"] boolValue] == YES) { // Check for updates directly when Fraise gets focus
 		[FRAVarious checkIfDocumentsHaveBeenUpdatedByAnotherApplication];
-	}
-}
-
-
-#pragma mark
-#pragma mark Import from version 2
-
-- (void)importFromVersion2
-{
-	[FRADefaults setValue:@YES forKey:@"HasImportedFromVersion2"];
-	
-	@try {
-		NSManagedObjectModel *managedObjectModelVersion2 = [[NSManagedObjectModel alloc] initWithContentsOfURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"FRADataModel2" ofType:@"mom"]]];
-		
-		NSFileManager *fileManager = [NSFileManager defaultManager];
-		NSString *applicationSupportFolder = [self applicationSupportFolder];
-		if (![fileManager fileExistsAtPath:[applicationSupportFolder stringByAppendingPathComponent:@"Fraise.fraise"] isDirectory:NULL]) {
-			return;
-		}
-		
-		NSURL *url = [NSURL fileURLWithPath:[applicationSupportFolder stringByAppendingPathComponent:@"Fraise.fraise"]];
-		NSPersistentStoreCoordinator *persistentStoreCoordinatorVersion2 = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:managedObjectModelVersion2];
-		if (![persistentStoreCoordinatorVersion2 addPersistentStoreWithType:NSBinaryStoreType configuration:nil URL:url options:nil error:nil]){
-			return;
-		}  
-		
-		NSManagedObjectContext *managedObjectContextVersion2 = [[NSManagedObjectContext alloc] init];
-		[managedObjectContextVersion2 setPersistentStoreCoordinator:persistentStoreCoordinatorVersion2];
-		
-		NSEntityDescription *entityDescription = [NSEntityDescription entityForName:@"Command" inManagedObjectContext:managedObjectContextVersion2];
-		NSFetchRequest *request = [[NSFetchRequest alloc] init];
-		[request setEntity:entityDescription];
-		
-		// Commands
-		NSArray *oldCommands = [managedObjectContextVersion2 executeFetchRequest:request error:nil];
-		if ([oldCommands count] != 0) {			
-			id newCollection = [FRABasic createNewObjectForEntity:@"CommandCollection"];
-			[newCollection setValue:NSLocalizedStringFromTable(@"Old Commands", @"Localizable3", @"Old Commands") forKey:@"name"];			
-			
-			id command;
-			for (command in oldCommands) {
-				id newCommand = [FRABasic createNewObjectForEntity:@"Command"];
-				[newCommand setValue:[command valueForKey:@"command"] forKey:@"name"];
-				[newCommand setValue:[command valueForKey:@"command"] forKey:@"text"];			
-				[newCommand setValue:[command valueForKey:@"shortcutDisplayString"] forKey:@"shortcutDisplayString"];
-				[newCommand setValue:[command valueForKey:@"shortcutMenuItemKeyString"] forKey:@"shortcutMenuItemKeyString"];
-				[newCommand setValue:[command valueForKey:@"shortcutModifier"] forKey:@"shortcutModifier"];
-				[newCommand setValue:[command valueForKey:@"sortOrder"] forKey:@"sortOrder"];
-				[newCommand setValue:@3 forKey:@"version"];
-				[[newCollection mutableSetValueForKey:@"commands"] addObject:newCommand];
-			}
-		}
-		
-		
-		// Snippets
-		entityDescription = [NSEntityDescription entityForName:@"SnippetCollection" inManagedObjectContext:managedObjectContextVersion2];
-		request = [[NSFetchRequest alloc] init];
-		[request setEntity:entityDescription];
-		
-		NSArray *collections = [managedObjectContextVersion2 executeFetchRequest:request error:nil];
-		for (id collection in collections) {
-			id newCollection = [FRABasic createNewObjectForEntity:@"SnippetCollection"];
-			[newCollection setValue:[collection valueForKey:@"name"] forKey:@"name"];
-			
-			NSEntityDescription *entityDescriptionSnippet = [NSEntityDescription entityForName:@"Snippet" inManagedObjectContext:managedObjectContextVersion2];
-			NSFetchRequest *requestSnippet = [[NSFetchRequest alloc] init];
-			[requestSnippet setEntity:entityDescriptionSnippet];
-			NSPredicate *predicate = [NSPredicate predicateWithFormat:@"collectionUUID == %@", [collection valueForKey:@"uuid"]];
-			[requestSnippet setPredicate:predicate];
-			
-			NSArray *snippets = [managedObjectContextVersion2 executeFetchRequest:requestSnippet error:nil];
-			for (id oldSnippet in snippets) {
-				id snippet = [FRABasic createNewObjectForEntity:@"Snippet"];
-				[snippet setValue:[oldSnippet valueForKey:@"name"] forKey:@"name"];
-				[snippet setValue:[oldSnippet valueForKey:@"text"] forKey:@"text"];			
-				[snippet setValue:[oldSnippet valueForKey:@"shortcutDisplayString"] forKey:@"shortcutDisplayString"];
-				[snippet setValue:[oldSnippet valueForKey:@"shortcutMenuItemKeyString"] forKey:@"shortcutMenuItemKeyString"];
-				[snippet setValue:[oldSnippet valueForKey:@"shortcutModifier"] forKey:@"shortcutModifier"];
-				[snippet setValue:[oldSnippet valueForKey:@"sortOrder"] forKey:@"sortOrder"];
-				[[newCollection mutableSetValueForKey:@"snippets"] addObject:snippet];
-			}			
-		}
-		
-	}
-	@catch (NSException *exception) {
 	}
 }
 

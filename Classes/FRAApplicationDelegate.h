@@ -16,10 +16,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 @interface FRAApplicationDelegate : NSObject <NSApplicationDelegate>
 {
-    NSPersistentStoreCoordinator *persistentStoreCoordinator;
-    NSManagedObjectModel *managedObjectModel;
-    NSManagedObjectContext *managedObjectContext;
-	
 	BOOL shouldCreateEmptyDocument;
 	BOOL hasFinishedLaunching;
 	BOOL isTerminatingApplication;
@@ -28,10 +24,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	NSAppleEventDescriptor *appleEventDescriptor;
 
 }
-
-@property (readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
-@property (readonly) NSManagedObjectModel *managedObjectModel;
-@property (readonly) NSManagedObjectContext *managedObjectContext;
 
 @property (readonly) BOOL shouldCreateEmptyDocument, hasFinishedLaunching, isTerminatingApplication;
 
@@ -42,7 +34,5 @@ Unless required by applicable law or agreed to in writing, software distributed 
 + (FRAApplicationDelegate *)sharedInstance;
 
 - (IBAction)saveAction:sender;
-
-- (void)importFromVersion2;
 
 @end

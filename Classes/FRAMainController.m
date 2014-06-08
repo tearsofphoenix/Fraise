@@ -54,8 +54,6 @@ VASingletonIMPDefault(FRAMainController)
 		}
 	}
 	
-	[FRABasic insertFetchRequests];
-	
 	[[FRAPreferencesController sharedInstance] setDefaults];	
 	
 	VFFontTransformer *fontTransformer = [[VFFontTransformer alloc] init];
@@ -69,10 +67,6 @@ VASingletonIMPDefault(FRAMainController)
 - (void)awakeFromNib
 {
 	// If the application crashed so these weren't removed, remove them now
-	[FRABasic removeAllObjectsForEntity:@"Document"];
-	[FRABasic removeAllObjectsForEntity:@"Encoding"];
-	[FRABasic removeAllObjectsForEntity:@"SyntaxDefinition"];
-	[FRABasic removeAllObjectsForEntity:@"Project"];
 	
 	[FRAVarious insertTextEncodings];
 	[FRAVarious insertSyntaxDefinitions];

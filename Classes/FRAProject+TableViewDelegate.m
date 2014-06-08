@@ -94,10 +94,10 @@ Unless required by applicable law or agreed to in writing, software distributed 
 {	
 	[self setFirstDocument:document];
 	
-	[FRAInterface removeAllSubviewsFromView:firstContentView];
-	[firstContentView addSubview:[document firstTextScrollView]];
+	[FRAInterface removeAllSubviewsFromView: [self firstContentView]];
+	[[self firstContentView] addSubview:[document firstTextScrollView]];
 	if ([document showLineNumberGutter] == YES) {
-		[firstContentView addSubview:[document firstGutterScrollView]];
+		[[self firstContentView] addSubview: [document firstGutterScrollView]];
 	}
 	
 	[self updateWindowTitleBarForDocument:document];

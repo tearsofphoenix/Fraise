@@ -27,6 +27,7 @@
 
 #import "VADocument.h"
 #import "FRATextView.h"
+#import "VAEncoding.h"
 
 #import <VADevUIKit/VADevUIKit.h>
 
@@ -55,11 +56,14 @@ VASingletonIMPDefault(FRAFileMenuController)
 {
 	[FRABasic removeAllItemsFromMenu:[[[FRAExtraInterfaceController sharedInstance] openPanelEncodingsPopUp] menu]];
     
-	NSEnumerator *enumerator = [[FRABasic fetchAll:@"EncodingSortKeyName"] reverseObjectEnumerator];
+	NSArray *allEncodings = [VAEncoding allEncodings];
+
 	NSMenuItem *menuItem;
-	for (id item in enumerator) {
-		if ([[item valueForKey:@"active"] boolValue] == YES) {
-			NSUInteger encoding = [[item valueForKey:@"encoding"] unsignedIntegerValue];
+	for (VAEncoding *item in allEncodings)
+    {
+		if ([item active])
+        {
+			NSUInteger encoding = [item encoding];
 			menuItem = [[NSMenuItem alloc] initWithTitle:[NSString localizedNameOfStringEncoding:encoding] action:nil keyEquivalent:@""];
 			[menuItem setTag:encoding];
 			[[[[FRAExtraInterfaceController sharedInstance] openPanelEncodingsPopUp] menu] insertItem:menuItem atIndex:0];

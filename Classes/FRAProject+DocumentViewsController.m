@@ -24,13 +24,16 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 #import "FRAProjectsController.h"
 #import "VADocument.h"
+#import "VAProject.h"
 
 @implementation FRAProject (DocumentViewsController)
 
 
 - (void)setDefaultViews
 {
-	[tabBarControl setTabView:tabBarTabView];
+    PSMTabBarControl *tabBarControl = [self tabBarControl];
+    
+	[tabBarControl setTabView: [self tabBarTabView]];
 	[tabBarControl setCanCloseOnlyTab:YES];
 	[tabBarControl setStyleNamed: @"Unified"];
 	[tabBarControl setAllowsDragBetweenWindows:YES];
@@ -40,16 +43,14 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	[tabBarControl setDelegate:self];
 	[tabBarControl registerForDraggedTypes:@[NSFilenamesPboardType]];
 	
-	if ([project valueForKey:@"viewSize"] == nil) {
-		[project setValue:[FRADefaults valueForKey:@"ViewSize"] forKey:@"viewSize"];
-	}
-	if ([project valueForKey:@"view"] == nil) {
-		[project setValue:[FRADefaults valueForKey:@"View"] forKey:@"view"];
-	}
+    VAProject *project = [self project];
+    
+    [project setViewSize: [[FRADefaults valueForKey:@"ViewSize"] integerValue]];
+    [project setView:  [[FRADefaults valueForKey:@"View"] integerValue]];
 	
-	[self insertView:[[project valueForKey:@"view"] integerValue]];
+	[self insertView: [project view]];
 	
-	[mainSplitView adjustSubviews];
+	[[self mainSplitView] adjustSubviews];
 }
 
 
@@ -58,12 +59,15 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	NSInteger size = round([viewSelectionSizeSlider doubleValue]);
 	
 	[FRADefaults setValue:@(size) forKey:@"ViewSize"];
-	[project setValue:@(size) forKey:@"viewSize"];
+    VAProject *project = [self project];
+    
+	[project setViewSize: size];
 	
-	FRAView view = [[project valueForKey:@"view"] integerValue];
+	FRAView view = [project view];
 	
-	if (view == FRAListView) {
-		[documentsTableView setRowHeight:([[project valueForKey:@"viewSize"] integerValue] + 1)];
+	if (view == FRAListView)
+    {
+		[[self documentsTableView] setRowHeight:([project viewSize] + 1)];
 	}
 	
 	[self reloadData];
@@ -72,20 +76,26 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (void)insertView:(FRAView)view
 {
+    VAProject *project = [self project];
+    NSView *leftDocumentsTableView = [self leftDocumentsTableView];
+    NSView *leftDocumentsView = [self leftDocumentsView];
+    
 	[FRADefaults setValue: @(view) forKey:@"View"];
-	[project setValue: @(view) forKey:@"view"];
+	[project setView: view];
 	
-	[FRAInterface removeAllSubviewsFromView:leftDocumentsView];
+	[FRAInterface removeAllSubviewsFromView: leftDocumentsView];
 	
 	CGFloat viewSelectionHeight;
-	if ([[FRADefaults valueForKey:@"ShowSizeSlider"] boolValue] == YES) {
+	if ([[FRADefaults valueForKey:@"ShowSizeSlider"] boolValue] == YES)
+    {
 		viewSelectionHeight = [viewSelectionView bounds].size.height;
 	} else {
 		viewSelectionHeight = 0;
 	}
 
-	if (view == FRAListView) {
-		[documentsTableView setRowHeight:[[project valueForKey:@"viewSize"] integerValue]];
+	if (view == FRAListView)
+    {
+		[[self documentsTableView] setRowHeight:[project viewSize]];
 		[leftDocumentsTableView setFrame:NSMakeRect([leftDocumentsView bounds].origin.x, [leftDocumentsView bounds].origin.y + viewSelectionHeight, [leftDocumentsView bounds].size.width, [leftDocumentsView bounds].size.height - viewSelectionHeight)];
 		[leftDocumentsView addSubview:leftDocumentsTableView];	
 		
@@ -96,12 +106,15 @@ Unless required by applicable law or agreed to in writing, software distributed 
 		[leftDocumentsView addSubview:viewSelectionView];
 	//}
 	
-	[viewSelectionSizeSlider setDoubleValue:[[project valueForKey:@"viewSize"] doubleValue]];
+	[viewSelectionSizeSlider setDoubleValue: [project viewSize]];
 }
 
 
 - (void)animateSizeSlider
 {
+    NSView *leftDocumentsTableView = [self leftDocumentsTableView];
+    NSView *leftDocumentsView = [self leftDocumentsView];
+
 	CGFloat viewSelectionHeight;
 	if ([[FRADefaults valueForKey:@"ShowSizeSlider"] boolValue] == YES) {
 		viewSelectionHeight = 22;//[viewSelectionView bounds].size.height;
@@ -117,12 +130,15 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (void)reloadData
 {
-	FRAView view = [[project valueForKey:@"view"] integerValue];
+    VAProject *project = [self project];
+
+	FRAView view = [project view];
 	
-	if (view == FRAListView) {
-		[documentsArrayController rearrangeObjects];
-		[documentsTableView removeAllToolTips];
-		[documentsTableView reloadData];
+	if (view == FRAListView)
+    {
+		[[self documentsArrayController] rearrangeObjects];
+		[[self documentsTableView] removeAllToolTips];
+		[[self documentsTableView] reloadData];
 	
 	}
 }
@@ -134,11 +150,12 @@ Unless required by applicable law or agreed to in writing, software distributed 
 		return;
 	}
 	
+    PSMTabBarControl *tabBarControl = [self tabBarControl];
 	id savedDelegate = [tabBarControl delegate]; // So it doesn't change the selected document when it updates its documents
 	[tabBarControl setDelegate:nil];
-	[FRAInterface removeAllTabBarObjectsForTabView:tabBarTabView];
+	[FRAInterface removeAllTabBarObjectsForTabView: [self tabBarTabView]];
 	
-	[[[FRAApplicationDelegate sharedInstance] managedObjectContext] processPendingChanges];
+    NSArrayController *documentsArrayController = [self documentsArrayController];
 	[documentsArrayController rearrangeObjects];
 	NSEnumerator *enumerator = [[documentsArrayController arrangedObjects] reverseObjectEnumerator];
 	for (id item in enumerator) {
@@ -148,7 +165,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 		} else {
 			[tabViewItem setLabel:[item valueForKey:@"name"]];
 		}
-		[tabBarTabView insertTabViewItem:tabViewItem atIndex:0];
+		[[self tabBarTabView] insertTabViewItem:tabViewItem atIndex:0];
 	}
 	
 	[self selectSameDocumentInTabBarAsInDocumentsList];
@@ -161,16 +178,18 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	if ([[FRADefaults valueForKey:@"ShowTabBar"] boolValue] == NO) {
 		return;
 	}
-	NSArray *selectedObjects = [documentsArrayController selectedObjects];
+	NSArray *selectedObjects = [[self documentsArrayController] selectedObjects];
 	if ([selectedObjects count] == 0) {
 		return;
 	}
 	
 	id selectedDocument = selectedObjects[0];
-	NSArray *array = [tabBarTabView tabViewItems];
-	for (id item in array) {
-		if ([item identifier] == selectedDocument) {
-			[tabBarTabView selectTabViewItem:item];
+	NSArray *array = [[self tabBarTabView] tabViewItems];
+	for (id item in array)
+    {
+		if ([item identifier] == selectedDocument)
+        {
+			[[self tabBarTabView] selectTabViewItem:item];
 			break;
 		}
 	}
@@ -195,10 +214,12 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #pragma mark Tab bar control delegates
 - (void)tabView:(NSTabView *)tabView willSelectTabViewItem:(NSTabViewItem *)tabViewItem
 {
-	FRAView view = [[project valueForKey:@"view"] integerValue];
+    VAProject *project = [self project];
+
+	FRAView view = [project view];
 	
 	if (view == FRAListView) {
-		[documentsArrayController setSelectedObjects:@[[tabViewItem identifier]]];
+		[[self documentsArrayController] setSelectedObjects:@[[tabViewItem identifier]]];
 	}
 		
 }
@@ -225,7 +246,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 		index++;
 	}
 	
-	[documentsArrayController rearrangeObjects];
+	[[self documentsArrayController] rearrangeObjects];
 }
 
 
@@ -233,7 +254,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #pragma mark Split view delegates
 - (void)splitViewDidResizeSubviews:(NSNotification *)aNotification
 {
-	if ([aNotification object] == contentSplitView)
+	if ([aNotification object] == [self contentSplitView])
     {
 		[[[self firstDocument] lineNumbers] updateLineNumbersCheckWidth: NO];
         [[[self firstDocument] syntaxColouring] pageRecolour];
@@ -243,7 +264,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 			[[[self secondDocument] lineNumbers] updateLineNumbersCheckWidth: NO];
             [[[self secondDocument] syntaxColouring] pageRecolour];
 		}
-	} else if ([aNotification object] == mainSplitView) {
+	} else if ([aNotification object] == [self mainSplitView]) {
 		[self resizeViewSizeSlider];		
 	}
 }
@@ -251,9 +272,11 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (BOOL)splitView:(NSSplitView *)splitView shouldCollapseSubview:(NSView *)subview forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex
 {
-	if (splitView == mainSplitView) {
+	if (splitView == [self mainSplitView])
+    {
 		[[FRAViewMenuController sharedInstance] performCollapseDocumentsView];
-	} else if (splitView == contentSplitView) {
+	} else if (splitView == [self contentSplitView])
+    {
 		[[FRAViewMenuController sharedInstance] performCollapse];
 	}
 
@@ -270,7 +293,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (void)splitView:(NSSplitView *)sender resizeSubviewsWithOldSize:(NSSize)oldSize
 {
-	if (sender != mainSplitView) {
+	if (sender != [self mainSplitView])
+    {
 		[sender adjustSubviews];
 		return;
 	}
@@ -289,19 +313,19 @@ Unless required by applicable law or agreed to in writing, software distributed 
     [[sender subviews][0] setFrame:documentsListRect];
     [[sender subviews][1] setFrame:contentRect];
 		
-	NSRect firstViewFrame = [[contentSplitView subviews][0] frame];
+	NSRect firstViewFrame = [[[self contentSplitView] subviews][0] frame];
 	firstViewFrame.size.width = contentRect.size.width;	
-	[[contentSplitView subviews][0] setFrame:firstViewFrame];		
+	[[[self contentSplitView] subviews][0] setFrame:firstViewFrame];
 
-	NSRect secondViewFrame = [[contentSplitView subviews][1] frame];
+	NSRect secondViewFrame = [[[self contentSplitView] subviews][1] frame];
 	secondViewFrame.size.width = contentRect.size.width;
 	if ([self secondDocument] == nil)
     {
 		secondViewFrame.size.height = 0.0;
 	}
-	[[contentSplitView subviews][1] setFrame:secondViewFrame];
+	[[[self contentSplitView] subviews][1] setFrame:secondViewFrame];
 
-	[contentSplitView adjustSubviews];
+	[[self contentSplitView] adjustSubviews];
 }
 
 

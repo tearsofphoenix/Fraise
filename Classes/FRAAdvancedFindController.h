@@ -52,8 +52,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (NSView *)resultDocumentContentView;
 
-- (NSManagedObjectContext *)managedObjectContext;
-
 - (NSMutableDictionary *)preparedResultDictionaryFromString:(NSString *)completeString searchStringLength:(NSInteger)searchStringLength range:(NSRange)foundRange lineNumber:(NSInteger)lineNumber document:(id)document;
 
 - (void)alertThatThisIsNotAValidRegularExpression:(NSString *)string;

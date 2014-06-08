@@ -23,6 +23,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRATextView.h"
 #import "FRAProject+DocumentViewsController.h"
 #import "VADocument.h"
+#import "VAProject.h"
 
 @implementation FRAProjectsController
 
@@ -178,14 +179,15 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	[project makeWindowControllers];
 
 	[project setFileURL:[NSURL fileURLWithPath:path]];
-	[[project project] setValue:path forKey:@"path"];
+	[[project project] setPath: path];
 	id projectToOpen = [NSUnarchiver unarchiveObjectWithData:[NSData dataWithContentsOfFile:path]];
 	
 	if ([projectToOpen isKindOfClass:[NSArray class]]) { // From version 2
-		[self insertDocumentsFromProjectArray:projectToOpen];
+		[self insertDocumentsFromProjectArray: projectToOpen];
 	} else { // From version 3
 		
-		if ([projectToOpen valueForKey:@"windowFrame"] != nil) {
+		if ([projectToOpen valueForKey:@"windowFrame"] != nil)
+        {
 			[[project window] setFrame:NSRectFromString([projectToOpen valueForKey:@"windowFrame"]) display:NO animate:NO];
 		}
 		
@@ -195,7 +197,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 		if ([projectToOpen valueForKey:@"selectedDocumentName"] != nil) {
 			NSString *name = [projectToOpen valueForKey:@"selectedDocumentName"];
 			NSArray *array = [project documents];
-			for (id item in array) {
+			for (id item in array)
+            {
 				if ([[item valueForKey:@"name"] isEqualToString:name]) {
 					[project selectDocument:item];
 					break;
@@ -203,14 +206,17 @@ Unless required by applicable law or agreed to in writing, software distributed 
 			}		
 		}
 		
-		if ([projectToOpen valueForKey:@"view"] != nil) {
-			[[project project] setValue:[projectToOpen valueForKey:@"view"] forKey:@"view"];
+		if ([projectToOpen valueForKey:@"view"] != nil)
+        {
+			[[project project] setView: [[projectToOpen valueForKey:@"view"] integerValue]];
 		}
-		if ([projectToOpen valueForKey:@"viewSize"] != nil) {
-			[[project project] setValue:[projectToOpen valueForKey:@"viewSize"] forKey:@"viewSize"];
+		if ([projectToOpen valueForKey:@"viewSize"] != nil)
+        {
+			[[project project] setViewSize: [[projectToOpen valueForKey:@"viewSize"] integerValue]];
 		}
-		if ([projectToOpen valueForKey:@"dividerPosition"] != nil) {
-			[[project project] setValue:[projectToOpen valueForKey:@"dividerPosition"] forKey:@"dividerPosition"];
+		if ([projectToOpen valueForKey:@"dividerPosition"] != nil)
+        {
+			[[project project] setDividerPosition: [[projectToOpen valueForKey:@"dividerPosition"] floatValue]];
 			[project resizeMainSplitView];
 		}
 		

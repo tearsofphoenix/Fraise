@@ -26,6 +26,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAProject.h"
 #import "FRATextView.h"
 #import "VADocument.h"
+#import "VASnippetCollection.h"
+#import "VACommandCollection.h"
 
 @implementation FRADragAndDropController
 
@@ -52,8 +54,9 @@ VASingletonIMPDefault(FRADragAndDropController)
 		NSMutableArray *uriArray = [NSMutableArray array];
 		NSArray *arrangedObjects = [[FRACurrentProject documentsArrayController] arrangedObjects];
 		NSInteger currentIndex = [rowIndexes firstIndex];
-		while (currentIndex != NSNotFound) {
-			[uriArray addObject:[FRABasic uriFromObject:arrangedObjects[currentIndex]]];
+		while (currentIndex != NSNotFound)
+        {
+			[uriArray addObject: [arrangedObjects[currentIndex] URI]];
 			currentIndex = [rowIndexes indexGreaterThanIndex:currentIndex];
 		}
 		
@@ -79,7 +82,7 @@ VASingletonIMPDefault(FRADragAndDropController)
 			[insertString replaceOccurrencesOfString:@"%%s" withString:selectedText options:NSLiteralSearch range:NSMakeRange(0, [insertString length])];
 			
 			[string appendString:insertString];
-			[uriArray addObject:[FRABasic uriFromObject:arrangedObjects[currentIndex]]];
+			[uriArray addObject:[arrangedObjects[currentIndex] URI]];
 			currentIndex = [rowIndexes indexGreaterThanIndex:currentIndex];
 		}
 		
@@ -106,7 +109,7 @@ VASingletonIMPDefault(FRADragAndDropController)
 			[insertString replaceOccurrencesOfString:@"%%s" withString:selectedText options:NSLiteralSearch range:NSMakeRange(0, [insertString length])];
 			
 			[string appendString:insertString];
-			[uriArray addObject:[FRABasic uriFromObject:arrangedObjects[currentIndex]]];
+			[uriArray addObject:[arrangedObjects[currentIndex] URI]];
 			currentIndex = [rowIndexes indexGreaterThanIndex:currentIndex];
 		}
 		
@@ -244,11 +247,12 @@ VASingletonIMPDefault(FRADragAndDropController)
 			NSArray *pasteboardData = [NSUnarchiver unarchiveObjectWithData:[[info draggingPasteboard] dataForType:movedSnippetType]];
 			NSArray *uriArray = pasteboardData[1];
 			
-			id collection = [[[FRASnippetsController sharedInstance] snippetCollectionsArrayController] arrangedObjects][row];
+			VASnippetCollection *collection = [[[FRASnippetsController sharedInstance] snippetCollectionsArrayController] arrangedObjects][row];
 			
 			id item;
-			for (item in uriArray) {
-				[[collection mutableSetValueForKey:@"snippets"] addObject:[FRABasic objectFromURI:item]];
+			for (item in uriArray)
+            {
+				[[collection snippets] addObject: item];
 			}
 			
 			[[[FRASnippetsController sharedInstance] snippetsArrayController] rearrangeObjects];
@@ -295,11 +299,12 @@ VASingletonIMPDefault(FRADragAndDropController)
 			NSArray *pasteboardData = [NSUnarchiver unarchiveObjectWithData:[[info draggingPasteboard] dataForType:movedCommandType]];
 			NSArray *uriArray = pasteboardData[1];
 			
-			id collection = [[[FRACommandsController sharedInstance] commandCollectionsArrayController] arrangedObjects][row];
+			VACommandCollection *collection = [[[FRACommandsController sharedInstance] commandCollectionsArrayController] arrangedObjects][row];
 			
 			id item;
-			for (item in uriArray) {
-				[[collection mutableSetValueForKey:@"commands"] addObject:[FRABasic objectFromURI:item]];
+			for (item in uriArray)
+            {
+				[[collection commands] addObject: item];
 			}
 			
 			[[[FRACommandsController sharedInstance] commandsArrayController] rearrangeObjects];
@@ -328,7 +333,7 @@ VASingletonIMPDefault(FRADragAndDropController)
 		NSArrayController *destinationArrayController = [destinationProject documentsArrayController];
 		NSArray *pasteboardData = [NSUnarchiver unarchiveObjectWithData:[[info draggingPasteboard] dataForType:movedDocumentType]];
 		NSArray *uriArray = pasteboardData[1];
-		VADocument *document = [FRABasic objectFromURI:uriArray[0]];
+		VADocument *document = uriArray[0];
 		[(NSMutableSet *)[destinationProject documents] addObject:document];
 		[document setSortOrder: row];
 		[FRAVarious fixSortOrderNumbersForArrayController:destinationArrayController overIndex:row];
@@ -386,8 +391,10 @@ VASingletonIMPDefault(FRADragAndDropController)
 	
 	NSEnumerator *enumerator = [objects reverseObjectEnumerator]; 
 	id item;
-	for (item in enumerator) {
-		[arrangedObjects insertObject:[FRABasic objectFromURI:item] atIndex:insertIndex];
+	for (item in enumerator)
+    {
+		[arrangedObjects insertObject: item
+                              atIndex: insertIndex];
 	}
 
 	[arrangedObjects removeObject:[NSNull null]];

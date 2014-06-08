@@ -29,6 +29,8 @@
 #import "VADocument.h"
 #import "FRATextView.h"
 
+#import "VASyntaxDefinition.h"
+
 #import <VAFoundation/VAFoundation.h>
 #import <VADevUIKit/VADevUIKit.h>
 
@@ -246,32 +248,35 @@
 
 - (void)setSyntaxDefinition
 {
-	NSArray *syntaxDefinitions = [FRABasic fetchAll:@"SyntaxDefinitionSortKeySortOrder"];
-	
-	NSManagedObjectContext *managedObjectContext = FRAManagedObjectContext;
-	NSEntityDescription *entityDescription = [NSEntityDescription entityForName:@"SyntaxDefinition" inManagedObjectContext:managedObjectContext];
-	NSFetchRequest *request = [[entityDescription managedObjectModel] fetchRequestFromTemplateWithName:@"syntaxDefinitionName" substitutionVariables:@{@"NAME": [FRADefaults valueForKey:@"SyntaxColouringPopUpString"]}];
-	NSArray *foundSyntaxDefinition = [managedObjectContext executeFetchRequest:request error:nil];
+	NSArray *syntaxDefinitions = [VASyntaxDefinition allDefinitions];
+    NSString *name = [FRADefaults valueForKey:@"SyntaxColouringPopUpString"];
+	NSArray *foundSyntaxDefinition = nil;
     
 	NSString *fileToUse = nil;
 	NSString *extension = [[document name] pathExtension];
-	if ([document hasManuallyChangedSyntaxDefinition] == YES) { // Once the user has changed the syntax definition always use that one and not the one from the extension
-		request = [[entityDescription managedObjectModel] fetchRequestFromTemplateWithName:@"syntaxDefinitionName" substitutionVariables:@{@"NAME": [document syntaxDefinition]}];
-		NSArray *foundManuallyChangedSyntaxDefinition = [managedObjectContext executeFetchRequest:request error:nil];
-		if ([foundManuallyChangedSyntaxDefinition count] != 0) {
-			fileToUse = [foundManuallyChangedSyntaxDefinition[0] valueForKey:@"file"];
-		} else {
-			fileToUse = [syntaxDefinitions[0] valueForKey:@"file"];
+	if ([document hasManuallyChangedSyntaxDefinition] == YES)
+    { // Once the user has changed the syntax definition always use that one and not the one from the extension
+
+        //TODO
+        //[document syntaxDefinition];
+		NSArray *foundManuallyChangedSyntaxDefinition = nil;
+
+		if ([foundManuallyChangedSyntaxDefinition count] != 0)
+        {
+			fileToUse = [foundManuallyChangedSyntaxDefinition[0] file];
+		} else
+        {
+			fileToUse = [syntaxDefinitions[0] file];
 		}
 	} else {
 		
 		if ([[FRADefaults valueForKey:@"SyntaxColouringMatrix"] integerValue] == 1) { // Always use...
 			if ([foundSyntaxDefinition count] != 0) {
-				fileToUse = [foundSyntaxDefinition[0] valueForKey:@"file"];
-				[document setSyntaxDefinition: [foundSyntaxDefinition[0] valueForKey:@"name"]];
+				fileToUse = [foundSyntaxDefinition[0] file];
+				[document setSyntaxDefinition: [foundSyntaxDefinition[0] name]];
 			} else {
-				fileToUse = [syntaxDefinitions[0] valueForKey:@"file"];
-				[document setSyntaxDefinition: [syntaxDefinitions[0] valueForKey:@"name"]];
+				fileToUse = [syntaxDefinitions[0] file];
+				[document setSyntaxDefinition: [syntaxDefinitions[0] name]];
 			}
 		} else {
 			NSString *lowercaseExtension;
@@ -287,20 +292,21 @@
 				lowercaseExtension = [extension lowercaseString];
 			}
 			
-			id item;
+			VASyntaxDefinition *item;
 			index = 0;
 			for (item in syntaxDefinitions)
             {
-				NSString *name = [item valueForKey:@"name"];
-				if ([name isEqualToString:@"Standard"] || [name isEqualToString:@"None"] || [item valueForKey:@"extensions"] == nil)
+				NSString *name = [item name];
+                
+				if ([name isEqualToString:@"Standard"] || [name isEqualToString:@"None"] || [item extensions] == nil)
                 {
 					continue;
 				}
-				NSMutableString *extensionsString = [NSMutableString stringWithString:[item valueForKey:@"extensions"]];
+				NSMutableString *extensionsString = [NSMutableString stringWithString:[item extensions]];
 				[extensionsString replaceOccurrencesOfString:@"." withString:@"" options:NSLiteralSearch range:NSMakeRange(0, [extensionsString length])];
 				if ([[extensionsString componentsSeparatedByString:@" "] containsObject:lowercaseExtension])
                 {
-					fileToUse = [item valueForKey:@"file"];
+					fileToUse = [item file];
 					[document setSyntaxDefinition: name];
 					break;
 				}
@@ -308,13 +314,14 @@
 			}
 			if (fileToUse == nil && [foundSyntaxDefinition count] != 0)
             {
-				fileToUse = [foundSyntaxDefinition[0] valueForKey:@"file"];
-				[document setSyntaxDefinition: [foundSyntaxDefinition[0] valueForKey:@"name"]];
+				fileToUse = [foundSyntaxDefinition[0] file];
+				[document setSyntaxDefinition: [foundSyntaxDefinition[0] name]];
 			}
 		}
 	}
 	
-	if (fileToUse == nil) {
+	if (fileToUse == nil)
+    {
 		fileToUse = @"standard"; // Be sure to set it to something
 		[document setSyntaxDefinition: @"Standard"];
 	}

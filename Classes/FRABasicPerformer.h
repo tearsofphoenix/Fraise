@@ -15,22 +15,13 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import <Cocoa/Cocoa.h>
 
 
-@interface FRABasicPerformer : NSObject {
-	
+@interface FRABasicPerformer : NSObject
+{
 	NSNumberFormatter *thousandFormatter;
-	NSMutableDictionary *fetchRequests;
 }
 
 + (FRABasicPerformer *)sharedInstance;
 
-- (void)insertFetchRequests;
-- (NSArray *)fetchAll:(NSString *)key;
-- (NSFetchRequest *)fetchRequest:(NSString *)key;
-
-- (id)createNewObjectForEntity:(NSString *)entity;
-- (void)removeAllObjectsForEntity:(NSString *)entity;
-- (NSURL *)uriFromObject:(id)object;
-- (id)objectFromURI:(NSURL *)uri;
 - (void)removeAllItemsFromMenu:(NSMenu *)menu;
 
 - (void)insertSortOrderNumbersForArrayController:(NSArrayController *)arrayController;

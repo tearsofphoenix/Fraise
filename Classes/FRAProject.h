@@ -21,33 +21,11 @@ Unless required by applicable law or agreed to in writing, software distributed 
 @class FRATableViewDelegate;
 @class FRASplitViewDelegate;
 @class PSMTabBarControl;
+@class VAProject;
 
 @interface FRAProject : NSDocument <NSTableViewDelegate,NSSplitViewDelegate,NSWindowDelegate,NSMenuDelegate>
-{
-	NSManagedObject *__unsafe_unretained project;
-	
-	IBOutlet NSTextField *__unsafe_unretained statusBarTextField;
-	
-	IBOutlet NSView *__unsafe_unretained firstContentView;
-	IBOutlet NSView *__unsafe_unretained secondContentView;
-
-	IBOutlet NSView *__unsafe_unretained secondContentViewNavigationBar;
-	IBOutlet NSPopUpButton *__unsafe_unretained secondContentViewPopUpButton;
-	
-	IBOutlet NSSplitView *__unsafe_unretained mainSplitView;
-	IBOutlet NSSplitView *__unsafe_unretained contentSplitView;
-	
-	IBOutlet NSView *__unsafe_unretained leftDocumentsView;
-	
-	IBOutlet PSMTabBarControl *__unsafe_unretained tabBarControl;
-	IBOutlet NSTabView *__unsafe_unretained tabBarTabView;
-	
-	FRATextView *__unsafe_unretained lastTextViewInFocus;
-		
+{    
 	BOOL shouldWindowClose;
-		
-	IBOutlet NSButton *functionButton;
-	IBOutlet NSPopUpButton *functionPopUpButton;
 	
 	NSTimer *liveFindSessionTimer;
 	NSInteger originalPosition;
@@ -57,11 +35,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	// FRADocumentViewsControllerCategory
 	IBOutlet NSView *viewSelectionView;
 	IBOutlet NSSlider *viewSelectionSizeSlider;
-	
-	IBOutlet NSView *__unsafe_unretained leftDocumentsTableView;
-	IBOutlet NSTableView *__unsafe_unretained documentsTableView;
-	IBOutlet NSArrayController *__unsafe_unretained documentsArrayController;
-	
 }
 
 @property (nonatomic, unsafe_unretained) FRATextView *lastTextViewInFocus;
@@ -69,24 +42,24 @@ Unless required by applicable law or agreed to in writing, software distributed 
 @property (strong) VADocument *firstDocument;
 @property (strong) VADocument *secondDocument;
 
-@property (unsafe_unretained, readonly) IBOutlet NSManagedObject *project;
-@property (unsafe_unretained, readonly) IBOutlet NSArrayController *documentsArrayController;
-@property (unsafe_unretained, readonly) IBOutlet NSTableView *documentsTableView;
-@property (unsafe_unretained, readonly) IBOutlet NSView *firstContentView;
-@property (unsafe_unretained, readonly) IBOutlet NSView *secondContentView;
-@property (unsafe_unretained, readonly) IBOutlet NSTextField *statusBarTextField;
+@property (strong) VAProject *project;
+@property (strong) IBOutlet NSArrayController *documentsArrayController;
+@property (strong) IBOutlet NSTableView *documentsTableView;
+@property (strong) IBOutlet NSView *firstContentView;
+@property (strong) IBOutlet NSView *secondContentView;
+@property (strong) IBOutlet NSTextField *statusBarTextField;
 
-@property (unsafe_unretained, readonly) IBOutlet NSSplitView *mainSplitView;
-@property (unsafe_unretained, readonly) IBOutlet NSSplitView *contentSplitView;
+@property (strong) IBOutlet NSSplitView *mainSplitView;
+@property (strong) IBOutlet NSSplitView *contentSplitView;
 
-@property (unsafe_unretained, readonly) IBOutlet NSView *secondContentViewNavigationBar;
-@property (unsafe_unretained, readonly) IBOutlet NSPopUpButton *secondContentViewPopUpButton;
+@property (strong) IBOutlet NSView *secondContentViewNavigationBar;
+@property (strong) IBOutlet NSPopUpButton *secondContentViewPopUpButton;
 
-@property (unsafe_unretained, readonly) IBOutlet NSView *leftDocumentsView;
-@property (unsafe_unretained, readonly) IBOutlet NSView *leftDocumentsTableView;
+@property (strong) IBOutlet NSView *leftDocumentsView;
+@property (strong) IBOutlet NSView *leftDocumentsTableView;
 
-@property (unsafe_unretained, readonly) IBOutlet PSMTabBarControl *tabBarControl;
-@property (unsafe_unretained, readonly) IBOutlet NSTabView *tabBarTabView;
+@property (strong) IBOutlet PSMTabBarControl *tabBarControl;
+@property (strong) IBOutlet NSTabView *tabBarTabView;
 
 
 - (void)setDefaultAppearanceAtStartup;
@@ -106,8 +79,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 
 - (NSMutableSet *)documents;
-
-- (NSManagedObjectContext *)managedObjectContext;
 
 - (NSDictionary *)dictionaryOfDocumentsInProject;
 

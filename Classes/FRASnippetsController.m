@@ -26,6 +26,8 @@
 #import "FRAToolsMenuController.h"
 #import "FRAProjectsController.h"
 #import "VADocument.h"
+#import "VASnippetCollection.h"
+#import "VASnippet.h"
 
 #import <VADevUIKit/VADevUIKit.h>
 
@@ -80,9 +82,8 @@ VASingletonIMPDefault(FRASnippetsController)
 - (IBAction)newCollectionAction:(id)sender
 {
 	[snippetCollectionsArrayController commitEditing];
-	id collection = [FRABasic createNewObjectForEntity:@"SnippetCollection"];
-	
-	[FRAManagedObjectContext processPendingChanges];
+	VASnippetCollection *collection = [[VASnippetCollection alloc] init];
+
 	[snippetCollectionsArrayController setSelectedObjects:@[collection]];
 	
 	[snippetsWindow makeFirstResponder:snippetCollectionsTableView];
@@ -92,11 +93,14 @@ VASingletonIMPDefault(FRASnippetsController)
 
 - (IBAction)newSnippetAction:(id)sender
 {
-	NSArray *snippetCollections = [FRABasic fetchAll:@"SnippetCollectionSortKeyName"];
-	if ([snippetCollections count] == 0) {
-		id collection = [FRABasic createNewObjectForEntity:@"SnippetCollection"];
-		[collection setValue:COLLECTION_STRING forKey:@"name"];
+	NSArray *snippetCollections = [VASnippetCollection allSnippetCollections];
+
+	if ([snippetCollections count] == 0)
+    {
+		VASnippetCollection *collection = [[VASnippetCollection alloc] init];
+		[collection setName: COLLECTION_STRING];
 	}
+    
 	[snippetsArrayController commitEditing];
 	[self performInsertNewSnippet];
 	
@@ -107,22 +111,26 @@ VASingletonIMPDefault(FRASnippetsController)
 
 - (id)performInsertNewSnippet
 {
-	id collection;
-	NSArray *snippetCollections = [FRABasic fetchAll:@"SnippetCollectionSortKeyName"];
-	if ([snippetCollections count] == 0) {
-		collection = [FRABasic createNewObjectForEntity:@"SnippetCollection"];
-		[collection setValue:COLLECTION_STRING forKey:@"name"];
-	} else {
-		if (snippetsWindow != nil && [[snippetCollectionsArrayController selectedObjects] count] != 0) {
+	VASnippetCollection *collection;
+	NSArray *snippetCollections = [VASnippetCollection allSnippetCollections];
+
+	if ([snippetCollections count] == 0)
+    {
+		collection = [[VASnippetCollection alloc] init];
+		[collection setName: COLLECTION_STRING];
+	} else
+    {
+		if (snippetsWindow != nil && [[snippetCollectionsArrayController selectedObjects] count] != 0)
+        {
 			collection = [snippetCollectionsArrayController selectedObjects][0];
 		} else { // If no collection is selected choose the last one in the array
 			collection = [snippetCollections lastObject];
 		}
 	}
 	
-	id item = [FRABasic createNewObjectForEntity:@"Snippet"];
-	[[collection mutableSetValueForKey:@"snippets"] addObject:item];
-	[FRAManagedObjectContext processPendingChanges];
+	VASnippet* item = [[VASnippet alloc] init];
+	[[collection snippets] addObject: item];
+
 	[snippetsArrayController setSelectedObjects:@[item]];
 	
 	return item;
@@ -160,9 +168,8 @@ VASingletonIMPDefault(FRASnippetsController)
 
 - (void)performDeleteCollection
 {
-	id collection = [snippetCollectionsArrayController selectedObjects][0];
-    
-	[FRAManagedObjectContext deleteObject:collection];
+    //TODO
+//	id collection = [snippetCollectionsArrayController selectedObjects][0];
 	
 	[[FRAToolsMenuController sharedInstance] buildInsertSnippetMenu];
 }
@@ -199,25 +206,23 @@ VASingletonIMPDefault(FRASnippetsController)
 	
 	if ([[snippets[0] valueForKey:@"version"] integerValue] == 2 || [[snippets[0] valueForKey:@"version"] integerValue] == 3) {
 		
-		id collection = [FRABasic createNewObjectForEntity:@"SnippetCollection"];
-		[collection setValue:[snippets[0] valueForKey:@"collectionName"] forKey:@"name"];
+		VASnippetCollection *collection = [[VASnippetCollection alloc] init];
+		[collection setName: [snippets[0] collectionName]];
 		
-		id item;
+		NSDictionary *item;
 		for (item in snippets)
         {
-			id snippet = [FRABasic createNewObjectForEntity:@"Snippet"];
-			[snippet setValue:[item valueForKey:@"name"] forKey:@"name"];
-			[snippet setValue:[item valueForKey:@"text"] forKey:@"text"];
-			[snippet setValue:[item valueForKey:@"collectionName"] forKey:@"collectionName"];
-			[snippet setValue:[item valueForKey:@"shortcutDisplayString"] forKey:@"shortcutDisplayString"];
-			[snippet setValue:[item valueForKey:@"shortcutMenuItemKeyString"] forKey:@"shortcutMenuItemKeyString"];
-			[snippet setValue:[item valueForKey:@"shortcutModifier"] forKey:@"shortcutModifier"];
-			[snippet setValue:[item valueForKey:@"sortOrder"] forKey:@"sortOrder"];
-			[[collection mutableSetValueForKey:@"snippets"] addObject:snippet];
+			VASnippet *snippet = [[VASnippet alloc] init];
+			[snippet setName: item[@"name"]];
+			[snippet setText: item[@"text"]];
+			[snippet setCollectionName: item[@"collectionName"]];
+			[snippet setShortcutDisplayString: item[@"shortcutDisplayString"]];
+			[snippet setShortcutMenuItemKeyString: item[@"shortcutMenuItemKeyString"]];
+			[snippet setShortcutModifier: item[@"shortcutModifier"]];
+			[snippet setSortOrder: item[@"sortOrder"]];
+			[[collection snippets] addObject: snippet];
 		}
-		
-		[FRAManagedObjectContext processPendingChanges];
-		
+				
 		[snippetCollectionsArrayController setSelectedObjects:@[collection]];
 	} else {
 		NSBeep();
@@ -268,13 +273,6 @@ VASingletonIMPDefault(FRASnippetsController)
 	[snippetCollectionsArrayController commitEditing];
 	[snippetsArrayController commitEditing];
 }
-
-
-- (NSManagedObjectContext *)managedObjectContext
-{
-	return FRAManagedObjectContext;
-}
-
 
 - (NSTextView *)snippetsTextView
 {

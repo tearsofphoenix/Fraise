@@ -35,19 +35,18 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAPrintTextView.h"
 #import "VADocument.h"
 #import "FRATextView.h"
+#import "VAProject.h"
 
 #import <VADevUIKit/VADevUIKit.h>
 
 @implementation FRAProject
 
-@synthesize firstDocument, secondDocument, lastTextViewInFocus, project, documentsArrayController, documentsTableView, firstContentView, secondContentView, statusBarTextField, mainSplitView, contentSplitView, secondContentViewNavigationBar, secondContentViewPopUpButton, leftDocumentsView, leftDocumentsTableView, tabBarControl, tabBarTabView;
-
-
 - (id)init
 {
     self = [super init];
-    if (self) {
-		project = [FRABasic createNewObjectForEntity:@"Project"];
+    if (self)
+    {
+		_project = [[VAProject alloc] init];
 		[[FRAProjectsController sharedDocumentController] setCurrentProject:self];
     }
     return self;
@@ -76,22 +75,22 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	
 	[self setDefaultViews];
 	
-	[documentsTableView setDelegate:self];
-	[mainSplitView setDelegate:self];
+	[_documentsTableView setDelegate:self];
+	[_mainSplitView setDelegate:self];
 	//[mainSplitView setAutosaveName:@"MainSplitView"];
-	[contentSplitView setDelegate:self];	
+	[_contentSplitView setDelegate:self];	
 	
 	[[FRAViewMenuController sharedInstance] performCollapse];
 	[self performSelector:@selector(performSetupAfterItIsCurrentProject) withObject:nil afterDelay:0.0];
 	
 	[[self window] setDelegate:self];
 	
-	[documentsTableView setDataSource:[FRADragAndDropController sharedInstance]];
-	[documentsTableView registerForDraggedTypes:@[NSFilenamesPboardType, NSStringPboardType, @"FRAMovedDocumentType"]];
-	[documentsTableView setDraggingSourceOperationMask:(NSDragOperationCopy | NSDragOperationMove) forLocal:NO];
+	[_documentsTableView setDataSource:[FRADragAndDropController sharedInstance]];
+	[_documentsTableView registerForDraggedTypes:@[NSFilenamesPboardType, NSStringPboardType, @"FRAMovedDocumentType"]];
+	[_documentsTableView setDraggingSourceOperationMask:(NSDragOperationCopy | NSDragOperationMove) forLocal:NO];
 	
 	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"sortOrder" ascending:YES];
-	[documentsArrayController setSortDescriptors:@[sortDescriptor]];
+	[_documentsArrayController setSortDescriptors:@[sortDescriptor]];
 
 	if ([[FRAApplicationDelegate sharedInstance] shouldCreateEmptyDocument] == YES) {
 		id document = [self createNewDocumentWithContents:@""];
@@ -173,11 +172,12 @@ Unless required by applicable law or agreed to in writing, software distributed 
 {
 	[[FRAProjectsController sharedDocumentController] setCurrentProject:nil];
 	
-	[documentsTableView setTarget:self];
-	[documentsTableView setDoubleAction:@selector(doubleClick:)];
+	[_documentsTableView setTarget:self];
+	[_documentsTableView setDoubleAction:@selector(doubleClick:)];
 	
-	if ([[documentsArrayController arrangedObjects] count] > 0) {
-		[self updateWindowTitleBarForDocument:[documentsArrayController selectedObjects][0]];
+	if ([[_documentsArrayController arrangedObjects] count] > 0)
+    {
+		[self updateWindowTitleBarForDocument: [_documentsArrayController selectedObjects][0]];
 	} else {
 		[self updateWindowTitleBarForDocument:nil];
 	}
@@ -188,28 +188,29 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (void)setDefaultAppearanceAtStartup
 {
-	[[statusBarTextField cell] setBackgroundStyle:NSBackgroundStyleRaised];
+	[[_statusBarTextField cell] setBackgroundStyle:NSBackgroundStyleRaised];
 	
 	FRADocumentsListCell *cell = [[FRADocumentsListCell alloc] init];
 	[cell setWraps:NO];
 	[cell setLineBreakMode:NSLineBreakByTruncatingMiddle];
-	[[documentsTableView tableColumnWithIdentifier:@"name"] setDataCell:cell];
+	[[_documentsTableView tableColumnWithIdentifier:@"name"] setDataCell:cell];
 
-	if ([[FRADefaults valueForKey:@"ShowStatusBar"] boolValue] == NO) {
+	if ([[FRADefaults valueForKey:@"ShowStatusBar"] boolValue] == NO)
+    {
 		[[FRAViewMenuController sharedInstance] performHideStatusBar];
 	}
 
 	if ([[FRADefaults valueForKey:@"ShowTabBar"] boolValue] == NO) {
-		CGFloat tabBarHeight = [tabBarControl bounds].size.height;
-		NSRect mainSplitViewRect = [mainSplitView frame];
-		[tabBarControl setHidden:YES];
-		[mainSplitView setFrame:NSMakeRect(mainSplitViewRect.origin.x, mainSplitViewRect.origin.y, mainSplitViewRect.size.width, mainSplitViewRect.size.height + tabBarHeight)];
+		CGFloat tabBarHeight = [_tabBarControl bounds].size.height;
+		NSRect mainSplitViewRect = [_mainSplitView frame];
+		[_tabBarControl setHidden:YES];
+		[_mainSplitView setFrame:NSMakeRect(mainSplitViewRect.origin.x, mainSplitViewRect.origin.y, mainSplitViewRect.size.width, mainSplitViewRect.size.height + tabBarHeight)];
 	} else {
 		[self updateTabBar];
 	}
 
-	if ([project valueForKey:@"dividerPosition"] == nil) {
-		[project setValue:[FRADefaults valueForKey:@"DividerPosition"] forKey:@"dividerPosition"];
+	if ([_project valueForKey:@"dividerPosition"] == nil) {
+		[_project setValue:[FRADefaults valueForKey:@"DividerPosition"] forKey:@"dividerPosition"];
 	}
 	[self resizeMainSplitView];
 }
@@ -217,13 +218,14 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (void)selectDocument:(id)document
 {
-	[documentsArrayController setSelectedObjects:@[document]];
+	[_documentsArrayController setSelectedObjects:@[document]];
 }
 
 
 - (BOOL)areThereAnyDocuments
 {
-	if ([[documentsArrayController arrangedObjects] count] > 0) {
+	if ([[_documentsArrayController arrangedObjects] count] > 0)
+    {
 		return YES;
 	} else {
 		return NO;
@@ -239,7 +241,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 		CGFloat subtractFromHeight = 0;
 		NSInteger extraHeight;
 		NSInteger viewNumber = 0;
-		NSView *view = firstContentView;
+		NSView *view = _firstContentView;
 		NSScrollView *textScrollView = [document firstTextScrollView];
 		NSScrollView *gutterScrollView = [document firstGutterScrollView];
 		
@@ -248,11 +250,11 @@ Unless required by applicable law or agreed to in writing, software distributed 
 			extraHeight = 0;
 			if (viewNumber == 2) {
 				if ([document secondTextView] != nil) {
-					view = secondContentView;
+					view = _secondContentView;
 					textScrollView = [document secondTextScrollView];
 					gutterScrollView = [document secondGutterScrollView];
-					subtractFromY = [secondContentViewNavigationBar bounds].size.height * -1;
-					subtractFromHeight = [secondContentViewNavigationBar bounds].size.height;
+					subtractFromY = [_secondContentViewNavigationBar bounds].size.height * -1;
+					subtractFromHeight = [_secondContentViewNavigationBar bounds].size.height;
 				} else {
 					continue;
 				}
@@ -325,10 +327,10 @@ Unless required by applicable law or agreed to in writing, software distributed 
                                                              checkWidth: NO];
     [[document syntaxColouring] pageRecolourTextView: [clipView documentView]];
 
-	[document setSortOrder: [[documentsArrayController arrangedObjects] count]];
+	[document setSortOrder: [[_documentsArrayController arrangedObjects] count]];
 	[self documentsListHasUpdated];
 	
-	[documentsArrayController setSelectedObjects:@[document]];
+	[_documentsArrayController setSelectedObjects:@[document]];
 	
 	[document setEncodingName: [NSString localizedNameOfStringEncoding: [document encoding]]];
 	
@@ -527,7 +529,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 		}
 	}
 	
-	[FRAVarious resetSortOrderNumbersForArrayController:documentsArrayController];	
+	[FRAVarious resetSortOrderNumbersForArrayController: _documentsArrayController];
 }
 
 
@@ -562,15 +564,14 @@ Unless required by applicable law or agreed to in writing, software distributed 
 		[self setFirstDocument:nil];
 	}
 	
-    [documentsArrayController removeObject:document];
+    [_documentsArrayController removeObject:document];
 	[[FRAApplicationDelegate sharedInstance] saveAction:nil]; // To remove it from memory
-	[[FRAManagedObjectContext undoManager] removeAllActions];
 }
 
 
 - (NSDictionary *)dictionaryOfDocumentsInProject
 {	
-	[FRAVarious resetSortOrderNumbersForArrayController:documentsArrayController];
+	[FRAVarious resetSortOrderNumbersForArrayController: _documentsArrayController];
 	
 	NSArray *array = [[self documents] allObjects];
 	NSMutableDictionary *returnDictionary = [NSMutableDictionary dictionary];
@@ -599,17 +600,17 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	[returnDictionary setObject:documentsArray forKey:@"documentsArray"];
 	NSString *name;
 	
-	if ([self areThereAnyDocuments] == NO || [[documentsArrayController selectedObjects][0] valueForKey:@"name"] == nil) {
+	if ([self areThereAnyDocuments] == NO || [[_documentsArrayController selectedObjects][0] valueForKey:@"name"] == nil) {
 		name = @"";
 	} else {
-		name = [[documentsArrayController selectedObjects][0] valueForKey:@"name"];
+		name = [[_documentsArrayController selectedObjects][0] valueForKey:@"name"];
 	}
 	[returnDictionary setObject:name forKey:@"selectedDocumentName"];
-	[returnDictionary setObject:NSStringFromRect([[self window] frame]) forKey:@"windowFrame"];
-	[returnDictionary setObject:[project valueForKey:@"view"] forKey:@"view"];
-	[returnDictionary setObject:[project valueForKey:@"viewSize"] forKey:@"viewSize"];
+	[returnDictionary setObject: NSStringFromRect([[self window] frame]) forKey:@"windowFrame"];
+	[returnDictionary setObject: [_project valueForKey:@"view"] forKey:@"view"];
+	[returnDictionary setObject: [_project valueForKey:@"viewSize"] forKey:@"viewSize"];
 	[self saveMainSplitViewFraction];
-	[returnDictionary setObject:[project valueForKey:@"dividerPosition"]  forKey:@"dividerPosition"];
+	[returnDictionary setObject: [_project valueForKey:@"dividerPosition"]  forKey:@"dividerPosition"];
 	[returnDictionary setObject:@3 forKey:@"version"];
 	
 	return returnDictionary;
@@ -639,7 +640,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 - (void)selectionDidChange
 {
 	[self tableViewSelectionDidChange: [NSNotification notificationWithName: NSTableViewSelectionDidChangeNotification
-                                                                     object: documentsTableView]];
+                                                                     object: _documentsTableView]];
 }
 
 
@@ -690,26 +691,28 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (void)buildSecondContentViewNavigationBarMenu
 {
-	if (secondDocument == nil) {
+	if (_secondDocument == nil)
+    {
 		return;
 	}
 	
-	NSMenu *menu = [secondContentViewPopUpButton menu];
+	NSMenu *menu = [_secondContentViewPopUpButton menu];
 	[FRABasic removeAllItemsFromMenu:menu];
 	
 	id menuItemToSelect = nil;
-	NSEnumerator *enumerator = [[documentsArrayController arrangedObjects] reverseObjectEnumerator];
+	NSEnumerator *enumerator = [[_documentsArrayController arrangedObjects] reverseObjectEnumerator];
 	for (id item in enumerator) {
 		NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:[item valueForKey:@"name"] action:@selector(secondContentViewDocumentChanged:) keyEquivalent:@""];
 		[menuItem setRepresentedObject:item];
 		[menuItem setTarget:self];
 		[menu insertItem:menuItem atIndex:0];
-		if (item == secondDocument) {
+		if (item == _secondDocument)
+        {
 			menuItemToSelect = menuItem;
 		}
 	}
 	
-	[secondContentViewPopUpButton selectItem:menuItemToSelect];
+	[_secondContentViewPopUpButton selectItem:menuItemToSelect];
 }
 
 
@@ -722,8 +725,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
 - (CGFloat)mainSplitViewFraction
 {
 	CGFloat fraction;
-	if ([contentSplitView bounds].size.width + [leftDocumentsView bounds].size.width + [mainSplitView dividerThickness] != 0) {
-		fraction = [leftDocumentsView bounds].size.width / ([contentSplitView bounds].size.width + [leftDocumentsView bounds].size.width + [mainSplitView dividerThickness]);
+	if ([_contentSplitView bounds].size.width + [_leftDocumentsView bounds].size.width + [_mainSplitView dividerThickness] != 0)
+    {
+		fraction = [_leftDocumentsView bounds].size.width / ([_contentSplitView bounds].size.width + [_leftDocumentsView bounds].size.width + [_mainSplitView dividerThickness]);
 	} else {
 		fraction = 0.0;
 	}
@@ -734,23 +738,23 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (void)resizeMainSplitView
 {	
-	NSRect leftDocumentsViewFrame = [[mainSplitView subviews][0] frame];
-    NSRect contentViewFrame = [[mainSplitView subviews][1] frame];
-	CGFloat totalWidth = leftDocumentsViewFrame.size.width + contentViewFrame.size.width + [mainSplitView dividerThickness];
-    leftDocumentsViewFrame.size.width = [[project valueForKey:@"dividerPosition"] doubleValue] * totalWidth;
-    contentViewFrame.size.width = totalWidth - leftDocumentsViewFrame.size.width - [mainSplitView dividerThickness];
+	NSRect leftDocumentsViewFrame = [[_mainSplitView subviews][0] frame];
+    NSRect contentViewFrame = [[_mainSplitView subviews][1] frame];
+	CGFloat totalWidth = leftDocumentsViewFrame.size.width + contentViewFrame.size.width + [_mainSplitView dividerThickness];
+    leftDocumentsViewFrame.size.width = [_project dividerPosition] * totalWidth;
+    contentViewFrame.size.width = totalWidth - leftDocumentsViewFrame.size.width - [_mainSplitView dividerThickness];
 	
-    [[mainSplitView subviews][0] setFrame:leftDocumentsViewFrame];
-    [[mainSplitView subviews][1] setFrame:contentViewFrame];
+    [[_mainSplitView subviews][0] setFrame:leftDocumentsViewFrame];
+    [[_mainSplitView subviews][1] setFrame:contentViewFrame];
 	
-    [mainSplitView adjustSubviews];
+    [_mainSplitView adjustSubviews];
 }
 
 
 - (void)saveMainSplitViewFraction
 {
 	NSNumber *fraction = @([self mainSplitViewFraction]);
-	[project setValue:fraction forKey:@"dividerPosition"];
+	[_project setDividerPosition: [fraction doubleValue]];
 	[FRADefaults setValue:fraction forKey:@"DividerPosition"];
 }
 
@@ -773,9 +777,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (void)setLastTextViewInFocus: (FRATextView *)newLastTextViewInFocus
 {
-	if (lastTextViewInFocus != newLastTextViewInFocus)
+	if (_lastTextViewInFocus != newLastTextViewInFocus)
     {
-		lastTextViewInFocus = newLastTextViewInFocus;
+		_lastTextViewInFocus = newLastTextViewInFocus;
 	}
 	
 	[self updateWindowTitleBarForDocument:[FRAProjectsController currentDocument]];
@@ -784,7 +788,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (NSMutableSet *)documents
 {
-	return [project mutableSetValueForKey:@"documents"];
+	return [_project documents];
 }
 
 
@@ -792,13 +796,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 {
 	return [[self windowControllers][0] window];
 }
-
-
-- (NSManagedObjectContext *)managedObjectContext
-{
-	return FRAManagedObjectContext;
-}
-
 
 - (NSToolbar *)projectWindowToolbar
 {
@@ -834,12 +831,13 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 	[[FRAApplicationDelegate sharedInstance] saveAction:nil]; // Make sure the documents objects really are deleted, before deleting the project
 
-	if (project != nil) { // Remove the managed object project
-		[FRAManagedObjectContext deleteObject:project];
+	if (_project != nil)
+    { // Remove the managed object project
+//		[FRAManagedObjectContext deleteObject:project];
 	}
 
 	[[FRAApplicationDelegate sharedInstance] saveAction:nil];
-	[[FRAManagedObjectContext undoManager] removeAllActions];
+//	[[FRAManagedObjectContext undoManager] removeAllActions];
 }
 
 

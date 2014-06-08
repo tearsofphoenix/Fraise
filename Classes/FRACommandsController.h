@@ -55,9 +55,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 - (void)performCommandsImportWithPath:(NSString *)path;
 - (void)exportCommands;
 
-- (NSManagedObjectContext *)managedObjectContext;
-
-
 - (IBAction)runAction:(id)sender;
 
 - (IBAction)insertPathAction:(id)sender;

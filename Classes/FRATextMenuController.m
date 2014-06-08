@@ -27,6 +27,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRATextView.h"
 #import "FRAProject.h"
 #import "VADocument.h"
+#import "VAEncoding.h"
+#import "VASyntaxDefinition.h"
 
 #import <VADevUIKit/VADevUIKit.h>
 
@@ -59,13 +61,16 @@ static id sharedInstance = nil;
 	[FRABasic removeAllItemsFromMenu:textEncodingMenu];
 	[FRABasic removeAllItemsFromMenu:reloadTextWithEncodingMenu];
 	
-	NSArray *encodingsArray = [FRABasic fetchAll:@"EncodingSortKeyName"];
+	NSArray *encodingsArray = [VAEncoding allEncodings];
+
 	NSEnumerator *enumerator = [encodingsArray reverseObjectEnumerator];
-	id item;
+	VAEncoding *item;
 	NSMenuItem *menuItem;
-	for (item in enumerator) {
-		if ([[item valueForKey:@"active"] boolValue] == YES) {
-			NSUInteger encoding = [[item valueForKey:@"encoding"] unsignedIntegerValue];
+	for (item in enumerator)
+    {
+		if ([item active] == YES)
+        {
+			NSUInteger encoding = [item encoding];
 			menuItem = [[NSMenuItem alloc] initWithTitle:[NSString localizedNameOfStringEncoding:encoding] action:@selector(changeEncodingAction:) keyEquivalent:@""];
 			[menuItem setTag:encoding];
 			[menuItem setTarget:self];
@@ -74,9 +79,11 @@ static id sharedInstance = nil;
 	}
 	
 	enumerator = [encodingsArray reverseObjectEnumerator];
-	for (item in enumerator) {
-		if ([[item valueForKey:@"active"] boolValue] == YES) {
-			NSUInteger encoding = [[item valueForKey:@"encoding"] unsignedIntegerValue];
+	for (item in enumerator)
+    {
+		if ([item active] == YES)
+        {
+			NSUInteger encoding = [item encoding];
 			menuItem = [[NSMenuItem alloc] initWithTitle:[NSString localizedNameOfStringEncoding:encoding] action:@selector(reloadText:) keyEquivalent:@""];
 			[menuItem setTag:encoding];
 			[menuItem setTarget:self];
@@ -88,12 +95,16 @@ static id sharedInstance = nil;
 
 - (void)buildSyntaxDefinitionsMenu
 {
-	NSArray *syntaxDefinitions = [FRABasic fetchAll:@"SyntaxDefinitionSortKeySortOrder"];
+	NSArray *syntaxDefinitions = [VASyntaxDefinition allDefinitions];
+
 	NSEnumerator *enumerator = [syntaxDefinitions reverseObjectEnumerator];
 	NSMenuItem *menuItem;
 	NSInteger tag = [syntaxDefinitions count] - 1;
-	for (id item in enumerator) {
-		menuItem = [[NSMenuItem alloc] initWithTitle:[item valueForKey:@"name"] action:@selector(changeSyntaxDefinitionAction:) keyEquivalent:@""];
+	for (id item in enumerator)
+    {
+		menuItem = [[NSMenuItem alloc] initWithTitle: [item name]
+                                              action: @selector(changeSyntaxDefinitionAction:)
+                                       keyEquivalent: @""];
 		[menuItem setTag:tag];
 		[menuItem setTarget:self];
 		[syntaxDefinitionMenu insertItem:menuItem atIndex:0];
