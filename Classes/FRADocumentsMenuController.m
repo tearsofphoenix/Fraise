@@ -90,7 +90,7 @@ VASingletonIMPDefault(FRADocumentsMenuController)
 			menu = [[NSMenu alloc] initWithTitle:[project valueForKey:@"name"]];
 		}
 		
-		NSEnumerator *documentsEnumerator = [[[(FRAProject *)project documents] allObjects] reverseObjectEnumerator];
+		NSEnumerator *documentsEnumerator = [[(FRAProject *)project documents] reverseObjectEnumerator];
 		for (id document in documentsEnumerator) {
 			menuItem = [[NSMenuItem alloc] initWithTitle:[document name] action:@selector(changeSelectedDocument:) keyEquivalent:@""];
 			[menuItem setTarget:self];

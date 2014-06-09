@@ -258,7 +258,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 {
 	NSArray *projects = [self documents];
 	for (id project in projects) {
-		NSArray *documents = [[(FRAProject *)project documents] allObjects];
+		NSArray *documents = [(FRAProject *)project documents];
 		for (id item in documents) {
 			if (item == document) {
 				[[project window] makeKeyAndOrderFront:nil];

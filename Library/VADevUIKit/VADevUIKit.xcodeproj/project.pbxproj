@@ -11,8 +11,6 @@
 		6034C5541942937300D53431 /* VILayoutManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6034C5521942937300D53431 /* VILayoutManager.m */; };
 		6034C55719429B7F00D53431 /* VILineNumbers.h in Headers */ = {isa = PBXBuildFile; fileRef = 6034C55519429B7F00D53431 /* VILineNumbers.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6034C55819429B7F00D53431 /* VILineNumbers.m in Sources */ = {isa = PBXBuildFile; fileRef = 6034C55619429B7F00D53431 /* VILineNumbers.m */; };
-		6034C55B19429C2600D53431 /* VISyntaxColouring.h in Headers */ = {isa = PBXBuildFile; fileRef = 6034C55919429C2600D53431 /* VISyntaxColouring.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		6034C55C19429C2600D53431 /* VISyntaxColouring.m in Sources */ = {isa = PBXBuildFile; fileRef = 6034C55A19429C2600D53431 /* VISyntaxColouring.m */; };
 		6034C55F19429DFB00D53431 /* VIScrollView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6034C55D19429DFB00D53431 /* VIScrollView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6034C56019429DFB00D53431 /* VIScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6034C55E19429DFB00D53431 /* VIScrollView.m */; };
 		6034C56319429EE400D53431 /* VITextView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6034C56119429EE400D53431 /* VITextView.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -20,8 +18,6 @@
 		6034C5651942AB9C00D53431 /* VAFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 604480971940A646000E1820 /* VAFoundation.framework */; };
 		6034C5681942B82300D53431 /* NSTextView+VAExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 6034C5661942B82300D53431 /* NSTextView+VAExtensions.h */; };
 		6034C5691942B82300D53431 /* NSTextView+VAExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 6034C5671942B82300D53431 /* NSTextView+VAExtensions.m */; };
-		6034C56C1942C3C300D53431 /* VISyntaxColouring+TextDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 6034C56A1942C3C300D53431 /* VISyntaxColouring+TextDelegate.h */; };
-		6034C56D1942C3C300D53431 /* VISyntaxColouring+TextDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6034C56B1942C3C300D53431 /* VISyntaxColouring+TextDelegate.m */; };
 		6044808E1940A53A000E1820 /* VIDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 6044808C1940A53A000E1820 /* VIDefaults.m */; };
 		604589861942021F0004DF6B /* VIGradientView.h in Headers */ = {isa = PBXBuildFile; fileRef = 604589841942021F0004DF6B /* VIGradientView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		604589871942021F0004DF6B /* VIGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = 604589851942021F0004DF6B /* VIGradientView.m */; };
@@ -89,16 +85,12 @@
 		6034C5521942937300D53431 /* VILayoutManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VILayoutManager.m; sourceTree = "<group>"; };
 		6034C55519429B7F00D53431 /* VILineNumbers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VILineNumbers.h; sourceTree = "<group>"; };
 		6034C55619429B7F00D53431 /* VILineNumbers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VILineNumbers.m; sourceTree = "<group>"; };
-		6034C55919429C2600D53431 /* VISyntaxColouring.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VISyntaxColouring.h; sourceTree = "<group>"; };
-		6034C55A19429C2600D53431 /* VISyntaxColouring.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VISyntaxColouring.m; sourceTree = "<group>"; };
 		6034C55D19429DFB00D53431 /* VIScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VIScrollView.h; sourceTree = "<group>"; };
 		6034C55E19429DFB00D53431 /* VIScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VIScrollView.m; sourceTree = "<group>"; };
 		6034C56119429EE400D53431 /* VITextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VITextView.h; sourceTree = "<group>"; };
 		6034C56219429EE400D53431 /* VITextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VITextView.m; sourceTree = "<group>"; };
 		6034C5661942B82300D53431 /* NSTextView+VAExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSTextView+VAExtensions.h"; sourceTree = "<group>"; };
 		6034C5671942B82300D53431 /* NSTextView+VAExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSTextView+VAExtensions.m"; sourceTree = "<group>"; };
-		6034C56A1942C3C300D53431 /* VISyntaxColouring+TextDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "VISyntaxColouring+TextDelegate.h"; sourceTree = "<group>"; };
-		6034C56B1942C3C300D53431 /* VISyntaxColouring+TextDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "VISyntaxColouring+TextDelegate.m"; sourceTree = "<group>"; };
 		6044808B1940A53A000E1820 /* VIDefaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VIDefaults.h; sourceTree = "<group>"; };
 		6044808C1940A53A000E1820 /* VIDefaults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VIDefaults.m; sourceTree = "<group>"; };
 		604480911940A646000E1820 /* VAFoundation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = VAFoundation.xcodeproj; path = ../VAFoundation/VAFoundation.xcodeproj; sourceTree = "<group>"; };
@@ -248,10 +240,6 @@
 				6034C55E19429DFB00D53431 /* VIScrollView.m */,
 				6034C56119429EE400D53431 /* VITextView.h */,
 				6034C56219429EE400D53431 /* VITextView.m */,
-				6034C55919429C2600D53431 /* VISyntaxColouring.h */,
-				6034C55A19429C2600D53431 /* VISyntaxColouring.m */,
-				6034C56A1942C3C300D53431 /* VISyntaxColouring+TextDelegate.h */,
-				6034C56B1942C3C300D53431 /* VISyntaxColouring+TextDelegate.m */,
 				92A1FF50194067730090870B /* VADevUIKitNotifications.h */,
 				92A1FF52194067FD0090870B /* VADevUIKitNotifications.m */,
 				6044808B1940A53A000E1820 /* VIDefaults.h */,
@@ -326,7 +314,6 @@
 			files = (
 				92A1FF49194060990090870B /* NSToolbarItem+Fraise.h in Headers */,
 				92A1FF51194067730090870B /* VADevUIKitNotifications.h in Headers */,
-				6034C56C1942C3C300D53431 /* VISyntaxColouring+TextDelegate.h in Headers */,
 				92A1FF4E194065BC0090870B /* VIGutterTextView.h in Headers */,
 				92A1FF47194060990090870B /* NSImage+Fraise.h in Headers */,
 				6034C5681942B82300D53431 /* NSTextView+VAExtensions.h in Headers */,
@@ -335,7 +322,6 @@
 				6045898B194209090004DF6B /* VIEmptyView.h in Headers */,
 				604589AC194229500004DF6B /* PSMTabBarCell.h in Headers */,
 				6034C55F19429DFB00D53431 /* VIScrollView.h in Headers */,
-				6034C55B19429C2600D53431 /* VISyntaxColouring.h in Headers */,
 				6034C56319429EE400D53431 /* VITextView.h in Headers */,
 				6034C55719429B7F00D53431 /* VILineNumbers.h in Headers */,
 				6034C5531942937300D53431 /* VILayoutManager.h in Headers */,
@@ -462,9 +448,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6034C56D1942C3C300D53431 /* VISyntaxColouring+TextDelegate.m in Sources */,
 				92A1FF48194060990090870B /* NSImage+Fraise.m in Sources */,
-				6034C55C19429C2600D53431 /* VISyntaxColouring.m in Sources */,
 				6034C5541942937300D53431 /* VILayoutManager.m in Sources */,
 				6034C5691942B82300D53431 /* NSTextView+VAExtensions.m in Sources */,
 				604589A6194222800004DF6B /* PSMTabBarControl.m in Sources */,

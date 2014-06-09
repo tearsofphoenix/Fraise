@@ -29,7 +29,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAFileMenuController.h"
 #import "FRAAdvancedFindController.h"
 #import "FRAProject+DocumentViewsController.h"
-
+#import "FRAProject+TableViewDelegate.h"
 
 #import "FRAPrintViewController.h"
 #import "FRAPrintTextView.h"
@@ -38,6 +38,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "VAProject.h"
 
 #import <VADevUIKit/VADevUIKit.h>
+#import <PXSourceList/PXSourceList.h>
 
 @implementation FRAProject
 
@@ -47,6 +48,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
     if (self)
     {
 		_project = [[VAProject alloc] init];
+        _documentsArrayController = [[NSArrayController alloc] init];
 		[[FRAProjectsController sharedDocumentController] setCurrentProject:self];
     }
     return self;
@@ -69,30 +71,30 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	
 	[[self windowControllers][0] setWindowFrameAutosaveName:@"FraiseProjectWindow"];
 	[[self window] setFrameAutosaveName:@"FraiseProjectWindow"];
-	//[[[self windowControllers] objectAtIndex:0] setShouldCascadeWindows:NO];
 	
 	[self setDefaultAppearanceAtStartup];
 	
 	[self setDefaultViews];
 	
-	[_documentsTableView setDelegate:self];
+	[_documentsTableView setDelegate: self];
 	[_mainSplitView setDelegate:self];
-	//[mainSplitView setAutosaveName:@"MainSplitView"];
-	[_contentSplitView setDelegate:self];	
+	[_contentSplitView setDelegate:self];
 	
 	[[FRAViewMenuController sharedInstance] performCollapse];
 	[self performSelector:@selector(performSetupAfterItIsCurrentProject) withObject:nil afterDelay:0.0];
 	
 	[[self window] setDelegate:self];
 	
-	[_documentsTableView setDataSource:[FRADragAndDropController sharedInstance]];
+	[_documentsTableView setDataSource: self];
+
 	[_documentsTableView registerForDraggedTypes:@[NSFilenamesPboardType, NSStringPboardType, @"FRAMovedDocumentType"]];
 	[_documentsTableView setDraggingSourceOperationMask:(NSDragOperationCopy | NSDragOperationMove) forLocal:NO];
 	
 	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"sortOrder" ascending:YES];
 	[_documentsArrayController setSortDescriptors:@[sortDescriptor]];
 
-	if ([[FRAApplicationDelegate sharedInstance] shouldCreateEmptyDocument] == YES) {
+	if ([[FRAApplicationDelegate sharedInstance] shouldCreateEmptyDocument] == YES)
+    {
 		id document = [self createNewDocumentWithContents:@""];
 		[self insertDefaultIconsInDocument:document];
 		[self selectionDidChange];
@@ -180,9 +182,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 		[self updateWindowTitleBarForDocument: [_documentsArrayController selectedObjects][0]];
 	} else {
 		[self updateWindowTitleBarForDocument:nil];
-	}
-	
-//	[self extraToolbarValidation];
+	}	
 }
 
 
@@ -310,30 +310,16 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (id)createNewDocumentWithPath:(NSString *)path andContents:(NSString *)textString
 {
-	VADocument *document = [[VADocument alloc] init];
+	VADocument *document = [[VADocument alloc] initWithPath: path
+                                                    content: textString
+                                               contentFrame: [[self firstContentView] bounds]];
 	
 	[[self documents] addObject:document];
 	
-	[FRAVarious setNameAndPathForDocument:document path:path];
-	[FRAInterface createFirstViewForDocument:document];
-
-	[[document firstTextView] setString:textString];
-	
-	FRASyntaxColouring *syntaxColouring = [[FRASyntaxColouring alloc] initWithDocument:document];
-	[document setSyntaxColouring: syntaxColouring];
-	
-    NSClipView *clipView = [[document firstTextScrollView] contentView];
-	[[document lineNumbers] updateLineNumbersForClipView: clipView
-                                                             checkWidth: NO];
-    [[document syntaxColouring] pageRecolourTextView: [clipView documentView]];
-
 	[document setSortOrder: [[_documentsArrayController arrangedObjects] count]];
 	[self documentsListHasUpdated];
 	
 	[_documentsArrayController setSelectedObjects:@[document]];
-	
-	[document setEncodingName: [NSString localizedNameOfStringEncoding: [document encoding]]];
-	
 	return document;
 }
 
@@ -573,7 +559,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 {	
 	[FRAVarious resetSortOrderNumbersForArrayController: _documentsArrayController];
 	
-	NSArray *array = [[self documents] allObjects];
+	NSArray *array = [self documents];
 	NSMutableDictionary *returnDictionary = [NSMutableDictionary dictionary];
 	NSMutableArray *documentsArray = [NSMutableArray array];
 	
@@ -582,22 +568,22 @@ Unless required by applicable law or agreed to in writing, software distributed 
 		if ([item path] != nil)
         {
 			NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
-			[dictionary setObject:[item path] forKey:@"path"];
-			[dictionary setObject: @([item encoding]) forKey:@"encoding"];
-			[dictionary setObject: @([item sortOrder]) forKey:@"sortOrder"];
+			dictionary[@"path"] = [item path];
+			dictionary[@"encoding"] = @([item encoding]);
+			dictionary[@"sortOrder"] = @([item sortOrder]);
 			NSRange selectedRange = [[item firstTextView] selectedRange];
 			if (selectedRange.location == NSNotFound)
             {
-				[dictionary setObject:NSStringFromRange(NSMakeRange(0, 0)) forKey:@"selectedRange"];
+				dictionary[@"selectedRange"] = NSStringFromRange(NSMakeRange(0, 0));
 			} else
             {
-				[dictionary setObject:NSStringFromRange(selectedRange) forKey:@"selectedRange"];
+				dictionary[@"selectedRange"] = NSStringFromRange(selectedRange);
 			}
 			[documentsArray addObject:dictionary];
 		}
 	}
 	
-	[returnDictionary setObject:documentsArray forKey:@"documentsArray"];
+	returnDictionary[@"documentsArray"] = documentsArray;
 	NSString *name;
 	
 	if ([self areThereAnyDocuments] == NO || [[_documentsArrayController selectedObjects][0] valueForKey:@"name"] == nil) {
@@ -605,13 +591,13 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	} else {
 		name = [[_documentsArrayController selectedObjects][0] valueForKey:@"name"];
 	}
-	[returnDictionary setObject:name forKey:@"selectedDocumentName"];
-	[returnDictionary setObject: NSStringFromRect([[self window] frame]) forKey:@"windowFrame"];
-	[returnDictionary setObject: [_project valueForKey:@"view"] forKey:@"view"];
-	[returnDictionary setObject: [_project valueForKey:@"viewSize"] forKey:@"viewSize"];
+	returnDictionary[@"selectedDocumentName"] = name;
+	returnDictionary[@"windowFrame"] = NSStringFromRect([[self window] frame]);
+	returnDictionary[@"view"] = [_project valueForKey:@"view"];
+	returnDictionary[@"viewSize"] = [_project valueForKey:@"viewSize"];
 	[self saveMainSplitViewFraction];
-	[returnDictionary setObject: [_project valueForKey:@"dividerPosition"]  forKey:@"dividerPosition"];
-	[returnDictionary setObject:@3 forKey:@"version"];
+	returnDictionary[@"dividerPosition"] = [_project valueForKey:@"dividerPosition"];
+	returnDictionary[@"version"] = @3;
 	
 	return returnDictionary;
 }
@@ -656,7 +642,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	
 	shouldWindowClose = YES;
 	
-	NSArray *array = [[self documents] allObjects];
+	NSArray *array = [self documents];
 	for (id item in array) {
 		if ([item isEdited] == YES) {	
 			[self checkIfDocumentIsUnsaved:item keepOpen:YES];
@@ -680,12 +666,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	[self updateTabBar];
 	[self buildSecondContentViewNavigationBarMenu];
 		
-	[self reloadData];
-	
-	if ([[FRAApplicationDelegate sharedInstance] hasFinishedLaunching] == YES)
-    { // Do this toolbar validation here so it doesn't need to be updated all the time as it would have been in validateToolbarItem
-//		[self extraToolbarValidation];
-	}
+	[self reloadData];	
 }
 
 
@@ -786,7 +767,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 }
 
 
-- (NSMutableSet *)documents
+- (NSMutableArray *)documents
 {
 	return [_project documents];
 }
@@ -824,7 +805,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	
 	[self autosave];
 	
-	NSArray *array = [[self documents] allObjects];
+	NSArray *array = [self documents];
 	for (id item in array) {
 		[self cleanUpDocument:item];
 	}

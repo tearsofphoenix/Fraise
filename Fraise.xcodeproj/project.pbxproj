@@ -145,6 +145,8 @@
 		8D15AC310486D014006FF6A4 /* FRAProject.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37F4ACFDCFA73011CA2CEA /* FRAProject.m */; settings = {ATTRIBUTES = (); }; };
 		8D15AC320486D014006FF6A4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37F4B0FDCFA73011CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */; };
+		9269AB3A194555350025DF9B /* PXSourceList.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9269AB34194555260025DF9B /* PXSourceList.framework */; };
+		9269AB3B1945553B0025DF9B /* PXSourceList.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9269AB34194555260025DF9B /* PXSourceList.framework */; };
 		92A1FEA8194055F40090870B /* VAFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A1FE9D194055270090870B /* VAFoundation.framework */; };
 		92A1FEA9194057770090870B /* VAFoundation.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 92A1FE9D194055270090870B /* VAFoundation.framework */; };
 		92A1FF4019405AF20090870B /* VADevUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A1FEE8194057C30090870B /* VADevUIKit.framework */; };
@@ -208,6 +210,34 @@
 			remoteGlobalIDString = 0392857C14CCCBF300D02672;
 			remoteInfo = SNRHUDKit;
 		};
+		9269AB2F194555260025DF9B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9269AB26194555260025DF9B /* PXSourceList.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8D1107320486CEB800E47090;
+			remoteInfo = CellBasedSourceList;
+		};
+		9269AB31194555260025DF9B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9269AB26194555260025DF9B /* PXSourceList.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D263123B186EF9F00036501C;
+			remoteInfo = ViewBasedSourceList;
+		};
+		9269AB33194555260025DF9B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9269AB26194555260025DF9B /* PXSourceList.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4CC5EA2A12DC81ED001F282E;
+			remoteInfo = PXSourceList;
+		};
+		9269AB38194555300025DF9B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9269AB26194555260025DF9B /* PXSourceList.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 4CC5EA2912DC81ED001F282E;
+			remoteInfo = PXSourceList;
+		};
 		92A1FE9C194055270090870B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 92A1FE97194055260090870B /* VAFoundation.xcodeproj */;
@@ -259,6 +289,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				9269AB3B1945553B0025DF9B /* PXSourceList.framework in CopyFiles */,
 				60E015771942F4CD002E066E /* SNRHUDKit.framework in CopyFiles */,
 				604589831941C0CE0004DF6B /* BWTK.framework in CopyFiles */,
 				92A1FF4119405B980090870B /* VADevUIKit.framework in CopyFiles */,
@@ -581,6 +612,7 @@
 		7FD53F120D91A8F30071054F /* Fraise-Manual.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "Fraise-Manual.pdf"; sourceTree = "<group>"; };
 		8D15AC360486D014006FF6A4 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D15AC370486D014006FF6A4 /* Fraise.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Fraise.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9269AB26194555260025DF9B /* PXSourceList.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = PXSourceList.xcodeproj; path = Library/PXSourceList/PXSourceList.xcodeproj; sourceTree = "<group>"; };
 		92A1FE97194055260090870B /* VAFoundation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = VAFoundation.xcodeproj; path = Library/VAFoundation/VAFoundation.xcodeproj; sourceTree = "<group>"; };
 		92A1FEE2194057C20090870B /* VADevUIKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = VADevUIKit.xcodeproj; path = Library/VADevUIKit/VADevUIKit.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -598,6 +630,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9269AB3A194555350025DF9B /* PXSourceList.framework in Frameworks */,
 				60E015761942F4C8002E066E /* SNRHUDKit.framework in Frameworks */,
 				604589821941C0C60004DF6B /* BWTK.framework in Frameworks */,
 				92A1FF4019405AF20090870B /* VADevUIKit.framework in Frameworks */,
@@ -657,6 +690,7 @@
 		2A37F4AAFDCFA73011CA2CEA /* Smultron */ = {
 			isa = PBXGroup;
 			children = (
+				9269AB26194555260025DF9B /* PXSourceList.xcodeproj */,
 				60E015671942F432002E066E /* SNRHUDKit.xcodeproj */,
 				604589741941C0B20004DF6B /* BWToolkit.xcodeproj */,
 				92A1FEE2194057C20090870B /* VADevUIKit.xcodeproj */,
@@ -1056,6 +1090,16 @@
 			name = Headers;
 			sourceTree = "<group>";
 		};
+		9269AB27194555260025DF9B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9269AB30194555260025DF9B /* PXSourceList.app */,
+				9269AB32194555260025DF9B /* ViewBasedSourceList.app */,
+				9269AB34194555260025DF9B /* PXSourceList.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		92A1FE98194055260090870B /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -1106,6 +1150,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				9269AB39194555300025DF9B /* PBXTargetDependency */,
 				60E015751942F4C3002E066E /* PBXTargetDependency */,
 				604589811941C0C00004DF6B /* PBXTargetDependency */,
 				92A1FF3F19405AEE0090870B /* PBXTargetDependency */,
@@ -1157,6 +1202,10 @@
 					ProjectRef = 604589741941C0B20004DF6B /* BWToolkit.xcodeproj */;
 				},
 				{
+					ProductGroup = 9269AB27194555260025DF9B /* Products */;
+					ProjectRef = 9269AB26194555260025DF9B /* PXSourceList.xcodeproj */;
+				},
+				{
 					ProductGroup = 60E015681942F432002E066E /* Products */;
 					ProjectRef = 60E015671942F432002E066E /* SNRHUDKit.xcodeproj */;
 				},
@@ -1205,6 +1254,27 @@
 			fileType = wrapper.application;
 			path = Catalog.app;
 			remoteRef = 60E015701942F432002E066E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		9269AB30194555260025DF9B /* PXSourceList.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = PXSourceList.app;
+			remoteRef = 9269AB2F194555260025DF9B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		9269AB32194555260025DF9B /* ViewBasedSourceList.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = ViewBasedSourceList.app;
+			remoteRef = 9269AB31194555260025DF9B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		9269AB34194555260025DF9B /* PXSourceList.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = PXSourceList.framework;
+			remoteRef = 9269AB33194555260025DF9B /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		92A1FE9D194055270090870B /* VAFoundation.framework */ = {
@@ -1408,6 +1478,11 @@
 			isa = PBXTargetDependency;
 			name = SNRHUDKit;
 			targetProxy = 60E015741942F4C3002E066E /* PBXContainerItemProxy */;
+		};
+		9269AB39194555300025DF9B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = PXSourceList;
+			targetProxy = 9269AB38194555300025DF9B /* PBXContainerItemProxy */;
 		};
 		92A1FEA7194055E90090870B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

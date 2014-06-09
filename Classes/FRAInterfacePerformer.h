@@ -46,7 +46,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 + (FRAInterfacePerformer *)sharedInstance;
 
 - (void)goToFunctionOnLine:(id)sender;
-- (void)createFirstViewForDocument:(id)document;
+
 - (void)insertDocumentIntoSecondContentView:(id)document;
 - (void)insertDocumentIntoThirdContentView:(id)document orderFront:(BOOL)orderFront;
 - (void)insertDocumentIntoFourthContentView:(id)document;

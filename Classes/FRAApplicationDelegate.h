@@ -16,16 +16,14 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 @interface FRAApplicationDelegate : NSObject <NSApplicationDelegate>
 {
-	BOOL shouldCreateEmptyDocument;
-	BOOL hasFinishedLaunching;
-	BOOL isTerminatingApplication;
-	
 	NSMutableArray *filesToOpenArray;
 	NSAppleEventDescriptor *appleEventDescriptor;
 
 }
 
-@property (readonly) BOOL shouldCreateEmptyDocument, hasFinishedLaunching, isTerminatingApplication;
+@property BOOL shouldCreateEmptyDocument;
+@property BOOL hasFinishedLaunching;
+@property BOOL isTerminatingApplication;
 
 @property (readonly) NSMutableArray *filesToOpenArray;
 @property  NSAppleEventDescriptor *appleEventDescriptor;

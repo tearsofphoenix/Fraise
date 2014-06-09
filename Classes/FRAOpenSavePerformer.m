@@ -299,8 +299,8 @@ VASingletonIMPDefault(FRAOpenSavePerformer)
 	[FRAVarious insertIconsInBackground:@[document, path]];
 	NSArray *icons = [NSImage iconsForPath: path
                           useQuickLookIcon: NO];
-    [document setIcon: [icons objectAtIndex:0]];
-	[document setUnsavedIcon: [icons objectAtIndex:1]];
+    [document setIcon: icons[0]];
+	[document setUnsavedIcon: icons[1]];
 	
 	NSDictionary *fileAttributes = [NSDictionary dictionaryWithDictionary:[[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil]];
 	[document setFileAttributes: fileAttributes];
@@ -507,8 +507,8 @@ VASingletonIMPDefault(FRAOpenSavePerformer)
 		
 		NSArray *icons = [NSImage iconsForPath: path
                               useQuickLookIcon: NO];
-		[document setIcon: [icons objectAtIndex:0]];
-		[document setUnsavedIcon: [icons objectAtIndex:1]];
+		[document setIcon: icons[0]];
+		[document setUnsavedIcon: icons[1]];
 	}
 	
 	[[NSWorkspace sharedWorkspace] noteFileSystemChanged:path];
@@ -534,7 +534,7 @@ VASingletonIMPDefault(FRAOpenSavePerformer)
 			NSMutableData *value = [NSMutableData dataWithLength:valueSize];
 			getxattr([path fileSystemRepresentation], key, [value mutableBytes], valueSize, 0, 0);
 			
-			[dictionary setObject:value forKey:@(key)];
+			dictionary[@(key)] = value;
 		}
 	}
 	@catch (NSException *exception) {

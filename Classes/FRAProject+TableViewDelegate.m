@@ -24,6 +24,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 #import "FRAProject+DocumentViewsController.h"
 
+#import <PXSourceList/PXSourceList.h>
+
 @implementation FRAProject (TableViewDelegate)
 
 
@@ -113,6 +115,148 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	[FRAInterface updateStatusBar];
 	
 	[self selectSameDocumentInTabBarAsInDocumentsList];
+}
+
+
+#pragma mark - PXSourceList Data Source
+
+- (NSUInteger)sourceList:(PXSourceList*)sourceList numberOfChildrenOfItem:(id)item
+{
+    if (!item)
+    {
+        return [[self documents] count];
+    }
+    
+    return [[item children] count];
+}
+
+- (id)sourceList:(PXSourceList*)aSourceList child:(NSUInteger)index ofItem:(id)item
+{
+    if (!item)
+    {
+        return [self documents][index];
+    }
+    
+    return [[item children] objectAtIndex:index];
+}
+
+- (BOOL)sourceList:(PXSourceList*)aSourceList isItemExpandable:(id)item
+{
+    return [item hasChildren];
+}
+
+#pragma mark - PXSourceList Delegate
+
+- (BOOL)sourceList:(PXSourceList *)aSourceList isGroupAlwaysExpanded:(id)group
+{
+    return YES;
+}
+
+- (NSView *)sourceList:(PXSourceList *)aSourceList viewForItem:(id)item
+{
+    PXSourceListTableCellView *cellView = nil;
+    if ([aSourceList levelForItem:item] == 0)
+        cellView = [aSourceList makeViewWithIdentifier:@"HeaderCell" owner:nil];
+    else
+        cellView = [aSourceList makeViewWithIdentifier:@"MainCell" owner:nil];
+    
+    PXSourceListItem *sourceListItem = item;
+    VADocument *document =  [sourceListItem representedObject];
+    
+    // Only allow us to edit the user created photo collection titles.
+    BOOL isTitleEditable = YES;
+
+    cellView.textField.editable = isTitleEditable;
+    cellView.textField.selectable = isTitleEditable;
+    
+    cellView.textField.stringValue = sourceListItem.title ? sourceListItem.title : [sourceListItem.representedObject title];
+    cellView.imageView.image = [item icon];
+    cellView.badgeView.hidden = YES;
+    cellView.badgeView.badgeValue = 0;
+    
+    return cellView;
+}
+
+- (void)sourceListSelectionDidChange:(NSNotification *)notification
+{
+    PXSourceListItem *selectedItem = [[self documentsTableView] itemAtRow: [[self documentsTableView] selectedRow]];
+
+    NSString *newLabel = @"";
+    if (selectedItem)
+    {
+        // We can use the underlying model object to do something based on the selection.
+//        VADocument *document = [selectedItem representedObject];
+        
+        newLabel = @"User-created collection selected.";
+    }
+}
+
+#pragma mark - Drag and Drop
+
+- (BOOL)sourceList:(PXSourceList*)aSourceList writeItems:(NSArray *)items toPasteboard:(NSPasteboard *)pboard
+{
+//    // For simplicity in this example, put the dragged indexes on the pasteboard. Since we use the representedObject
+//    // on SourceListItem, we cannot reliably archive it directly.
+//    NSMutableIndexSet *draggedChildIndexes = [NSMutableIndexSet indexSet];
+//    for (PXSourceListItem *item in items)
+//    {
+//        [draggedChildIndexes addIndex:[[parentItem children] indexOfObject:item]];
+//    }
+//    
+//    [pboard declareTypes:@[draggingType] owner:self];
+//    [pboard setData:[NSKeyedArchiver archivedDataWithRootObject:draggedChildIndexes] forType:draggingType];
+    
+    return YES;
+}
+
+- (NSDragOperation)sourceList:(PXSourceList*)sourceList validateDrop:(id < NSDraggingInfo >)info proposedItem:(id)item proposedChildIndex:(NSInteger)index
+{
+//    PXSourceListItem *albumsItem = self.albumsItem;
+//    
+//    // Only allow the items in the 'albums' group to be moved around. It can either be dropped on the group header, or inserted between other child items.
+//    // It can't be made the child of another item in this group, so the only valid case is when the proposedItem is the 'Albums' group item.
+//    if (![item isEqual:albumsItem])
+//        return NSDragOperationNone;
+    
+    return NSDragOperationMove;
+}
+
+- (BOOL)sourceList:(PXSourceList*)aSourceList acceptDrop:(id < NSDraggingInfo >)info item:(id)item childIndex:(NSInteger)index
+{
+//    NSPasteboard *draggingPasteboard = info.draggingPasteboard;
+//    NSMutableIndexSet *draggedChildIndexes = [NSKeyedUnarchiver unarchiveObjectWithData:[draggingPasteboard dataForType:draggingType]];
+//    
+//    PXSourceListItem *parentItem = self.albumsItem;
+//    NSMutableArray *draggedItems = [NSMutableArray array];
+//    [draggedChildIndexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
+//        [draggedItems addObject:[[parentItem children] objectAtIndex:idx]];
+//    }];
+//    
+//    // An index of -1 means it's been dropped on the group header itself, so insert at the end of the group.
+//    if (index == -1)
+//        index = parentItem.children.count;
+//    
+//    // Perform the Source List and model updates.
+//    [aSourceList beginUpdates];
+//    [aSourceList removeItemsAtIndexes:draggedChildIndexes
+//                             inParent:parentItem
+//                        withAnimation:NSTableViewAnimationEffectNone];
+//    [parentItem removeChildItems:draggedItems];
+//    
+//    // We have to calculate the new child index which we have to perform the drop at, since we've just removed items from the parent item which
+//    // may have come before the drop index.
+//    NSUInteger adjustedDropIndex = index - [draggedChildIndexes countOfIndexesInRange:NSMakeRange(0, index)];
+//    
+//    // The insertion indexes are now simply from the adjusted drop index.
+//    NSIndexSet *insertionIndexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(adjustedDropIndex, draggedChildIndexes.count)];
+//    [parentItem insertChildItems:draggedItems atIndexes:insertionIndexes];
+//    
+//    [aSourceList insertItemsAtIndexes:insertionIndexes
+//                             inParent:parentItem
+//                        withAnimation:NSTableViewAnimationEffectNone];
+//    [aSourceList endUpdates];
+    
+    return YES;
 }
 
 @end

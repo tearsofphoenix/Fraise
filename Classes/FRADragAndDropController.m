@@ -44,28 +44,40 @@ VASingletonIMPDefault(FRADragAndDropController)
     return self;
 }
 
+- (NSInteger)numberOfRowsInTableView: (NSTableView *)tableView
+{
+    return 1;
+}
+
+- (id)          tableView: (NSTableView *)tableView
+objectValueForTableColumn: (NSTableColumn *)tableColumn
+                      row: (NSInteger)row
+{
+    return @"";
+}
 
 - (BOOL)tableView:(NSTableView *)aTableView writeRowsWithIndexes:(NSIndexSet *)rowIndexes toPasteboard:(NSPasteboard*)pboard
 {
 	NSArray *typesArray;
-	if (aTableView == [FRACurrentProject documentsTableView]) {		
-		typesArray = @[movedDocumentType];
-		
-		NSMutableArray *uriArray = [NSMutableArray array];
-		NSArray *arrangedObjects = [[FRACurrentProject documentsArrayController] arrangedObjects];
-		NSInteger currentIndex = [rowIndexes firstIndex];
-		while (currentIndex != NSNotFound)
-        {
-			[uriArray addObject: [arrangedObjects[currentIndex] URI]];
-			currentIndex = [rowIndexes indexGreaterThanIndex:currentIndex];
-		}
-		
-		[pboard declareTypes:typesArray owner:self];
-		[pboard setData:[NSArchiver archivedDataWithRootObject:@[rowIndexes, uriArray]] forType:movedDocumentType];
-		
-		return YES;
-		
-	} else if (aTableView == [[FRASnippetsController sharedInstance] snippetsTableView]) {
+//	if (aTableView == [FRACurrentProject documentsTableView]) {		
+//		typesArray = @[movedDocumentType];
+//		
+//		NSMutableArray *uriArray = [NSMutableArray array];
+//		NSArray *arrangedObjects = [[FRACurrentProject documentsArrayController] arrangedObjects];
+//		NSInteger currentIndex = [rowIndexes firstIndex];
+//		while (currentIndex != NSNotFound)
+//        {
+//			[uriArray addObject: [arrangedObjects[currentIndex] URI]];
+//			currentIndex = [rowIndexes indexGreaterThanIndex:currentIndex];
+//		}
+//		
+//		[pboard declareTypes:typesArray owner:self];
+//		[pboard setData:[NSArchiver archivedDataWithRootObject:@[rowIndexes, uriArray]] forType:movedDocumentType];
+//		
+//		return YES;
+//		
+//	} else
+        if (aTableView == [[FRASnippetsController sharedInstance] snippetsTableView]) {
 		typesArray = @[NSStringPboardType, movedSnippetType];
 		
 		NSMutableString *string = [NSMutableString stringWithString:@""];
@@ -127,16 +139,18 @@ VASingletonIMPDefault(FRADragAndDropController)
 
 - (NSDragOperation)tableView:(NSTableView *)aTableView validateDrop:(id <NSDraggingInfo>)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)operation
 {
-	if (aTableView == [FRACurrentProject documentsTableView]) {
-		if ([info draggingSource] == [FRACurrentProject documentsTableView]) {
-			[aTableView setDropRow:row dropOperation:NSTableViewDropAbove];
-			return NSDragOperationMove;
-		} else {
-			[aTableView setDropRow:[[[FRACurrentProject documentsArrayController] arrangedObjects] count] dropOperation:NSTableViewDropAbove];
-			return NSDragOperationCopy;
-		}
-		
-	} else if (aTableView == [[FRASnippetsController sharedInstance] snippetsTableView]) {
+//	if (aTableView == [FRACurrentProject documentsTableView])
+//    {
+//		if ([info draggingSource] == [FRACurrentProject documentsTableView]) {
+//			[aTableView setDropRow:row dropOperation:NSTableViewDropAbove];
+//			return NSDragOperationMove;
+//		} else {
+//			[aTableView setDropRow:[[[FRACurrentProject documentsArrayController] arrangedObjects] count] dropOperation:NSTableViewDropAbove];
+//			return NSDragOperationCopy;
+//		}
+//		
+//	} else
+        if (aTableView == [[FRASnippetsController sharedInstance] snippetsTableView]) {
 		[aTableView setDropRow:row dropOperation:NSTableViewDropAbove];
 	 	return NSDragOperationCopy;
 		
@@ -180,38 +194,40 @@ VASingletonIMPDefault(FRADragAndDropController)
 	}
 
     // Documents list
-	if (aTableView == [FRACurrentProject documentsTableView]) {
-		if ([info draggingSource] == [FRACurrentProject documentsTableView]) {
-			if (![[[info draggingPasteboard] types] containsObject:movedDocumentType]) {
-				return NO;
-			}
-			NSArrayController *arrayController = [FRACurrentProject documentsArrayController];
-			
-			NSArray *pasteboardData = [NSUnarchiver unarchiveObjectWithData:[[info draggingPasteboard] dataForType:movedDocumentType]];
-			NSIndexSet *rowIndexes = pasteboardData[0];
-			NSArray *uriArray = pasteboardData[1];
-			[self moveObjects:uriArray inArrayController:arrayController fromIndexes:rowIndexes toIndex:row];
-			
-			[FRACurrentProject documentsListHasUpdated];
-			
-			return YES;
-			
-		}
-
-		NSArray *filesToImport = [[info draggingPasteboard] propertyListForType:NSFilenamesPboardType];
-		if (filesToImport != nil && aTableView == [FRACurrentProject documentsTableView]) {
-			[FRAOpenSave openAllTheseFiles:filesToImport];
-			return YES;
-		}
-		
-		NSString *textToImport = (NSString *)[[info draggingPasteboard] stringForType:NSStringPboardType];
-		if (textToImport != nil && aTableView == [FRACurrentProject documentsTableView]) {
-			[FRACurrentProject createNewDocumentWithContents:textToImport];
-			return YES;
-		}
-		
-	// Snippets
-	} else if (aTableView == [[FRASnippetsController sharedInstance] snippetsTableView]) {
+//	if (aTableView == [FRACurrentProject documentsTableView])
+//    {
+//		if ([info draggingSource] == [FRACurrentProject documentsTableView]) {
+//			if (![[[info draggingPasteboard] types] containsObject:movedDocumentType]) {
+//				return NO;
+//			}
+//			NSArrayController *arrayController = [FRACurrentProject documentsArrayController];
+//			
+//			NSArray *pasteboardData = [NSUnarchiver unarchiveObjectWithData:[[info draggingPasteboard] dataForType:movedDocumentType]];
+//			NSIndexSet *rowIndexes = pasteboardData[0];
+//			NSArray *uriArray = pasteboardData[1];
+//			[self moveObjects:uriArray inArrayController:arrayController fromIndexes:rowIndexes toIndex:row];
+//			
+//			[FRACurrentProject documentsListHasUpdated];
+//			
+//			return YES;
+//			
+//		}
+//
+//		NSArray *filesToImport = [[info draggingPasteboard] propertyListForType:NSFilenamesPboardType];
+//		if (filesToImport != nil && aTableView == [FRACurrentProject documentsTableView]) {
+//			[FRAOpenSave openAllTheseFiles:filesToImport];
+//			return YES;
+//		}
+//		
+//		NSString *textToImport = (NSString *)[[info draggingPasteboard] stringForType:NSStringPboardType];
+//		if (textToImport != nil && aTableView == [FRACurrentProject documentsTableView]) {
+//			[FRACurrentProject createNewDocumentWithContents:textToImport];
+//			return YES;
+//		}
+//		
+//	// Snippets
+//	} else
+        if (aTableView == [[FRASnippetsController sharedInstance] snippetsTableView]) {
 		
 		NSString *textToImport = (NSString *)[[info draggingPasteboard] stringForType:NSStringPboardType];
 		if (textToImport != nil) {
@@ -318,13 +334,16 @@ VASingletonIMPDefault(FRADragAndDropController)
 			return NO;
 		}
 		
-		NSArray *array = [[FRAProjectsController sharedDocumentController] documents];
+//		NSArray *array = [[FRAProjectsController sharedDocumentController] documents];
 		id destinationProject;
-		for (destinationProject in array) {
-			if (aTableView == [destinationProject documentsTableView]) {
-				break;
-			}
-		}
+		
+//        for (destinationProject in array)
+//        {
+//			if (aTableView == [destinationProject documentsTableView])
+//            {
+//				break;
+//			}
+//		}
 		
 		if (destinationProject == nil) {
 			return NO;
@@ -346,19 +365,23 @@ VASingletonIMPDefault(FRADragAndDropController)
 		
 	
 	// To a table view which is not active
-	} else if ([aTableView isKindOfClass:[FRATableView class]]) {
+	} else if ([aTableView isKindOfClass:[FRATableView class]])
+    {
 		
 		NSArray *filesToImport = [[info draggingPasteboard] propertyListForType:NSFilenamesPboardType];
 		
-		if (filesToImport != nil) {
+		if (filesToImport != nil)
+        {
 			[[aTableView window] makeMainWindow];
-			NSArray *array = [[FRAProjectsController sharedDocumentController] documents];
-			for (id item in array) {
-				if (aTableView == [item documentsTableView]) {
-					[[FRAProjectsController sharedDocumentController] setCurrentProject:item];
-					break;
-				}
-			}
+//			NSArray *array = [[FRAProjectsController sharedDocumentController] documents];
+//			for (id item in array)
+//            {
+//				if (aTableView == [item documentsTableView])
+//                {
+//					[[FRAProjectsController sharedDocumentController] setCurrentProject:item];
+//					break;
+//				}
+//			}
 			
 			if (FRACurrentProject != nil) {
 				[FRAOpenSave openAllTheseFiles:filesToImport];

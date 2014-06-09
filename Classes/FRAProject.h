@@ -22,6 +22,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 @class FRASplitViewDelegate;
 @class PSMTabBarControl;
 @class VAProject;
+@class PXSourceList;
 
 @interface FRAProject : NSDocument <NSTableViewDelegate,NSSplitViewDelegate,NSWindowDelegate,NSMenuDelegate>
 {    
@@ -43,8 +44,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 @property (strong) VADocument *secondDocument;
 
 @property (strong) VAProject *project;
-@property (strong) IBOutlet NSArrayController *documentsArrayController;
-@property (strong) IBOutlet NSTableView *documentsTableView;
+@property (strong) NSArrayController *documentsArrayController;
+@property (strong) IBOutlet PXSourceList *documentsTableView;
 @property (strong) IBOutlet NSView *firstContentView;
 @property (strong) IBOutlet NSView *secondContentView;
 @property (strong) IBOutlet NSTextField *statusBarTextField;
@@ -78,7 +79,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 - (void)cleanUpDocument:(id)document;
 
 
-- (NSMutableSet *)documents;
+- (NSMutableArray *)documents;
 
 - (NSDictionary *)dictionaryOfDocumentsInProject;
 

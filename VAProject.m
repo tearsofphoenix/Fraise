@@ -14,7 +14,7 @@
 {
     if ((self = [super init]))
     {
-        _documents = [[NSMutableSet alloc] init];
+        _documents = [[NSMutableArray alloc] init];
     }
     
     return self;

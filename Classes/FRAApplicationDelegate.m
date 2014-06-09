@@ -31,7 +31,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 @implementation FRAApplicationDelegate
 	
-@synthesize shouldCreateEmptyDocument, hasFinishedLaunching, isTerminatingApplication, filesToOpenArray, appleEventDescriptor;
+@synthesize filesToOpenArray, appleEventDescriptor;
 
 VASingletonIMPDefault(FRAApplicationDelegate)
 
@@ -39,9 +39,9 @@ VASingletonIMPDefault(FRAApplicationDelegate)
 {
     if ((self = [super init]))
     {
-		shouldCreateEmptyDocument = YES;
-		hasFinishedLaunching = NO;
-		isTerminatingApplication = NO;
+		_shouldCreateEmptyDocument = YES;
+		_hasFinishedLaunching = NO;
+		_isTerminatingApplication = NO;
 		appleEventDescriptor = nil;
     }
 	
@@ -86,7 +86,7 @@ VASingletonIMPDefault(FRAApplicationDelegate)
 		}
 	}
 
-	isTerminatingApplication = YES; // This is to avoid changing the document when quiting the application because otherwise it "flashes" when removing the documents
+	_isTerminatingApplication = YES; // This is to avoid changing the document when quiting the application because otherwise it "flashes" when removing the documents
 	
 	[[FRACommandsController sharedInstance] clearAnyTemporaryFiles];
 	
@@ -158,7 +158,7 @@ VASingletonIMPDefault(FRAApplicationDelegate)
 //    }
     
 	if (reply == NSTerminateCancel) {
-		isTerminatingApplication = NO;
+		_isTerminatingApplication = NO;
 	}
 	
     return reply;
@@ -169,15 +169,15 @@ VASingletonIMPDefault(FRAApplicationDelegate)
 {
 	filesToOpenArray = [[NSMutableArray alloc] initWithArray:filenames];
 	[filesToOpenArray sortUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
-	shouldCreateEmptyDocument = NO;
+	_shouldCreateEmptyDocument = NO;
 	
-	if (hasFinishedLaunching) {
+	if (_hasFinishedLaunching) {
 		[FRAOpenSave openAllTheseFiles:filesToOpenArray];
 		filesToOpenArray = nil;
 	} else if ([[[NSAppleEventManager sharedAppleEventManager] currentAppleEvent] paramDescriptorForKeyword:keyFileSender] != nil || [[[NSAppleEventManager sharedAppleEventManager] currentAppleEvent] paramDescriptorForKeyword:keyAEPropData] != nil) {
 		if (appleEventDescriptor == nil) {
 			appleEventDescriptor = [[NSAppleEventDescriptor alloc] initWithDescriptorType:[[[NSAppleEventManager sharedAppleEventManager] currentAppleEvent] descriptorType] data:[[[NSAppleEventManager sharedAppleEventManager] currentAppleEvent] data]];
-			shouldCreateEmptyDocument = NO;
+			_shouldCreateEmptyDocument = NO;
 		}
 	}
 }
@@ -207,7 +207,7 @@ VASingletonIMPDefault(FRAApplicationDelegate)
 	} else { // Open previously opened documents/projects only if Fraise wasn't opened by e.g. dragging a document onto the icon
 		
 		if ([[FRADefaults valueForKey:@"OpenAllDocumentsIHadOpen"] boolValue] == YES && [[FRADefaults valueForKey:@"OpenDocuments"] count] > 0) {
-			shouldCreateEmptyDocument = NO;
+			_shouldCreateEmptyDocument = NO;
 			NSArray *openDocument = [VADocument allDocuments];
 			if ([openDocument count] != 0) {
 				if (FRACurrentProject != nil) {
@@ -222,13 +222,13 @@ VASingletonIMPDefault(FRAApplicationDelegate)
 		}
 		
 		if ([[FRADefaults valueForKey:@"OpenAllProjectsIHadOpen"] boolValue] == YES && [[FRADefaults valueForKey:@"OpenProjects"] count] > 0) {
-			shouldCreateEmptyDocument = NO;
+			_shouldCreateEmptyDocument = NO;
 			[FRAOpenSave openAllTheseFiles:[FRADefaults valueForKey:@"OpenProjects"]];
 		}
 	}
 
-	hasFinishedLaunching = YES;
-	shouldCreateEmptyDocument = NO;
+	_hasFinishedLaunching = YES;
+	_shouldCreateEmptyDocument = NO;
 
 	// Do this here so that it won't slow down the perceived start-up time
 	[[FRAToolsMenuController sharedInstance] buildInsertSnippetMenu];
@@ -284,7 +284,7 @@ VASingletonIMPDefault(FRAApplicationDelegate)
 			menu = [[NSMenu alloc] initWithTitle:[project valueForKey:@"name"]];
 		}
 		
-		NSEnumerator *documentsEnumerator = [[[(FRAProject *)project documents] allObjects] reverseObjectEnumerator];
+		NSEnumerator *documentsEnumerator = [[(FRAProject *)project documents] reverseObjectEnumerator];
 		for (document in documentsEnumerator) {
 			menuItem = [[NSMenuItem alloc] initWithTitle:[document name] action:@selector(selectDocumentFromTheDock:) keyEquivalent:@""];
 			[menuItem setTarget:[FRAProjectsController sharedDocumentController]];

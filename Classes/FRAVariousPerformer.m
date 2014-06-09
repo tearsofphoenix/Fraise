@@ -575,18 +575,24 @@ VASingletonIMPDefault(FRAVariousPerformer)
                              path: (NSString *)path
 {
 	NSString *name;
-	if (path == nil) {
+	
+    if (path == nil)
+    {
 		NSString *untitledName = NSLocalizedString(@"untitled", @"Name for untitled document");
-		if (untitledNumber == 1) {
-			name = [NSString stringWithString:untitledName];
-		} else {
-			name = [NSString stringWithFormat:@"%@ %ld", untitledName, untitledNumber];
+		if (untitledNumber == 1)
+        {
+			name = [NSString stringWithString: untitledName];
+		} else
+        {
+			name = [NSString stringWithFormat: @"%@ %ld", untitledName, untitledNumber];
 		}
+        
 		untitledNumber++;
-		[document setNameWithPath: name];
 		
-	} else {
+        [document setNameWithPath: name];
 		
+	} else
+    {
 		name = [path lastPathComponent];
 		[document setNameWithPath: [NSString stringWithFormat:@"%@ - %@", name, [path stringByDeletingLastPathComponent]]];
 	}

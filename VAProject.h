@@ -17,6 +17,6 @@
 @property  NSInteger viewSize;
 @property NSRect windowFrame;
 
-@property (strong) NSMutableSet *documents;
+@property (strong) NSMutableArray *documents;
 
 @end

@@ -26,7 +26,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (void)keyDown:(NSEvent *)event
 {
-	if (self == [[FRACommandsController sharedInstance] commandCollectionsTableView] || self == [[FRACommandsController sharedInstance] commandsTableView] || self == [[FRASnippetsController sharedInstance] snippetCollectionsTableView] || self == [[FRASnippetsController sharedInstance] snippetsTableView] || self == [FRACurrentProject documentsTableView]) {
+	if (self == [[FRACommandsController sharedInstance] commandCollectionsTableView] || self == [[FRACommandsController sharedInstance] commandsTableView] || self == [[FRASnippetsController sharedInstance] snippetCollectionsTableView] || self == [[FRASnippetsController sharedInstance] snippetsTableView])
+    {
 	
 		unichar key = [[event charactersIgnoringModifiers] characterAtIndex:0];
 		NSInteger keyCode = [event keyCode];
@@ -96,10 +97,12 @@ Unless required by applicable law or agreed to in writing, software distributed 
 					[[FRAToolsMenuController sharedInstance] buildRunCommandMenu];
 				
 				// Document
-				} else if (self == [FRACurrentProject documentsTableView]) {
-					id document = [[FRACurrentProject documentsArrayController] selectedObjects][0];
-					[FRACurrentProject checkIfDocumentIsUnsaved:document keepOpen:NO];
 				}
+//                else if (self == [FRACurrentProject documentsTableView])
+//                {
+//					id document = [[FRACurrentProject documentsArrayController] selectedObjects][0];
+//					[FRACurrentProject checkIfDocumentIsUnsaved:document keepOpen:NO];
+//				}
 			}
 		}
 		

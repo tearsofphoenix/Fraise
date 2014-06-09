@@ -26,6 +26,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "VADocument.h"
 #import "VAProject.h"
 
+#import <PXSourceList/PXSourceList.h>
+
 @implementation FRAProject (DocumentViewsController)
 
 

@@ -14,9 +14,11 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 #import <Cocoa/Cocoa.h>
 #import "FRAProject.h"
+#import <PXSourceList/PXSourceList.h>
 
-@interface FRAProject (TableViewDelegate)
+@interface FRAProject (TableViewDelegate)<PXSourceListDataSource, PXSourceListDelegate>
 
 
 - (void)performInsertFirstDocument:(id)document;
+
 @end

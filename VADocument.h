@@ -49,7 +49,7 @@
 @property (assign) id project;
 
 @property (strong) id externalSender;
-@property (strong) id nameWithPath;
+@property (strong) NSString *nameWithPath;
 @property NSInteger gutterWidth;
 
 @property BOOL ignoreAnotherApplicationHasUpdatedDocument;
@@ -70,4 +70,9 @@
 
 + (NSArray *)allDocuments;
 
+- (id)initWithPath: (NSString *)path
+           content: (NSString *)content
+      contentFrame: (NSRect)frame;
+
 @end
+

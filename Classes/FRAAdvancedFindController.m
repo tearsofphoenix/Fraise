@@ -691,11 +691,9 @@ VASingletonIMPDefault(FRAAdvancedFindController)
 	[displayString appendString:[FRAText replaceAllNewLineCharactersWithSymbolInString:[completeString substringWithRange:linesRange]]];
 	
 	NSMutableDictionary *node = [NSMutableDictionary dictionary];
-	[node setObject: @YES
-            forKey:@"isLeaf"];
-	[node setObject: NSStringFromRange(foundRange) forKey:@"range"];
-	[node setObject: document
-            forKey: @"document"];
+	node[@"isLeaf"] = @YES;
+	node[@"range"] = NSStringFromRange(foundRange);
+	node[@"document"] = document;
 	NSInteger fontSize;
 	if ([[FRADefaults valueForKey:@"SizeOfDocumentsListTextPopUp"] integerValue] == 0) {
 		fontSize = 11;
