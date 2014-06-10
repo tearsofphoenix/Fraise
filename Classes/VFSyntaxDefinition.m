@@ -37,8 +37,7 @@ static NSMutableDictionary *gsMap = nil;
     {
         _name = name;
         
-        [gsMap setObject: self
-                  forKey: _name];
+        gsMap[_name] = self;
     }
 }
 

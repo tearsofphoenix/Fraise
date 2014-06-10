@@ -28,6 +28,7 @@
 #import "FRAApplicationDelegate.h"
 #import "FRAProject.h"
 #import "VFSyntaxDefinition.h"
+#import "VFEncoding.h"
 
 #import "FRASyntaxColouring.h"
 #import <VADevUIKit/VADevUIKit.h>
@@ -543,12 +544,16 @@ VASingletonIMPDefault(FRAPreferencesController)
 {
 	[FRABasic removeAllItemsFromMenu:[encodingsPopUp menu]];
 	
-	NSEnumerator *enumerator = [[FRABasic fetchAll:@"EncodingSortKeyName"] reverseObjectEnumerator];
+	NSEnumerator *enumerator = [[VFEncoding allEncodings] reverseObjectEnumerator];
 	NSMenuItem *menuItem;
-	for (id item in enumerator) {
-		if ([[item valueForKey:@"active"] boolValue] == YES) {
-			NSUInteger encoding = [[item valueForKey:@"encoding"] unsignedIntegerValue];
-			menuItem = [[NSMenuItem alloc] initWithTitle:[NSString localizedNameOfStringEncoding:encoding] action:nil keyEquivalent:@""];
+	for (VFEncoding *item in enumerator)
+    {
+		if ([item active])
+        {
+			NSUInteger encoding = [item encoding];
+			menuItem = [[NSMenuItem alloc] initWithTitle: [NSString localizedNameOfStringEncoding:encoding]
+                                                  action: nil
+                                           keyEquivalent: @""];
 			[menuItem setTag:encoding];
 			[menuItem setTarget:self];
 			[[encodingsPopUp menu] insertItem:menuItem atIndex:0];

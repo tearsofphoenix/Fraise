@@ -27,6 +27,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRATextView.h"
 #import "FRAProject.h"
 #import "VFSyntaxDefinition.h"
+#import "VFEncoding.h"
 
 #import <VADevUIKit/VADevUIKit.h>
 
@@ -59,27 +60,35 @@ static id sharedInstance = nil;
 	[FRABasic removeAllItemsFromMenu:textEncodingMenu];
 	[FRABasic removeAllItemsFromMenu:reloadTextWithEncodingMenu];
 	
-	NSArray *encodingsArray = [FRABasic fetchAll:@"EncodingSortKeyName"];
+	NSArray *encodingsArray = [VFEncoding allEncodings];
 	NSEnumerator *enumerator = [encodingsArray reverseObjectEnumerator];
-	id item;
+	VFEncoding *item;
 	NSMenuItem *menuItem;
-	for (item in enumerator) {
-		if ([[item valueForKey:@"active"] boolValue] == YES) {
-			NSUInteger encoding = [[item valueForKey:@"encoding"] unsignedIntegerValue];
-			menuItem = [[NSMenuItem alloc] initWithTitle:[NSString localizedNameOfStringEncoding:encoding] action:@selector(changeEncodingAction:) keyEquivalent:@""];
-			[menuItem setTag:encoding];
+	for (item in enumerator)
+    {
+		if ([item active])
+        {
+			NSUInteger encoding = [item encoding];
+			menuItem = [[NSMenuItem alloc] initWithTitle: [NSString localizedNameOfStringEncoding:encoding]
+                                                  action: @selector(changeEncodingAction:)
+                                           keyEquivalent: @""];
+			[menuItem setTag: encoding];
 			[menuItem setTarget:self];
 			[textEncodingMenu insertItem:menuItem atIndex:0];
 		}
 	}
 	
 	enumerator = [encodingsArray reverseObjectEnumerator];
-	for (item in enumerator) {
-		if ([[item valueForKey:@"active"] boolValue] == YES) {
-			NSUInteger encoding = [[item valueForKey:@"encoding"] unsignedIntegerValue];
-			menuItem = [[NSMenuItem alloc] initWithTitle:[NSString localizedNameOfStringEncoding:encoding] action:@selector(reloadText:) keyEquivalent:@""];
-			[menuItem setTag:encoding];
-			[menuItem setTarget:self];
+	for (item in enumerator)
+    {
+		if ([item active])
+        {
+			NSUInteger encoding = [item encoding];
+			menuItem = [[NSMenuItem alloc] initWithTitle: [NSString localizedNameOfStringEncoding:encoding]
+                                                  action: @selector(reloadText:)
+                                           keyEquivalent: @""];
+			[menuItem setTag: encoding];
+			[menuItem setTarget: self];
 			[reloadTextWithEncodingMenu insertItem:menuItem atIndex:0];
 		}
 	}

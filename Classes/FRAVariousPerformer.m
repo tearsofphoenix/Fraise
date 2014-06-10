@@ -29,6 +29,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRATextView.h"
 #import "FRACommandManagedObject.h"
 #import "VFSyntaxDefinition.h"
+#import "VFEncoding.h"
 
 #import <VAFoundation/VAFoundation.h>
 #import <VADevUIKit/VADevUIKit.h>
@@ -79,13 +80,14 @@ VASingletonIMPDefault(FRAVariousPerformer)
 	NSArray *activeEncodings = [FRADefaults valueForKey:@"ActiveEncodings"];
 	while ((encoding = *availableEncodings++))
     {
-		id item = [FRABasic createNewObjectForEntity:@"Encoding"];
+		VFEncoding *item = [[VFEncoding alloc] init];
 		NSNumber *encodingObject =  @(encoding);
-		if ([activeEncodings containsObject:encodingObject]) {
-			[item setValue:@YES forKey:@"active"];
+		if ([activeEncodings containsObject:encodingObject])
+        {
+			[item setActive: YES];
 		}
-		[item setValue:encodingObject forKey:@"encoding"];
-		[item setValue:[NSString localizedNameOfStringEncoding:encoding] forKey:@"name"];
+        
+		[item setEncoding: encoding];
 	}
 }
 
