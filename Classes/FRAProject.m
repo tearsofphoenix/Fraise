@@ -96,7 +96,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	if ([[FRAApplicationDelegate sharedInstance] shouldCreateEmptyDocument] == YES)
     {
 		id document = [self createNewDocumentWithContents:@""];
-		[self insertDefaultIconsInDocument:document];
+        [[self documents] addObject: document];
+        [_documentsTableView reloadData];
 		[self selectionDidChange];
 	}
 }
@@ -300,8 +301,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 {
 	VADocument *document = [self createNewDocumentWithPath:nil andContents:textString];
 	
-	[document setNewDocument: YES];
-	[FRAVarious setUnsavedAsLastSavedDateForDocument:document];
 	[FRAInterface updateStatusBar];
 	
 	return document;
@@ -618,7 +617,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	}
 	
 	NSString *urlString = (NSString*)CFBridgingRelease(CFURLCreateStringByReplacingPercentEscapesUsingEncoding(NULL, (CFStringRef)[[self fileURL] absoluteString], CFSTR(""), kCFStringEncodingUTF8));
-//	NSMakeCollectable(urlString);
+
 	return [[urlString lastPathComponent] stringByDeletingPathExtension];
 }
 
@@ -739,18 +738,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	[FRADefaults setValue:fraction forKey:@"DividerPosition"];
 }
 
-
-- (void)insertDefaultIconsInDocument:(id)document
-{
-	NSImage *defaultIcon = [FRAInterface defaultIcon];
-	[defaultIcon setScalesWhenResized:YES];
-		
-	NSImage *defaultUnsavedIcon = [FRAInterface defaultUnsavedIcon];
-	[defaultUnsavedIcon setScalesWhenResized:YES];
-	
-	[document setIcon: defaultIcon];
-	[document setUnsavedIcon: defaultUnsavedIcon];
-}
 
 
 #pragma mark -

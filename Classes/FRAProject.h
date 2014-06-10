@@ -102,9 +102,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 - (void)resizeMainSplitView;
 - (void)saveMainSplitViewFraction;
 
-- (void)insertDefaultIconsInDocument:(id)document;
-
-
 @end
 
 

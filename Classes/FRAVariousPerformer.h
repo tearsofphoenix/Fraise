@@ -54,7 +54,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (BOOL)isChangingSyntaxDefinitionsProgrammatically;
 
-- (void)setUnsavedAsLastSavedDateForDocument:(id)document;
 - (void)setLastSavedDateForDocument:(id)document date:(NSDate *)lastSavedDate;
 - (void)hasChangedDocument:(id)document;
 

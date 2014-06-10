@@ -68,6 +68,8 @@
 
 @property NSRange selectedRange;
 
+- (BOOL)hasChildren;
+
 + (NSArray *)allDocuments;
 
 - (id)initWithPath: (NSString *)path

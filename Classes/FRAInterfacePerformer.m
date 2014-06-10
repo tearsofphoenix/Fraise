@@ -50,10 +50,7 @@ VASingletonIMPDefault(FRAInterfacePerformer)
 		statusBarSelectionLengthString = NSLocalizedString(@"Selection", @"Selection, in the status bar");
 		statusBarPositionString = NSLocalizedString(@"Position", @"Position, in the status bar");
 		statusBarSyntaxDefinitionString = NSLocalizedString(@"Syntax", @"Syntax, in the status bar");
-		statusBarEncodingString = NSLocalizedString(@"Encoding", @"Encoding, in the status bar");
-		
-		defaultIcon = [[NSImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"FRADefaultIcon" ofType:@"png"]];
-		defaultUnsavedIcon = [[NSImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"FRADefaultUnsavedIcon" ofType:@"png"]];
+		statusBarEncodingString = NSLocalizedString(@"Encoding", @"Encoding, in the status bar");		
     }
     return self;
 }

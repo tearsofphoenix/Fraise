@@ -536,13 +536,6 @@ VASingletonIMPDefault(FRAVariousPerformer)
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-
-- (void)setUnsavedAsLastSavedDateForDocument: (VADocument *)document
-{
-	[document setLastSaved: UNSAVED_STRING];
-}
-
-
 - (void)setLastSavedDateForDocument:(id)document date:(NSDate *)lastSavedDate
 {
 	[document setLastSaved: [NSString dateStringForDate: (NSCalendarDate *)lastSavedDate

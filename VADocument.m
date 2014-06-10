@@ -17,11 +17,15 @@
 
 static NSMutableArray *gsAllDocuments = nil;
 static NSInteger untitledNumber = 0;
+static NSImage *defaultIcon = nil;
+static NSImage *defaultUnsavedIcon = nil;
 
 + (void)initialize
 {
     gsAllDocuments = [[NSMutableArray alloc] initWithCapacity: 16];
     untitledNumber = 1;
+    defaultIcon = [[NSImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"FRADefaultIcon" ofType:@"png"]];
+    defaultUnsavedIcon = [[NSImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"FRADefaultUnsavedIcon" ofType:@"png"]];
 }
 
 - (id)initWithPath: (NSString *)path
@@ -38,9 +42,12 @@ static NSInteger untitledNumber = 0;
         _showLineNumberGutter = [[defaults valueForKey:@"ShowLineNumberGutter"] boolValue];
         _gutterWidth = [[defaults valueForKey:@"GutterWidth"] integerValue];
         _encoding = [[defaults valueForKey:@"EncodingsPopUp"] integerValue];
-
+        _newDocument = YES;
+        _lastSaved = UNSAVED_STRING;
+        
         [self _initNameWithPath: path];
         [self _createFirstViewWithFrame: frame];
+        [self _insertDefaultIcons];
         
         [[self firstTextView] setString: content];
         
@@ -147,9 +154,23 @@ static NSInteger untitledNumber = 0;
 	[self setFirstGutterScrollView: gutterScrollView];
 }
 
+- (void)_insertDefaultIcons
+{
+	[defaultIcon setScalesWhenResized:YES];
+	[defaultUnsavedIcon setScalesWhenResized:YES];
+	
+	[self setIcon: defaultIcon];
+	[self setUnsavedIcon: defaultUnsavedIcon];
+}
+
 + (NSArray *)allDocuments
 {
     return gsAllDocuments;
+}
+
+- (BOOL)hasChildren
+{
+    return NO;
 }
 
 @end

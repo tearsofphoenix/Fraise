@@ -37,11 +37,12 @@ VASingletonIMPDefault(FRAFileMenuController)
 
 - (IBAction)newAction:(id)sender
 {
-	if (FRACurrentProject == nil) {
+	if (FRACurrentProject == nil)
+    {
 		[[FRAProjectsController sharedDocumentController] newDocument:nil];
 	}
 	id document = [FRACurrentProject createNewDocumentWithContents:@""];
-	[FRACurrentProject insertDefaultIconsInDocument:document];
+
 	[FRACurrentProject selectionDidChange];
 }
 
