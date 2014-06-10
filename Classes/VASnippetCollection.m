@@ -29,6 +29,7 @@ static NSMutableArray * gsAllDefinitions = nil;
     if ((self = [super init]))
     {
         _uuid = [NSString UUIDString];
+        _snippets = [[NSMutableArray alloc] init];
         
         [gsAllDefinitions addObject: self];
     }

@@ -228,7 +228,8 @@ VASingletonIMPDefault(FRADragAndDropController)
 		}		
 	
 	// Snippet collections
-	} else if (aTableView == [[FRASnippetsController sharedInstance] snippetCollectionsTableView]) {
+	} else if (aTableView == [[FRASnippetsController sharedInstance] snippetCollectionsTableView])
+    {
 		NSArray *filesToImport = [[info draggingPasteboard] propertyListForType:NSFilenamesPboardType];
 		
 		if (filesToImport != nil) {

@@ -158,7 +158,7 @@ VASingletonIMPDefault(FRAVariousPerformer)
 
 - (void)insertDefaultSnippets
 {
-	if ([[VASnippet all]  count] == 0 && [[FRADefaults valueForKey:@"HasInsertedDefaultSnippets"] boolValue] == NO)
+	if ([[VASnippet all]  count] == 0 )//&& [[FRADefaults valueForKey:@"HasInsertedDefaultSnippets"] boolValue] == NO)
     {
 		NSDictionary *defaultSnippets = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"DefaultSnippets" ofType:@"plist"]];
 		

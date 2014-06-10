@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="5056" systemVersion="13D65" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
-        <deployment version="1060" defaultVersion="1060" identifier="macosx"/>
+        <deployment version="1070" defaultVersion="1060" identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="5056"/>
     </dependencies>
     <objects>
@@ -41,14 +41,14 @@
                         <rect key="frame" x="-1" y="20" width="585" height="386"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView autohidesScrollers="YES" horizontalLineScroll="35" horizontalPageScroll="10" verticalLineScroll="35" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="136">
+                            <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="136">
                                 <rect key="frame" x="0.0" y="0.0" width="172" height="386"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <clipView key="contentView" id="2p4-v9-7Nw">
                                     <rect key="frame" x="1" y="17" width="170" height="368"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" selectionHighlightStyle="sourceList" columnReordering="NO" multipleSelection="NO" emptySelection="NO" autosaveName="SnippetCollections" rowHeight="33" headerView="205" id="137" customClass="FRATableView">
+                                        <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" selectionHighlightStyle="sourceList" columnReordering="NO" multipleSelection="NO" emptySelection="NO" autosaveName="SnippetCollections" rowSizeStyle="automatic" headerView="205" viewBased="YES" id="137" customClass="PXSourceList">
                                             <rect key="frame" x="0.0" y="0.0" width="170" height="368"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <size key="intercellSpacing" width="3" height="2"/>
@@ -68,6 +68,26 @@
                                                     </textFieldCell>
                                                     <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="name"/>
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                                    <prototypeCellViews>
+                                                        <tableCellView identifier="HeaderCell" id="oXa-ZO-gTl" customClass="PXSourceListTableCellView">
+                                                            <rect key="frame" x="1" y="1" width="167" height="17"/>
+                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                            <subviews>
+                                                                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="N7z-qZ-liN">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="167" height="17"/>
+                                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                                                    <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="JTA-lr-TMd">
+                                                                        <font key="font" metaFont="system"/>
+                                                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                                    </textFieldCell>
+                                                                </textField>
+                                                            </subviews>
+                                                            <connections>
+                                                                <outlet property="textField" destination="N7z-qZ-liN" id="2j8-lP-e68"/>
+                                                            </connections>
+                                                        </tableCellView>
+                                                    </prototypeCellViews>
                                                     <connections>
                                                         <binding destination="9" name="value" keyPath="arrangedObjects.name" id="160"/>
                                                     </connections>
@@ -177,17 +197,17 @@
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <size key="minSize" width="402" height="166"/>
-                                                    <size key="maxSize" width="402" height="10000000"/>
+                                                    <size key="maxSize" width="404" height="10000000"/>
                                                     <color key="insertionPointColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                     <size key="minSize" width="402" height="166"/>
-                                                    <size key="maxSize" width="402" height="10000000"/>
+                                                    <size key="maxSize" width="404" height="10000000"/>
                                                     <connections>
+                                                        <binding destination="10" name="value" keyPath="selection.text" id="167"/>
                                                         <binding destination="168" name="font" keyPath="values.TextFont" id="171">
                                                             <dictionary key="options">
                                                                 <string key="NSValueTransformerName">NSUnarchiveFromData</string>
                                                             </dictionary>
                                                         </binding>
-                                                        <binding destination="10" name="value" keyPath="selection.text" id="167"/>
                                                     </connections>
                                                 </textView>
                                             </subviews>
@@ -225,7 +245,6 @@
                     </textField>
                 </subviews>
             </view>
-            <metadata/>
             <connections>
                 <outlet property="delegate" destination="-2" id="158"/>
             </connections>

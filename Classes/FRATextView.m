@@ -609,7 +609,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 		[menuItem setTag:-123457];
 		NSMenu *subMenu = [[NSMenu alloc] init];
 		
-		NSMutableArray *array = [NSMutableArray arrayWithArray: [[collection snippets] allObjects]];
+		NSMutableArray *array = [NSMutableArray arrayWithArray: [collection snippets]];
 		[array sortUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
 		for (id snippet in array)
         {

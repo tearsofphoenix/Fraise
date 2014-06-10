@@ -29,14 +29,15 @@
 #import "VASnippetCollection.h"
 
 #import <VADevUIKit/VADevUIKit.h>
+#import <PXSourceList/PXSourceList.h>
 
-@interface FRASnippetsController ()<NSTableViewDataSource, NSTableViewDelegate>
+@interface FRASnippetsController ()<PXSourceListDataSource, PXSourceListDelegate>
 
 @end
 
 @implementation FRASnippetsController
 
-@synthesize snippetsTextView, snippetsWindow, snippetCollectionsArrayController, snippetCollectionsTableView, snippetsTableView, snippetsArrayController;
+@synthesize snippetsTextView, snippetsWindow, snippetCollectionsArrayController, snippetsTableView, snippetsArrayController;
 
 VASingletonIMPDefault(FRASnippetsController)
 
@@ -46,11 +47,11 @@ VASingletonIMPDefault(FRASnippetsController)
     {
 		[NSBundle loadNibNamed:@"FRASnippets.nib" owner:self];
 		
-		[snippetCollectionsTableView setDataSource:[FRADragAndDropController sharedInstance]];
+		[_snippetCollectionsTableView setDataSource: self];
 		[snippetsTableView setDataSource:[FRADragAndDropController sharedInstance]];
 		
-		[snippetCollectionsTableView registerForDraggedTypes:@[NSFilenamesPboardType, @"FRAMovedSnippetType"]];
-		[snippetCollectionsTableView setDraggingSourceOperationMask:(NSDragOperationCopy) forLocal:NO];
+		[_snippetCollectionsTableView registerForDraggedTypes: @[NSFilenamesPboardType, @"FRAMovedSnippetType"]];
+		[_snippetCollectionsTableView setDraggingSourceOperationMask:(NSDragOperationCopy) forLocal:NO];
 		
 		[snippetsTableView registerForDraggedTypes:@[NSStringPboardType]];
 		[snippetsTableView setDraggingSourceOperationMask:(NSDragOperationCopy) forLocal:NO];
@@ -62,7 +63,7 @@ VASingletonIMPDefault(FRASnippetsController)
 		FRADocumentsListCell *cell = [[FRADocumentsListCell alloc] init];
 		[cell setWraps:NO];
 		[cell setLineBreakMode:NSLineBreakByTruncatingMiddle];
-		[[snippetCollectionsTableView tableColumnWithIdentifier:@"collection"] setDataCell:cell];
+		[[_snippetCollectionsTableView tableColumnWithIdentifier:@"collection"] setDataCell:cell];
 		
 		NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"SnippetsToolbarIdentifier"];
 		[toolbar setShowsBaselineSeparator:YES];
@@ -87,8 +88,9 @@ VASingletonIMPDefault(FRASnippetsController)
 	
 	[snippetCollectionsArrayController setSelectedObjects:@[collection]];
 	
-	[snippetsWindow makeFirstResponder:snippetCollectionsTableView];
-	[snippetCollectionsTableView editColumn:0 row:[snippetCollectionsTableView selectedRow] withEvent:nil select:NO];
+	[snippetsWindow makeFirstResponder:_snippetCollectionsTableView];
+//	[_snippetCollectionsTableView editColumn:0 row:[_snippetCollectionsTableView selectedRow] withEvent:nil select:NO];
+    [_snippetCollectionsTableView reloadData];
 }
 
 
@@ -252,7 +254,7 @@ VASingletonIMPDefault(FRASnippetsController)
                                                   VASnippetCollection *collection = [snippetCollectionsArrayController selectedObjects][0];
                                                   
                                                   NSMutableArray *exportArray = [NSMutableArray array];
-                                                  NSArray *array = [[collection snippets] allObjects];
+                                                  NSArray *array = [collection snippets];
                                                   for (id item in array)
                                                   {
                                                       NSMutableDictionary *snippet = [NSMutableDictionary dictionary];
@@ -349,4 +351,140 @@ VASingletonIMPDefault(FRASnippetsController)
 	
 	return nil;
 }
+
+
+#pragma mark - PXSourceList Data Source
+
+- (NSUInteger)sourceList:(PXSourceList*)sourceList numberOfChildrenOfItem:(id)item
+{
+    if (!item)
+    {
+        return [[VASnippetCollection allSnippetCollections] count];
+    }
+
+    return 0;
+}
+
+- (id)sourceList: (PXSourceList*)aSourceList
+           child: (NSUInteger)index
+          ofItem: (id)item
+{
+    if (!item)
+    {
+        return [VASnippetCollection allSnippetCollections][index];
+    }
+    
+    return nil;
+}
+
+- (BOOL)sourceList:(PXSourceList*)aSourceList isItemExpandable:(id)item
+{
+    return NO;
+}
+
+#pragma mark - PXSourceList Delegate
+
+- (BOOL)sourceList:(PXSourceList *)aSourceList isGroupAlwaysExpanded:(id)group
+{
+    return YES;
+}
+
+- (NSView *)sourceList:(PXSourceList *)aSourceList viewForItem:(id)item
+{
+    PXSourceListTableCellView *cellView = nil;
+    if ([aSourceList levelForItem:item] == 0)
+        cellView = [aSourceList makeViewWithIdentifier:@"HeaderCell" owner:nil];
+    else
+        cellView = [aSourceList makeViewWithIdentifier:@"MainCell" owner:nil];
+    
+    VASnippetCollection *collection = item;
+    
+    // Only allow us to edit the user created photo collection titles.
+    BOOL isTitleEditable = YES;
+    cellView.textField.editable = isTitleEditable;
+    cellView.textField.selectable = isTitleEditable;
+    
+    cellView.textField.stringValue = [collection name];
+
+//    cellView.imageView.image = [item icon];
+    cellView.badgeView.hidden = YES;
+    
+    return cellView;
+}
+
+- (void)sourceListSelectionDidChange: (NSNotification *)notification
+{
+    VASnippetCollection *selectedItem = [_snippetCollectionsTableView itemAtRow: [_snippetCollectionsTableView selectedRow]];
+    
+    NSLog(@"%@", [selectedItem name]);
+}
+
+#pragma mark - Drag and Drop
+
+- (BOOL)sourceList:(PXSourceList*)aSourceList writeItems:(NSArray *)items toPasteboard:(NSPasteboard *)pboard
+{
+    
+    // For simplicity in this example, put the dragged indexes on the pasteboard. Since we use the representedObject
+    // on SourceListItem, we cannot reliably archive it directly.
+//    NSMutableIndexSet *draggedChildIndexes = [NSMutableIndexSet indexSet];
+//    for (PXSourceListItem *item in items)
+//        [draggedChildIndexes addIndex:[[parentItem children] indexOfObject:item]];
+//    
+//    [pboard declareTypes:@[draggingType] owner:self];
+//    [pboard setData:[NSKeyedArchiver archivedDataWithRootObject:draggedChildIndexes] forType:draggingType];
+    
+    return YES;
+}
+
+- (NSDragOperation)sourceList:(PXSourceList*)sourceList validateDrop:(id < NSDraggingInfo >)info proposedItem:(id)item proposedChildIndex:(NSInteger)index
+{
+//    PXSourceListItem *albumsItem = self.albumsItem;
+    
+    // Only allow the items in the 'albums' group to be moved around. It can either be dropped on the group header, or inserted between other child items.
+    // It can't be made the child of another item in this group, so the only valid case is when the proposedItem is the 'Albums' group item.
+//    if (![item isEqual:albumsItem])
+//        return NSDragOperationNone;
+    
+    return NSDragOperationMove;
+}
+
+- (BOOL)sourceList:(PXSourceList*)aSourceList acceptDrop:(id < NSDraggingInfo >)info item:(id)item childIndex:(NSInteger)index
+{
+    /*
+    NSPasteboard *draggingPasteboard = info.draggingPasteboard;
+    NSMutableIndexSet *draggedChildIndexes = [NSKeyedUnarchiver unarchiveObjectWithData:[draggingPasteboard dataForType:draggingType]];
+    
+    PXSourceListItem *parentItem = self.albumsItem;
+    NSMutableArray *draggedItems = [NSMutableArray array];
+    [draggedChildIndexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
+        [draggedItems addObject:[[parentItem children] objectAtIndex:idx]];
+    }];
+    
+    // An index of -1 means it's been dropped on the group header itself, so insert at the end of the group.
+    if (index == -1)
+        index = parentItem.children.count;
+    
+    // Perform the Source List and model updates.
+    [aSourceList beginUpdates];
+    [aSourceList removeItemsAtIndexes:draggedChildIndexes
+                             inParent:parentItem
+                        withAnimation:NSTableViewAnimationEffectNone];
+    [parentItem removeChildItems:draggedItems];
+    
+    // We have to calculate the new child index which we have to perform the drop at, since we've just removed items from the parent item which
+    // may have come before the drop index.
+    NSUInteger adjustedDropIndex = index - [draggedChildIndexes countOfIndexesInRange:NSMakeRange(0, index)];
+    
+    // The insertion indexes are now simply from the adjusted drop index.
+    NSIndexSet *insertionIndexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(adjustedDropIndex, draggedChildIndexes.count)];
+    [parentItem insertChildItems:draggedItems atIndexes:insertionIndexes];
+    
+    [aSourceList insertItemsAtIndexes:insertionIndexes
+                             inParent:parentItem
+                        withAnimation:NSTableViewAnimationEffectNone];
+    [aSourceList endUpdates];
+    */
+    return YES;
+}
+
 @end

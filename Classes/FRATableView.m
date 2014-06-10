@@ -26,7 +26,10 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (void)keyDown:(NSEvent *)event
 {
-	if (self == [[FRACommandsController sharedInstance] commandCollectionsTableView] || self == [[FRACommandsController sharedInstance] commandsTableView] || self == [[FRASnippetsController sharedInstance] snippetCollectionsTableView] || self == [[FRASnippetsController sharedInstance] snippetsTableView] || self == [FRACurrentProject documentsTableView]) {
+	if (self == [[FRACommandsController sharedInstance] commandCollectionsTableView]
+        || self == [[FRACommandsController sharedInstance] commandsTableView]
+        || self == [[FRASnippetsController sharedInstance] snippetsTableView]
+        || self == [FRACurrentProject documentsTableView]) {
 	
 		unichar key = [[event charactersIgnoringModifiers] characterAtIndex:0];
 		NSInteger keyCode = [event keyCode];

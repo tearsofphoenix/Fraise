@@ -145,7 +145,7 @@ VASingletonIMPDefault(FRAToolsMenuController)
                                                    keyEquivalent: @""];
 		NSMenu *subMenu = [[NSMenu alloc] init];
 		
-		NSMutableArray *array = [NSMutableArray arrayWithArray:[[collection snippets] allObjects]];
+		NSMutableArray *array = [NSMutableArray arrayWithArray: [collection snippets]];
 		[array sortUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
 		for (VASnippet *snippet in array)
         {

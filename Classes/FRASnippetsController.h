@@ -14,10 +14,11 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 #import <Cocoa/Cocoa.h>
 
+@class PXSourceList;
+
 @interface FRASnippetsController : NSObject <NSToolbarDelegate>
 { 
     IBOutlet NSArrayController *__unsafe_unretained snippetCollectionsArrayController;
-    IBOutlet NSTableView *__unsafe_unretained snippetCollectionsTableView;
     IBOutlet NSArrayController *__unsafe_unretained snippetsArrayController;
     IBOutlet NSTableView *__unsafe_unretained snippetsTableView;
     IBOutlet NSWindow *__unsafe_unretained snippetsWindow;
@@ -28,7 +29,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 @property (unsafe_unretained, readonly) IBOutlet NSTextView *snippetsTextView;
 @property (unsafe_unretained, readonly) IBOutlet NSWindow *snippetsWindow;
 @property (unsafe_unretained, readonly) IBOutlet NSArrayController *snippetCollectionsArrayController;
-@property (unsafe_unretained, readonly) IBOutlet NSTableView *snippetCollectionsTableView;
+@property (unsafe_unretained) IBOutlet PXSourceList *snippetCollectionsTableView;
 @property (unsafe_unretained, readonly) IBOutlet NSArrayController *snippetsArrayController;
 @property (unsafe_unretained, readonly) IBOutlet NSTableView *snippetsTableView;
 

@@ -32,6 +32,7 @@
 
 #import "FRASyntaxColouring.h"
 #import <VADevUIKit/VADevUIKit.h>
+#import <PXSourceList/PXSourceList.h>
 
 @implementation FRAPreferencesController
 

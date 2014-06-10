@@ -14,7 +14,7 @@
 @property NSInteger sortOrder;
 @property (strong) NSString *uuid;
 @property NSInteger version;
-@property (strong) NSMutableSet *snippets;
+@property (strong) NSMutableArray *snippets;
 
 + (NSArray *)allSnippetCollections;
 
