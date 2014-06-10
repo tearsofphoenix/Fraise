@@ -795,14 +795,7 @@
 				7F85E07A0B7C8AC900DAC8B2 /* FRASplitView.m */,
 				7F980AF80B73B6A2000A9140 /* FRATableView.m */,
 				7F980B000B73B6A2000A9140 /* FRATextView.m */,
-				9231DE911946A36800726887 /* VFSyntaxDefinition.h */,
-				9231DE921946A36800726887 /* VFSyntaxDefinition.m */,
-				9231DEA01946AEB300726887 /* VFEncoding.h */,
-				9231DEA11946AEB300726887 /* VFEncoding.m */,
-				9231DEA31946B47500726887 /* VASnippet.h */,
-				9231DEA41946B47500726887 /* VASnippet.m */,
-				9231DEA51946B47500726887 /* VASnippetCollection.h */,
-				9231DEA61946B47500726887 /* VASnippetCollection.m */,
+				9237A5DB194703E00049BF32 /* Model */,
 			);
 			name = Subclasses;
 			sourceTree = "<group>";
@@ -1014,6 +1007,21 @@
 				9231DEBB1946D7AB00726887 /* PXSourceList.framework */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		9237A5DB194703E00049BF32 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				9231DE911946A36800726887 /* VFSyntaxDefinition.h */,
+				9231DE921946A36800726887 /* VFSyntaxDefinition.m */,
+				9231DEA01946AEB300726887 /* VFEncoding.h */,
+				9231DEA11946AEB300726887 /* VFEncoding.m */,
+				9231DEA31946B47500726887 /* VASnippet.h */,
+				9231DEA41946B47500726887 /* VASnippet.m */,
+				9231DEA51946B47500726887 /* VASnippetCollection.h */,
+				9231DEA61946B47500726887 /* VASnippetCollection.m */,
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 		92A1FE98194055260090870B /* Products */ = {
