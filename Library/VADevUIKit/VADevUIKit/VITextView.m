@@ -620,7 +620,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	
 	[menu insertItem:[NSMenuItem separatorItem] atIndex:0];
 	
-//	NSEnumerator *collectionEnumerator = [[FRABasic fetchAll:@"SnippetCollectionSortKeyName"] reverseObjectEnumerator];
+//	NSEnumerator *collectionEnumerator = [[VASnippetCollection allSnippetCollections] reverseObjectEnumerator];
     NSArray *snippetCollections = nil;
     
 	for (id collection in snippetCollections)
@@ -633,7 +633,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 		[menuItem setTag:-123457];
 		NSMenu *subMenu = [[NSMenu alloc] init];
 		
-		NSMutableArray *array = [NSMutableArray arrayWithArray:[[collection mutableSetValueForKey:@"snippets"] allObjects]];
+		NSMutableArray *array = [NSMutableArray arrayWithArray:[[collection valueForKey: @"snippets"] allObjects]];
 		[array sortUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
 		for (id snippet in array)
         {

@@ -30,6 +30,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRACommandManagedObject.h"
 #import "VFSyntaxDefinition.h"
 #import "VFEncoding.h"
+#import "VASnippet.h"
+#import "VASnippetCollection.h"
 
 #import <VAFoundation/VAFoundation.h>
 #import <VADevUIKit/VADevUIKit.h>
@@ -123,7 +125,7 @@ VASingletonIMPDefault(FRAVariousPerformer)
 			continue;
 		}
         
-		VFSyntaxDefinition *syntaxDefinition = [[VFSyntaxDefinition alloc] init]; //[FRABasic createNewObjectForEntity:@"SyntaxDefinition"];
+		VFSyntaxDefinition *syntaxDefinition = [[VFSyntaxDefinition alloc] init];
 		NSString *name = item[@"name"];
 		[syntaxDefinition setName: name];
 		[syntaxDefinition setFile: item[@"file"]];
@@ -156,19 +158,25 @@ VASingletonIMPDefault(FRAVariousPerformer)
 
 - (void)insertDefaultSnippets
 {
-	if ([[FRABasic fetchAll:@"Snippet"] count] == 0 && [[FRADefaults valueForKey:@"HasInsertedDefaultSnippets"] boolValue] == NO) {
+	if ([[VASnippet all]  count] == 0 && [[FRADefaults valueForKey:@"HasInsertedDefaultSnippets"] boolValue] == NO)
+    {
 		NSDictionary *defaultSnippets = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"DefaultSnippets" ofType:@"plist"]];
 		
 		NSEnumerator *collectionEnumerator = [defaultSnippets keyEnumerator];
-		for (id collection in collectionEnumerator) {
-			id newCollection = [FRABasic createNewObjectForEntity:@"SnippetCollection"];
-			[newCollection setValue:collection forKey:@"name"];
-			NSArray *array = [defaultSnippets valueForKey:collection];
-			for (id snippet in array) {
-				id newSnippet = [FRABasic createNewObjectForEntity:@"Snippet"];
-				[newSnippet setValue:[snippet valueForKey:@"name"] forKey:@"name"];
-				[newSnippet setValue:[snippet valueForKey:@"text"] forKey:@"text"];
-				[[newCollection mutableSetValueForKey:@"snippets"] addObject:newSnippet];
+		for (NSString *collection in collectionEnumerator)
+        {
+			VASnippetCollection *newCollection = [[VASnippetCollection alloc] init];
+
+			[newCollection setName: collection];
+            
+			NSArray *array = [defaultSnippets objectForKey: collection];
+			for (NSDictionary *snippet in array)
+            {
+				VASnippet *newSnippet = [[VASnippet alloc] init];
+
+				[newSnippet setName: snippet[@"name"]];
+				[newSnippet setText: snippet[@"text"]];
+				[[newCollection snippets] addObject: newSnippet];
 			}
 		}
 		

@@ -74,30 +74,7 @@ VASingletonIMPDefault(FRABasicPerformer)
 	entityDescription = [NSEntityDescription entityForName:@"Project" inManagedObjectContext:managedObjectContext];
 	request = [[NSFetchRequest alloc] init];
 	[request setEntity:entityDescription];
-	[fetchRequests setValue:request forKey:@"Project"];
-	
-	entityDescription = [NSEntityDescription entityForName:@"Snippet" inManagedObjectContext:managedObjectContext];
-	request = [[NSFetchRequest alloc] init];
-	[request setEntity:entityDescription];
-	[fetchRequests setValue:request forKey:@"Snippet"];
-	
-	entityDescription = [NSEntityDescription entityForName:@"SnippetCollection" inManagedObjectContext:managedObjectContext];
-	request = [[NSFetchRequest alloc] init];
-	[request setEntity:entityDescription];
-	[fetchRequests setValue:request forKey:@"SnippetCollection"];
-	
-	entityDescription = [NSEntityDescription entityForName:@"SnippetCollection" inManagedObjectContext:managedObjectContext];
-	request = [[NSFetchRequest alloc] init];
-	[request setEntity:entityDescription];
-	sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
-	[request setSortDescriptors:@[sortDescriptor]];
-	[fetchRequests setValue:request forKey:@"SnippetCollectionSortKeyName"];
-	
-	entityDescription = [NSEntityDescription entityForName:@"SyntaxDefinition" inManagedObjectContext:managedObjectContext];
-	request = [[NSFetchRequest alloc] init];
-	[request setEntity:entityDescription];
-	[fetchRequests setValue:request forKey:@"SyntaxDefinition"];
-	
+	[fetchRequests setValue:request forKey:@"Project"];	
 }
 
 

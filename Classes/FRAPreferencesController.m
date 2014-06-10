@@ -535,7 +535,7 @@ VASingletonIMPDefault(FRAPreferencesController)
 {
 	[[NSUserDefaultsController sharedUserDefaultsController] revertToInitialValues:nil];
 	[FRADefaults setValue:nil forKey:@"ChangedSyntaxDefinitions"];
-	[FRABasic removeAllObjectsForEntity:@"SyntaxDefinition"];
+
 	[FRAVarious insertSyntaxDefinitions];
 }
 

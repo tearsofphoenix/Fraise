@@ -20,7 +20,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAToolsMenuController.h"
 #import "FRAProjectsController.h"
 #import "FRAProject.h"
-
+#import "VASnippetCollection.h"
 
 @implementation FRATableView
 
@@ -40,12 +40,14 @@ Unless required by applicable law or agreed to in writing, software distributed 
 				// Snippet collection
 				if (self == [[FRASnippetsController sharedInstance] snippetCollectionsTableView]) {
 					
-					id collection = [[[FRASnippetsController sharedInstance] snippetCollectionsArrayController] selectedObjects][0];
-					NSMutableSet *snippetsToDelete = [collection mutableSetValueForKey:@"snippets"];
-					if ([snippetsToDelete count] == 0) {
+					VASnippetCollection *collection = [[[FRASnippetsController sharedInstance] snippetCollectionsArrayController] selectedObjects][0];
+					NSMutableSet *snippetsToDelete = [collection snippets];
+					if ([snippetsToDelete count] == 0)
+                    {
 						[[FRASnippetsController sharedInstance] performDeleteCollection];
-					} else {
-						NSString *title = [NSString stringWithFormat:WILL_DELETE_ALL_ITEMS_IN_COLLECTION, [collection valueForKey:@"name"]];
+					} else
+                    {
+						NSString *title = [NSString stringWithFormat:WILL_DELETE_ALL_ITEMS_IN_COLLECTION, [collection name]];
 						NSBeginAlertSheet(title,
 										  DELETE_BUTTON,
 										  nil,

@@ -177,8 +177,6 @@ VASingletonIMPDefault(FRAApplicationDelegate)
 	}
 	
 	[FRABasic removeAllObjectsForEntity:@"Document"];
-	[FRABasic removeAllObjectsForEntity:@"Encoding"];
-	[FRABasic removeAllObjectsForEntity:@"SyntaxDefinition"];
 	[FRABasic removeAllObjectsForEntity:@"Project"];
 	
 	NSError *error;

@@ -25,6 +25,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAVariousPerformer.h"
 #import "FRAProject.h"
 #import "FRATextView.h"
+#import "VASnippetCollection.h"
 
 @implementation FRADragAndDropController
 
@@ -243,11 +244,12 @@ VASingletonIMPDefault(FRADragAndDropController)
 			NSArray *pasteboardData = [NSUnarchiver unarchiveObjectWithData:[[info draggingPasteboard] dataForType:movedSnippetType]];
 			NSArray *uriArray = pasteboardData[1];
 			
-			id collection = [[[FRASnippetsController sharedInstance] snippetCollectionsArrayController] arrangedObjects][row];
+			VASnippetCollection *collection = [[[FRASnippetsController sharedInstance] snippetCollectionsArrayController] arrangedObjects][row];
 			
 			id item;
-			for (item in uriArray) {
-				[[collection mutableSetValueForKey:@"snippets"] addObject:[FRABasic objectFromURI:item]];
+			for (item in uriArray)
+            {
+				[[collection snippets] addObject: [FRABasic objectFromURI:item]];
 			}
 			
 			[[[FRASnippetsController sharedInstance] snippetsArrayController] rearrangeObjects];
