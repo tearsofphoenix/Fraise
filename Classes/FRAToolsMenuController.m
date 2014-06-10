@@ -20,7 +20,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAProjectsController.h"
 #import "FRAPreviewController.h"
 #import "FRABasicPerformer.h"
-#import "FRATextPerformer.h"
+
 #import "FRAInterfacePerformer.h"
 #import "FRATextMenuController.h"
 #import "FRAInfoController.h"
@@ -37,7 +37,7 @@ VASingletonIMPDefault(FRAToolsMenuController)
 
 - (IBAction)createSnippetFromSelectionAction:(id)sender
 {	
-	id item = [[FRASnippetsController sharedInstance] performInsertNewSnippet];
+	VASnippet *item = [[FRASnippetsController sharedInstance] performInsertNewSnippet];
 	
 	NSRange selectedRange = [FRACurrentTextView selectedRange];
 	NSString *text = [[FRACurrentTextView string] substringWithRange:selectedRange];
@@ -47,10 +47,12 @@ VASingletonIMPDefault(FRAToolsMenuController)
 	}
 
 	[item setValue:text forKey:@"text"];
-	if ([text length] > SNIPPET_NAME_LENGTH) {
-		[item setValue:[FRAText replaceAllNewLineCharactersWithSymbolInString:[text substringWithRange:NSMakeRange(0, SNIPPET_NAME_LENGTH)]] forKey:@"name"];
-	} else {
-		[item setValue:text forKey:@"name"];
+	if ([text length] > SNIPPET_NAME_LENGTH)
+    {
+		[item setName: [[text substringWithRange:NSMakeRange(0, SNIPPET_NAME_LENGTH)] stringByReplaceAllNewLineCharactersWithSymbol]];
+	} else
+    {
+		[item setName: text];
 	}
 }
 
@@ -104,8 +106,11 @@ VASingletonIMPDefault(FRAToolsMenuController)
 	NSString *textPath = [FRABasic genererateTemporaryPath];
 	
 	id document = FRACurrentDocument;
-	NSData *data = [[NSData alloc] initWithData:[[FRAText convertLineEndings:text inDocument:document] dataUsingEncoding:[[document valueForKey:@"encoding"] integerValue] allowLossyConversion:YES]];
-	if ([data writeToFile:textPath atomically:YES]) {
+    
+	NSData *data = [[NSData alloc] initWithData:[[text stringByConvertToLineEndings: VADefaultsLineEndings] dataUsingEncoding: [[document valueForKey:@"encoding"] integerValue] allowLossyConversion:YES]];
+    
+	if ([data writeToFile:textPath atomically:YES])
+    {
 		NSString *result;
 		NSString *resultPath = [FRABasic genererateTemporaryPath];
 		system([[NSString stringWithFormat:@"%@ %@ > %@", [FRADefaults valueForKey:@"RunText"], textPath, resultPath] UTF8String]);
@@ -336,7 +341,8 @@ VASingletonIMPDefault(FRAToolsMenuController)
 			enableMenuItem = NO;
 		}
 	} else if (tag == 7) { // Export Snippets
-		if ([[[FRASnippetsController sharedInstance] snippetsWindow] isVisible] == NO || [[[[FRASnippetsController sharedInstance] snippetCollectionsArrayController] selectedObjects] count] < 1) {
+		if ([[[FRASnippetsController sharedInstance] snippetsWindow] isVisible] == NO || [[FRASnippetsController sharedInstance] selectedCollection] == nil)
+        {
 			enableMenuItem = NO;
 		}
 	} else if (tag == 8) { // Export Commands
@@ -424,7 +430,7 @@ VASingletonIMPDefault(FRAToolsMenuController)
 	NSString *textPath = [FRABasic genererateTemporaryPath];
 	
 	id document = FRACurrentDocument;
-	NSData *data = [[NSData alloc] initWithData:[[FRAText convertLineEndings:text inDocument:document] dataUsingEncoding:[[document valueForKey:@"encoding"] integerValue] allowLossyConversion:YES]];
+	NSData *data = [[NSData alloc] initWithData:[[text stringByConvertToLineEndings: VADefaultsLineEndings] dataUsingEncoding:[[document valueForKey:@"encoding"] integerValue] allowLossyConversion:YES]];
 	if ([data writeToFile:textPath atomically:YES]) {
 		NSString *result;
 		NSString *resultPath = [FRABasic genererateTemporaryPath];

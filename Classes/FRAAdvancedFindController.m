@@ -23,7 +23,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAInterfacePerformer.h"
 
 #import "FRAProject.h"
-#import "FRATextPerformer.h"
+
 #import "FRAOpenSavePerformer.h"
 #import "FRASyntaxColouring.h"
 
@@ -689,7 +689,7 @@ VASingletonIMPDefault(FRAAdvancedFindController)
 	NSString *lineNumberString = [NSString stringWithFormat:@"%ld\t", (long)lineNumber];
 	[displayString appendString:lineNumberString];
 	NSRange linesRange = [completeString lineRangeForRange:foundRange];
-	[displayString appendString:[FRAText replaceAllNewLineCharactersWithSymbolInString:[completeString substringWithRange:linesRange]]];
+	[displayString appendString: [[completeString substringWithRange: linesRange] stringByReplaceAllNewLineCharactersWithSymbol]];
 	
 	NSMutableDictionary *node = [NSMutableDictionary dictionary];
 	[node setValue:@YES forKey:@"isLeaf"];

@@ -18,7 +18,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAOpenSavePerformer.h"
 #import "FRAProjectsController.h"
 #import "FRATableView.h"
-#import "FRATextPerformer.h"
+
 #import "FRACommandsController.h"
 #import "FRABasicPerformer.h"
 #import "FRASnippetsController.h"
@@ -59,33 +59,6 @@ VASingletonIMPDefault(FRADragAndDropController)
 		
 		[pboard declareTypes:typesArray owner:self];
 		[pboard setData:[NSArchiver archivedDataWithRootObject:@[rowIndexes, uriArray]] forType:movedDocumentType];
-		
-		return YES;
-		
-	} else if (aTableView == [[FRASnippetsController sharedInstance] snippetsTableView]) {
-		typesArray = @[NSStringPboardType, movedSnippetType];
-		
-		NSMutableString *string = [NSMutableString stringWithString:@""];
-		NSMutableArray *uriArray = [NSMutableArray array];
-		NSArray *arrangedObjects = [[[FRASnippetsController sharedInstance] snippetsArrayController] arrangedObjects];
-		NSInteger currentIndex = [rowIndexes firstIndex];
-		while (currentIndex != NSNotFound) {
-			NSRange selectedRange = [FRACurrentTextView selectedRange];
-			NSString *selectedText = [[FRACurrentTextView string] substringWithRange:selectedRange];
-			if (selectedText == nil) {
-				selectedText = @"";
-			}
-			NSMutableString *insertString = [NSMutableString stringWithString:[arrangedObjects[currentIndex] valueForKey:@"text"]];
-			[insertString replaceOccurrencesOfString:@"%%s" withString:selectedText options:NSLiteralSearch range:NSMakeRange(0, [insertString length])];
-			
-			[string appendString:insertString];
-			[uriArray addObject:[FRABasic uriFromObject:arrangedObjects[currentIndex]]];
-			currentIndex = [rowIndexes indexGreaterThanIndex:currentIndex];
-		}
-		
-		[pboard declareTypes:typesArray owner:self];
-		[pboard setString:string forType:NSStringPboardType];
-		[pboard setData:[NSArchiver archivedDataWithRootObject:@[rowIndexes, uriArray]] forType:movedSnippetType];
 		
 		return YES;
 		
@@ -132,20 +105,6 @@ VASingletonIMPDefault(FRADragAndDropController)
 			[aTableView setDropRow:[[[FRACurrentProject documentsArrayController] arrangedObjects] count] dropOperation:NSTableViewDropAbove];
 			return NSDragOperationCopy;
 		}
-		
-	} else if (aTableView == [[FRASnippetsController sharedInstance] snippetsTableView]) {
-		[aTableView setDropRow:row dropOperation:NSTableViewDropAbove];
-	 	return NSDragOperationCopy;
-		
-	} else if (aTableView == [[FRASnippetsController sharedInstance] snippetCollectionsTableView]) {
-		if ([info draggingSource] == [[FRASnippetsController sharedInstance] snippetsTableView]) {
-			[aTableView setDropRow:row dropOperation:NSTableViewDropOn];
-			return NSDragOperationMove;
-		} else {
-			[aTableView setDropRow:[[[[FRASnippetsController sharedInstance] snippetCollectionsArrayController] arrangedObjects] count] dropOperation:NSTableViewDropAbove];
-			return NSDragOperationCopy;
-		}
-		return NSDragOperationCopy;
 		
 	} else if (aTableView == [[FRACommandsController sharedInstance] commandsTableView]) {
 		[aTableView setDropRow:row dropOperation:NSTableViewDropAbove];
@@ -206,59 +165,7 @@ VASingletonIMPDefault(FRADragAndDropController)
 			[FRACurrentProject createNewDocumentWithContents:textToImport];
 			return YES;
 		}
-		
-	// Snippets
-	} else if (aTableView == [[FRASnippetsController sharedInstance] snippetsTableView]) {
-		
-		NSString *textToImport = (NSString *)[[info draggingPasteboard] stringForType:NSStringPboardType];
-		if (textToImport != nil) {
 			
-			id item = [[FRASnippetsController sharedInstance] performInsertNewSnippet];
-			
-			[item setValue:textToImport forKey:@"text"];
-			if ([textToImport length] > SNIPPET_NAME_LENGTH) {
-				[item setValue:[FRAText replaceAllNewLineCharactersWithSymbolInString:[textToImport substringWithRange:NSMakeRange(0, SNIPPET_NAME_LENGTH)]] forKey:@"name"];
-			} else {
-				[item setValue:textToImport forKey:@"name"];
-			}
-			
-			return YES;
-		} else {
-			return NO;
-		}		
-	
-	// Snippet collections
-	} else if (aTableView == [[FRASnippetsController sharedInstance] snippetCollectionsTableView])
-    {
-		NSArray *filesToImport = [[info draggingPasteboard] propertyListForType:NSFilenamesPboardType];
-		
-		if (filesToImport != nil) {
-			[FRAOpenSave openAllTheseFiles:filesToImport];
-			return YES;
-		}
-		
-		if ([info draggingSource] == [[FRASnippetsController sharedInstance] snippetsTableView]) {
-			if (![[[info draggingPasteboard] types] containsObject:movedSnippetType]) {
-				return NO;
-			}
-			
-			NSArray *pasteboardData = [NSUnarchiver unarchiveObjectWithData:[[info draggingPasteboard] dataForType:movedSnippetType]];
-			NSArray *uriArray = pasteboardData[1];
-			
-			VASnippetCollection *collection = [[[FRASnippetsController sharedInstance] snippetCollectionsArrayController] arrangedObjects][row];
-			
-			id item;
-			for (item in uriArray)
-            {
-				[[collection snippets] addObject: [FRABasic objectFromURI:item]];
-			}
-			
-			[[[FRASnippetsController sharedInstance] snippetsArrayController] rearrangeObjects];
-
-			return YES;
-		}
-		
-		
 	// Commands
 	} else if (aTableView == [[FRACommandsController sharedInstance] commandsTableView]) {
 		
@@ -268,9 +175,12 @@ VASingletonIMPDefault(FRADragAndDropController)
 			id item = [[FRACommandsController sharedInstance] performInsertNewCommand];
 			
 			[item setValue:textToImport forKey:@"text"];
-			if ([textToImport length] > SNIPPET_NAME_LENGTH) {
-				[item setValue:[FRAText replaceAllNewLineCharactersWithSymbolInString:[textToImport substringWithRange:NSMakeRange(0, SNIPPET_NAME_LENGTH)]] forKey:@"name"];
-			} else {
+			if ([textToImport length] > SNIPPET_NAME_LENGTH)
+            {
+				[item setValue: [[textToImport substringWithRange:NSMakeRange(0, SNIPPET_NAME_LENGTH)] stringByReplaceAllNewLineCharactersWithSymbol]
+                        forKey: @"name"];
+			} else
+            {
 				[item setValue:textToImport forKey:@"name"];
 			}
 			

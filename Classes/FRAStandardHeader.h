@@ -47,13 +47,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import <sys/mount.h>
 #import <sys/xattr.h>
 
-enum {
-	FRADefaultsLineEndings = 0,
-	FRAUnixLineEndings = 1,
-	FRAMacLineEndings = 2,
-	FRADarkSideLineEndings = 3,
-	FRALeaveLineEndingsUnchanged = 6
-};
+
 typedef NSUInteger FRALineEndings;
 
 
@@ -143,7 +137,7 @@ typedef NSUInteger FRAErrors;
 #define FRABasic [FRABasicPerformer sharedInstance]
 #define FRAInterface [FRAInterfacePerformer sharedInstance]
 #define FRAOpenSave [FRAOpenSavePerformer sharedInstance]
-#define FRAText [FRATextPerformer sharedInstance]
+
 #define FRAVarious [FRAVariousPerformer sharedInstance]
 #define FRADocumentViews [FRADocumentViewsController sharedInstance]
 #define FRAManagedObjectContext [[FRAApplicationDelegate sharedInstance] managedObjectContext]

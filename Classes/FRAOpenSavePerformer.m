@@ -21,7 +21,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRASnippetsController.h"
 #import "FRABasicPerformer.h"
 #import "FRAAuthenticationController.h"
-#import "FRATextPerformer.h"
+
 #import "FRATextMenuController.h"
 #import "FRAApplicationDelegate.h"
 #import "FRAInterfacePerformer.h"
@@ -180,7 +180,8 @@ VASingletonIMPDefault(FRAOpenSavePerformer)
 			if (textData == nil) {
 				textData = [[NSData alloc] initWithContentsOfFile:path];
 			}
-			encoding = [FRAText guessEncodingFromData:textData];
+			encoding = [textData guessEncoding];
+            
 			if (encoding == 0 || encoding == -1) { // Something has gone wrong or it hasn't found an encoding, so use default
 				encoding = [[FRADefaults valueForKey:@"EncodingsPopUp"] integerValue];
 			}
@@ -331,11 +332,15 @@ VASingletonIMPDefault(FRAOpenSavePerformer)
 
 - (void)performSaveOfDocument:(id)document path:(NSString *)path fromSaveAs:(BOOL)fromSaveAs aCopy:(BOOL)aCopy
 {
-	NSString *string = [FRAText convertLineEndings:[[[document valueForKey:@"firstTextScrollView"] documentView] string] inDocument:document];
-	if ([[FRADefaults valueForKey:@"AlwaysEndFileWithLineFeed"] boolValue] == YES) {
+    NSString *text = [[[document valueForKey:@"firstTextScrollView"] documentView] string];
+	NSString *string = [text stringByConvertToLineEndings: VADefaultsLineEndings];
+
+	if ([[FRADefaults valueForKey:@"AlwaysEndFileWithLineFeed"] boolValue] == YES)
+    {
 		if ([string characterAtIndex:[string length] - 1] != '\n') {
 			[[[document valueForKey:@"firstTextScrollView"] documentView] replaceCharactersInRange:NSMakeRange([string length], 0) withString:@"\n"];
-			string = [FRAText convertLineEndings:[[[document valueForKey:@"firstTextScrollView"] documentView] string] inDocument:document];
+			string = [[[[document valueForKey:@"firstTextScrollView"] documentView] string] stringByConvertToLineEndings: VADefaultsLineEndings];
+
 			[[document valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth: NO];
 		}
 	}

@@ -28,8 +28,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 {
 	if (self == [[FRACommandsController sharedInstance] commandCollectionsTableView]
         || self == [[FRACommandsController sharedInstance] commandsTableView]
-        || self == [[FRASnippetsController sharedInstance] snippetsTableView]
-        || self == [FRACurrentProject documentsTableView]) {
+        || self == [FRACurrentProject documentsTableView])
+    {
 	
 		unichar key = [[event charactersIgnoringModifiers] characterAtIndex:0];
 		NSInteger keyCode = [event keyCode];
@@ -41,10 +41,11 @@ Unless required by applicable law or agreed to in writing, software distributed 
 			} else {
 				
 				// Snippet collection
-				if (self == [[FRASnippetsController sharedInstance] snippetCollectionsTableView]) {
+				if (self == [[FRASnippetsController sharedInstance] snippetCollectionsTableView])
+                {
 					
-					VASnippetCollection *collection = [[[FRASnippetsController sharedInstance] snippetCollectionsArrayController] selectedObjects][0];
-					NSMutableSet *snippetsToDelete = [collection snippets];
+					VASnippetCollection *collection = [[FRASnippetsController sharedInstance] selectedCollection];
+					NSMutableArray *snippetsToDelete = [collection snippets];
 					if ([snippetsToDelete count] == 0)
                     {
 						[[FRASnippetsController sharedInstance] performDeleteCollection];
@@ -65,10 +66,12 @@ Unless required by applicable law or agreed to in writing, software distributed 
 					[[FRAToolsMenuController sharedInstance] buildInsertSnippetMenu];
 					
 				// Snippet
-				} else if (self == [[FRASnippetsController sharedInstance] snippetsTableView]) {
+				} else if (self == [[FRASnippetsController sharedInstance] snippetsTableView])
+                {
 					
-					id snippet = [[[FRASnippetsController sharedInstance] snippetsArrayController] selectedObjects][0];
-					[[[FRASnippetsController sharedInstance] snippetsArrayController] removeObject:snippet];
+					VASnippet *snippet = [[FRASnippetsController sharedInstance] selectedSnippet];
+                    //TODO
+//					[[[FRASnippetsController sharedInstance] snippetsArrayController] removeObject:snippet];
 					[[FRAToolsMenuController sharedInstance] buildInsertSnippetMenu];
 					
 				// Command collection

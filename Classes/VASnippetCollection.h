@@ -17,5 +17,6 @@
 @property (strong) NSMutableArray *snippets;
 
 + (NSArray *)allSnippetCollections;
++ (void)removeCollection: (id)collection;
 
 @end

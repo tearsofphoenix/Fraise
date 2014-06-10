@@ -56,4 +56,9 @@ static NSMutableArray * gsAllDefinitions = nil;
 	}
 }
 
++ (void)removeCollection: (id)collection
+{
+    [gsAllDefinitions removeObject: collection];
+}
+
 @end

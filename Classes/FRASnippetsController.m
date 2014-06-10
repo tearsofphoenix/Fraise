@@ -37,7 +37,7 @@
 
 @implementation FRASnippetsController
 
-@synthesize snippetsTextView, snippetsWindow, snippetCollectionsArrayController, snippetsTableView, snippetsArrayController;
+@synthesize snippetsTextView, snippetsWindow;
 
 VASingletonIMPDefault(FRASnippetsController)
 
@@ -48,18 +48,17 @@ VASingletonIMPDefault(FRASnippetsController)
 		[NSBundle loadNibNamed:@"FRASnippets.nib" owner:self];
 		
 		[_snippetCollectionsTableView setDataSource: self];
-		[snippetsTableView setDataSource:[FRADragAndDropController sharedInstance]];
-		
+        [_snippetCollectionsTableView setDelegate: self];
+        
+		[_snippetsTableView setDataSource: self];
+		[_snippetsTableView setDelegate: self];
+        
 		[_snippetCollectionsTableView registerForDraggedTypes: @[NSFilenamesPboardType, @"FRAMovedSnippetType"]];
 		[_snippetCollectionsTableView setDraggingSourceOperationMask:(NSDragOperationCopy) forLocal:NO];
 		
-		[snippetsTableView registerForDraggedTypes:@[NSStringPboardType]];
-		[snippetsTableView setDraggingSourceOperationMask:(NSDragOperationCopy) forLocal:NO];
-		
-		NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
-		[snippetCollectionsArrayController setSortDescriptors:@[sortDescriptor]];
-		[snippetsArrayController setSortDescriptors:@[sortDescriptor]];
-		
+		[_snippetsTableView registerForDraggedTypes:@[NSStringPboardType]];
+		[_snippetsTableView setDraggingSourceOperationMask:(NSDragOperationCopy) forLocal:NO];
+        
 		FRADocumentsListCell *cell = [[FRADocumentsListCell alloc] init];
 		[cell setWraps:NO];
 		[cell setLineBreakMode:NSLineBreakByTruncatingMiddle];
@@ -83,13 +82,12 @@ VASingletonIMPDefault(FRASnippetsController)
 
 - (IBAction)newCollectionAction:(id)sender
 {
-	[snippetCollectionsArrayController commitEditing];
 	VASnippetCollection *collection = [[VASnippetCollection alloc] init];
 	
-	[snippetCollectionsArrayController setSelectedObjects:@[collection]];
+	_selectedCollection = collection;
 	
 	[snippetsWindow makeFirstResponder:_snippetCollectionsTableView];
-//	[_snippetCollectionsTableView editColumn:0 row:[_snippetCollectionsTableView selectedRow] withEvent:nil select:NO];
+    //	[_snippetCollectionsTableView editColumn:0 row:[_snippetCollectionsTableView selectedRow] withEvent:nil select:NO];
     [_snippetCollectionsTableView reloadData];
 }
 
@@ -98,34 +96,36 @@ VASingletonIMPDefault(FRASnippetsController)
 {
 	NSArray *snippetCollections = [VASnippetCollection allSnippetCollections];
 	if ([snippetCollections count] == 0)
-    {        
+    {
 		VASnippetCollection *collection = [[VASnippetCollection alloc] init];
-
+        
 		[collection setName: COLLECTION_STRING];
 	}
-	[snippetsArrayController commitEditing];
+    
 	[self performInsertNewSnippet];
 	
-	[snippetsWindow makeFirstResponder:snippetsTableView];
-	[snippetsTableView editColumn:0 row:[snippetsTableView selectedRow] withEvent:nil select:NO];
+	[snippetsWindow makeFirstResponder:_snippetsTableView];
+	[_snippetsTableView editColumn:0 row:[_snippetsTableView selectedRow] withEvent:nil select:NO];
 }
 
 
-- (id)performInsertNewSnippet
+- (VASnippet *)performInsertNewSnippet
 {
 	VASnippetCollection *collection;
 	NSArray *snippetCollections = [VASnippetCollection allSnippetCollections];
-
+    
 	if ([snippetCollections count] == 0)
     {
 		collection = [[VASnippetCollection alloc] init];
 		[collection setName: COLLECTION_STRING];
 	} else
     {
-		if (snippetsWindow != nil && [[snippetCollectionsArrayController selectedObjects] count] != 0)
+		if (snippetsWindow != nil && _selectedCollection)
         {
-			collection = [snippetCollectionsArrayController selectedObjects][0];
-		} else { // If no collection is selected choose the last one in the array
+			collection = _selectedCollection;
+            
+		} else
+        { // If no collection is selected choose the last one in the array
 			collection = [snippetCollections lastObject];
 		}
 	}
@@ -133,8 +133,8 @@ VASingletonIMPDefault(FRASnippetsController)
 	VASnippet *item = [[VASnippet alloc] init];
     
 	[[collection snippets] addObject: item];
-	[FRAManagedObjectContext processPendingChanges];
-	[snippetsArrayController setSelectedObjects:@[item]];
+    
+    _selectedSnippet = item;
 	
 	return item;
 }
@@ -143,10 +143,12 @@ VASingletonIMPDefault(FRASnippetsController)
 - (void)insertSnippet:(id)snippet
 {
 	FRATextView *textView = FRACurrentTextView;
-	if ([FRAMain isInFullScreenMode]) {
+	if ([FRAMain isInFullScreenMode])
+    {
 		textView = [[FRAInterface fullScreenDocument] valueForKey:@"thirdTextView"];
 	}
-	if (textView == nil) {
+	if (textView == nil)
+    {
 		NSBeep();
 		return;
 	}
@@ -170,9 +172,7 @@ VASingletonIMPDefault(FRASnippetsController)
 
 - (void)performDeleteCollection
 {
-	id collection = [snippetCollectionsArrayController selectedObjects][0];
-    
-	[FRAManagedObjectContext deleteObject:collection];
+    [VASnippetCollection removeCollection: _selectedCollection];
 	
 	[[FRAToolsMenuController sharedInstance] buildInsertSnippetMenu];
 }
@@ -213,13 +213,13 @@ VASingletonIMPDefault(FRASnippetsController)
     {
 		
 		VASnippetCollection *collection = [[VASnippetCollection alloc] init];
-
+        
 		[collection setName: snippets[0][@"collectionName"]];
 		
 		for (NSDictionary *item in snippets)
         {
 			VASnippet *snippet = [[VASnippet alloc] init];
-
+            
 			[snippet setName: [item objectForKey: @"name"]];
 			[snippet setText: [item objectForKey: @"text"]];
 			[snippet setCollectionName: [item objectForKey:@"collectionName"]];
@@ -230,11 +230,10 @@ VASingletonIMPDefault(FRASnippetsController)
             
 			[[collection snippets] addObject: snippet];
 		}
-		
-		[FRAManagedObjectContext processPendingChanges];
-		
-		[snippetCollectionsArrayController setSelectedObjects:@[collection]];
-	} else {
+        
+        _selectedCollection = collection;
+	} else
+    {
 		NSBeep();
 	}
 }
@@ -245,27 +244,28 @@ VASingletonIMPDefault(FRASnippetsController)
 	NSSavePanel *savePanel = [NSSavePanel savePanel];
     [savePanel setAllowedFileTypes: @[@"fraiseSnippets"]];
     [savePanel setDirectoryURL: [NSURL fileURLWithPath: [FRAInterface whichDirectoryForSave]]];
-    [savePanel setNameFieldStringValue: [[snippetCollectionsArrayController selectedObjects][0] valueForKey:@"name"]];
+    [savePanel setNameFieldStringValue: [_selectedCollection name]];
     [savePanel beginSheetModalForWindow: snippetsWindow
                       completionHandler: (^(NSInteger result)
                                           {
                                               if (result == NSOKButton)
                                               {
-                                                  VASnippetCollection *collection = [snippetCollectionsArrayController selectedObjects][0];
+                                                  VASnippetCollection *collection = _selectedCollection;
                                                   
                                                   NSMutableArray *exportArray = [NSMutableArray array];
                                                   NSArray *array = [collection snippets];
-                                                  for (id item in array)
+                                                  for (VASnippet *item in array)
                                                   {
                                                       NSMutableDictionary *snippet = [NSMutableDictionary dictionary];
-                                                      snippet[@"name"] = [item valueForKey:@"name"];
-                                                      snippet[@"text"] = [item valueForKey:@"text"];
+                                                      snippet[@"name"] = [item name];
+                                                      snippet[@"text"] = [item text];
                                                       snippet[@"collectionName"] = [collection name];
-                                                      snippet[@"shortcutDisplayString"] = [item valueForKey:@"shortcutDisplayString"];
-                                                      snippet[@"shortcutMenuItemKeyString"] = [item valueForKey:@"shortcutMenuItemKeyString"];
-                                                      snippet[@"shortcutModifier"] = [item valueForKey:@"shortcutModifier"];
-                                                      snippet[@"sortOrder"] = [item valueForKey:@"sortOrder"];
+                                                      snippet[@"shortcutDisplayString"] = [item shortcutDisplayString];
+                                                      snippet[@"shortcutMenuItemKeyString"] = [item shortcutMenuItemKeyString];
+                                                      snippet[@"shortcutModifier"] = @([item shortcutModifier]);
+                                                      snippet[@"sortOrder"] = @([item sortOrder]);
                                                       snippet[@"version"] = @3;
+                                                      
                                                       [exportArray addObject:snippet];
                                                   }
                                                   
@@ -280,22 +280,8 @@ VASingletonIMPDefault(FRASnippetsController)
 
 - (void)windowWillClose:(NSNotification *)aNotification
 {
-	[snippetCollectionsArrayController commitEditing];
-	[snippetsArrayController commitEditing];
+    
 }
-
-
-- (NSManagedObjectContext *)managedObjectContext
-{
-	return FRAManagedObjectContext;
-}
-
-
-- (NSTextView *)snippetsTextView
-{
-	return snippetsTextView;
-}
-
 
 - (void)tableView:(NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 {
@@ -355,59 +341,76 @@ VASingletonIMPDefault(FRASnippetsController)
 
 #pragma mark - PXSourceList Data Source
 
-- (NSUInteger)sourceList:(PXSourceList*)sourceList numberOfChildrenOfItem:(id)item
+- (NSUInteger)sourceList: (PXSourceList*)sourceList numberOfChildrenOfItem:(id)item
 {
-    if (!item)
+    if (sourceList == _snippetCollectionsTableView)
     {
-        return [[VASnippetCollection allSnippetCollections] count];
+        if (!item)
+        {
+            return [[VASnippetCollection allSnippetCollections] count];
+        }
+    }else
+    {
+        
     }
-
+    
     return 0;
 }
 
-- (id)sourceList: (PXSourceList*)aSourceList
+- (id)sourceList: (PXSourceList*)sourceList
            child: (NSUInteger)index
           ofItem: (id)item
 {
-    if (!item)
+    if (sourceList == _snippetCollectionsTableView)
     {
-        return [VASnippetCollection allSnippetCollections][index];
+        
+        if (!item)
+        {
+            return [VASnippetCollection allSnippetCollections][index];
+        }
+        
+    }else
+    {
+        
     }
-    
     return nil;
 }
 
-- (BOOL)sourceList:(PXSourceList*)aSourceList isItemExpandable:(id)item
+- (BOOL)sourceList:(PXSourceList*)sourceList isItemExpandable:(id)item
 {
     return NO;
 }
 
 #pragma mark - PXSourceList Delegate
 
-- (BOOL)sourceList:(PXSourceList *)aSourceList isGroupAlwaysExpanded:(id)group
+- (BOOL)sourceList:(PXSourceList *)sourceList isGroupAlwaysExpanded:(id)group
 {
     return YES;
 }
 
 - (NSView *)sourceList:(PXSourceList *)aSourceList viewForItem:(id)item
 {
-    PXSourceListTableCellView *cellView = nil;
-    if ([aSourceList levelForItem:item] == 0)
-        cellView = [aSourceList makeViewWithIdentifier:@"HeaderCell" owner:nil];
-    else
-        cellView = [aSourceList makeViewWithIdentifier:@"MainCell" owner:nil];
+    NSTableCellView *cellView = nil;
     
-    VASnippetCollection *collection = item;
-    
-    // Only allow us to edit the user created photo collection titles.
-    BOOL isTitleEditable = YES;
-    cellView.textField.editable = isTitleEditable;
-    cellView.textField.selectable = isTitleEditable;
-    
-    cellView.textField.stringValue = [collection name];
-
-//    cellView.imageView.image = [item icon];
-    cellView.badgeView.hidden = YES;
+    if (aSourceList == _snippetCollectionsTableView)
+    {
+        if ([aSourceList levelForItem:item] == 0)
+            cellView = [aSourceList makeViewWithIdentifier:@"HeaderCell" owner:nil];
+        else
+            cellView = [aSourceList makeViewWithIdentifier:@"MainCell" owner:nil];
+        
+        VASnippetCollection *collection = item;
+        
+        // Only allow us to edit the user created photo collection titles.
+        BOOL isTitleEditable = YES;
+        cellView.textField.editable = isTitleEditable;
+        cellView.textField.selectable = isTitleEditable;
+        
+        cellView.textField.stringValue = [collection name];
+    }else
+    {
+        
+    }
     
     return cellView;
 }
@@ -424,66 +427,120 @@ VASingletonIMPDefault(FRASnippetsController)
 - (BOOL)sourceList:(PXSourceList*)aSourceList writeItems:(NSArray *)items toPasteboard:(NSPasteboard *)pboard
 {
     
-    // For simplicity in this example, put the dragged indexes on the pasteboard. Since we use the representedObject
-    // on SourceListItem, we cannot reliably archive it directly.
-//    NSMutableIndexSet *draggedChildIndexes = [NSMutableIndexSet indexSet];
-//    for (PXSourceListItem *item in items)
-//        [draggedChildIndexes addIndex:[[parentItem children] indexOfObject:item]];
-//    
-//    [pboard declareTypes:@[draggingType] owner:self];
-//    [pboard setData:[NSKeyedArchiver archivedDataWithRootObject:draggedChildIndexes] forType:draggingType];
-    
-    return YES;
+    NSArray *typesArray;
+    if (aSourceList == _snippetsTableView)
+    {
+        typesArray = @[NSStringPboardType, @"FRAMovedSnippetType"];
+		
+        NSMutableString *string = [NSMutableString stringWithString: @""];
+        NSMutableArray *uuidArray = [NSMutableArray arrayWithCapacity: [items count]];
+        for (VASnippet *sLooper in items)
+        {
+            [uuidArray addObject: [sLooper uuid]];
+        }
+        
+		[pboard declareTypes: typesArray
+                       owner: self];
+		[pboard setString: string
+                  forType: NSStringPboardType];
+		[pboard setData: [NSArchiver archivedDataWithRootObject: uuidArray]
+                forType: @"FRAMovedSnippetType"];
+		
+		return YES;
+	}else
+    {
+		return NO;
+	}
 }
 
 - (NSDragOperation)sourceList:(PXSourceList*)sourceList validateDrop:(id < NSDraggingInfo >)info proposedItem:(id)item proposedChildIndex:(NSInteger)index
 {
-//    PXSourceListItem *albumsItem = self.albumsItem;
-    
-    // Only allow the items in the 'albums' group to be moved around. It can either be dropped on the group header, or inserted between other child items.
-    // It can't be made the child of another item in this group, so the only valid case is when the proposedItem is the 'Albums' group item.
-//    if (![item isEqual:albumsItem])
-//        return NSDragOperationNone;
-    
-    return NSDragOperationMove;
+    if (sourceList == _snippetsTableView)
+    {
+		[sourceList setDropRow: index
+                 dropOperation: NSTableViewDropAbove];
+	 	return NSDragOperationCopy;
+		
+	} else if (sourceList == _snippetCollectionsTableView)
+    {
+		if ([info draggingSource] == _snippetsTableView)
+        {
+			[sourceList setDropRow: index
+                     dropOperation: NSTableViewDropOn];
+			return NSDragOperationMove;
+		} else
+        {
+			[sourceList setDropRow: [[VASnippetCollection allSnippetCollections] count]
+                     dropOperation: NSTableViewDropAbove];
+			return NSDragOperationCopy;
+		}
+        
+		return NSDragOperationCopy;
+	}
+	
+	return NSDragOperationNone;
 }
 
 - (BOOL)sourceList:(PXSourceList*)aSourceList acceptDrop:(id < NSDraggingInfo >)info item:(id)item childIndex:(NSInteger)index
 {
-    /*
-    NSPasteboard *draggingPasteboard = info.draggingPasteboard;
-    NSMutableIndexSet *draggedChildIndexes = [NSKeyedUnarchiver unarchiveObjectWithData:[draggingPasteboard dataForType:draggingType]];
+	
+	// Snippets
+    if (aSourceList == _snippetsTableView)
+    {
+        
+        NSString *textToImport = (NSString *)[[info draggingPasteboard] stringForType:NSStringPboardType];
+        if (textToImport != nil) {
+            
+            VASnippet *item = [[FRASnippetsController sharedInstance] performInsertNewSnippet];
+            
+            [item setText: textToImport];
+            
+            if ([textToImport length] > SNIPPET_NAME_LENGTH)
+            {
+                [item setName: [[textToImport substringWithRange:NSMakeRange(0, SNIPPET_NAME_LENGTH)] stringByReplaceAllNewLineCharactersWithSymbol]];
+            } else
+            {
+                [item setName: textToImport];
+            }
+            
+            return YES;
+        } else {
+            return NO;
+        }
+        
+        // Snippet collections
+    } else if (aSourceList == _snippetCollectionsTableView)
+    {
+        NSArray *filesToImport = [[info draggingPasteboard] propertyListForType:NSFilenamesPboardType];
+        
+        if (filesToImport != nil)
+        {
+            [FRAOpenSave openAllTheseFiles:filesToImport];
+            return YES;
+        }
+        
+        if ([info draggingSource] == [[FRASnippetsController sharedInstance] snippetsTableView])
+        {
+//            if (![[[info draggingPasteboard] types] containsObject: movedSnippetType])
+//            {
+//                return NO;
+//            }
+//TODO
+//            NSArray *pasteboardData = [NSUnarchiver unarchiveObjectWithData: [[info draggingPasteboard] dataForType: movedSnippetType]];
+//            NSArray *uriArray = pasteboardData[1];
+//            
+//            VASnippetCollection *collection = item;
+//            
+//            id item;
+//            for (item in uriArray)
+//            {
+//                [[collection snippets] addObject: [FRABasic objectFromURI: item]];
+//            }
+            
+            return YES;
+        }
+    }
     
-    PXSourceListItem *parentItem = self.albumsItem;
-    NSMutableArray *draggedItems = [NSMutableArray array];
-    [draggedChildIndexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
-        [draggedItems addObject:[[parentItem children] objectAtIndex:idx]];
-    }];
-    
-    // An index of -1 means it's been dropped on the group header itself, so insert at the end of the group.
-    if (index == -1)
-        index = parentItem.children.count;
-    
-    // Perform the Source List and model updates.
-    [aSourceList beginUpdates];
-    [aSourceList removeItemsAtIndexes:draggedChildIndexes
-                             inParent:parentItem
-                        withAnimation:NSTableViewAnimationEffectNone];
-    [parentItem removeChildItems:draggedItems];
-    
-    // We have to calculate the new child index which we have to perform the drop at, since we've just removed items from the parent item which
-    // may have come before the drop index.
-    NSUInteger adjustedDropIndex = index - [draggedChildIndexes countOfIndexesInRange:NSMakeRange(0, index)];
-    
-    // The insertion indexes are now simply from the adjusted drop index.
-    NSIndexSet *insertionIndexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(adjustedDropIndex, draggedChildIndexes.count)];
-    [parentItem insertChildItems:draggedItems atIndexes:insertionIndexes];
-    
-    [aSourceList insertItemsAtIndexes:insertionIndexes
-                             inParent:parentItem
-                        withAnimation:NSTableViewAnimationEffectNone];
-    [aSourceList endUpdates];
-    */
     return YES;
 }
 

@@ -21,7 +21,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAVariousPerformer.h"
 #import "FRAExtraInterfaceController.h"
 #import "FRAFileMenuController.h"
-#import "FRATextPerformer.h"
+
 
 #import "FRASyntaxColouring.h"
 #import "FRATextView.h"
@@ -935,7 +935,7 @@ static id sharedInstance = nil;
 		NSRange selectedRange = NSMakeRange([item rangeValue].location - sumOfDeletedLineEndings, [item rangeValue].length);
 		NSString *stringToRemoveLineEndingsFrom = [text substringWithRange:selectedRange];
 		NSInteger originalLength = [stringToRemoveLineEndingsFrom length];
-		NSString *stringWithNoLineEndings = [FRAText removeAllLineEndingsInString:stringToRemoveLineEndingsFrom];
+		NSString *stringWithNoLineEndings = [stringToRemoveLineEndingsFrom stringByRemoveAllLineEndings];
 		NSInteger newLength = [stringWithNoLineEndings length];
 		if ([textView shouldChangeTextInRange:NSMakeRange(selectedRange.location, originalLength) replacementString:stringWithNoLineEndings]) { // Do it this way to mark it as an Undo
 			[textView replaceCharactersInRange:NSMakeRange(selectedRange.location, originalLength) withString:stringWithNoLineEndings];
@@ -973,7 +973,7 @@ static id sharedInstance = nil;
 	NSTextView *textView = FRACurrentTextView;
 	NSRange selectedRange = [textView selectedRange];
 	NSString *text = [textView string];
-	NSString *convertedString = [FRAText convertLineEndings:text inDocument:document];
+	NSString *convertedString = [text stringByConvertToLineEndings: VADefaultsLineEndings];
 	[textView replaceCharactersInRange:NSMakeRange(0, [text length]) withString:convertedString];
 	[textView setSelectedRange:selectedRange];
 	
@@ -995,7 +995,7 @@ static id sharedInstance = nil;
 	NSTextView *textView = FRACurrentTextView;
 	NSRange selectedRange = [textView selectedRange];
 	NSString *text = [textView string];
-	NSString *convertedString = [FRAText convertLineEndings:text inDocument:document];
+	NSString *convertedString = [text stringByConvertToLineEndings: VADefaultsLineEndings];
 	[textView replaceCharactersInRange:NSMakeRange(0, [text length]) withString:convertedString];
 	[textView setSelectedRange:selectedRange];
 	
@@ -1052,9 +1052,10 @@ static id sharedInstance = nil;
 	NSString *replacementString;
 	
 	// If the last symbol is a line ending one, we don't have to append one.
-	if ([lastSymbol isEqualToString:[FRAText darkSideLineEnding]] 
-		|| [lastSymbol isEqualToString:[FRAText unixLineEnding]] 
-		|| [lastSymbol isEqualToString:[FRAText macLineEnding]]) {
+	if ([lastSymbol isEqualToString:[NSString darkSideLineEnding]]
+		|| [lastSymbol isEqualToString:[NSString unixLineEnding]]
+		|| [lastSymbol isEqualToString:[NSString macLineEnding]])
+    {
 		replacementString = [NSString stringWithFormat:@"%@%@", lineString, lineString];
 	}
 	else {
@@ -1065,14 +1066,16 @@ static id sharedInstance = nil;
 			lineEndings = [[FRACurrentDocument valueForKey:@"lineEndings"] integerValue];
 		}
 		
-		if (lineEndings == FRADarkSideLineEndings) {
-			replacementString = [NSString stringWithFormat:@"%@%@%@", lineString, [FRAText darkSideLineEnding], lineString];
+		if (lineEndings == VADarkSideLineEndings)
+        {
+			replacementString = [NSString stringWithFormat:@"%@%@%@", lineString, [NSString darkSideLineEnding], lineString];
 		}
-		else if (lineEndings == FRAMacLineEndings) {
-			replacementString = [NSString stringWithFormat:@"%@%@%@", lineString, [FRAText macLineEnding], lineString];
+		else if (lineEndings == VAMacLineEndings)
+        {
+			replacementString = [NSString stringWithFormat:@"%@%@%@", lineString, [NSString macLineEnding], lineString];
 		}
 		else {
-			replacementString = [NSString stringWithFormat:@"%@%@%@", lineString, [FRAText unixLineEnding], lineString];
+			replacementString = [NSString stringWithFormat:@"%@%@%@", lineString, [NSString unixLineEnding], lineString];
 		}
 	}
 	

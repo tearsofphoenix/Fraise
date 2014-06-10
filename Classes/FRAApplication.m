@@ -135,32 +135,33 @@ Unless required by applicable law or agreed to in writing, software distributed 
 			}
 			
 			
-		} else if (eventWindow == [[FRASnippetsController sharedInstance] snippetsWindow]) {
-			NSInteger editedColumn = [[[FRASnippetsController sharedInstance] snippetsTableView] editedColumn];
-			if (editedColumn != -1) {
-				NSTableColumn *tableColumn = [[[FRASnippetsController sharedInstance] snippetsTableView] tableColumns][editedColumn];
-				
-				if ([[tableColumn identifier] isEqualToString:@"shortcut"]) {
-					key = [[event charactersIgnoringModifiers] characterAtIndex:0];
-					keyCode = [event keyCode];
-					if (keyCode == 0x35) { // If the user cancels by pressing Escape don't insert a hot key
-						[[[FRASnippetsController sharedInstance] snippetsWindow] makeFirstResponder:[[FRASnippetsController sharedInstance] snippetsTableView]];
-						return;
-					} else if (keyCode == 0x30) { // Tab
-						[[[FRASnippetsController sharedInstance] snippetsWindow] makeFirstResponder:[[FRASnippetsController sharedInstance] snippetsTextView]];
-						return;
-					} else {
-						flags = ([event modifierFlags] & 0x00FF);
-						if ((key == NSDeleteCharacter || keyCode == 0x75) && flags == 0) { // 0x75 is forward delete 
-							[[FRAShortcutsController sharedInstance] unregisterSelectedSnippetShortcut];
-						} else {
-							[[FRAShortcutsController sharedInstance] registerSnippetShortcutWithEvent:event];
-						}
-						[[[FRASnippetsController sharedInstance] snippetsWindow] makeFirstResponder:[[FRASnippetsController sharedInstance] snippetsTableView]];
-						return;
-					}
-				}
-			}
+		} else if (eventWindow == [[FRASnippetsController sharedInstance] snippetsWindow])
+        {
+//			NSInteger editedColumn = [[[FRASnippetsController sharedInstance] snippetsTableView] editedColumn];
+//			if (editedColumn != -1) {
+//				NSTableColumn *tableColumn = [[[FRASnippetsController sharedInstance] snippetsTableView] tableColumns][editedColumn];
+//				
+//				if ([[tableColumn identifier] isEqualToString:@"shortcut"]) {
+//					key = [[event charactersIgnoringModifiers] characterAtIndex:0];
+//					keyCode = [event keyCode];
+//					if (keyCode == 0x35) { // If the user cancels by pressing Escape don't insert a hot key
+//						[[[FRASnippetsController sharedInstance] snippetsWindow] makeFirstResponder:[[FRASnippetsController sharedInstance] snippetsTableView]];
+//						return;
+//					} else if (keyCode == 0x30) { // Tab
+//						[[[FRASnippetsController sharedInstance] snippetsWindow] makeFirstResponder:[[FRASnippetsController sharedInstance] snippetsTextView]];
+//						return;
+//					} else {
+//						flags = ([event modifierFlags] & 0x00FF);
+//						if ((key == NSDeleteCharacter || keyCode == 0x75) && flags == 0) { // 0x75 is forward delete 
+//							[[FRAShortcutsController sharedInstance] unregisterSelectedSnippetShortcut];
+//						} else {
+//							[[FRAShortcutsController sharedInstance] registerSnippetShortcutWithEvent:event];
+//						}
+//						[[[FRASnippetsController sharedInstance] snippetsWindow] makeFirstResponder:[[FRASnippetsController sharedInstance] snippetsTableView]];
+//						return;
+//					}
+//				}
+//			}
 			
 			
 		} else if (eventWindow == [[FRACommandsController sharedInstance] commandsWindow]) {

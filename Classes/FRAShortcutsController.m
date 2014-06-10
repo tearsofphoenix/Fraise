@@ -17,6 +17,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAShortcutsController.h"
 #import "FRACommandsController.h"
 #import "FRASnippetsController.H"
+#import "VASnippet.h"
 
 @implementation FRAShortcutsController
 
@@ -24,20 +25,20 @@ VASingletonIMPDefault(FRAShortcutsController)
 
 - (void)registerSnippetShortcutWithEvent:(NSEvent *)event
 {
-	id snippet = [[[FRASnippetsController sharedInstance] snippetsArrayController] selectedObjects][0];	
-	[snippet setValue:@([event modifierFlags]) forKey:@"shortcutModifier"];
-	[snippet setValue:[self menuItemKeyStringFromEvent:event] forKey:@"shortcutMenuItemKeyString"];
-	[snippet setValue:[[self plainModifierStringFromEvent:event] stringByAppendingString:[self plainKeyStringFromEvent:event]] forKey:@"shortcutDisplayString"];
+	VASnippet *snippet = [[FRASnippetsController sharedInstance] selectedSnippet];
+	[snippet setShortcutModifier: [event modifierFlags]];
+	[snippet setShortcutMenuItemKeyString: [self menuItemKeyStringFromEvent:event]];
+	[snippet setShortcutDisplayString: [[self plainModifierStringFromEvent:event] stringByAppendingString: [self plainKeyStringFromEvent:event]]];
 }
 
 
 - (void)unregisterSelectedSnippetShortcut
 {
-	id snippet = [[[FRASnippetsController sharedInstance] snippetsArrayController] selectedObjects][0];	
+	VASnippet *snippet = [[FRASnippetsController sharedInstance] selectedSnippet];
 	
-	[snippet setValue:nil forKey:@"shortcutModifier"];
-	[snippet setValue:nil forKey:@"shortcutMenuItemKeyString"];
-	[snippet setValue:nil forKey:@"shortcutDisplayString"];
+	[snippet setShortcutModifier: 0];
+	[snippet setShortcutMenuItemKeyString: nil];
+	[snippet setShortcutDisplayString: nil];
 }
 
 

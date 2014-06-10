@@ -15,12 +15,11 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import <Cocoa/Cocoa.h>
 
 @class PXSourceList;
+@class VASnippetCollection;
+@class VASnippet;
 
 @interface FRASnippetsController : NSObject <NSToolbarDelegate>
 { 
-    IBOutlet NSArrayController *__unsafe_unretained snippetCollectionsArrayController;
-    IBOutlet NSArrayController *__unsafe_unretained snippetsArrayController;
-    IBOutlet NSTableView *__unsafe_unretained snippetsTableView;
     IBOutlet NSWindow *__unsafe_unretained snippetsWindow;
 	IBOutlet NSTextView *__unsafe_unretained snippetsTextView;
 	IBOutlet NSView *snippetsFilterView;
@@ -28,10 +27,10 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 @property (unsafe_unretained, readonly) IBOutlet NSTextView *snippetsTextView;
 @property (unsafe_unretained, readonly) IBOutlet NSWindow *snippetsWindow;
-@property (unsafe_unretained, readonly) IBOutlet NSArrayController *snippetCollectionsArrayController;
 @property (unsafe_unretained) IBOutlet PXSourceList *snippetCollectionsTableView;
-@property (unsafe_unretained, readonly) IBOutlet NSArrayController *snippetsArrayController;
-@property (unsafe_unretained, readonly) IBOutlet NSTableView *snippetsTableView;
+@property (unsafe_unretained) IBOutlet PXSourceList *snippetsTableView;
+@property (strong) VASnippetCollection *selectedCollection;
+@property (strong) VASnippet *selectedSnippet;
 
 + (FRASnippetsController *)sharedInstance;
 
@@ -40,7 +39,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 - (IBAction)newCollectionAction:(id)sender;
 - (IBAction)newSnippetAction:(id)sender;
 
-- (id)performInsertNewSnippet;
+- (VASnippet *)performInsertNewSnippet;
 
 - (void)insertSnippet:(id)snippet;
 
@@ -49,8 +48,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 - (void)importSnippets;
 - (void)performSnippetsImportWithPath:(NSString *)path;
 - (void)exportSnippets;
-
-- (NSManagedObjectContext *)managedObjectContext;
 
 
 @end

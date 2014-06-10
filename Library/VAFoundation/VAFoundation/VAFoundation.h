@@ -8,6 +8,7 @@
 
 #import <VAFoundation/VFBase.h>
 #import <VAFoundation/NSString+VAExtensions.h>
+#import <VAFoundation/NSData+VAExtensions.h>
 #import <VAFoundation/ICUMatcher.h>
 #import <VAFoundation/ICUPattern.h>
 #import <VAFoundation/NSStringICUAdditions.h>

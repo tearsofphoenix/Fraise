@@ -7,9 +7,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="FRASnippetsController">
             <connections>
-                <outlet property="snippetCollectionsArrayController" destination="9" id="152"/>
                 <outlet property="snippetCollectionsTableView" destination="137" id="155"/>
-                <outlet property="snippetsArrayController" destination="10" id="153"/>
                 <outlet property="snippetsFilterView" destination="180" id="185"/>
                 <outlet property="snippetsTableView" destination="140" id="156"/>
                 <outlet property="snippetsTextView" destination="135" id="176"/>
@@ -69,7 +67,7 @@
                                                     <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="name"/>
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                     <prototypeCellViews>
-                                                        <tableCellView identifier="HeaderCell" id="oXa-ZO-gTl" customClass="PXSourceListTableCellView">
+                                                        <tableCellView identifier="HeaderCell" id="oXa-ZO-gTl">
                                                             <rect key="frame" x="1" y="1" width="167" height="17"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
@@ -88,9 +86,6 @@
                                                             </connections>
                                                         </tableCellView>
                                                     </prototypeCellViews>
-                                                    <connections>
-                                                        <binding destination="9" name="value" keyPath="arrangedObjects.name" id="160"/>
-                                                    </connections>
                                                 </tableColumn>
                                             </tableColumns>
                                             <connections>
@@ -124,7 +119,7 @@
                                             <rect key="frame" x="1" y="17" width="402" height="191"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
-                                                <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" columnSelection="YES" emptySelection="NO" autosaveName="SelectedSnippets" headerView="210" id="140" customClass="FRATableView">
+                                                <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" columnSelection="YES" emptySelection="NO" autosaveName="SelectedSnippets" rowSizeStyle="automatic" headerView="210" viewBased="YES" id="140" customClass="PXSourceList">
                                                     <rect key="frame" x="0.0" y="0.0" width="402" height="191"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <size key="intercellSpacing" width="3" height="2"/>
@@ -144,9 +139,26 @@
                                                             </textFieldCell>
                                                             <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="name"/>
                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                                            <connections>
-                                                                <binding destination="10" name="value" keyPath="arrangedObjects.name" id="162"/>
-                                                            </connections>
+                                                            <prototypeCellViews>
+                                                                <tableCellView identifier="NameCell" id="s9a-Xw-9WA">
+                                                                    <rect key="frame" x="1" y="1" width="225" height="17"/>
+                                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                                    <subviews>
+                                                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="zyd-pO-axH">
+                                                                            <rect key="frame" x="0.0" y="0.0" width="225" height="17"/>
+                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                                                            <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="Je7-ce-MvZ">
+                                                                                <font key="font" metaFont="system"/>
+                                                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                                            </textFieldCell>
+                                                                        </textField>
+                                                                    </subviews>
+                                                                    <connections>
+                                                                        <outlet property="textField" destination="zyd-pO-axH" id="i2V-bY-pMT"/>
+                                                                    </connections>
+                                                                </tableCellView>
+                                                            </prototypeCellViews>
                                                         </tableColumn>
                                                         <tableColumn identifier="shortcut" width="170.69820000000001" minWidth="52.698239999999998" maxWidth="1000" id="142">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Shortcut">
@@ -160,9 +172,26 @@
                                                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                             </textFieldCell>
                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                                            <connections>
-                                                                <binding destination="10" name="value" keyPath="arrangedObjects.shortcutDisplayString" id="164"/>
-                                                            </connections>
+                                                            <prototypeCellViews>
+                                                                <tableCellView identifier="ShortcutCell" id="K94-NH-LDU">
+                                                                    <rect key="frame" x="229" y="1" width="171" height="17"/>
+                                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                                    <subviews>
+                                                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="Fq7-z7-f7C">
+                                                                            <rect key="frame" x="0.0" y="0.0" width="171" height="17"/>
+                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                                                            <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="vBP-ex-dV6">
+                                                                                <font key="font" metaFont="system"/>
+                                                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                                            </textFieldCell>
+                                                                        </textField>
+                                                                    </subviews>
+                                                                    <connections>
+                                                                        <outlet property="textField" destination="Fq7-z7-f7C" id="y6B-Vf-vUD"/>
+                                                                    </connections>
+                                                                </tableCellView>
+                                                            </prototypeCellViews>
                                                         </tableColumn>
                                                     </tableColumns>
                                                     <connections>
@@ -202,7 +231,6 @@
                                                     <size key="minSize" width="402" height="166"/>
                                                     <size key="maxSize" width="404" height="10000000"/>
                                                     <connections>
-                                                        <binding destination="10" name="value" keyPath="selection.text" id="167"/>
                                                         <binding destination="168" name="font" keyPath="values.TextFont" id="171">
                                                             <dictionary key="options">
                                                                 <string key="NSValueTransformerName">NSUnarchiveFromData</string>
@@ -249,27 +277,6 @@
                 <outlet property="delegate" destination="-2" id="158"/>
             </connections>
         </window>
-        <arrayController mode="entity" entityName="SnippetCollection" automaticallyPreparesContent="YES" id="9" userLabel="SnippetCollectionsArrayController">
-            <declaredKeys>
-                <string>name</string>
-                <string>snippets</string>
-            </declaredKeys>
-            <connections>
-                <binding destination="-2" name="managedObjectContext" keyPath="managedObjectContext" id="157"/>
-            </connections>
-        </arrayController>
-        <arrayController mode="entity" entityName="Snippet" automaticallyPreparesContent="YES" id="10" userLabel="SnippetsArrayController">
-            <declaredKeys>
-                <string>snippets</string>
-                <string>text</string>
-                <string>name</string>
-                <string>shortcut</string>
-                <string>shortcutDisplayString</string>
-            </declaredKeys>
-            <connections>
-                <binding destination="9" name="contentSet" keyPath="selection.snippets" id="166"/>
-            </connections>
-        </arrayController>
         <userDefaultsController representsSharedInstance="YES" id="168" userLabel="Shared Defaults"/>
         <customView id="180" userLabel="SnippetsFilterView">
             <rect key="frame" x="0.0" y="0.0" width="120" height="32"/>
@@ -283,14 +290,6 @@
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </searchFieldCell>
-                    <connections>
-                        <binding destination="10" name="predicate" keyPath="filterPredicate" id="195">
-                            <dictionary key="options">
-                                <string key="NSDisplayName">Current collection</string>
-                                <string key="NSPredicateFormat">name contains[c] $value OR text contains[c] $value</string>
-                            </dictionary>
-                        </binding>
-                    </connections>
                 </searchField>
             </subviews>
         </customView>
