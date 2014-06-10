@@ -28,6 +28,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "ODBEditorSuite.h"
 #import "FRATextView.h"
 #import "FRACommandManagedObject.h"
+#import "VFSyntaxDefinition.h"
 
 #import <VAFoundation/VAFoundation.h>
 #import <VADevUIKit/VADevUIKit.h>
@@ -94,7 +95,8 @@ VASingletonIMPDefault(FRAVariousPerformer)
 	isChangingSyntaxDefinitionsProgrammatically = YES;
 	NSMutableArray *syntaxDefinitionsArray = [[NSMutableArray alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"SyntaxDefinitions" ofType:@"plist"]];
 	NSString *path = [[[[NSHomeDirectory() stringByAppendingPathComponent:@"Library"] stringByAppendingPathComponent:@"Application Support"] stringByAppendingPathComponent:@"Fraise"] stringByAppendingPathComponent:@"SyntaxDefinitions.plist"];
-	if ([[NSFileManager defaultManager] fileExistsAtPath:path] == YES) {
+	if ([[NSFileManager defaultManager] fileExistsAtPath:path] == YES)
+    {
 		NSArray *syntaxDefinitionsUserArray = [[NSArray alloc] initWithContentsOfFile:path];
 		[syntaxDefinitionsArray addObjectsFromArray:syntaxDefinitionsUserArray];
 	}
@@ -106,36 +108,43 @@ VASingletonIMPDefault(FRAVariousPerformer)
 	[syntaxDefinitionsArray insertObject:standard atIndex:0];
 	
 	NSMutableArray *changedSyntaxDefinitionsArray = nil;
-	if ([FRADefaults valueForKey:@"ChangedSyntaxDefinitions"]) {
+	if ([FRADefaults valueForKey:@"ChangedSyntaxDefinitions"])
+    {
 		changedSyntaxDefinitionsArray = [NSMutableArray arrayWithArray:[FRADefaults valueForKey:@"ChangedSyntaxDefinitions"]];
 	}
 	
-	id item;
+	NSDictionary *item;
 	NSInteger index = 0;
-	for (item in syntaxDefinitionsArray) {
-		if ([[item valueForKey:@"extensions"] isKindOfClass:[NSArray class]]) { // If extensions is an array instead of a string, i.e. an older version
+	for (item in syntaxDefinitionsArray)
+    {
+		if ([item[@"extensions"] isKindOfClass:[NSArray class]]) { // If extensions is an array instead of a string, i.e. an older version
 			continue;
 		}
-		id syntaxDefinition = [FRABasic createNewObjectForEntity:@"SyntaxDefinition"];
-		NSString *name = [item valueForKey:@"name"];
-		[syntaxDefinition setValue:name forKey:@"name"];
-		[syntaxDefinition setValue:[item valueForKey:@"file"] forKey:@"file"];
-		[syntaxDefinition setValue:@(index) forKey:@"sortOrder"];
+        
+		VFSyntaxDefinition *syntaxDefinition = [[VFSyntaxDefinition alloc] init]; //[FRABasic createNewObjectForEntity:@"SyntaxDefinition"];
+		NSString *name = item[@"name"];
+		[syntaxDefinition setName: name];
+		[syntaxDefinition setFile: item[@"file"]];
+		[syntaxDefinition setSortOrder: index];
 		index++;
 		
 		BOOL hasInsertedAChangedValue = NO;
-		if (changedSyntaxDefinitionsArray != nil) {
-			for (id changedObject in changedSyntaxDefinitionsArray) {
-				if ([[changedObject valueForKey:@"name"] isEqualToString:name]) {
-					[syntaxDefinition setValue:[changedObject valueForKey:@"extensions"] forKey:@"extensions"];
+		if (changedSyntaxDefinitionsArray != nil)
+        {
+			for (id changedObject in changedSyntaxDefinitionsArray)
+            {
+				if ([[changedObject valueForKey:@"name"] isEqualToString:name])
+                {
+					[syntaxDefinition setExtensions: [changedObject valueForKey:@"extensions"]];
 					hasInsertedAChangedValue = YES;
 					break;
 				}					
 			}
 		} 
 		
-		if (hasInsertedAChangedValue == NO) {
-			[syntaxDefinition setValue:[item valueForKey:@"extensions"] forKey:@"extensions"];
+		if (hasInsertedAChangedValue == NO)
+        {
+			[syntaxDefinition setExtensions: [item valueForKey:@"extensions"]];
 		}		
 	}
 

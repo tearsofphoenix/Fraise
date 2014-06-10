@@ -26,6 +26,7 @@
 #import "FRAPreviewController.h"
 
 #import "FRAProject.h"
+#import "VFSyntaxDefinition.h"
 
 #import <VAFoundation/VAFoundation.h>
 #import <VADevUIKit/VADevUIKit.h>
@@ -244,30 +245,35 @@
 
 - (void)setSyntaxDefinition
 {
-	NSArray *syntaxDefinitions = [FRABasic fetchAll:@"SyntaxDefinitionSortKeySortOrder"];
+	NSArray *syntaxDefinitions = [VFSyntaxDefinition allDefinitions];
 	
-	NSManagedObjectContext *managedObjectContext = FRAManagedObjectContext;
-	NSEntityDescription *entityDescription = [NSEntityDescription entityForName:@"SyntaxDefinition" inManagedObjectContext:managedObjectContext];
-	NSFetchRequest *request = [[entityDescription managedObjectModel] fetchRequestFromTemplateWithName:@"syntaxDefinitionName" substitutionVariables:@{@"NAME": [FRADefaults valueForKey:@"SyntaxColouringPopUpString"]}];
-	NSArray *foundSyntaxDefinition = [managedObjectContext executeFetchRequest:request error:nil];
+    NSString *name = [FRADefaults valueForKey:@"SyntaxColouringPopUpString"];
+	VFSyntaxDefinition *foundSyntaxDefinition = [VFSyntaxDefinition definitionForName: name]; //[managedObjectContext executeFetchRequest:request error:nil];
     
 	NSString *fileToUse = nil;
 	NSString *extension = [[document valueForKey:@"name"] pathExtension];
-	if ([[document valueForKey:@"hasManuallyChangedSyntaxDefinition"] boolValue] == YES) { // Once the user has changed the syntax definition always use that one and not the one from the extension
-		request = [[entityDescription managedObjectModel] fetchRequestFromTemplateWithName:@"syntaxDefinitionName" substitutionVariables:@{@"NAME": [document valueForKey:@"syntaxDefinition"]}];
-		NSArray *foundManuallyChangedSyntaxDefinition = [managedObjectContext executeFetchRequest:request error:nil];
-		if ([foundManuallyChangedSyntaxDefinition count] != 0) {
-			fileToUse = [foundManuallyChangedSyntaxDefinition[0] valueForKey:@"file"];
-		} else {
+	if ([[document valueForKey:@"hasManuallyChangedSyntaxDefinition"] boolValue] == YES)
+    { // Once the user has changed the syntax definition always use that one and not the one from the extension
+
+		VFSyntaxDefinition *foundManuallyChangedSyntaxDefinition = [VFSyntaxDefinition definitionForName: [document valueForKey:@"syntaxDefinition"]];
+
+		if (foundManuallyChangedSyntaxDefinition)
+        {
+			fileToUse = [foundManuallyChangedSyntaxDefinition file];
+		} else
+        {
 			fileToUse = [syntaxDefinitions[0] valueForKey:@"file"];
 		}
-	} else {
-		
+	} else
+    {
 		if ([[FRADefaults valueForKey:@"SyntaxColouringMatrix"] integerValue] == 1) { // Always use...
-			if ([foundSyntaxDefinition count] != 0) {
-				fileToUse = [foundSyntaxDefinition[0] valueForKey:@"file"];
-				[document setValue:[foundSyntaxDefinition[0] valueForKey:@"name"] forKey:@"syntaxDefinition"];
-			} else {
+			if (foundSyntaxDefinition)
+            {
+				fileToUse = [foundSyntaxDefinition file];
+				[document setValue: [foundSyntaxDefinition name]
+                            forKey: @"syntaxDefinition"];
+			} else
+            {
 				fileToUse = [syntaxDefinitions[0] valueForKey:@"file"];
 				[document setValue:[syntaxDefinitions[0] valueForKey:@"name"] forKey:@"syntaxDefinition"];
 			}
@@ -304,9 +310,11 @@
 				}
 				index++;
 			}
-			if (fileToUse == nil && [foundSyntaxDefinition count] != 0) {
-				fileToUse = [foundSyntaxDefinition[0] valueForKey:@"file"];
-				[document setValue:[foundSyntaxDefinition[0] valueForKey:@"name"] forKey:@"syntaxDefinition"];
+			if (fileToUse == nil && foundSyntaxDefinition)
+            {
+				fileToUse = [foundSyntaxDefinition file];
+				[document setValue: [foundSyntaxDefinition name]
+                            forKey: @"syntaxDefinition"];
 			}
 		}
 	}

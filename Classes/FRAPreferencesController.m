@@ -27,6 +27,7 @@
 #import "FRAMainController.h"
 #import "FRAApplicationDelegate.h"
 #import "FRAProject.h"
+#import "VFSyntaxDefinition.h"
 
 #import "FRASyntaxColouring.h"
 #import <VADevUIKit/VADevUIKit.h>
@@ -441,10 +442,13 @@ VASingletonIMPDefault(FRAPreferencesController)
 			// Build syntax definitions menu
 			[FRABasic removeAllItemsFromMenu:[syntaxColouringPopUp menu]];
             
-			NSEnumerator *enumerator = [[FRABasic fetchAll:@"SyntaxDefinitionSortKeySortOrder"] reverseObjectEnumerator];
+            NSArray *allSyntaxDefinition = [VFSyntaxDefinition allDefinitions];
 			NSMenuItem *menuItem;
-			for (id item in enumerator) {
-				menuItem = [[NSMenuItem alloc] initWithTitle:[item valueForKey:@"name"] action:nil keyEquivalent:@""];
+			for (VFSyntaxDefinition *item in allSyntaxDefinition)
+            {
+				menuItem = [[NSMenuItem alloc] initWithTitle: [item name]
+                                                      action: nil
+                                               keyEquivalent: @""];
 				[[syntaxColouringPopUp menu] insertItem:menuItem atIndex:0];
 			}
 			
@@ -530,7 +534,6 @@ VASingletonIMPDefault(FRAPreferencesController)
 {
 	[[NSUserDefaultsController sharedUserDefaultsController] revertToInitialValues:nil];
 	[FRADefaults setValue:nil forKey:@"ChangedSyntaxDefinitions"];
-	[FRADefaults setValue:@YES forKey:@"HasImportedFromVersion2"];
 	[FRABasic removeAllObjectsForEntity:@"SyntaxDefinition"];
 	[FRAVarious insertSyntaxDefinitions];
 }

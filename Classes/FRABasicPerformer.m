@@ -110,12 +110,6 @@ VASingletonIMPDefault(FRABasicPerformer)
 	[request setEntity:entityDescription];
 	[fetchRequests setValue:request forKey:@"SyntaxDefinition"];
 	
-	entityDescription = [NSEntityDescription entityForName:@"SyntaxDefinition" inManagedObjectContext:managedObjectContext];
-	request = [[NSFetchRequest alloc] init];
-	[request setEntity:entityDescription];
-	sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"sortOrder" ascending:YES];
-	[request setSortDescriptors:@[sortDescriptor]];
-	[fetchRequests setValue:request forKey:@"SyntaxDefinitionSortKeySortOrder"];
 }
 
 

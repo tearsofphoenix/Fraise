@@ -139,7 +139,6 @@
 	<array>
 		<string>PreferencesGeneralViewSavedFrame</string>
 		<string>HasInsertedDefaultSnippets</string>
-		<string>HasImportedFromVersion2</string>
 		<string>HasInsertedDefaultCommands3</string>
 	</array>
 	<key>LSMinimumSystemVersion</key>

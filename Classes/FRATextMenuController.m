@@ -26,6 +26,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRASyntaxColouring.h"
 #import "FRATextView.h"
 #import "FRAProject.h"
+#import "VFSyntaxDefinition.h"
 
 #import <VADevUIKit/VADevUIKit.h>
 
@@ -87,12 +88,15 @@ static id sharedInstance = nil;
 
 - (void)buildSyntaxDefinitionsMenu
 {
-	NSArray *syntaxDefinitions = [FRABasic fetchAll:@"SyntaxDefinitionSortKeySortOrder"];
+	NSArray *syntaxDefinitions = [VFSyntaxDefinition allDefinitions];
+
 	NSEnumerator *enumerator = [syntaxDefinitions reverseObjectEnumerator];
 	NSMenuItem *menuItem;
 	NSInteger tag = [syntaxDefinitions count] - 1;
-	for (id item in enumerator) {
-		menuItem = [[NSMenuItem alloc] initWithTitle:[item valueForKey:@"name"] action:@selector(changeSyntaxDefinitionAction:) keyEquivalent:@""];
+	for (VFSyntaxDefinition *item in enumerator)
+    {
+		menuItem = [[NSMenuItem alloc] initWithTitle: [item name]
+                                              action: @selector(changeSyntaxDefinitionAction:) keyEquivalent:@""];
 		[menuItem setTag:tag];
 		[menuItem setTarget:self];
 		[syntaxDefinitionMenu insertItem:menuItem atIndex:0];

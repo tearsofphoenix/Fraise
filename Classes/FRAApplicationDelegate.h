@@ -43,6 +43,4 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (IBAction)saveAction:sender;
 
-- (void)importFromVersion2;
-
 @end
