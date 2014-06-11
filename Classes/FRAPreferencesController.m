@@ -32,7 +32,7 @@
 
 #import "FRASyntaxColouring.h"
 #import <VADevUIKit/VADevUIKit.h>
-#import <PXSourceList/PXSourceList.h>
+
 
 @implementation FRAPreferencesController
 
@@ -252,7 +252,8 @@ VASingletonIMPDefault(FRAPreferencesController)
 			[[[FRACommandsController sharedInstance] commandsTableView] reloadData];
 		}
 		
-		if ([[FRASnippetsController sharedInstance] snippetsWindow] != nil) {
+		if ([[FRASnippetsController sharedInstance] snippetsWindow] != nil)
+        {
 			[[[FRASnippetsController sharedInstance] snippetCollectionsTableView] reloadData];
 			[[[FRASnippetsController sharedInstance] snippetsTableView] reloadData];
 		}

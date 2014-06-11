@@ -29,9 +29,11 @@
 #import "VASnippetCollection.h"
 
 #import <VADevUIKit/VADevUIKit.h>
-#import <PXSourceList/PXSourceList.h>
 
-@interface FRASnippetsController ()<PXSourceListDataSource, PXSourceListDelegate>
+
+@interface FRASnippetsController ()<NSOutlineViewDataSource, NSOutlineViewDelegate>
+
+@property (nonatomic, strong) NSArray *draggedNodes;
 
 @end
 
@@ -339,209 +341,183 @@ VASingletonIMPDefault(FRASnippetsController)
 }
 
 
-#pragma mark - PXSourceList Data Source
+#pragma mark - NSOutlineView data source methods. (The required ones)
 
-- (NSUInteger)sourceList: (PXSourceList*)sourceList numberOfChildrenOfItem:(id)item
+// The NSOutlineView uses 'nil' to indicate the root item. We return our root tree node for that case.
+- (NSArray *)childrenForItem: (id)item
 {
-    if (sourceList == _snippetCollectionsTableView)
+    if (item == nil)
     {
-        if (!item)
-        {
-            return [[VASnippetCollection allSnippetCollections] count];
-        }
-    }else
+        return [VASnippetCollection allSnippetCollections];
+    } else
     {
-        
+        return nil;
     }
-    
-    return 0;
 }
 
-- (id)sourceList: (PXSourceList*)sourceList
-           child: (NSUInteger)index
-          ofItem: (id)item
+// Required methods.
+- (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(id)item
 {
-    if (sourceList == _snippetCollectionsTableView)
-    {
-        
-        if (!item)
-        {
-            return [VASnippetCollection allSnippetCollections][index];
-        }
-        
-    }else
-    {
-        
-    }
-    return nil;
+    // 'item' may potentially be nil for the root item.
+    NSArray *children = [self childrenForItem:item];
+    // This will return an NSTreeNode with our model object as the representedObject
+    return [children objectAtIndex:index];
 }
 
-- (BOOL)sourceList:(PXSourceList*)sourceList isItemExpandable:(id)item
+- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
 {
     return NO;
 }
 
-#pragma mark - PXSourceList Delegate
+- (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
+{
+    // 'item' may potentially be nil for the root item.
+    NSArray *children = [self childrenForItem:item];
+    return [children count];
+}
 
-- (BOOL)sourceList:(PXSourceList *)sourceList isGroupAlwaysExpanded:(id)group
+- (id)        outlineView: (NSOutlineView *)outlineView
+objectValueForTableColumn: (NSTableColumn *)tableColumn
+                   byItem: (id)item
+{
+    id objectValue = nil;
+    VASnippetCollection *collection = item;
+    
+    // The return value from this method is used to configure the state of the items cell via setObjectValue:
+    if ((tableColumn == nil) || [[tableColumn identifier] isEqualToString: @"collection"])
+    {
+        objectValue = [collection name];
+    }
+    
+    return objectValue;
+}
+
+// Optional method: needed to allow editing.
+- (void)outlineView: (NSOutlineView *)ov
+     setObjectValue: (id)object
+     forTableColumn: (NSTableColumn *)tableColumn
+             byItem: (id)item
+{
+    VASnippetCollection *collection = item;
+    [collection setName: object];
+}
+
+// We can return a different cell for each row, if we want
+- (NSCell *)outlineView: (NSOutlineView *)ov
+ dataCellForTableColumn: (NSTableColumn *)tableColumn
+                   item: (id)item
+{
+    // If we return a cell for the 'nil' tableColumn, it will be used as a "full width" cell and span all the columns
+    {
+        // We want to use the cell for the name column, but we could construct a new cell if we wanted to, or return a different cell for each row.
+        //return [[_outlineView tableColumnWithIdentifier:COLUMNID_NAME] dataCell];
+    }
+    return [tableColumn dataCell];
+}
+
+// To get the "group row" look, we implement this method.
+- (BOOL)outlineView: (NSOutlineView *)outlineView
+        isGroupItem: (id)item
+{
+    return NO;
+}
+
+- (BOOL)outlineView:(NSOutlineView *)outlineView shouldExpandItem:(id)item
 {
     return YES;
 }
 
-- (NSView *)sourceList:(PXSourceList *)aSourceList viewForItem:(id)item
+- (void)outlineView: (NSOutlineView *)outlineView
+    willDisplayCell: (NSCell *)cell
+     forTableColumn: (NSTableColumn *)tableColumn
+               item: (id)item
 {
-    NSTableCellView *cellView = nil;
-    
-    if (aSourceList == _snippetCollectionsTableView)
-    {
-        if ([aSourceList levelForItem:item] == 0)
-            cellView = [aSourceList makeViewWithIdentifier:@"HeaderCell" owner:nil];
-        else
-            cellView = [aSourceList makeViewWithIdentifier:@"MainCell" owner:nil];
-        
         VASnippetCollection *collection = item;
-        
-        // Only allow us to edit the user created photo collection titles.
-        BOOL isTitleEditable = YES;
-        cellView.textField.editable = isTitleEditable;
-        cellView.textField.selectable = isTitleEditable;
-        
-        cellView.textField.stringValue = [collection name];
-    }else
-    {
-        
-    }
     
-    return cellView;
-}
-
-- (void)sourceListSelectionDidChange: (NSNotification *)notification
-{
-    VASnippetCollection *selectedItem = [_snippetCollectionsTableView itemAtRow: [_snippetCollectionsTableView selectedRow]];
-    
-    NSLog(@"%@", [selectedItem name]);
-}
-
-#pragma mark - Drag and Drop
-
-- (BOOL)sourceList:(PXSourceList*)aSourceList writeItems:(NSArray *)items toPasteboard:(NSPasteboard *)pboard
-{
-    
-    NSArray *typesArray;
-    if (aSourceList == _snippetsTableView)
-    {
-        typesArray = @[NSStringPboardType, @"FRAMovedSnippetType"];
-		
-        NSMutableString *string = [NSMutableString stringWithString: @""];
-        NSMutableArray *uuidArray = [NSMutableArray arrayWithCapacity: [items count]];
-        for (VASnippet *sLooper in items)
+        if ((tableColumn == nil) || [[tableColumn identifier] isEqualToString: @"collection"])
         {
-            [uuidArray addObject: [sLooper uuid]];
+            [cell setStringValue: [collection name]];
         }
-        
-		[pboard declareTypes: typesArray
-                       owner: self];
-		[pboard setString: string
-                  forType: NSStringPboardType];
-		[pboard setData: [NSArchiver archivedDataWithRootObject: uuidArray]
-                forType: @"FRAMovedSnippetType"];
-		
-		return YES;
-	}else
-    {
-		return NO;
-	}
+    
+    // For all the other columns, we don't do anything.
 }
 
-- (NSDragOperation)sourceList:(PXSourceList*)sourceList validateDrop:(id < NSDraggingInfo >)info proposedItem:(id)item proposedChildIndex:(NSInteger)index
+- (BOOL)outlineView: (NSOutlineView *)ov
+   shouldSelectItem: (id)item
 {
-    if (sourceList == _snippetsTableView)
-    {
-		[sourceList setDropRow: index
-                 dropOperation: NSTableViewDropAbove];
-	 	return NSDragOperationCopy;
-		
-	} else if (sourceList == _snippetCollectionsTableView)
-    {
-		if ([info draggingSource] == _snippetsTableView)
-        {
-			[sourceList setDropRow: index
-                     dropOperation: NSTableViewDropOn];
-			return NSDragOperationMove;
-		} else
-        {
-			[sourceList setDropRow: [[VASnippetCollection allSnippetCollections] count]
-                     dropOperation: NSTableViewDropAbove];
-			return NSDragOperationCopy;
-		}
-        
-		return NSDragOperationCopy;
-	}
-	
-	return NSDragOperationNone;
+    return YES;
 }
 
-- (BOOL)sourceList:(PXSourceList*)aSourceList acceptDrop:(id < NSDraggingInfo >)info item:(id)item childIndex:(NSInteger)index
-{
-	
-	// Snippets
-    if (aSourceList == _snippetsTableView)
+- (BOOL)outlineView:(NSOutlineView *)ov shouldTrackCell:(NSCell *)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item {
+    // We want to allow tracking for all the button cells, even if we don't allow selecting that particular row.
+    if ([cell isKindOfClass:[NSButtonCell class]])
     {
+        // We can also take a peek and make sure that the part of the cell clicked is an area that is normally tracked. Otherwise, clicking outside of the checkbox may make it check the checkbox
+        NSRect cellFrame = [_snippetCollectionsTableView frameOfCellAtColumn: [[_snippetCollectionsTableView tableColumns] indexOfObject: tableColumn]
+                                                                         row: [_snippetCollectionsTableView rowForItem: item]];
+        NSUInteger hitTestResult = [cell hitTestForEvent: [NSApp currentEvent]
+                                                  inRect: cellFrame
+                                                  ofView: _snippetCollectionsTableView];
         
-        NSString *textToImport = (NSString *)[[info draggingPasteboard] stringForType:NSStringPboardType];
-        if (textToImport != nil) {
-            
-            VASnippet *item = [[FRASnippetsController sharedInstance] performInsertNewSnippet];
-            
-            [item setText: textToImport];
-            
-            if ([textToImport length] > SNIPPET_NAME_LENGTH)
-            {
-                [item setName: [[textToImport substringWithRange:NSMakeRange(0, SNIPPET_NAME_LENGTH)] stringByReplaceAllNewLineCharactersWithSymbol]];
-            } else
-            {
-                [item setName: textToImport];
-            }
-            
+        if ((hitTestResult & NSCellHitTrackableArea) != 0)
+        {
             return YES;
-        } else {
+        } else
+        {
             return NO;
         }
-        
-        // Snippet collections
-    } else if (aSourceList == _snippetCollectionsTableView)
+    } else
     {
-        NSArray *filesToImport = [[info draggingPasteboard] propertyListForType:NSFilenamesPboardType];
+        // Only allow tracking on selected rows. This is what NSTableView does by default.
+        return [_snippetCollectionsTableView isRowSelected:[_snippetCollectionsTableView rowForItem: item]];
+    }
+}
+
+/* In 10.7 multiple drag images are supported by using this delegate method. */
+- (id <NSPasteboardWriting>)outlineView:(NSOutlineView *)outlineView pasteboardWriterForItem:(id)item
+{
+    VASnippetCollection *collection = item;
+
+    return [collection  name];
+}
+
+/* Setup a local reorder. */
+- (void)outlineView: (NSOutlineView *)outlineView
+    draggingSession: (NSDraggingSession *)session
+   willBeginAtPoint: (NSPoint)screenPoint
+           forItems: (NSArray *)draggedItems
+{
+    _draggedNodes = draggedItems;
+    [session.draggingPasteboard setData: [NSData data]
+                                forType: @"com.veritas.fraise.pasteboard.data"];
+}
+
+- (void)outlineView: (NSOutlineView *)outlineView
+    draggingSession: (NSDraggingSession *)session
+       endedAtPoint: (NSPoint)screenPoint
+          operation: (NSDragOperation)operation
+{
+    // If the session ended in the trash, then delete all the items
+    if (operation == NSDragOperationDelete)
+    {
+        [_snippetCollectionsTableView beginUpdates];
         
-        if (filesToImport != nil)
-        {
-            [FRAOpenSave openAllTheseFiles:filesToImport];
-            return YES;
-        }
+        [_draggedNodes enumerateObjectsWithOptions: NSEnumerationReverse
+                                        usingBlock: (^(id node, NSUInteger index, BOOL *stop)
+                                                     {
+                                                         id parent = [node parentNode];
+                                                         NSMutableArray *children = [parent mutableChildNodes];
+                                                         NSInteger childIndex = [children indexOfObject:node];
+                                                         [children removeObjectAtIndex:childIndex];
+                                                         [_snippetCollectionsTableView removeItemsAtIndexes: [NSIndexSet indexSetWithIndex:childIndex]
+                                                                                                   inParent: nil
+                                                                                              withAnimation: NSTableViewAnimationEffectFade];
+                                                     })];
         
-        if ([info draggingSource] == [[FRASnippetsController sharedInstance] snippetsTableView])
-        {
-//            if (![[[info draggingPasteboard] types] containsObject: movedSnippetType])
-//            {
-//                return NO;
-//            }
-//TODO
-//            NSArray *pasteboardData = [NSUnarchiver unarchiveObjectWithData: [[info draggingPasteboard] dataForType: movedSnippetType]];
-//            NSArray *uriArray = pasteboardData[1];
-//            
-//            VASnippetCollection *collection = item;
-//            
-//            id item;
-//            for (item in uriArray)
-//            {
-//                [[collection snippets] addObject: [FRABasic objectFromURI: item]];
-//            }
-            
-            return YES;
-        }
+        [_snippetCollectionsTableView endUpdates];
     }
     
-    return YES;
+    _draggedNodes = nil;
 }
 
 @end

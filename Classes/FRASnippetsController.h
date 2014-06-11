@@ -27,8 +27,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 @property (unsafe_unretained, readonly) IBOutlet NSTextView *snippetsTextView;
 @property (unsafe_unretained, readonly) IBOutlet NSWindow *snippetsWindow;
-@property (unsafe_unretained) IBOutlet PXSourceList *snippetCollectionsTableView;
-@property (unsafe_unretained) IBOutlet PXSourceList *snippetsTableView;
+@property (unsafe_unretained) IBOutlet NSOutlineView *snippetCollectionsTableView;
+@property (unsafe_unretained) IBOutlet NSOutlineView *snippetsTableView;
 @property (strong) VASnippetCollection *selectedCollection;
 @property (strong) VASnippet *selectedSnippet;
 

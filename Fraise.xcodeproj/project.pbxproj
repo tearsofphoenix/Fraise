@@ -135,8 +135,6 @@
 		9231DEA21946AEB300726887 /* VFEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = 9231DEA11946AEB300726887 /* VFEncoding.m */; };
 		9231DEA71946B47500726887 /* VASnippet.m in Sources */ = {isa = PBXBuildFile; fileRef = 9231DEA41946B47500726887 /* VASnippet.m */; };
 		9231DEA81946B47500726887 /* VASnippetCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 9231DEA61946B47500726887 /* VASnippetCollection.m */; };
-		9231DEC01946D7D000726887 /* PXSourceList.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9231DEBB1946D7AB00726887 /* PXSourceList.framework */; };
-		9231DEC11946D7D500726887 /* PXSourceList.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9231DEBB1946D7AB00726887 /* PXSourceList.framework */; };
 		92A1FEA8194055F40090870B /* VAFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A1FE9D194055270090870B /* VAFoundation.framework */; };
 		92A1FEA9194057770090870B /* VAFoundation.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 92A1FE9D194055270090870B /* VAFoundation.framework */; };
 		92A1FF4019405AF20090870B /* VADevUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A1FEE8194057C30090870B /* VADevUIKit.framework */; };
@@ -171,34 +169,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 53DF68FC067E5B5A0090B5B0;
 			remoteInfo = BWTK;
-		};
-		9231DEB61946D7AB00726887 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9231DEAD1946D7AA00726887 /* PXSourceList.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 8D1107320486CEB800E47090;
-			remoteInfo = CellBasedSourceList;
-		};
-		9231DEB81946D7AB00726887 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9231DEAD1946D7AA00726887 /* PXSourceList.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D263123B186EF9F00036501C;
-			remoteInfo = ViewBasedSourceList;
-		};
-		9231DEBA1946D7AB00726887 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9231DEAD1946D7AA00726887 /* PXSourceList.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4CC5EA2A12DC81ED001F282E;
-			remoteInfo = PXSourceList;
-		};
-		9231DEBE1946D7CB00726887 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9231DEAD1946D7AA00726887 /* PXSourceList.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 4CC5EA2912DC81ED001F282E;
-			remoteInfo = PXSourceList;
 		};
 		92A1FE9C194055270090870B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -251,7 +221,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				9231DEC11946D7D500726887 /* PXSourceList.framework in CopyFiles */,
 				604589831941C0CE0004DF6B /* BWTK.framework in CopyFiles */,
 				92A1FF4119405B980090870B /* VADevUIKit.framework in CopyFiles */,
 				92A1FEA9194057770090870B /* VAFoundation.framework in CopyFiles */,
@@ -556,7 +525,6 @@
 		9231DEA41946B47500726887 /* VASnippet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VASnippet.m; path = Classes/VASnippet.m; sourceTree = "<group>"; };
 		9231DEA51946B47500726887 /* VASnippetCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VASnippetCollection.h; path = Classes/VASnippetCollection.h; sourceTree = "<group>"; };
 		9231DEA61946B47500726887 /* VASnippetCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VASnippetCollection.m; path = Classes/VASnippetCollection.m; sourceTree = "<group>"; };
-		9231DEAD1946D7AA00726887 /* PXSourceList.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = PXSourceList.xcodeproj; path = Library/PXSourceList/PXSourceList.xcodeproj; sourceTree = "<group>"; };
 		92A1FE97194055260090870B /* VAFoundation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = VAFoundation.xcodeproj; path = Library/VAFoundation/VAFoundation.xcodeproj; sourceTree = "<group>"; };
 		92A1FEE2194057C20090870B /* VADevUIKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = VADevUIKit.xcodeproj; path = Library/VADevUIKit/VADevUIKit.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -574,7 +542,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9231DEC01946D7D000726887 /* PXSourceList.framework in Frameworks */,
 				604589821941C0C60004DF6B /* BWTK.framework in Frameworks */,
 				92A1FF4019405AF20090870B /* VADevUIKit.framework in Frameworks */,
 				92A1FEA8194055F40090870B /* VAFoundation.framework in Frameworks */,
@@ -633,7 +600,6 @@
 		2A37F4AAFDCFA73011CA2CEA /* Smultron */ = {
 			isa = PBXGroup;
 			children = (
-				9231DEAD1946D7AA00726887 /* PXSourceList.xcodeproj */,
 				604589741941C0B20004DF6B /* BWToolkit.xcodeproj */,
 				92A1FEE2194057C20090870B /* VADevUIKit.xcodeproj */,
 				92A1FE97194055260090870B /* VAFoundation.xcodeproj */,
@@ -761,6 +727,7 @@
 				7F980AE10B73B6A2000A9140 /* FRAProjectsController.m */,
 				7F980AE50B73B6A2000A9140 /* FRAServicesController.m */,
 				7F980AE70B73B6A2000A9140 /* FRAShortcutsController.m */,
+				7F980AEA0B73B6A2000A9140 /* FRASnippetsController.h */,
 				7F980AEB0B73B6A2000A9140 /* FRASnippetsController.m */,
 			);
 			name = Controllers;
@@ -886,7 +853,6 @@
 				7F980AE00B73B6A2000A9140 /* FRAProjectsController.h */,
 				7F980AE40B73B6A2000A9140 /* FRAServicesController.h */,
 				7F980AE60B73B6A2000A9140 /* FRAShortcutsController.h */,
-				7F980AEA0B73B6A2000A9140 /* FRASnippetsController.h */,
 			);
 			name = Headers;
 			sourceTree = "<group>";
@@ -999,16 +965,6 @@
 			name = Headers;
 			sourceTree = "<group>";
 		};
-		9231DEAE1946D7AA00726887 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				9231DEB71946D7AB00726887 /* PXSourceList.app */,
-				9231DEB91946D7AB00726887 /* ViewBasedSourceList.app */,
-				9231DEBB1946D7AB00726887 /* PXSourceList.framework */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		9237A5DB194703E00049BF32 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -1074,7 +1030,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				9231DEBF1946D7CB00726887 /* PBXTargetDependency */,
 				604589811941C0C00004DF6B /* PBXTargetDependency */,
 				92A1FF3F19405AEE0090870B /* PBXTargetDependency */,
 				92A1FEA7194055E90090870B /* PBXTargetDependency */,
@@ -1125,10 +1080,6 @@
 					ProjectRef = 604589741941C0B20004DF6B /* BWToolkit.xcodeproj */;
 				},
 				{
-					ProductGroup = 9231DEAE1946D7AA00726887 /* Products */;
-					ProjectRef = 9231DEAD1946D7AA00726887 /* PXSourceList.xcodeproj */;
-				},
-				{
 					ProductGroup = 92A1FEE3194057C20090870B /* Products */;
 					ProjectRef = 92A1FEE2194057C20090870B /* VADevUIKit.xcodeproj */;
 				},
@@ -1152,27 +1103,6 @@
 			fileType = wrapper.framework;
 			path = BWTK.framework;
 			remoteRef = 6045897A1941C0B20004DF6B /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9231DEB71946D7AB00726887 /* PXSourceList.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = PXSourceList.app;
-			remoteRef = 9231DEB61946D7AB00726887 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9231DEB91946D7AB00726887 /* ViewBasedSourceList.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = ViewBasedSourceList.app;
-			remoteRef = 9231DEB81946D7AB00726887 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9231DEBB1946D7AB00726887 /* PXSourceList.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = PXSourceList.framework;
-			remoteRef = 9231DEBA1946D7AB00726887 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		92A1FE9D194055270090870B /* VAFoundation.framework */ = {
@@ -1363,11 +1293,6 @@
 			isa = PBXTargetDependency;
 			name = BWTK;
 			targetProxy = 604589801941C0C00004DF6B /* PBXContainerItemProxy */;
-		};
-		9231DEBF1946D7CB00726887 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = PXSourceList;
-			targetProxy = 9231DEBE1946D7CB00726887 /* PBXContainerItemProxy */;
 		};
 		92A1FEA7194055E90090870B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
