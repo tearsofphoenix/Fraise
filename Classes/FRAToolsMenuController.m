@@ -346,7 +346,8 @@ VASingletonIMPDefault(FRAToolsMenuController)
 			enableMenuItem = NO;
 		}
 	} else if (tag == 8) { // Export Commands
-		if ([[[FRACommandsController sharedInstance] commandsWindow] isVisible] == NO || [[[[FRACommandsController sharedInstance] commandCollectionsArrayController] selectedObjects] count] < 1) {
+		if ([[[FRACommandsController sharedInstance] commandsWindow] isVisible] == NO || [[FRACommandsController sharedInstance] selectedCollection] == nil)
+        {
 			enableMenuItem = NO;
 		}
 	} else if (tag == 9) { // Run Selection Inline

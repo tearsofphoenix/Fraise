@@ -13,9 +13,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 */
 
 #import <Cocoa/Cocoa.h>
-#import <BWTK/BWToolkitFramework.h>
 
-@interface FRATableView : BWTransparentTableView
+@interface FRATableView : NSTableView
 {
 
 }

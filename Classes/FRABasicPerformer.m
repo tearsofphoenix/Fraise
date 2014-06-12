@@ -41,24 +41,7 @@ VASingletonIMPDefault(FRABasicPerformer)
 	NSFetchRequest *request;
 	NSSortDescriptor *sortDescriptor;
 	fetchRequests = [[NSMutableDictionary alloc] init];
-	
-	entityDescription = [NSEntityDescription entityForName:@"Command" inManagedObjectContext:managedObjectContext];
-	request = [[NSFetchRequest alloc] init];
-	[request setEntity:entityDescription];
-	[fetchRequests setValue:request forKey:@"Command"];
-	
-	entityDescription = [NSEntityDescription entityForName:@"CommandCollection" inManagedObjectContext:managedObjectContext];
-	request = [[NSFetchRequest alloc] init];
-	[request setEntity:entityDescription];
-	[fetchRequests setValue:request forKey:@"CommandCollection"];
-	
-	entityDescription = [NSEntityDescription entityForName:@"CommandCollection" inManagedObjectContext:managedObjectContext];
-	request = [[NSFetchRequest alloc] init];
-	[request setEntity:entityDescription];
-	sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
-	[request setSortDescriptors:@[sortDescriptor]];
-	[fetchRequests setValue:request forKey:@"CommandCollectionSortKeyName"];
-	
+		
 	entityDescription = [NSEntityDescription entityForName:@"Document" inManagedObjectContext:managedObjectContext];
 	request = [[NSFetchRequest alloc] init];
 	[request setEntity:entityDescription];

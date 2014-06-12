@@ -26,9 +26,7 @@
 
 - (void)keyDown:(NSEvent *)event
 {
-	if (self == [[FRACommandsController sharedInstance] commandCollectionsTableView]
-        || self == [[FRACommandsController sharedInstance] commandsTableView]
-        || self == [FRACurrentProject documentsTableView])
+	if (self == [FRACurrentProject documentsTableView])
     {
         
 		unichar key = [[event charactersIgnoringModifiers] characterAtIndex:0];
@@ -38,40 +36,10 @@
 		if ((key == NSDeleteCharacter || keyCode == 0x75) && flags == 0) { // 0x75 is forward delete
 			if ([self selectedRow] == -1) {
 				NSBeep();
-			} else {
-				
-                
-				// Command collection
-				if (self == [[FRACommandsController sharedInstance] commandCollectionsTableView]) {
-					
-					id collection = [[[FRACommandsController sharedInstance] commandCollectionsArrayController] selectedObjects][0];
-					NSMutableSet *commandsToDelete = [collection mutableSetValueForKey:@"commands"];
-					if ([commandsToDelete count] == 0) {
-						[[FRACommandsController sharedInstance] performDeleteCollection];
-					} else {
-						NSString *title = [NSString stringWithFormat:WILL_DELETE_ALL_ITEMS_IN_COLLECTION, [collection valueForKey:@"name"]];
-						NSBeginAlertSheet(title,
-										  DELETE_BUTTON,
-										  nil,
-										  CANCEL_BUTTON,
-										  [[FRACommandsController sharedInstance] commandsWindow],
-										  self,
-										  nil,
-										  @selector(commandSheetDidDismiss:returnCode:contextInfo:),
-										  nil,
-										  NSLocalizedStringFromTable(@"Please consider exporting the commands first. There is no undo available", @"Localizable3", @"Please consider exporting the commands first. There is no undo available"));
-					}
-					[[FRAToolsMenuController sharedInstance] buildRunCommandMenu];
-                    
-                    // Command
-				} else if (self == [[FRACommandsController sharedInstance] commandsTableView]) {
-					
-					id command = [[[FRACommandsController sharedInstance] commandsArrayController] selectedObjects][0];
-					[[[FRACommandsController sharedInstance] commandsArrayController] removeObject:command];
-					[[FRAToolsMenuController sharedInstance] buildRunCommandMenu];
-                    
-                    // Document
-				} else if (self == [FRACurrentProject documentsTableView]) {
+			} else
+            {
+                 if (self == [FRACurrentProject documentsTableView])
+                 {
 					id document = [[FRACurrentProject documentsArrayController] selectedObjects][0];
 					[FRACurrentProject checkIfDocumentIsUnsaved:document keepOpen:NO];
 				}

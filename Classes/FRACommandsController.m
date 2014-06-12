@@ -26,11 +26,18 @@
 #import "FRAOpenSavePerformer.h"
 #import "FRATextView.h"
 
+#import "VACommand.h"
+#import "VACommandCollection.h"
+
 #import <VADevUIKit/VADevUIKit.h>
+
+@interface FRACommandsController ()<NSOutlineViewDataSource, NSOutlineViewDelegate>
+
+@end
 
 @implementation FRACommandsController
 
-@synthesize commandsTextView, commandsWindow, commandCollectionsArrayController, commandCollectionsTableView, commandsTableView, commandsArrayController;
+@synthesize commandsTextView;
 
 VASingletonIMPDefault(FRACommandsController)
 
@@ -46,26 +53,23 @@ VASingletonIMPDefault(FRACommandsController)
 
 - (void)openCommandsWindow
 {
-	if (commandsWindow == nil) {
+	if (_commandsWindow == nil)
+    {
 		[NSBundle loadNibNamed:@"FRACommands.nib" owner:self];
 		
-		[commandCollectionsTableView setDataSource:[FRADragAndDropController sharedInstance]];
-		[commandsTableView setDataSource:[FRADragAndDropController sharedInstance]];
+		[_commandCollectionsTableView setDataSource: self];
+		[_commandsTableView setDataSource: self];
 		
-		[commandCollectionsTableView registerForDraggedTypes:@[NSFilenamesPboardType, @"FRAMovedCommandType"]];
-		[commandCollectionsTableView setDraggingSourceOperationMask:(NSDragOperationCopy) forLocal:NO];
+		[_commandCollectionsTableView registerForDraggedTypes:@[NSFilenamesPboardType, @"FRAMovedCommandType"]];
+		[_commandCollectionsTableView setDraggingSourceOperationMask:(NSDragOperationCopy) forLocal:NO];
 		
-		[commandsTableView registerForDraggedTypes:@[NSStringPboardType]];
-		[commandsTableView setDraggingSourceOperationMask:(NSDragOperationCopy) forLocal:NO];
-		
-		NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
-		[commandCollectionsArrayController setSortDescriptors:@[sortDescriptor]];
-		[commandsArrayController setSortDescriptors:@[sortDescriptor]];
-		
+		[_commandsTableView registerForDraggedTypes:@[NSStringPboardType]];
+		[_commandsTableView setDraggingSourceOperationMask:(NSDragOperationCopy) forLocal:NO];
+				
 		FRADocumentsListCell *cell = [[FRADocumentsListCell alloc] init];
 		[cell setWraps:NO];
 		[cell setLineBreakMode:NSLineBreakByTruncatingMiddle];
-		[[commandCollectionsTableView tableColumnWithIdentifier:@"collection"] setDataCell:cell];
+		[[_commandCollectionsTableView tableColumnWithIdentifier:@"collection"] setDataCell:cell];
 		
 		
 		NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"CommandsToolbarIdentifier"];
@@ -75,67 +79,71 @@ VASingletonIMPDefault(FRACommandsController)
 		[toolbar setDisplayMode:NSToolbarDisplayModeDefault];
 		[toolbar setSizeMode:NSToolbarSizeModeSmall];
 		[toolbar setDelegate:self];
-		[commandsWindow setToolbar:toolbar];
+		[_commandsWindow setToolbar:toolbar];
 		
-		//[commandCollectionsTableView setBackgroundColor:[[NSColor controlAlternatingRowBackgroundColors] objectAtIndex:1]];
+		//[_commandCollectionsTableView setBackgroundColor:[[NSColor controlAlternatingRowBackgroundColors] objectAtIndex:1]];
         
 	}
 	
-	[commandsWindow makeKeyAndOrderFront:self];
+	[_commandsWindow makeKeyAndOrderFront:self];
 	[[FRAToolsMenuController sharedInstance] buildRunCommandMenu];
 }
 
 
 - (IBAction)newCollectionAction:(id)sender
 {
-	[commandCollectionsArrayController commitEditing];
-	[commandsArrayController commitEditing];
-	id collection = [FRABasic createNewObjectForEntity:@"CommandCollection"];
+	VACommandCollection *collection = [[VACommandCollection alloc] init];
 	
-	[FRAManagedObjectContext processPendingChanges];
-	[commandCollectionsArrayController setSelectedObjects:@[collection]];
+    [self setSelectedCollection: collection];
 	
-	[commandsWindow makeFirstResponder:commandCollectionsTableView];
-	[commandCollectionsTableView editColumn:0 row:[commandCollectionsTableView selectedRow] withEvent:nil select:NO];
+	[_commandsWindow makeFirstResponder: _commandCollectionsTableView];
+	[_commandCollectionsTableView editColumn:0 row:[_commandCollectionsTableView selectedRow] withEvent:nil select:NO];
 }
 
 
 - (IBAction)newCommandAction:(id)sender
 {
-	id collection;
-	NSArray *commandCollections = [FRABasic fetchAll:@"CommandCollectionSortKeyName"];
-	if ([commandCollections count] == 0) {
-		collection = [FRABasic createNewObjectForEntity:@"CommandCollection"];
-		[collection setValue:COLLECTION_STRING forKey:@"name"];
+	VACommandCollection *collection;
+	NSArray *commandCollections = [VACommandCollection allCommandCollections];
+
+	if ([commandCollections count] == 0)
+    {
+		collection = [[VACommandCollection alloc] init];
+
+		[collection setName: COLLECTION_STRING];
 	}
-	[commandsArrayController commitEditing];
-	[commandCollectionsArrayController commitEditing];
+    
 	[self performInsertNewCommand];
 	
-	[commandsWindow makeFirstResponder:commandsTableView];
-	[commandsTableView editColumn:0 row:[commandsTableView selectedRow] withEvent:nil select:NO];
+	[_commandsWindow makeFirstResponder:_commandsTableView];
+	[_commandsTableView editColumn:0 row:[_commandsTableView selectedRow] withEvent:nil select:NO];
 }
 
 
 - (id)performInsertNewCommand
 {
-	id collection;
-	NSArray *commandCollections = [FRABasic fetchAll:@"CommandCollectionSortKeyName"];
-	if ([commandCollections count] == 0) {
-		collection = [FRABasic createNewObjectForEntity:@"CommandCollection"];
-		[collection setValue:COLLECTION_STRING forKey:@"name"];
-	} else {
-		if (commandsWindow != nil && [[commandCollectionsArrayController selectedObjects] count] != 0) {
-			collection = [commandCollectionsArrayController selectedObjects][0];
+	VACommandCollection *collection;
+	NSArray *commandCollections = [VACommandCollection allCommandCollections];
+
+	if ([commandCollections count] == 0)
+    {
+		collection = [[VACommandCollection alloc] init];
+		[collection setName: COLLECTION_STRING];
+	} else
+    {
+        
+		if (_commandsWindow != nil && _selectedCollection)
+        {
+			collection = _selectedCollection;
 		} else { // If no collection is selected choose the last one in the array
 			collection = [commandCollections lastObject];
 		}
 	}
 	
-	id item = [FRABasic createNewObjectForEntity:@"Command"];
-	[[collection mutableSetValueForKey:@"commands"] addObject:item];
-	[FRAManagedObjectContext processPendingChanges];
-	[commandsArrayController setSelectedObjects:@[item]];
+	id item = [[VACommand alloc] init];
+	[[collection commands] addObject: item];
+
+    [self setSelectedCommand: item];
 	
 	return item;
 }
@@ -143,9 +151,10 @@ VASingletonIMPDefault(FRACommandsController)
 
 - (void)performDeleteCollection
 {
-	id collection = [commandCollectionsArrayController selectedObjects][0];
-	
-	[FRAManagedObjectContext deleteObject:collection];
+	id collection = _selectedCollection;
+
+	//TODO
+//	[FRAManagedObjectContext deleteObject:collection];
 	
 	[[FRAToolsMenuController sharedInstance] buildRunCommandMenu];
 }
@@ -158,13 +167,13 @@ VASingletonIMPDefault(FRACommandsController)
 	[openPanel setResolvesAliases:YES];
     [openPanel setDirectoryURL: [NSURL fileURLWithPath: [FRAInterface whichDirectoryForOpen]]];
     [openPanel setAllowedFileTypes: @[@"fraiseCommands"]];
-    [openPanel beginSheetModalForWindow: commandsWindow
+    [openPanel beginSheetModalForWindow: _commandsWindow
                       completionHandler: (^(NSInteger returnCode)
                                           {
                                               if (returnCode == NSOKButton) {
                                                   [self performCommandsImportWithPath: [[openPanel URL] path]];
                                               }
-                                              [commandsWindow makeKeyAndOrderFront:nil];
+                                              [_commandsWindow makeKeyAndOrderFront:nil];
                                           })];
 }
 
@@ -178,13 +187,13 @@ VASingletonIMPDefault(FRACommandsController)
 		return;
 	}
 	
-	id collection = [FRABasic createNewObjectForEntity:@"CommandCollection"];
+	id collection = [[VACommandCollection alloc] init];
 	[collection setValue:[commands[0] valueForKey:@"collectionName"] forKey:@"name"];
 	
 	id item;
 	for (item in commands)
     {
-		id command = [FRABasic createNewObjectForEntity:@"Command"];
+		id command = [[VACommand alloc] init];
 		[command setValue:[item valueForKey:@"name"] forKey:@"name"];
 		[command setValue:[item valueForKey:@"text"] forKey:@"text"];
 		[command setValue:[item valueForKey:@"collectionName"] forKey:@"collectionName"];
@@ -200,10 +209,8 @@ VASingletonIMPDefault(FRACommandsController)
 		}
 		[[collection mutableSetValueForKey:@"commands"] addObject:command];
 	}
-	
-	[FRAManagedObjectContext processPendingChanges];
-	
-	[commandCollectionsArrayController setSelectedObjects:@[collection]];
+		
+    _selectedCollection = collection;
 }
 
 
@@ -212,29 +219,29 @@ VASingletonIMPDefault(FRACommandsController)
 	NSSavePanel *savePanel = [NSSavePanel savePanel];
     [savePanel setAllowedFileTypes: @[@"fraiseCommands"]];
     [savePanel setDirectoryURL: [NSURL fileURLWithPath: [FRAInterface whichDirectoryForSave]]];
-    [savePanel setNameFieldStringValue: [[commandCollectionsArrayController selectedObjects][0] valueForKey:@"name"]];
-    [savePanel beginSheetModalForWindow: commandsWindow
+    [savePanel setNameFieldStringValue: [_selectedCollection name]];
+    [savePanel beginSheetModalForWindow: _commandsWindow
                       completionHandler: (^(NSInteger returnCode)
                                           {
                                               if (returnCode == NSOKButton)
                                               {
-                                                  id collection = [commandCollectionsArrayController selectedObjects][0];
+                                                  VACommandCollection *collection = _selectedCollection;
                                                   
                                                   NSMutableArray *exportArray = [NSMutableArray array];
-                                                  NSEnumerator *enumerator = [[collection mutableSetValueForKey:@"commands"] objectEnumerator];
-                                                  for (NSDictionary *item in enumerator)
+                                                  NSEnumerator *enumerator = [[collection commands] objectEnumerator];
+                                                  for (VACommand *item in enumerator)
                                                   {
                                                       NSMutableDictionary *command = [[NSMutableDictionary alloc] init];
-                                                      command[@"name"] = [item valueForKey:@"name"];
-                                                      command[@"text"] = [item valueForKey:@"text"];
-                                                      command[@"collectionName"] = [collection valueForKey:@"name"];
-                                                      command[@"shortcutDisplayString"] = [item valueForKey:@"shortcutDisplayString"];
-                                                      command[@"shortcutMenuItemKeyString"] = [item valueForKey:@"shortcutMenuItemKeyString"];
-                                                      command[@"shortcutModifier"] = [item valueForKey:@"shortcutModifier"];
-                                                      command[@"sortOrder"] = [item valueForKey:@"sortOrder"];
+                                                      command[@"name"] = [item name];
+                                                      command[@"text"] = [item text];
+                                                      command[@"collectionName"] = [collection name];
+                                                      command[@"shortcutDisplayString"] = [item shortcutDisplayString];
+                                                      command[@"shortcutMenuItemKeyString"] = [item shortcutMenuItemKeyString];
+                                                      command[@"shortcutModifier"] = @([item shortcutModifier]);
+                                                      command[@"sortOrder"] = @([item sortOrder]);
                                                       command[@"version"] = @3;
-                                                      command[@"inline"] = [item valueForKey:@"inline"];
-                                                      command[@"interpreter"] = [item valueForKey:@"interpreter"];
+                                                      command[@"inline"] = @([item isInline]);
+                                                      command[@"interpreter"] = [item interpreter];
                                                       [exportArray addObject: command];
                                                   }
                                                   
@@ -243,27 +250,19 @@ VASingletonIMPDefault(FRACommandsController)
                                                                               path: [[savePanel URL] path]];
                                               }
                                               
-                                              [commandsWindow makeKeyAndOrderFront:nil];
+                                              [_commandsWindow makeKeyAndOrderFront:nil];
 
                                           })];
 }
 
 - (void)windowWillClose:(NSNotification *)aNotification
 {
-	[commandCollectionsArrayController commitEditing];
-	[commandsArrayController commitEditing];
+
 }
-
-
-- (NSManagedObjectContext *)managedObjectContext
-{
-	return FRAManagedObjectContext;
-}
-
 
 - (IBAction)runAction:(id)sender
 {
-	[self runCommand:[commandsArrayController selectedObjects][0]];
+	[self runCommand: _selectedCommand];
 }
 
 
@@ -320,30 +319,33 @@ VASingletonIMPDefault(FRACommandsController)
 }
 
 
-- (void)runCommand:(id)command
+- (void)runCommand: (VACommand *)command
 {
-	[commandCollectionsArrayController commitEditing];
-	[commandsArrayController commitEditing];
-	
 	isCommandRunning = YES;
 	
-	if ([command valueForKey:@"inline"] != nil && [[command valueForKey:@"inline"] boolValue] == YES) {
+	if ([command valueForKey:@"inline"] != nil && [command isInline])
+    {
 		currentCommandShouldBeInsertedInline = YES;
-	} else {
+	} else
+    {
 		currentCommandShouldBeInsertedInline = NO;
 	}
 	
-	NSString *commandString = [command valueForKey:@"text"];
-	if (commandString == nil || [commandString length] < 1) {
+	NSString *commandString = [command text];
+	
+    if (commandString == nil || [commandString length] < 1)
+    {
 		NSBeep();
 		return;
 	}
 	
-	if ([commandString length] > 2 && [commandString rangeOfString:@"#!" options:NSLiteralSearch range:NSMakeRange(0, 2)].location != NSNotFound) { // The command starts with a shebang so run it specially
+	if ([commandString length] > 2 && [commandString rangeOfString:@"#!" options:NSLiteralSearch range:NSMakeRange(0, 2)].location != NSNotFound)
+    { // The command starts with a shebang so run it specially
 		NSString *selectionStringPath;
 		NSMutableString *commandToWrite = [NSMutableString stringWithString:commandString];
 		
-		if ([FRACurrentTextView selectedRange].length > 0 && [commandString rangeOfString:@"%%s"].location != NSNotFound) {
+		if ([FRACurrentTextView selectedRange].length > 0 && [commandString rangeOfString:@"%%s"].location != NSNotFound)
+        {
 			selectionStringPath = [FRABasic genererateTemporaryPath];
 			NSString *selectionString = [FRACurrentText substringWithRange:[FRACurrentTextView selectedRange]];
 			[selectionString writeToFile:selectionStringPath atomically:YES encoding:NSUTF8StringEncoding error:nil];
@@ -361,10 +363,11 @@ VASingletonIMPDefault(FRACommandsController)
 		[commandToWrite writeToFile:commandPath atomically:YES encoding:NSUTF8StringEncoding error:nil];
 		[temporaryFilesArray addObject:commandPath];
 		
-		if ([command valueForKey:@"interpreter"] != nil && ![[command valueForKey:@"interpreter"] isEqualToString:@""]) {
-			[FRAVarious performCommandAsynchronously:[NSString stringWithFormat:@"%@ %@", [command valueForKey:@"interpreter"], commandPath]];
+		if ([command interpreter] != nil && ![[command interpreter] isEqualToString:@""])
+        {
+			[FRAVarious performCommandAsynchronously:[NSString stringWithFormat:@"%@ %@", [command interpreter], commandPath]];
 		} else {
-			[FRAVarious performCommandAsynchronously:[NSString stringWithFormat:@"%@ %@", [FRADefaults valueForKey:@"RunText"], commandPath]];
+			[FRAVarious performCommandAsynchronously:[NSString stringWithFormat:@"%@ %@", [FRADefaults valueForKey: @"RunText"], commandPath]];
 		}
 		
 		if (checkIfTemporaryFilesCanBeDeletedTimer != nil) {
@@ -372,8 +375,9 @@ VASingletonIMPDefault(FRACommandsController)
 		}
 		checkIfTemporaryFilesCanBeDeletedTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(checkIfTemporaryFilesCanBeDeleted) userInfo:nil repeats:YES];
 		
-	} else {
-		[FRAVarious performCommandAsynchronously:[self commandToRunFromString:commandString]];
+	} else
+    {
+		[FRAVarious performCommandAsynchronously: [self commandToRunFromString:commandString]];
 	}
 }
 

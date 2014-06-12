@@ -32,6 +32,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "VFEncoding.h"
 #import "VASnippet.h"
 #import "VASnippetCollection.h"
+#import "VACommand.h"
+#import "VACommandCollection.h"
 
 #import <VAFoundation/VAFoundation.h>
 #import <VADevUIKit/VADevUIKit.h>
@@ -194,30 +196,28 @@ VASingletonIMPDefault(FRAVariousPerformer)
 		NSEnumerator *collectionEnumerator = [defaultCommands keyEnumerator];
 		for (id collection in collectionEnumerator)
         {
-			id newCollection = [FRABasic createNewObjectForEntity:@"CommandCollection"];
-			[newCollection setValue:collection forKey:@"name"];
+            
+			VACommandCollection *newCollection = [[VACommandCollection alloc] init];
+			[newCollection setName: collection];
 			
             NSEnumerator *snippetEnumerator = [defaultCommands[collection] objectEnumerator];
 			for (id command in snippetEnumerator)
             {
-				FRACommandManagedObject *newCommand = [FRABasic createNewObjectForEntity:@"Command"];
-				[newCommand setValue: command[@"name"]
-                              forKey: @"name"];
-				[newCommand setValue: command[@"text"]
-                              forKey: @"text"];
+				VACommand *newCommand = [[VACommand alloc] init];
+				[newCommand setName: command[@"name"]];
+				[newCommand setText: command[@"text"]];
 				
                 if (command[@"inline"] != nil)
                 {
-					[newCommand setValue:command[@"inline"] forKey:@"inline"];
+					[newCommand setIsInline: [command[@"inline"] boolValue]];
 				}
                 
 				if (command[@"interpreter"] != nil)
                 {
-					[newCommand setValue: command[@"interpreter"]
-                                  forKey: @"interpreter"];
+					[newCommand setInterpreter: command[@"interpreter"]];
 				}
                 
-				[[newCollection mutableSetValueForKey:@"commands"] addObject:newCommand];
+				[[newCollection commands] addObject: newCommand];
 			}
 		}
 		

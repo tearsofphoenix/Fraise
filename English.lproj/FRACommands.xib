@@ -7,9 +7,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="FRACommandsController">
             <connections>
-                <outlet property="commandCollectionsArrayController" destination="9" id="186"/>
                 <outlet property="commandCollectionsTableView" destination="137" id="183"/>
-                <outlet property="commandsArrayController" destination="10" id="187"/>
                 <outlet property="commandsFilterView" destination="213" id="230"/>
                 <outlet property="commandsTableView" destination="140" id="184"/>
                 <outlet property="commandsTextView" destination="135" id="196"/>
@@ -39,7 +37,7 @@
                                     <rect key="frame" x="1" y="17" width="179" height="368"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" columnReordering="NO" columnSelection="YES" multipleSelection="NO" emptySelection="NO" autosaveName="CommandCollections" rowHeight="33" headerView="246" id="137" customClass="FRATableView">
+                                        <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" columnReordering="NO" columnSelection="YES" multipleSelection="NO" emptySelection="NO" autosaveName="CommandCollections" rowHeight="33" headerView="246" id="137" customClass="NSOutlineView">
                                             <rect key="frame" x="0.0" y="0.0" width="179" height="368"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <size key="intercellSpacing" width="3" height="2"/>
@@ -59,9 +57,6 @@
                                                     </textFieldCell>
                                                     <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="name"/>
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                                    <connections>
-                                                        <binding destination="9" name="value" keyPath="arrangedObjects.name" id="160"/>
-                                                    </connections>
                                                 </tableColumn>
                                             </tableColumns>
                                             <connections>
@@ -95,7 +90,7 @@
                                             <rect key="frame" x="1" y="17" width="473" height="196"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
-                                                <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" columnSelection="YES" emptySelection="NO" autosaveName="SelectedCommands3" headerView="251" id="140" customClass="FRATableView">
+                                                <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" columnSelection="YES" emptySelection="NO" autosaveName="SelectedCommands3" headerView="251" id="140" customClass="NSOutlineView">
                                                     <rect key="frame" x="0.0" y="0.0" width="473" height="196"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <size key="intercellSpacing" width="3" height="2"/>
@@ -115,9 +110,6 @@
                                                             </textFieldCell>
                                                             <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="name"/>
                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                                            <connections>
-                                                                <binding destination="10" name="value" keyPath="arrangedObjects.name" id="162"/>
-                                                            </connections>
                                                         </tableColumn>
                                                         <tableColumn identifier="inline" width="44" minWidth="10" maxWidth="1000" id="188">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Inline">
@@ -129,9 +121,6 @@
                                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                 <font key="font" metaFont="cellTitle"/>
                                                             </buttonCell>
-                                                            <connections>
-                                                                <binding destination="10" name="value" keyPath="arrangedObjects.inline" id="191"/>
-                                                            </connections>
                                                         </tableColumn>
                                                         <tableColumn identifier="interpreter" width="85" minWidth="10" maxWidth="1000" id="203">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Interpreter">
@@ -145,9 +134,6 @@
                                                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                             </textFieldCell>
                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                                            <connections>
-                                                                <binding destination="10" name="value" keyPath="arrangedObjects.interpreter" id="205"/>
-                                                            </connections>
                                                         </tableColumn>
                                                         <tableColumn identifier="shortcut" width="160.69820000000001" minWidth="52.698239999999998" maxWidth="1000" id="142">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Shortcut">
@@ -161,9 +147,6 @@
                                                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                             </textFieldCell>
                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                                            <connections>
-                                                                <binding destination="10" name="value" keyPath="arrangedObjects.shortcutDisplayString" id="164"/>
-                                                            </connections>
                                                         </tableColumn>
                                                     </tableColumns>
                                                     <connections>
@@ -198,17 +181,16 @@
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <size key="minSize" width="473" height="161"/>
-                                                    <size key="maxSize" width="473" height="10000000"/>
+                                                    <size key="maxSize" width="475" height="10000000"/>
                                                     <color key="insertionPointColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                     <size key="minSize" width="473" height="161"/>
-                                                    <size key="maxSize" width="473" height="10000000"/>
+                                                    <size key="maxSize" width="475" height="10000000"/>
                                                     <connections>
                                                         <binding destination="168" name="font" keyPath="values.TextFont" id="171">
                                                             <dictionary key="options">
                                                                 <string key="NSValueTransformerName">NSUnarchiveFromData</string>
                                                             </dictionary>
                                                         </binding>
-                                                        <binding destination="10" name="value" keyPath="selection.text" id="167"/>
                                                     </connections>
                                                 </textView>
                                             </subviews>
@@ -284,35 +266,10 @@
                     </textField>
                 </subviews>
             </view>
-            <metadata/>
             <connections>
                 <outlet property="delegate" destination="-2" id="158"/>
             </connections>
         </window>
-        <arrayController mode="entity" entityName="CommandCollection" automaticallyPreparesContent="YES" id="9" userLabel="CommandCollectionsArrayController">
-            <declaredKeys>
-                <string>name</string>
-                <string>snippets</string>
-                <string>commands</string>
-            </declaredKeys>
-            <connections>
-                <binding destination="-2" name="managedObjectContext" keyPath="managedObjectContext" id="157"/>
-            </connections>
-        </arrayController>
-        <arrayController mode="entity" entityName="Command" automaticallyPreparesContent="YES" id="10" userLabel="CommandsArrayController">
-            <declaredKeys>
-                <string>snippets</string>
-                <string>text</string>
-                <string>name</string>
-                <string>shortcut</string>
-                <string>shortcutDisplayString</string>
-                <string>inline</string>
-                <string>interpreter</string>
-            </declaredKeys>
-            <connections>
-                <binding destination="9" name="contentSet" keyPath="selection.commands" id="197"/>
-            </connections>
-        </arrayController>
         <userDefaultsController representsSharedInstance="YES" id="168" userLabel="Shared Defaults"/>
         <customView id="213" userLabel="CommandsFilterView">
             <rect key="frame" x="0.0" y="0.0" width="114" height="32"/>
@@ -326,17 +283,8 @@
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </searchFieldCell>
-                    <connections>
-                        <binding destination="10" name="predicate" keyPath="filterPredicate" id="231">
-                            <dictionary key="options">
-                                <string key="NSDisplayName">Current collection</string>
-                                <string key="NSPredicateFormat">name contains[c] $value OR text contains[c] $value</string>
-                            </dictionary>
-                        </binding>
-                    </connections>
                 </searchField>
             </subviews>
-            <metadata/>
         </customView>
     </objects>
 </document>

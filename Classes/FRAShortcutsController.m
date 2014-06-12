@@ -18,6 +18,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRACommandsController.h"
 #import "FRASnippetsController.H"
 #import "VASnippet.h"
+#import "VACommand.h"
 
 @implementation FRAShortcutsController
 
@@ -44,20 +45,20 @@ VASingletonIMPDefault(FRAShortcutsController)
 
 - (void)registerCommandShortcutWithEvent:(NSEvent *)event
 {
-	id command = [[[FRACommandsController sharedInstance] commandsArrayController] selectedObjects][0];	
-	[command setValue:@([event modifierFlags]) forKey:@"shortcutModifier"];
-	[command setValue:[self menuItemKeyStringFromEvent:event] forKey:@"shortcutMenuItemKeyString"];
-	[command setValue:[[self plainModifierStringFromEvent:event] stringByAppendingString:[self plainKeyStringFromEvent:event]] forKey:@"shortcutDisplayString"];
+	VACommand *command = [[FRACommandsController sharedInstance] selectedCommand];
+	[command setShortcutModifier: [event modifierFlags]];
+	[command setShortcutMenuItemKeyString: [self menuItemKeyStringFromEvent:event]];
+	[command setShortcutDisplayString: [[self plainModifierStringFromEvent:event] stringByAppendingString:[self plainKeyStringFromEvent:event]]];
 }
 
 
 - (void)unregisterSelectedCommandShortcut
 {
-	id command = [[[FRACommandsController sharedInstance] commandsArrayController] selectedObjects][0];	
+	VACommand *command = [[FRACommandsController sharedInstance] selectedCommand];
 	
-	[command setValue:nil forKey:@"shortcutModifier"];
-	[command setValue:nil forKey:@"shortcutMenuItemKeyString"];
-	[command setValue:nil forKey:@"shortcutDisplayString"];
+	[command setShortcutModifier: 0];
+	[command setShortcutMenuItemKeyString: nil];
+	[command setShortcutDisplayString: nil];
 }
 
 

@@ -14,16 +14,11 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 #import <Cocoa/Cocoa.h>
 
-@class FRATableView;
+@class VACommandCollection;
+@class VACommand;
 
-@interface FRACommandsController : NSObject <NSToolbarDelegate> {
-
-	IBOutlet NSArrayController *__unsafe_unretained commandCollectionsArrayController;
-	IBOutlet NSTableView *__unsafe_unretained commandCollectionsTableView;
-	IBOutlet NSArrayController *__unsafe_unretained commandsArrayController;
-	IBOutlet NSTableView *__unsafe_unretained commandsTableView;
-	IBOutlet NSWindow *__unsafe_unretained commandsWindow;
-	IBOutlet NSTextView *__unsafe_unretained commandsTextView;
+@interface FRACommandsController : NSObject <NSToolbarDelegate>
+{
 	IBOutlet NSView *commandsFilterView;
 	
 	BOOL currentCommandShouldBeInsertedInline;
@@ -33,12 +28,13 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 }
 
-@property (unsafe_unretained, readonly) IBOutlet NSTextView *commandsTextView;
-@property (unsafe_unretained, readonly) IBOutlet NSWindow *commandsWindow;
-@property (unsafe_unretained, readonly) IBOutlet NSArrayController *commandCollectionsArrayController;
-@property (unsafe_unretained, readonly) IBOutlet NSTableView *commandCollectionsTableView;
-@property (unsafe_unretained, readonly) IBOutlet NSArrayController *commandsArrayController;
-@property (unsafe_unretained, readonly) IBOutlet NSTableView *commandsTableView;
+@property (unsafe_unretained) IBOutlet NSTextView *commandsTextView;
+@property (unsafe_unretained) IBOutlet NSWindow *commandsWindow;
+@property (unsafe_unretained) IBOutlet NSOutlineView *commandCollectionsTableView;
+@property (unsafe_unretained) IBOutlet NSOutlineView *commandsTableView;
+
+@property (nonatomic, strong) VACommandCollection *selectedCollection;
+@property (nonatomic, strong) VACommand *selectedCommand;
 
 + (FRACommandsController *)sharedInstance;
 
@@ -54,9 +50,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 - (void)importCommands;
 - (void)performCommandsImportWithPath:(NSString *)path;
 - (void)exportCommands;
-
-- (NSManagedObjectContext *)managedObjectContext;
-
 
 - (IBAction)runAction:(id)sender;
 

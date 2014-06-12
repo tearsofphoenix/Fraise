@@ -26,6 +26,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAProject.h"
 #import "FRATextView.h"
 #import "VASnippetCollection.h"
+#import "VACommand.h"
+#import "VACommandCollection.h"
 
 @implementation FRADragAndDropController
 
@@ -67,7 +69,8 @@ VASingletonIMPDefault(FRADragAndDropController)
 		
 		NSMutableString *string = [NSMutableString stringWithString:@""];
 		NSMutableArray *uriArray = [NSMutableArray array];
-		NSArray *arrangedObjects = [[[FRACommandsController sharedInstance] commandsArrayController] arrangedObjects];
+		NSArray *arrangedObjects = [VACommand allCommands];
+
 		NSInteger currentIndex = [rowIndexes firstIndex];
 		while (currentIndex != NSNotFound) {
 			NSRange selectedRange = [FRACurrentTextView selectedRange];
@@ -114,8 +117,10 @@ VASingletonIMPDefault(FRADragAndDropController)
 		if ([info draggingSource] == [[FRACommandsController sharedInstance] commandsTableView]) {
 			[aTableView setDropRow:row dropOperation:NSTableViewDropOn];
 			return NSDragOperationMove;
-		} else {
-			[aTableView setDropRow:[[[[FRACommandsController sharedInstance] commandCollectionsArrayController] arrangedObjects] count] dropOperation:NSTableViewDropAbove];
+		} else
+        {
+			[aTableView setDropRow: [VACommandCollection allCommandCollections]
+                     dropOperation: NSTableViewDropAbove];
 			return NSDragOperationCopy;
 		}
 		return NSDragOperationCopy;
@@ -207,14 +212,15 @@ VASingletonIMPDefault(FRADragAndDropController)
 			NSArray *pasteboardData = [NSUnarchiver unarchiveObjectWithData:[[info draggingPasteboard] dataForType:movedCommandType]];
 			NSArray *uriArray = pasteboardData[1];
 			
-			id collection = [[[FRACommandsController sharedInstance] commandCollectionsArrayController] arrangedObjects][row];
+			VACommandCollection *collection = [VACommandCollection allCommandCollections][row];
 			
 			id item;
-			for (item in uriArray) {
-				[[collection mutableSetValueForKey:@"commands"] addObject:[FRABasic objectFromURI:item]];
+			for (item in uriArray)
+            {
+				[[collection commands] addObject: [FRABasic objectFromURI:item]];
 			}
 			
-			[[[FRACommandsController sharedInstance] commandsArrayController] rearrangeObjects];
+//			[[[FRACommandsController sharedInstance] commandsArrayController] rearrangeObjects];
 			
 			return YES;
 		}
