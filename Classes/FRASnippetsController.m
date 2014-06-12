@@ -34,18 +34,17 @@
 @interface FRASnippetsController ()<NSOutlineViewDataSource, NSOutlineViewDelegate>
 
 @property (nonatomic, strong) NSArray *draggedNodes;
+@property (nonatomic, strong) NSArray *draggedSnippetNodes;
 
 @end
 
 @implementation FRASnippetsController
 
-@synthesize snippetsTextView, snippetsWindow;
-
 VASingletonIMPDefault(FRASnippetsController)
 
 - (void)openSnippetsWindow
 {
-	if (snippetsWindow == nil)
+	if (_snippetsWindow == nil)
     {
 		[NSBundle loadNibNamed:@"FRASnippets.nib" owner:self];
 		
@@ -73,10 +72,10 @@ VASingletonIMPDefault(FRASnippetsController)
 		[toolbar setDisplayMode:NSToolbarDisplayModeDefault];
 		[toolbar setSizeMode:NSToolbarSizeModeSmall];
 		[toolbar setDelegate:self];
-		[snippetsWindow setToolbar:toolbar];
+		[_snippetsWindow setToolbar:toolbar];
 	}
 	
-	[snippetsWindow makeKeyAndOrderFront:self];
+	[_snippetsWindow makeKeyAndOrderFront:self];
 	[[FRAToolsMenuController sharedInstance] buildInsertSnippetMenu];
 	
 }
@@ -88,7 +87,7 @@ VASingletonIMPDefault(FRASnippetsController)
 	
 	_selectedCollection = collection;
 	
-	[snippetsWindow makeFirstResponder:_snippetCollectionsTableView];
+	[_snippetsWindow makeFirstResponder:_snippetCollectionsTableView];
     //	[_snippetCollectionsTableView editColumn:0 row:[_snippetCollectionsTableView selectedRow] withEvent:nil select:NO];
     [_snippetCollectionsTableView reloadData];
 }
@@ -106,7 +105,7 @@ VASingletonIMPDefault(FRASnippetsController)
     
 	[self performInsertNewSnippet];
 	
-	[snippetsWindow makeFirstResponder:_snippetsTableView];
+	[_snippetsWindow makeFirstResponder:_snippetsTableView];
 	[_snippetsTableView editColumn:0 row:[_snippetsTableView selectedRow] withEvent:nil select:NO];
 }
 
@@ -122,7 +121,7 @@ VASingletonIMPDefault(FRASnippetsController)
 		[collection setName: COLLECTION_STRING];
 	} else
     {
-		if (snippetsWindow != nil && _selectedCollection)
+		if (_snippetsWindow != nil && _selectedCollection)
         {
 			collection = _selectedCollection;
             
@@ -187,7 +186,7 @@ VASingletonIMPDefault(FRASnippetsController)
 	[openPanel setResolvesAliases:YES];
 	[openPanel setDirectoryURL: [NSURL fileURLWithPath: [FRAInterface whichDirectoryForOpen]]];
     [openPanel setAllowedFileTypes: @[@"frac", @"smlc", @"fraiseSnippets"]];
-    [openPanel beginSheetModalForWindow: snippetsWindow
+    [openPanel beginSheetModalForWindow: _snippetsWindow
                       completionHandler: (^(NSInteger result)
                                           {
                                               
@@ -195,7 +194,7 @@ VASingletonIMPDefault(FRASnippetsController)
                                               {
                                                   [self performSnippetsImportWithPath: [[openPanel URL] path]];
                                               }
-                                              [snippetsWindow makeKeyAndOrderFront:nil];
+                                              [_snippetsWindow makeKeyAndOrderFront:nil];
                                           })];
 }
 
@@ -222,13 +221,13 @@ VASingletonIMPDefault(FRASnippetsController)
         {
 			VASnippet *snippet = [[VASnippet alloc] init];
             
-			[snippet setName: [item objectForKey: @"name"]];
-			[snippet setText: [item objectForKey: @"text"]];
-			[snippet setCollectionName: [item objectForKey:@"collectionName"]];
-			[snippet setShortcutDisplayString: [item objectForKey:@"shortcutDisplayString"]];
-			[snippet setShortcutMenuItemKeyString: [item objectForKey:@"shortcutMenuItemKeyString"]];
-			[snippet setShortcutModifier: [[item objectForKey:@"shortcutModifier"] integerValue]];
-			[snippet setSortOrder: [[item objectForKey:@"sortOrder"] integerValue]];
+			[snippet setName: item[@"name"]];
+			[snippet setText: item[@"text"]];
+			[snippet setCollectionName: item[@"collectionName"]];
+			[snippet setShortcutDisplayString: item[@"shortcutDisplayString"]];
+			[snippet setShortcutMenuItemKeyString: item[@"shortcutMenuItemKeyString"]];
+			[snippet setShortcutModifier: [item[@"shortcutModifier"] integerValue]];
+			[snippet setSortOrder: [item[@"sortOrder"] integerValue]];
             
 			[[collection snippets] addObject: snippet];
 		}
@@ -247,7 +246,7 @@ VASingletonIMPDefault(FRASnippetsController)
     [savePanel setAllowedFileTypes: @[@"fraiseSnippets"]];
     [savePanel setDirectoryURL: [NSURL fileURLWithPath: [FRAInterface whichDirectoryForSave]]];
     [savePanel setNameFieldStringValue: [_selectedCollection name]];
-    [savePanel beginSheetModalForWindow: snippetsWindow
+    [savePanel beginSheetModalForWindow: _snippetsWindow
                       completionHandler: (^(NSInteger result)
                                           {
                                               if (result == NSOKButton)
@@ -276,7 +275,7 @@ VASingletonIMPDefault(FRASnippetsController)
                                                                               path: [[savePanel URL] path]];
                                               }
                                               
-                                              [snippetsWindow makeKeyAndOrderFront:nil];
+                                              [_snippetsWindow makeKeyAndOrderFront:nil];
                                           })];
 }
 
@@ -343,25 +342,24 @@ VASingletonIMPDefault(FRASnippetsController)
 
 #pragma mark - NSOutlineView data source methods. (The required ones)
 
-// The NSOutlineView uses 'nil' to indicate the root item. We return our root tree node for that case.
-- (NSArray *)childrenForItem: (id)item
-{
-    if (item == nil)
-    {
-        return [VASnippetCollection allSnippetCollections];
-    } else
-    {
-        return nil;
-    }
-}
-
 // Required methods.
 - (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(id)item
 {
-    // 'item' may potentially be nil for the root item.
-    NSArray *children = [self childrenForItem:item];
-    // This will return an NSTreeNode with our model object as the representedObject
-    return [children objectAtIndex:index];
+    if (outlineView == _snippetCollectionsTableView)
+    {
+        if (!item)
+        {
+            return [VASnippetCollection allSnippetCollections][index];
+        }
+    }else if (outlineView == _snippetsTableView)
+    {
+        if (!item)
+        {
+            return [_selectedCollection snippets][index];
+        }
+    }
+    
+    return nil;
 }
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
@@ -372,8 +370,21 @@ VASingletonIMPDefault(FRASnippetsController)
 - (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
 {
     // 'item' may potentially be nil for the root item.
-    NSArray *children = [self childrenForItem:item];
-    return [children count];
+    if (outlineView == _snippetCollectionsTableView)
+    {
+        if (!item)
+        {
+            return [[VASnippetCollection allSnippetCollections] count];
+        }
+    }else if (outlineView == _snippetsTableView)
+    {
+        if (!item)
+        {
+            return [[_selectedCollection snippets] count];
+        }
+    }
+    
+    return 0;
 }
 
 - (id)        outlineView: (NSOutlineView *)outlineView
@@ -381,12 +392,20 @@ objectValueForTableColumn: (NSTableColumn *)tableColumn
                    byItem: (id)item
 {
     id objectValue = nil;
-    VASnippetCollection *collection = item;
     
-    // The return value from this method is used to configure the state of the items cell via setObjectValue:
-    if ((tableColumn == nil) || [[tableColumn identifier] isEqualToString: @"collection"])
+    if (outlineView == _snippetCollectionsTableView)
     {
-        objectValue = [collection name];
+        VASnippetCollection *collection = item;
+        
+        // The return value from this method is used to configure the state of the items cell via setObjectValue:
+        if ((tableColumn == nil) || [[tableColumn identifier] isEqualToString: @"collection"])
+        {
+            objectValue = [collection name];
+        }
+    }else if (outlineView == _snippetsTableView)
+    {
+        VASnippet *snippet = item;
+        objectValue = [snippet name];
     }
     
     return objectValue;
@@ -398,8 +417,16 @@ objectValueForTableColumn: (NSTableColumn *)tableColumn
      forTableColumn: (NSTableColumn *)tableColumn
              byItem: (id)item
 {
-    VASnippetCollection *collection = item;
-    [collection setName: object];
+    if (ov == _snippetCollectionsTableView)
+    {
+        VASnippetCollection *collection = item;
+        [collection setName: object];
+        
+    }else if (ov == _snippetsTableView)
+    {
+        VASnippet *snippet = item;
+        [snippet setName: object];
+    }
 }
 
 // We can return a different cell for each row, if we want
@@ -432,14 +459,28 @@ objectValueForTableColumn: (NSTableColumn *)tableColumn
      forTableColumn: (NSTableColumn *)tableColumn
                item: (id)item
 {
-        VASnippetCollection *collection = item;
+    NSString *tabColumnID = [tableColumn identifier];
     
-        if ((tableColumn == nil) || [[tableColumn identifier] isEqualToString: @"collection"])
+    if (outlineView == _snippetCollectionsTableView)
+    {
+        VASnippetCollection *collection = item;
+        
+        if ((tableColumn == nil) || [tabColumnID isEqualToString: @"collection"])
         {
             [cell setStringValue: [collection name]];
         }
-    
-    // For all the other columns, we don't do anything.
+        
+    }else if (outlineView == _snippetsTableView)
+    {
+        VASnippet *snippet = item;
+        if ([tabColumnID isEqualToString: @"name"])
+        {
+            [cell setStringValue: [snippet name]];
+        }else if ([tabColumnID isEqualToString: @"shortcut"])
+        {
+            [cell setStringValue: [snippet shortcutDisplayString] ?: @""];
+        }
+    }
 }
 
 - (BOOL)outlineView: (NSOutlineView *)ov
@@ -476,20 +517,52 @@ objectValueForTableColumn: (NSTableColumn *)tableColumn
 /* In 10.7 multiple drag images are supported by using this delegate method. */
 - (id <NSPasteboardWriting>)outlineView:(NSOutlineView *)outlineView pasteboardWriterForItem:(id)item
 {
-    VASnippetCollection *collection = item;
-
-    return [collection  name];
+    if (outlineView == _snippetCollectionsTableView)
+    {
+        VASnippetCollection *collection = item;
+        return [collection  name];
+    }else if (outlineView == _snippetsTableView)
+    {
+        VASnippet *snippet = item;
+        return [snippet name];
+    }
+    
+    return nil;
 }
 
-/* Setup a local reorder. */
+- (void)outlineViewSelectionDidChange: (NSNotification *)notification
+{
+    NSOutlineView *outlineView = [notification object];
+    if (outlineView == _snippetCollectionsTableView)
+    {
+        VASnippetCollection *collection = [outlineView itemAtRow: [outlineView selectedRow]];
+        [self setSelectedCollection: collection];
+        
+        [_snippetsTableView reloadData];
+        
+    }else if (outlineView == _snippetsTableView)
+    {
+        VASnippet *snippet = [outlineView itemAtRow: [outlineView selectedRow]];
+        [_snippetsTextView setString: [snippet text]];
+    }
+}
+
+#pragma mark - drag
+
 - (void)outlineView: (NSOutlineView *)outlineView
     draggingSession: (NSDraggingSession *)session
    willBeginAtPoint: (NSPoint)screenPoint
            forItems: (NSArray *)draggedItems
 {
-    _draggedNodes = draggedItems;
-    [session.draggingPasteboard setData: [NSData data]
-                                forType: @"com.veritas.fraise.pasteboard.data"];
+    if (outlineView == _snippetCollectionsTableView)
+    {
+        _draggedNodes = draggedItems;
+        [session.draggingPasteboard setData: [NSData data]
+                                    forType: @"com.veritas.fraise.pasteboard.data"];
+    }else
+    {
+        _draggedSnippetNodes = draggedItems;
+    }
 }
 
 - (void)outlineView: (NSOutlineView *)outlineView
@@ -498,26 +571,49 @@ objectValueForTableColumn: (NSTableColumn *)tableColumn
           operation: (NSDragOperation)operation
 {
     // If the session ended in the trash, then delete all the items
-    if (operation == NSDragOperationDelete)
+    if (outlineView == _snippetCollectionsTableView)
     {
-        [_snippetCollectionsTableView beginUpdates];
-        
-        [_draggedNodes enumerateObjectsWithOptions: NSEnumerationReverse
-                                        usingBlock: (^(id node, NSUInteger index, BOOL *stop)
-                                                     {
-                                                         id parent = [node parentNode];
-                                                         NSMutableArray *children = [parent mutableChildNodes];
-                                                         NSInteger childIndex = [children indexOfObject:node];
-                                                         [children removeObjectAtIndex:childIndex];
-                                                         [_snippetCollectionsTableView removeItemsAtIndexes: [NSIndexSet indexSetWithIndex:childIndex]
-                                                                                                   inParent: nil
-                                                                                              withAnimation: NSTableViewAnimationEffectFade];
-                                                     })];
-        
-        [_snippetCollectionsTableView endUpdates];
+        if (operation == NSDragOperationDelete)
+        {
+            [outlineView beginUpdates];
+            
+            [_draggedNodes enumerateObjectsWithOptions: NSEnumerationReverse
+                                            usingBlock: (^(id node, NSUInteger index, BOOL *stop)
+                                                         {
+                                                             id parent = [node parentNode];
+                                                             NSMutableArray *children = [parent mutableChildNodes];
+                                                             NSInteger childIndex = [children indexOfObject:node];
+                                                             [children removeObjectAtIndex:childIndex];
+                                                             [outlineView removeItemsAtIndexes: [NSIndexSet indexSetWithIndex:childIndex]
+                                                                                      inParent: nil
+                                                                                 withAnimation: NSTableViewAnimationEffectFade];
+                                                         })];
+            
+            [outlineView endUpdates];
+        }
+        _draggedNodes = nil;
+    }else if (outlineView == _snippetsTableView)
+    {
+        if (operation == NSDragOperationDelete)
+        {
+            [outlineView beginUpdates];
+            
+            [_draggedSnippetNodes enumerateObjectsWithOptions: NSEnumerationReverse
+                                                   usingBlock: (^(id node, NSUInteger index, BOOL *stop)
+                                                                {
+                                                                    id parent = [node parentNode];
+                                                                    NSMutableArray *children = [parent mutableChildNodes];
+                                                                    NSInteger childIndex = [children indexOfObject:node];
+                                                                    [children removeObjectAtIndex:childIndex];
+                                                                    [outlineView removeItemsAtIndexes: [NSIndexSet indexSetWithIndex:childIndex]
+                                                                                             inParent: nil
+                                                                                        withAnimation: NSTableViewAnimationEffectFade];
+                                                                })];
+            
+            [outlineView endUpdates];
+        }
+        _draggedSnippetNodes = nil;
     }
-    
-    _draggedNodes = nil;
 }
 
 @end

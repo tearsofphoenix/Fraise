@@ -169,7 +169,7 @@ VASingletonIMPDefault(FRAVariousPerformer)
 
 			[newCollection setName: collection];
             
-			NSArray *array = [defaultSnippets objectForKey: collection];
+			NSArray *array = defaultSnippets[collection];
 			for (NSDictionary *snippet in array)
             {
 				VASnippet *newSnippet = [[VASnippet alloc] init];

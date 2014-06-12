@@ -20,13 +20,11 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 @interface FRASnippetsController : NSObject <NSToolbarDelegate>
 { 
-    IBOutlet NSWindow *__unsafe_unretained snippetsWindow;
-	IBOutlet NSTextView *__unsafe_unretained snippetsTextView;
 	IBOutlet NSView *snippetsFilterView;
 }
 
-@property (unsafe_unretained, readonly) IBOutlet NSTextView *snippetsTextView;
-@property (unsafe_unretained, readonly) IBOutlet NSWindow *snippetsWindow;
+@property (unsafe_unretained) IBOutlet NSTextView *snippetsTextView;
+@property (unsafe_unretained) IBOutlet NSWindow *snippetsWindow;
 @property (unsafe_unretained) IBOutlet NSOutlineView *snippetCollectionsTableView;
 @property (unsafe_unretained) IBOutlet NSOutlineView *snippetsTableView;
 @property (strong) VASnippetCollection *selectedCollection;
