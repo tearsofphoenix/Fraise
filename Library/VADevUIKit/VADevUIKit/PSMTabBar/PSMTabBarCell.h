@@ -20,27 +20,26 @@
 }
 
 // creation/destruction
-- (id)initWithControlView:(PSMTabBarControl *)controlView;
-- (id)initPlaceholderWithFrame:(NSRect)frame expanded:(BOOL)value inControlView:(PSMTabBarControl *)controlView;
+- (instancetype)initWithControlView:(PSMTabBarControl *)controlView NS_DESIGNATED_INITIALIZER;
+- (instancetype)initPlaceholderWithFrame:(NSRect)frame expanded:(BOOL)value inControlView:(PSMTabBarControl *)controlView NS_DESIGNATED_INITIALIZER;
 
 // accessors
-- (id)controlView;
-- (void)setControlView:(id)view;
+@property (NS_NONATOMIC_IOSONLY, strong) id controlView;
 
 @property  NSTrackingRectTag closeButtonTrackingTag; // left side tracking, if dragging
 @property  NSTrackingRectTag cellTrackingTag; // right side tracking, if dragging
 
-- (CGFloat)width;
+@property (NS_NONATOMIC_IOSONLY, readonly) CGFloat width;
 
 @property NSRect frame;
 
 - (void)setStringValue:(NSString *)aString;
-- (NSSize)stringSize;
-- (NSAttributedString *)attributedStringValue;
+@property (NS_NONATOMIC_IOSONLY, readonly) NSSize stringSize;
+@property (NS_NONATOMIC_IOSONLY, readonly, copy) NSAttributedString *attributedStringValue;
 
 @property NSInteger tabState;
 
-- (NSProgressIndicator *)indicator;
+@property (NS_NONATOMIC_IOSONLY, readonly, strong) NSProgressIndicator *indicator;
 
 @property BOOL isInOverflowMenu;
 @property BOOL closeButtonPressed;
@@ -56,8 +55,8 @@
 // component attributes
 - (NSRect)indicatorRectForFrame:(NSRect)cellFrame;
 - (NSRect)closeButtonRectForFrame:(NSRect)cellFrame;
-- (CGFloat)minimumWidthOfCell;
-- (CGFloat)desiredWidthOfCell;
+@property (NS_NONATOMIC_IOSONLY, readonly) CGFloat minimumWidthOfCell;
+@property (NS_NONATOMIC_IOSONLY, readonly) CGFloat desiredWidthOfCell;
 
 // drawing
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView;
@@ -71,6 +70,6 @@
 
 // archiving
 - (void)encodeWithCoder:(NSCoder *)aCoder;
-- (id)initWithCoder:(NSCoder *)aDecoder;
+- (instancetype)initWithCoder:(NSCoder *)aDecoder NS_DESIGNATED_INITIALIZER;
 
 @end

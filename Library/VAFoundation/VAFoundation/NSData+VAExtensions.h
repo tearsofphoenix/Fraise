@@ -10,6 +10,6 @@
 
 @interface NSData (VAExtensions)
 
-- (NSStringEncoding)guessEncoding;
+@property (NS_NONATOMIC_IOSONLY, readonly) NSStringEncoding guessEncoding;
 
 @end

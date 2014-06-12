@@ -17,7 +17,7 @@
 
 #pragma mark -
 #pragma mark Creation/Destruction
-- (id)initWithControlView:(PSMTabBarControl *)controlView
+- (instancetype)initWithControlView:(PSMTabBarControl *)controlView
 {
     self = [super init];
     if(self){
@@ -37,7 +37,7 @@
     return self;
 }
 
-- (id)initPlaceholderWithFrame:(NSRect)frame expanded:(BOOL)value inControlView:(PSMTabBarControl *)controlView
+- (instancetype)initPlaceholderWithFrame:(NSRect)frame expanded:(BOOL)value inControlView:(PSMTabBarControl *)controlView
 {
     self = [super init];
     if(self){
@@ -258,7 +258,7 @@
     }
 }
 
-- (id)initWithCoder:(NSCoder *)aDecoder {
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self) {
         if ([aDecoder allowsKeyedCoding]) {

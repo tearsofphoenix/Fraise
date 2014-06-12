@@ -46,13 +46,13 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (void)showAdvancedFindWindow;
 
-- (NSEnumerator *)scopeEnumerator;
+@property (NS_NONATOMIC_IOSONLY, readonly, strong) NSEnumerator *scopeEnumerator;
 
 - (void)removeCurrentlyDisplayedDocumentInAdvancedFind;
 
-- (NSView *)resultDocumentContentView;
+@property (NS_NONATOMIC_IOSONLY, readonly, strong) NSView *resultDocumentContentView;
 
-- (NSManagedObjectContext *)managedObjectContext;
+@property (NS_NONATOMIC_IOSONLY, readonly, strong) NSManagedObjectContext *managedObjectContext;
 
 - (NSMutableDictionary *)preparedResultDictionaryFromString:(NSString *)completeString searchStringLength:(NSInteger)searchStringLength range:(NSRange)foundRange lineNumber:(NSInteger)lineNumber document:(id)document;
 
@@ -60,7 +60,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (void)searchScopeChanged:(id)sender;
 
-- (NSEnumerator *)documentsInFolderEnumerator;
+@property (NS_NONATOMIC_IOSONLY, readonly, strong) NSEnumerator *documentsInFolderEnumerator;
 
 - (IBAction)showRegularExpressionsHelpPanelAction:(id)sender;
 

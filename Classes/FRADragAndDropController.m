@@ -33,7 +33,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 VASingletonIMPDefault(FRADragAndDropController)
 
-- (id)init 
+- (instancetype)init 
 {
     if ((self = [super init]))
     {

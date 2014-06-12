@@ -34,7 +34,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 - (void)removeAllItemsFromMenu:(NSMenu *)menu;
 
 - (void)insertSortOrderNumbersForArrayController:(NSArrayController *)arrayController;
-- (NSString *)genererateTemporaryPath;
+@property (NS_NONATOMIC_IOSONLY, readonly, copy) NSString *genererateTemporaryPath;
 - (NSString *)thousandFormatedStringFromNumber:(NSNumber *)number;
 - (NSString *)resolveAliasInPath:(NSString *)path;
 

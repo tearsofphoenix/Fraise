@@ -45,7 +45,7 @@ static id sharedInstance = nil;
 } 
 
 
-- (id)init 
+- (instancetype)init 
 {
     if (sharedInstance == nil) {
         sharedInstance = [super init];

@@ -27,7 +27,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 #import "ODBEditorSuite.h"
 #import "FRATextView.h"
-#import "FRACommandManagedObject.h"
 #import "VFSyntaxDefinition.h"
 #import "VFEncoding.h"
 #import "VASnippet.h"
@@ -44,7 +43,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 VASingletonIMPDefault(FRAVariousPerformer)
 
-- (id)init 
+- (instancetype)init 
 {
     if ((self = [super init]))
     {
@@ -189,7 +188,8 @@ VASingletonIMPDefault(FRAVariousPerformer)
 
 - (void)insertDefaultCommands
 {
-	if ([[FRADefaults valueForKey:@"HasInsertedDefaultCommands3"] boolValue] == NO) {
+	//if ([[FRADefaults valueForKey:@"HasInsertedDefaultCommands3"] boolValue] == NO)
+    {
 		
 		NSDictionary *defaultCommands = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"DefaultCommands" ofType:@"plist"]];
 		

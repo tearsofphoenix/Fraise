@@ -14,7 +14,7 @@
 @property NSInteger sortOrder;
 @property (strong) NSString *uuid;
 @property NSInteger version;
-@property (strong) NSMutableSet *commands;
+@property (strong) NSMutableArray *commands;
 
 + (NSArray *)allCommandCollections;
 

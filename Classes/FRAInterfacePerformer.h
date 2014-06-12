@@ -53,8 +53,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 - (void)updateStatusBar;
 - (void)clearStatusBar;
 
-- (NSString *)whichDirectoryForOpen;
-- (NSString *)whichDirectoryForSave;
+@property (NS_NONATOMIC_IOSONLY, readonly, copy) NSString *whichDirectoryForOpen;
+@property (NS_NONATOMIC_IOSONLY, readonly, copy) NSString *whichDirectoryForSave;
 
 - (void)removeAllSubviewsFromView:(NSView *)view;
 - (void)enterFullScreenForDocument:(id)document;
@@ -62,8 +62,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 - (void)returnFromFullScreen;
 
 - (void)insertAllFunctionsIntoMenu:(NSMenu *)menu;
-- (NSArray *)allFunctions;
-- (NSInteger)currentLineNumber;
+@property (NS_NONATOMIC_IOSONLY, readonly, copy) NSArray *allFunctions;
+@property (NS_NONATOMIC_IOSONLY, readonly) NSInteger currentLineNumber;
 - (NSInteger)currentFunctionIndexForFunctions:(NSArray *)functions;
 
 - (void)removeAllTabBarObjectsForTabView:(NSTabView *)tabView;

@@ -15,7 +15,7 @@ static CGFloat scaleFactor = 1;
 
 + (void)initialize
 {
-    scaleFactor = [[NSScreen mainScreen] userSpaceScaleFactor];
+    scaleFactor = [[NSScreen mainScreen] backingScaleFactor];
     gradient = [[NSGradient alloc] initWithStartingColor: [NSColor colorWithDeviceRed:0.812 green:0.812 blue:0.812 alpha:1.0]
                                              endingColor: [NSColor colorWithDeviceRed:0.914 green:0.914 blue:0.914 alpha:1.0]];
 }

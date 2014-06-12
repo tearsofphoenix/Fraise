@@ -37,7 +37,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 - (IBAction)newCollectionAction:(id)sender;
 - (IBAction)newSnippetAction:(id)sender;
 
-- (VASnippet *)performInsertNewSnippet;
+@property (NS_NONATOMIC_IOSONLY, readonly, strong) VASnippet *performInsertNewSnippet;
 
 - (void)insertSnippet:(id)snippet;
 

@@ -52,7 +52,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 - (void)showPreferencesWindow;
 
 - (NSRect)getRectForView:(NSView *)view;
-- (CGFloat)toolbarHeight;
+@property (NS_NONATOMIC_IOSONLY, readonly) CGFloat toolbarHeight;
 
 - (IBAction)setFontAction:(id)sender;
 
@@ -64,6 +64,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (IBAction)changeGutterWidth:(id)sender;
 
-- (NSManagedObjectContext *)managedObjectContext;
+@property (NS_NONATOMIC_IOSONLY, readonly, strong) NSManagedObjectContext *managedObjectContext;
 
 @end

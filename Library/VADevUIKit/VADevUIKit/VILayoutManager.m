@@ -40,7 +40,7 @@ static NSString *newLineCharacter = nil;
     newLineCharacter = [[NSString alloc] initWithCharacters:&newLineUnichar length:1];
 }
 
-- (id)init
+- (instancetype)init
 {
 	if (self = [super init])
     {

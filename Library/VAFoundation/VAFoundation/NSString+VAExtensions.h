@@ -8,7 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-enum
+
+typedef NS_ENUM(NSUInteger, VALineEndingType)
 {
 	VADefaultsLineEndings = 0,
 	VAUnixLineEndings = 1,
@@ -17,20 +18,18 @@ enum
 	VALeaveLineEndingsUnchanged = 6
 };
 
-typedef NSUInteger VALineEndingType;
-
 @interface NSString (VAExtensions)
 
 + (NSString *)UUIDString;
 
-- (NSArray *)divideCommandIntoArray;
+@property (NS_NONATOMIC_IOSONLY, readonly, copy) NSArray *divideCommandIntoArray;
 
 
 - (NSString *)stringByConvertToLineEndings: (VALineEndingType)type;
 
-- (NSString *)stringByReplaceAllNewLineCharactersWithSymbol;
+@property (NS_NONATOMIC_IOSONLY, readonly, copy) NSString *stringByReplaceAllNewLineCharactersWithSymbol;
 
-- (NSString *)stringByRemoveAllLineEndings;
+@property (NS_NONATOMIC_IOSONLY, readonly, copy) NSString *stringByRemoveAllLineEndings;
 
 + (NSString *)darkSideLineEnding;
 + (NSString *)macLineEnding;

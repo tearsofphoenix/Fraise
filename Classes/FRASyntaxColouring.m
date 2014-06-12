@@ -115,13 +115,13 @@
 
 @synthesize undoManager;
 
-- (id)init
+- (instancetype)init
 {
     return [self initWithDocument: nil];
 }
 
 
-- (id)initWithDocument:(id)theDocument
+- (instancetype)initWithDocument:(id)theDocument
 {
 	if ((self = [super init]))
     {

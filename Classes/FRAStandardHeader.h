@@ -51,38 +51,33 @@ Unless required by applicable law or agreed to in writing, software distributed 
 typedef NSUInteger FRALineEndings;
 
 
-enum {
+typedef NS_ENUM(NSUInteger, FRAAdvancedFindScope) {
 	FRACurrentDocumentScope = 0,
 	FRACurrentProjectScope = 1,
 	FRAAllDocumentsScope = 2,
 	FRAParentDirectoryScope = 3
 };
-typedef NSUInteger FRAAdvancedFindScope;
 
-enum {
+typedef NS_OPTIONS(NSUInteger, FRAView) {
 	FRAListView = 0
 };
-typedef NSUInteger FRAView;
 
-enum {
+typedef NS_ENUM(NSUInteger, FRAWhatKindOfProject) {
 	FRAVirtualProject = 0,
 	FRAPermantProject = 1
 };
-typedef NSUInteger FRAWhatKindOfProject;
 
-enum {
+typedef NS_ENUM(NSUInteger, FRAPreviewParser) {
 	FRAPreviewHTML = 0,
 	FRAPreviewMarkdown = 1,
 	FRAPreviewMultiMarkdown = 2,
 };
-typedef NSUInteger FRAPreviewParser;
 
-enum {
+typedef NS_ENUM(NSUInteger, FRAOpenSaveMatrix) {
 	FRAOpenSaveRemember = 0,
 	FRAOpenSaveCurrent = 1,
 	FRAOpenSaveAlways = 2
 };
-typedef NSUInteger FRAOpenSaveMatrix;
 
 typedef struct _AppleEventSelectionRange {
 	short unused1; // 0 (not used)
@@ -93,10 +88,9 @@ typedef struct _AppleEventSelectionRange {
 	long theDate; // modification date/time
 } AppleEventSelectionRange;
 
-enum {
+typedef NS_ENUM(NSUInteger, FRAErrors) {
     FraiseSaveErrorEncodingInapplicable = 1,
 };
-typedef NSUInteger FRAErrors;
 
 
 

@@ -28,6 +28,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRATextView.h"
 #import "VASnippetCollection.h"
 #import "VASnippet.h"
+#import "VACommand.h"
+#import "VACommandCollection.h"
 
 #define SNIPPET_TAG		100
 
@@ -191,31 +193,38 @@ VASingletonIMPDefault(FRAToolsMenuController)
 {
 	[FRABasic removeAllItemsFromMenu:runCommandMenu];
 	
-	NSEnumerator *collectionEnumerator = [[FRABasic fetchAll:@"CommandCollectionSortKeyName"] reverseObjectEnumerator];
-	for (id collection in collectionEnumerator) {
-		if ([collection valueForKey:@"name"] == nil) {
+	NSEnumerator *collectionEnumerator = [[VACommandCollection allCommandCollections] reverseObjectEnumerator];
+	for (VACommandCollection *collection in collectionEnumerator)
+    {
+		if ([collection name] == nil)
+        {
 			continue;
 		}
-		NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:[collection valueForKey:@"name"] action:nil keyEquivalent:@""];
+        
+		NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle: [collection name]
+                                                          action: nil
+                                                   keyEquivalent: @""];
 		NSMenu *subMenu = [[NSMenu alloc] init];
 		
-		NSMutableArray *array = [NSMutableArray arrayWithArray:[[collection mutableSetValueForKey:@"commands"] allObjects]];
+		NSMutableArray *array = [NSMutableArray arrayWithArray: [collection commands]];
 		[array sortUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
-		for (id command in array) {
-			if ([command valueForKey:@"name"] == nil) {
+
+        for (VACommand *command in array)
+        {
+			if ([command name] == nil)
+            {
 				continue;
 			}
-			NSString *keyString;
-			if ([command valueForKey:@"shortcutMenuItemKeyString"] != nil) {
-				keyString = [command valueForKey:@"shortcutMenuItemKeyString"];
-			} else {
-				keyString = @"";
-			}
-			NSMenuItem *subMenuItem = [[NSMenuItem alloc] initWithTitle:[command valueForKey:@"name"] action:@selector(commandShortcutFired:) keyEquivalent:keyString];
-			[subMenuItem setKeyEquivalentModifierMask:[[command valueForKey:@"shortcutModifier"] integerValue]];
-			[subMenuItem setTarget:self];			
-			[subMenuItem setRepresentedObject:command];
-			[subMenu insertItem:subMenuItem atIndex:0];
+            NSString *keyString = [command shortcutMenuItemKeyString] ?: @"";
+
+            NSMenuItem *subMenuItem = [[NSMenuItem alloc] initWithTitle: [command name]
+                                                                 action: @selector(commandShortcutFired:)
+                                                          keyEquivalent: keyString];
+			[subMenuItem setKeyEquivalentModifierMask: [command shortcutModifier]];
+			[subMenuItem setTarget: self];
+			[subMenuItem setRepresentedObject: command];
+			[subMenu insertItem: subMenuItem
+                        atIndex: 0];
 		}
 		
 		[menuItem setSubmenu:subMenu];

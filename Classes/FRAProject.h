@@ -95,7 +95,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 - (void)setDefaultAppearanceAtStartup;
 
 - (void)selectDocument:(id)document;
-- (BOOL)areThereAnyDocuments;
+@property (NS_NONATOMIC_IOSONLY, readonly) BOOL areThereAnyDocuments;
 - (void)resizeViewsForDocument:(id)document;
 - (void)setLastTextViewInFocus:(FRATextView *)newLastTextViewInFocus;
 - (id)createNewDocumentWithContents:(NSString *)textString;
@@ -108,28 +108,28 @@ Unless required by applicable law or agreed to in writing, software distributed 
 - (void)cleanUpDocument:(id)document;
 
 
-- (NSMutableSet *)documents;
+@property (NS_NONATOMIC_IOSONLY, readonly, copy) NSMutableSet *documents;
 
-- (NSManagedObjectContext *)managedObjectContext;
+@property (NS_NONATOMIC_IOSONLY, readonly, strong) NSManagedObjectContext *managedObjectContext;
 
 - (NSDictionary *)dictionaryOfDocumentsInProject;
 
 - (void)autosave;
 
-- (NSString *)name;
+@property (NS_NONATOMIC_IOSONLY, readonly, copy) NSString *name;
 
 - (void)selectionDidChange;
 
-- (NSWindow *)window;
+@property (NS_NONATOMIC_IOSONLY, readonly, strong) NSWindow *window;
 
-- (NSToolbar *)projectWindowToolbar;
+@property (NS_NONATOMIC_IOSONLY, readonly, strong) NSToolbar *projectWindowToolbar;
 
-- (BOOL)areAllDocumentsSaved;
+@property (NS_NONATOMIC_IOSONLY, readonly) BOOL areAllDocumentsSaved;
 
 - (void)documentsListHasUpdated;
 - (void)buildSecondContentViewNavigationBarMenu;
 
-- (CGFloat)mainSplitViewFraction;
+@property (NS_NONATOMIC_IOSONLY, readonly) CGFloat mainSplitViewFraction;
 - (void)resizeMainSplitView;
 - (void)saveMainSplitViewFraction;
 

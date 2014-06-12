@@ -24,9 +24,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 @property (unsafe_unretained) FRAProject *currentProject;
 
-- (id)currentFRADocument;
-- (FRATextView *)currentTextView;
-- (NSString *)currentText;
+@property (NS_NONATOMIC_IOSONLY, readonly, strong) id currentFRADocument;
+@property (NS_NONATOMIC_IOSONLY, readonly, strong) FRATextView *currentTextView;
+@property (NS_NONATOMIC_IOSONLY, readonly, copy) NSString *currentText;
 - (void)selectDocumentFromTheDock:(id)sender;
 
 - (void)putInRecentWithPath:(NSString *)path;

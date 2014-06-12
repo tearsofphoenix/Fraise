@@ -24,7 +24,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 @implementation VILineNumbers
 
-- (id)init
+- (instancetype)init
 {
 	if (self = [super init])
     {

@@ -41,7 +41,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 @synthesize firstDocument, secondDocument, lastTextViewInFocus, project, documentsArrayController, documentsTableView, firstContentView, secondContentView, statusBarTextField, mainSplitView, contentSplitView, secondContentViewNavigationBar, secondContentViewPopUpButton, leftDocumentsView, leftDocumentsTableView, tabBarControl, tabBarTabView;
 
 
-- (id)init
+- (instancetype)init
 {
     self = [super init];
     if (self) {
@@ -748,10 +748,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 - (void)insertDefaultIconsInDocument:(id)document
 {
 	NSImage *defaultIcon = [FRAInterface defaultIcon];
-	[defaultIcon setScalesWhenResized:YES];
 		
 	NSImage *defaultUnsavedIcon = [FRAInterface defaultUnsavedIcon];
-	[defaultUnsavedIcon setScalesWhenResized:YES];
 	
 	[document setValue:defaultIcon forKey:@"icon"];	
 	[document setValue:defaultUnsavedIcon forKey:@"unsavedIcon"];

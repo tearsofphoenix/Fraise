@@ -21,7 +21,7 @@ static NSMutableDictionary *gsMap = nil;
     gsMap = [[NSMutableDictionary alloc] init];
 }
 
-- (id)init
+- (instancetype)init
 {
     if ((self = [super init]))
     {

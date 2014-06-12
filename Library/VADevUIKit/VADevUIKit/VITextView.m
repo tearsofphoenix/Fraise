@@ -30,7 +30,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 @implementation VITextView
 
-- (id)initWithFrame:(NSRect)frame
+- (instancetype)initWithFrame:(NSRect)frame
 {
 	if (self = [super initWithFrame:frame])
     {

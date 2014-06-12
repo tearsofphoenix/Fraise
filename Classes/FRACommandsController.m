@@ -33,15 +33,16 @@
 
 @interface FRACommandsController ()<NSOutlineViewDataSource, NSOutlineViewDelegate>
 
+@property (nonatomic, strong) NSArray *draggedNodes;
+@property (nonatomic, strong) NSArray *draggedCommandNodes;
+
 @end
 
 @implementation FRACommandsController
 
-@synthesize commandsTextView;
-
 VASingletonIMPDefault(FRACommandsController)
 
-- (id)init
+- (instancetype)init
 {
     if ((self = [super init]))
     {
@@ -58,7 +59,9 @@ VASingletonIMPDefault(FRACommandsController)
 		[NSBundle loadNibNamed:@"FRACommands.nib" owner:self];
 		
 		[_commandCollectionsTableView setDataSource: self];
+        [_commandCollectionsTableView setDelegate: self];
 		[_commandsTableView setDataSource: self];
+        [_commandsTableView setDelegate: self];
 		
 		[_commandCollectionsTableView registerForDraggedTypes:@[NSFilenamesPboardType, @"FRAMovedCommandType"]];
 		[_commandCollectionsTableView setDraggingSourceOperationMask:(NSDragOperationCopy) forLocal:NO];
@@ -274,7 +277,7 @@ VASingletonIMPDefault(FRACommandsController)
 		return;
 	}
 	
-	[commandsTextView insertText:[document valueForKey:@"path"]];
+	[_commandsTextView insertText:[document valueForKey:@"path"]];
 }
 
 
@@ -286,7 +289,7 @@ VASingletonIMPDefault(FRACommandsController)
 		return;
 	}
 	
-	[commandsTextView insertText:[[document valueForKey:@"path"] stringByDeletingLastPathComponent]];
+	[_commandsTextView insertText:[[document valueForKey:@"path"] stringByDeletingLastPathComponent]];
 }
 
 
@@ -491,6 +494,290 @@ VASingletonIMPDefault(FRACommandsController)
 }
 
 
+
+
+#pragma mark - NSOutlineView data source methods. (The required ones)
+
+// Required methods.
+- (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(id)item
+{
+    if (outlineView == _commandCollectionsTableView)
+    {
+        if (!item)
+        {
+            return [VACommandCollection allCommandCollections][index];
+        }
+    }else if (outlineView == _commandsTableView)
+    {
+        if (!item)
+        {
+            return [_selectedCollection commands][index];
+        }
+    }
+    
+    return nil;
+}
+
+- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
+{
+    return NO;
+}
+
+- (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
+{
+    // 'item' may potentially be nil for the root item.
+    if (outlineView == _commandCollectionsTableView)
+    {
+        if (!item)
+        {
+            return [[VACommandCollection allCommandCollections] count];
+        }
+    }else if (outlineView == _commandsTableView)
+    {
+        if (!item)
+        {
+            return [[_selectedCollection commands] count];
+        }
+    }
+    
+    return 0;
+}
+
+- (id)        outlineView: (NSOutlineView *)outlineView
+objectValueForTableColumn: (NSTableColumn *)tableColumn
+                   byItem: (id)item
+{
+    id objectValue = nil;
+    
+    if (outlineView == _commandCollectionsTableView)
+    {
+        VACommandCollection *collection = item;
+        
+        // The return value from this method is used to configure the state of the items cell via setObjectValue:
+        if ((tableColumn == nil) || [[tableColumn identifier] isEqualToString: @"collection"])
+        {
+            objectValue = [collection name];
+        }
+    }else if (outlineView == _commandsTableView)
+    {
+        VACommand *snippet = item;
+        objectValue = [snippet name];
+    }
+    
+    return objectValue;
+}
+
+// Optional method: needed to allow editing.
+- (void)outlineView: (NSOutlineView *)ov
+     setObjectValue: (id)object
+     forTableColumn: (NSTableColumn *)tableColumn
+             byItem: (id)item
+{
+    if (ov == _commandCollectionsTableView)
+    {
+        VACommandCollection *collection = item;
+        [collection setName: object];
+        
+    }else if (ov == _commandsTableView)
+    {
+        VACommand *snippet = item;
+        [snippet setName: object];
+    }
+}
+
+// We can return a different cell for each row, if we want
+- (NSCell *)outlineView: (NSOutlineView *)ov
+ dataCellForTableColumn: (NSTableColumn *)tableColumn
+                   item: (id)item
+{
+    // If we return a cell for the 'nil' tableColumn, it will be used as a "full width" cell and span all the columns
+    {
+        // We want to use the cell for the name column, but we could construct a new cell if we wanted to, or return a different cell for each row.
+        //return [[_outlineView tableColumnWithIdentifier:COLUMNID_NAME] dataCell];
+    }
+    return [tableColumn dataCell];
+}
+
+// To get the "group row" look, we implement this method.
+- (BOOL)outlineView: (NSOutlineView *)outlineView
+        isGroupItem: (id)item
+{
+    return NO;
+}
+
+- (BOOL)outlineView:(NSOutlineView *)outlineView shouldExpandItem:(id)item
+{
+    return YES;
+}
+
+- (void)outlineView: (NSOutlineView *)outlineView
+    willDisplayCell: (NSCell *)cell
+     forTableColumn: (NSTableColumn *)tableColumn
+               item: (id)item
+{
+    NSString *tabColumnID = [tableColumn identifier];
+    
+    if (outlineView == _commandCollectionsTableView)
+    {
+        VACommandCollection *collection = item;
+        
+        if ((tableColumn == nil) || [tabColumnID isEqualToString: @"collection"])
+        {
+            [cell setStringValue: [collection name]];
+        }
+        
+    }else if (outlineView == _commandsTableView)
+    {
+        VACommand *command = item;
+        if ([tabColumnID isEqualToString: @"name"])
+        {
+            [cell setStringValue: [command name]];
+        }else if ([tabColumnID isEqualToString: @"shortcut"])
+        {
+            [cell setStringValue: [command shortcutDisplayString] ?: @""];
+        }else if([tabColumnID isEqualToString: @"inline"])
+        {
+            [cell setObjectValue: @([command isInline])];
+            
+        }else if ([tabColumnID isEqualToString: @"intepreter"])
+        {
+            [cell setStringValue: [command interpreter]];
+        }
+    }
+}
+
+- (BOOL)outlineView: (NSOutlineView *)ov
+   shouldSelectItem: (id)item
+{
+    return YES;
+}
+
+- (BOOL)outlineView:(NSOutlineView *)ov shouldTrackCell:(NSCell *)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item {
+    // We want to allow tracking for all the button cells, even if we don't allow selecting that particular row.
+    if ([cell isKindOfClass:[NSButtonCell class]])
+    {
+        // We can also take a peek and make sure that the part of the cell clicked is an area that is normally tracked. Otherwise, clicking outside of the checkbox may make it check the checkbox
+        NSRect cellFrame = [_commandCollectionsTableView frameOfCellAtColumn: [[_commandCollectionsTableView tableColumns] indexOfObject: tableColumn]
+                                                                         row: [_commandCollectionsTableView rowForItem: item]];
+        NSUInteger hitTestResult = [cell hitTestForEvent: [NSApp currentEvent]
+                                                  inRect: cellFrame
+                                                  ofView: _commandCollectionsTableView];
+        
+        if ((hitTestResult & NSCellHitTrackableArea) != 0)
+        {
+            return YES;
+        } else
+        {
+            return NO;
+        }
+    } else
+    {
+        // Only allow tracking on selected rows. This is what NSTableView does by default.
+        return [_commandCollectionsTableView isRowSelected:[_commandCollectionsTableView rowForItem: item]];
+    }
+}
+
+/* In 10.7 multiple drag images are supported by using this delegate method. */
+- (id <NSPasteboardWriting>)outlineView:(NSOutlineView *)outlineView pasteboardWriterForItem:(id)item
+{
+    if (outlineView == _commandCollectionsTableView)
+    {
+        VACommandCollection *collection = item;
+        return [collection  name];
+    }else if (outlineView == _commandsTableView)
+    {
+        VACommand *snippet = item;
+        return [snippet name];
+    }
+    
+    return nil;
+}
+
+- (void)outlineViewSelectionDidChange: (NSNotification *)notification
+{
+    NSOutlineView *outlineView = [notification object];
+    if (outlineView == _commandCollectionsTableView)
+    {
+        VACommandCollection *collection = [outlineView itemAtRow: [outlineView selectedRow]];
+        [self setSelectedCollection: collection];
+        
+        [_commandsTableView reloadData];
+        
+    }else if (outlineView == _commandsTableView)
+    {
+        VACommand *snippet = [outlineView itemAtRow: [outlineView selectedRow]];
+        [_commandsTextView setString: [snippet text] ?: @""];
+    }
+}
+
+#pragma mark - drag
+
+- (void)outlineView: (NSOutlineView *)outlineView
+    draggingSession: (NSDraggingSession *)session
+   willBeginAtPoint: (NSPoint)screenPoint
+           forItems: (NSArray *)draggedItems
+{
+    if (outlineView == _commandCollectionsTableView)
+    {
+        _draggedNodes = draggedItems;
+        [session.draggingPasteboard setData: [NSData data]
+                                    forType: @"com.veritas.fraise.pasteboard.data"];
+    }else
+    {
+        _draggedCommandNodes = draggedItems;
+    }
+}
+
+- (void)outlineView: (NSOutlineView *)outlineView
+    draggingSession: (NSDraggingSession *)session
+       endedAtPoint: (NSPoint)screenPoint
+          operation: (NSDragOperation)operation
+{
+    // If the session ended in the trash, then delete all the items
+    if (outlineView == _commandCollectionsTableView)
+    {
+        if (operation == NSDragOperationDelete)
+        {
+            [outlineView beginUpdates];
+            
+            [_draggedNodes enumerateObjectsWithOptions: NSEnumerationReverse
+                                            usingBlock: (^(id node, NSUInteger index, BOOL *stop)
+                                                         {
+                                                             id parent = [node parentNode];
+                                                             NSMutableArray *children = [parent mutableChildNodes];
+                                                             NSInteger childIndex = [children indexOfObject:node];
+                                                             [children removeObjectAtIndex:childIndex];
+                                                             [outlineView removeItemsAtIndexes: [NSIndexSet indexSetWithIndex:childIndex]
+                                                                                      inParent: nil
+                                                                                 withAnimation: NSTableViewAnimationEffectFade];
+                                                         })];
+            
+            [outlineView endUpdates];
+        }
+        _draggedNodes = nil;
+    }else if (outlineView == _commandsTableView)
+    {
+        if (operation == NSDragOperationDelete)
+        {
+            [outlineView beginUpdates];
+            
+            [_draggedCommandNodes enumerateObjectsWithOptions: NSEnumerationReverse
+                                                   usingBlock: (^(id node, NSUInteger index, BOOL *stop)
+                                                                {
+                                                                    id parent = [node parentNode];
+                                                                    NSMutableArray *children = [parent mutableChildNodes];
+                                                                    NSInteger childIndex = [children indexOfObject:node];
+                                                                    [children removeObjectAtIndex:childIndex];
+                                                                    [outlineView removeItemsAtIndexes: [NSIndexSet indexSetWithIndex:childIndex]
+                                                                                             inParent: nil
+                                                                                        withAnimation: NSTableViewAnimationEffectFade];
+                                                                })];
+            
+            [outlineView endUpdates];
+        }
+        _draggedCommandNodes = nil;
+    }
+}
 
 
 @end

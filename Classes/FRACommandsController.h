@@ -43,7 +43,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 - (IBAction)newCollectionAction:(id)sender;
 - (IBAction)newCommandAction:(id)sender;
 
-- (id)performInsertNewCommand;
+@property (NS_NONATOMIC_IOSONLY, readonly, strong) id performInsertNewCommand;
 
 - (void)performDeleteCollection;
 
@@ -60,7 +60,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (void)runCommand:(id)command;
 
-- (BOOL)currentCommandShouldBeInsertedInline;
+@property (NS_NONATOMIC_IOSONLY, readonly) BOOL currentCommandShouldBeInsertedInline;
 
 - (void)setCommandRunning:(BOOL)flag;
 

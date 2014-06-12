@@ -24,7 +24,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 @implementation FRAPrintTextView
 
-- (id)initWithFrame:(NSRect)frame
+- (instancetype)initWithFrame:(NSRect)frame
 {
 	if (self = [super initWithFrame:frame]) {
 		[self setupView];

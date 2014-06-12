@@ -52,7 +52,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 - (void)performCommandAsynchronously:(NSString *)command;
 - (void)asynchronousTaskCompleted;
 
-- (BOOL)isChangingSyntaxDefinitionsProgrammatically;
+@property (NS_NONATOMIC_IOSONLY, getter=isChangingSyntaxDefinitionsProgrammatically, readonly) BOOL changingSyntaxDefinitionsProgrammatically;
 
 - (void)setUnsavedAsLastSavedDateForDocument:(id)document;
 - (void)setLastSavedDateForDocument:(id)document date:(NSDate *)lastSavedDate;

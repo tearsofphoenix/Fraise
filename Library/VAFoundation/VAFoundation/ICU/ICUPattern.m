@@ -51,7 +51,7 @@ NSUInteger const ICUUnicodeWordBoundaries = UREGEX_UWORD;
 	return [[self alloc] initWithString:aPattern flags:0];
 }
 
--(id)initWithString:(NSString *)aPattern flags:(NSUInteger)f {
+-(instancetype)initWithString:(NSString *)aPattern flags:(NSUInteger)f {
 
 	if(![super init])
 		return nil;
@@ -74,7 +74,7 @@ NSUInteger const ICUUnicodeWordBoundaries = UREGEX_UWORD;
 	return self;	
 }
 
--(id)initWithString:(NSString *)aPattern {
+-(instancetype)initWithString:(NSString *)aPattern {
 	return [self initWithString:aPattern flags:0];
 }
 

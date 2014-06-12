@@ -29,7 +29,7 @@ static NSFont *gsFont = nil;
     return gsFont;
 }
 
-- (id)initWithFrame:(NSRect)frame
+- (instancetype)initWithFrame:(NSRect)frame
 {
 	if (self = [super initWithFrame:frame])
     {

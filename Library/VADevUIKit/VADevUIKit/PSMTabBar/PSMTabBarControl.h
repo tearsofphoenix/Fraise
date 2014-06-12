@@ -102,9 +102,9 @@ performDragWithTarget: (PSMTabBarControl *)target
 @property (assign) IBOutlet id partnerView;
 
 // the buttons
-- (PSMRolloverButton *)addTabButton;
-- (PSMOverflowPopUpButton *)overflowPopUpButton;
-- (NSMutableArray *)representedTabViewItems;
+@property (NS_NONATOMIC_IOSONLY, readonly, strong) PSMRolloverButton *addTabButton;
+@property (NS_NONATOMIC_IOSONLY, readonly, strong) PSMOverflowPopUpButton *overflowPopUpButton;
+@property (NS_NONATOMIC_IOSONLY, readonly, copy) NSMutableArray *representedTabViewItems;
 
 // special effects
 - (void)hideTabBar:(BOOL)hide animate:(BOOL)animate;
@@ -113,13 +113,13 @@ performDragWithTarget: (PSMTabBarControl *)target
 
 @interface PSMTabBarControl (StyleAccessors)
 
-- (NSMutableArray *)cells;
+@property (NS_NONATOMIC_IOSONLY, readonly, copy) NSMutableArray *cells;
 
 @end
 
 @interface PSMTabBarControl (CellAccessors)
 
-- (id<PSMTabStyle>)style;
+@property (NS_NONATOMIC_IOSONLY, readonly, strong) id<PSMTabStyle> style;
 
 @end
 

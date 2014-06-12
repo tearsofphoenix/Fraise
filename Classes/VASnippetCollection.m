@@ -24,7 +24,7 @@ static NSMutableArray * gsAllDefinitions = nil;
     gsAllDefinitions = [[NSMutableArray alloc] init];
 }
 
-- (id)init
+- (instancetype)init
 {
     if ((self = [super init]))
     {

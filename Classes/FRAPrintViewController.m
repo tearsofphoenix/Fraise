@@ -21,7 +21,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 @synthesize dummyValue;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     return [super initWithNibName:@"FRAPrintAccessoryView" bundle:nibBundleOrNil];
 }
