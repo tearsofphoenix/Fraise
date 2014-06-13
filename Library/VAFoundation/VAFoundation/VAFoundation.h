@@ -15,3 +15,7 @@
 
 #import <VAFoundation/VFFontTransformer.h>
 //#import <VAFoundation/VFSyntaxDefinition.h>
+
+#import <VAFoundation/VATMObject.h>
+#import <VAFoundation/VATMCommand.h>
+#import <VAFoundation/VATMBundle.h>

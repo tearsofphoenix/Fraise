@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>nop</string>
+	<key>command</key>
+	<string>#!/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/bin/ruby
+
+require ENV['TM_SUPPORT_PATH'] + '/lib/textmate'
+
+puts "using ${TM_LUAC:-luac}"
+result = `"${TM_LUAC:-luac}" -p - 2&gt;&amp;1`
+puts result
+
+regexp = /^luac: stdin:(\d+):/
+
+if result =~ regexp
+  TextMate.go_to :line =&gt; $1
+else
+  puts "Syntax OK"
+end
+</string>
+	<key>input</key>
+	<string>document</string>
+	<key>inputFormat</key>
+	<string>text</string>
+	<key>keyEquivalent</key>
+	<string>^V</string>
+	<key>name</key>
+	<string>Check Syntax</string>
+	<key>outputCaret</key>
+	<string>afterOutput</string>
+	<key>outputFormat</key>
+	<string>text</string>
+	<key>outputLocation</key>
+	<string>toolTip</string>
+	<key>requiredCommands</key>
+	<array>
+		<dict>
+			<key>command</key>
+			<string>luac</string>
+			<key>locations</key>
+			<array>
+				<string>/opt/local/bin/luac</string>
+				<string>/usr/local/bin/luac</string>
+			</array>
+			<key>variable</key>
+			<string>TM_LUAC</string>
+		</dict>
+	</array>
+	<key>scope</key>
+	<string>source.lua</string>
+	<key>uuid</key>
+	<string>E2D1F434-A472-4185-9933-4D9408C6C4D0</string>
+	<key>version</key>
+	<integer>2</integer>
+</dict>
+</plist>

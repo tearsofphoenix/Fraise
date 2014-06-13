@@ -7,6 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
+#import <VAFoundation/VAFoundation.h>
 
 @interface VAFoundationTests : XCTestCase
 
@@ -28,7 +29,12 @@
 
 - (void)testExample
 {
-    XCTFail(@"No implementation for \"%s\"", __PRETTY_FUNCTION__);
+    NSString *bundlePath = [[NSBundle bundleForClass: [self class]] pathForResource: @"lua"
+                                                                             ofType: @"tmbundle"];
+    
+    VATMBundle *bundle = [[VATMBundle alloc] initWithPath: bundlePath];
+    
+    XCTAssertNotNil(bundlePath, @"should read path");
 }
 
 @end

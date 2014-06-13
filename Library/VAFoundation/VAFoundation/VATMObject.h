@@ -10,11 +10,13 @@
 
 @protocol VATMObject <NSObject>
 
-@property (nonatomic, strong) NSString *uuid;
+@property (strong) NSString *uuid;
+@property (strong) NSString *name;
+@property (strong) NSString *scope;
 
-@property (nonatomic) NSInteger version;
+@property NSInteger version;
 
-- (id)initWithDictionary: (NSDictionary *)dict;
+- (instancetype)initWithDictionary: (NSDictionary *)dict;
 
 - (NSDictionary *)dictionaryRepresent;
 
@@ -24,3 +26,7 @@
 
 
 @end
+
+extern NSString * const VATMNameKey;
+
+extern NSString * const VATMUUIDKey;

@@ -10,7 +10,7 @@
 
 @implementation VATMCommand
 
-- (id)initWithDictionary: (NSDictionary *)dict
+- (instancetype)initWithDictionary: (NSDictionary *)dict
 {
     if ((self = [super initWithDictionary: dict]))
     {
@@ -31,3 +31,5 @@
 }
 
 @end
+
+NSString * const VATMNopCommandName = @"nop";

@@ -6,25 +6,25 @@
 //  Copyright (c) 2014年 Mac003. All rights reserved.
 //
 
-#import "VATMObject.h"
+#import <VAFoundation/VATMObject.h>
 
 @interface VATMCommand : VATMObject
 
-@property (nonatomic, strong) NSString *beforeRunningCommand;
-@property (nonatomic, strong) NSString *command;
+@property (strong) NSString *beforeRunningCommand;
+@property (strong) NSString *command;
 
-@property (nonatomic, strong) NSString *input;
-@property (nonatomic, strong) NSString *inputFormat;
-@property (nonatomic, strong) NSString *output;
-@property (nonatomic, strong) NSString *outputFormat;
-@property (nonatomic, strong) NSString *outputLocation;
+@property (strong) NSString *input;
+@property (strong) NSString *inputFormat;
+@property (strong) NSString *output;
+@property (strong) NSString *outputFormat;
+@property (strong) NSString *outputLocation;
 
-@property (nonatomic, strong) NSString *keyEquivalent;
-@property (nonatomic, strong) NSString *name;
+@property (strong) NSString *keyEquivalent;
 
-@property (nonatomic, strong) NSArray *requiredCommands;
+@property (strong) NSArray *requiredCommands;
 
-@property (nonatomic, strong) NSString *scope;
-@property (nonatomic, strong) NSString *semanticClass;
+@property (strong) NSString *semanticClass;
 
 @end
+
+extern NSString * const VATMNopCommandName;

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>saveModifiedFiles</string>
+	<key>command</key>
+	<string>#!/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/bin/ruby -wKU
+require "#{ENV["TM_SUPPORT_PATH"]}/lib/escape"
+require "#{ENV['TM_SUPPORT_PATH']}/lib/tm/save_current_document"
+require "#{ENV["TM_SUPPORT_PATH"]}/lib/tm/executor"
+
+TextMate.save_if_untitled('lua')
+TextMate::Executor.run(e_sh(ENV['TM_LUA']), ENV['TM_FILEPATH'], :version_args =&gt; '-v', :version_regex =&gt; /(\w+ [\d.]+).*/)
+</string>
+	<key>input</key>
+	<string>none</string>
+	<key>inputFormat</key>
+	<string>text</string>
+	<key>keyEquivalent</key>
+	<string>@r</string>
+	<key>name</key>
+	<string>Run Script</string>
+	<key>outputCaret</key>
+	<string>afterOutput</string>
+	<key>outputFormat</key>
+	<string>html</string>
+	<key>outputLocation</key>
+	<string>newWindow</string>
+	<key>requiredCommands</key>
+	<array>
+		<dict>
+			<key>command</key>
+			<string>lua</string>
+			<key>locations</key>
+			<array>
+				<string>/opt/local/bin/lua</string>
+				<string>/usr/local/bin/lua</string>
+			</array>
+			<key>variable</key>
+			<string>TM_LUA</string>
+		</dict>
+	</array>
+	<key>scope</key>
+	<string>source.lua</string>
+	<key>semanticClass</key>
+	<string>process.run.script.lua</string>
+	<key>uuid</key>
+	<string>BF303CAC-FF2B-4299-8F2B-C84FE64B5146</string>
+	<key>version</key>
+	<integer>2</integer>
+</dict>
+</plist>

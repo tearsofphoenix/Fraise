@@ -6,18 +6,29 @@
 //  Copyright (c) 2014年 Mac003. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <VAFoundation/VATMObject.h>
 
-@interface VATMBundle : NSObject
+@interface VATMBundle : VATMObject
 
-@property (nonatomic, strong) NSArray *commands;
-@property (nonatomic, strong) NSDictionary *info;
-@property (nonatomic, strong) NSArray *preferences;
-@property (nonatomic, strong) NSArray *snippets;
-@property (nonatomic, strong) NSArray *syntaxes;
+@property (strong) NSDictionary *info;
 
-- (id)initWithPath: (NSString *)path;
+@property (strong) NSArray *commands;
+@property (strong) NSArray *preferences;
+@property (strong) NSArray *snippets;
+@property (strong) NSArray *syntaxes;
+
+- (instancetype)initWithPath: (NSString *)path NS_DESIGNATED_INITIALIZER;
 
 - (NSString *)path;
 
 @end
+
+extern NSString * const VATMBundleContactEmailRot13;
+
+extern NSString * const VATMBundleContactName;
+
+extern NSString * const VATMBundleDescription;
+
+extern NSString * const VATMBundleMainMenu;
+
+extern NSString * const VATMBundleOrdering;

@@ -12,12 +12,16 @@
 
 @synthesize uuid = _uuid;
 @synthesize version = _version;
+@synthesize name = _name;
+@synthesize scope = _scope;
 
-- (id)initWithDictionary: (NSDictionary *)dict
+- (instancetype)initWithDictionary: (NSDictionary *)dict
 {
     if ((self = [super init]))
     {
         _uuid = dict[@"uuid"];
+        _name = dict[@"name"];
+        _scope = dict[@"scope"];
         _version = [dict[@"version"] integerValue];
     }
     
@@ -27,12 +31,17 @@
 - (NSDictionary *)dictionaryRepresent
 {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    [dict setObject: _uuid
-             forKey: @"uuid"];
-    [dict setObject: @(_version)
-             forKey: @"version"];
+    dict[@"uuid"] = _uuid;
+    dict[@"name"] = _name;
+    dict[@"scope"] = _scope;
+    dict[@"version"] = @(_version);
     
     return dict;
 }
 
 @end
+
+
+NSString * const VATMNameKey = @"name";
+
+NSString * const VATMUUIDKey = @"uuid";
