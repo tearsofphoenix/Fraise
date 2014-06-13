@@ -18,4 +18,7 @@
 
 #import <VAFoundation/VATMObject.h>
 #import <VAFoundation/VATMCommand.h>
+#import <VAFoundation/VATMPreference.h>
+#import <VAFoundation/VATMSnippet.h>
+#import <VAFoundation/VATMSyntax.h>
 #import <VAFoundation/VATMBundle.h>

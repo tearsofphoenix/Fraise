@@ -30,7 +30,7 @@
     @abstract   Initializes a matcher that can match the given patter over the given string.
     @discussion 
 */
--(ICUMatcher *)initWithPattern:(ICUPattern *)p overString:(NSString *)stringToSearchOver NS_DESIGNATED_INITIALIZER;
+-(ICUMatcher *)initWithPattern:(ICUPattern *)p overString:(NSString *)stringToSearchOver ;
 
 /*!
     @method     findNext

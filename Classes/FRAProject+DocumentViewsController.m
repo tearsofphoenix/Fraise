@@ -23,6 +23,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRASyntaxColouring.h"
 #import "FRADocumentManagedObject.h"
 #import "FRAProjectsController.h"
+#import "VAProject.h"
 
 @implementation FRAProject (DocumentViewsController)
 
@@ -39,14 +40,11 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	[tabBarControl setDelegate:self];
 	[tabBarControl registerForDraggedTypes:@[NSFilenamesPboardType]];
 	
-	if ([project valueForKey:@"viewSize"] == nil) {
-		[project setValue:[FRADefaults valueForKey:@"ViewSize"] forKey:@"viewSize"];
-	}
-	if ([project valueForKey:@"view"] == nil) {
-		[project setValue:[FRADefaults valueForKey:@"View"] forKey:@"view"];
-	}
-	
-	[self insertView:[[project valueForKey:@"view"] integerValue]];
+    VAProject *project = [self project];
+    [project setViewSize: [[FRADefaults valueForKey:@"ViewSize"] integerValue]];
+    [project setView: [[FRADefaults valueForKey:@"View"] integerValue]];
+
+	[self insertView: [project view]];
 	
 	[mainSplitView adjustSubviews];
 }
@@ -57,12 +55,13 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	NSInteger size = round([viewSelectionSizeSlider doubleValue]);
 	
 	[FRADefaults setValue:@(size) forKey:@"ViewSize"];
-	[project setValue:@(size) forKey:@"viewSize"];
+	[[self project] setViewSize: size];
 	
-	FRAView view = [[project valueForKey:@"view"] integerValue];
+	FRAView view = [[self project] view];
 	
-	if (view == FRAListView) {
-		[documentsTableView setRowHeight:([[project valueForKey:@"viewSize"] integerValue] + 1)];
+	if (view == FRAListView)
+    {
+		[documentsTableView setRowHeight: ([[self project] viewSize] + 1)];
 	}
 	
 	[self reloadData];
@@ -72,20 +71,26 @@ Unless required by applicable law or agreed to in writing, software distributed 
 - (void)insertView:(FRAView)view
 {
 	[FRADefaults setValue: @(view) forKey:@"View"];
-	[project setValue: @(view) forKey:@"view"];
+	[[self project] setView: view];
 	
 	[FRAInterface removeAllSubviewsFromView:leftDocumentsView];
 	
 	CGFloat viewSelectionHeight;
-	if ([[FRADefaults valueForKey:@"ShowSizeSlider"] boolValue] == YES) {
+	if ([[FRADefaults valueForKey:@"ShowSizeSlider"] boolValue] == YES)
+    {
 		viewSelectionHeight = [viewSelectionView bounds].size.height;
-	} else {
+	} else
+    {
 		viewSelectionHeight = 0;
 	}
 
-	if (view == FRAListView) {
-		[documentsTableView setRowHeight:[[project valueForKey:@"viewSize"] integerValue]];
-		[leftDocumentsTableView setFrame:NSMakeRect([leftDocumentsView bounds].origin.x, [leftDocumentsView bounds].origin.y + viewSelectionHeight, [leftDocumentsView bounds].size.width, [leftDocumentsView bounds].size.height - viewSelectionHeight)];
+	if (view == FRAListView)
+    {
+		[documentsTableView setRowHeight: [[self project] viewSize]];
+		[leftDocumentsTableView setFrame:NSMakeRect([leftDocumentsView bounds].origin.x,
+                                                    [leftDocumentsView bounds].origin.y + viewSelectionHeight,
+                                                    [leftDocumentsView bounds].size.width,
+                                                    [leftDocumentsView bounds].size.height - viewSelectionHeight)];
 		[leftDocumentsView addSubview:leftDocumentsTableView];	
 		
 	}
@@ -95,7 +100,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 		[leftDocumentsView addSubview:viewSelectionView];
 	//}
 	
-	[viewSelectionSizeSlider setDoubleValue:[[project valueForKey:@"viewSize"] doubleValue]];
+	[viewSelectionSizeSlider setDoubleValue: [[self project] viewSize]];
 }
 
 
@@ -116,9 +121,10 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (void)reloadData
 {
-	FRAView view = [[project valueForKey:@"view"] integerValue];
+	FRAView view = [[self project] view];
 	
-	if (view == FRAListView) {
+	if (view == FRAListView)
+    {
 		[documentsArrayController rearrangeObjects];
 		[documentsTableView removeAllToolTips];
 		[documentsTableView reloadData];
@@ -194,7 +200,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #pragma mark Tab bar control delegates
 - (void)tabView:(NSTabView *)tabView willSelectTabViewItem:(NSTabViewItem *)tabViewItem
 {
-	FRAView view = [[project valueForKey:@"view"] integerValue];
+	FRAView view = [[self project] view];
 	
 	if (view == FRAListView) {
 		[documentsArrayController setSelectedObjects:@[[tabViewItem identifier]]];

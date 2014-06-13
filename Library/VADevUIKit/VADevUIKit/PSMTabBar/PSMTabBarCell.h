@@ -20,8 +20,8 @@
 }
 
 // creation/destruction
-- (instancetype)initWithControlView:(PSMTabBarControl *)controlView NS_DESIGNATED_INITIALIZER;
-- (instancetype)initPlaceholderWithFrame:(NSRect)frame expanded:(BOOL)value inControlView:(PSMTabBarControl *)controlView NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithControlView:(PSMTabBarControl *)controlView ;
+- (instancetype)initPlaceholderWithFrame:(NSRect)frame expanded:(BOOL)value inControlView:(PSMTabBarControl *)controlView ;
 
 // accessors
 @property (NS_NONATOMIC_IOSONLY, strong) id controlView;
@@ -70,6 +70,6 @@
 
 // archiving
 - (void)encodeWithCoder:(NSCoder *)aCoder;
-- (instancetype)initWithCoder:(NSCoder *)aDecoder NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithCoder:(NSCoder *)aDecoder ;
 
 @end

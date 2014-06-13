@@ -54,7 +54,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 @property NSInteger syntaxColouringMatrix;
 
-- (instancetype)initWithDocument:(id)document NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithDocument:(id)document ;
 
 - (void)setColours;
 - (void)setSyntaxDefinition;

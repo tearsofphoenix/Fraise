@@ -177,7 +177,6 @@ VASingletonIMPDefault(FRAApplicationDelegate)
 	}
 	
 	[FRABasic removeAllObjectsForEntity:@"Document"];
-	[FRABasic removeAllObjectsForEntity:@"Project"];
 	
 	NSError *error;
     NSInteger reply = NSTerminateNow;

@@ -129,16 +129,17 @@
 		8D15AC310486D014006FF6A4 /* FRAProject.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37F4ACFDCFA73011CA2CEA /* FRAProject.m */; settings = {ATTRIBUTES = (); }; };
 		8D15AC320486D014006FF6A4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37F4B0FDCFA73011CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */; };
-		9231DE931946A36800726887 /* VFSyntaxDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = 9231DE921946A36800726887 /* VFSyntaxDefinition.m */; };
-		9231DEA21946AEB300726887 /* VFEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = 9231DEA11946AEB300726887 /* VFEncoding.m */; };
-		9231DEA71946B47500726887 /* VASnippet.m in Sources */ = {isa = PBXBuildFile; fileRef = 9231DEA41946B47500726887 /* VASnippet.m */; };
-		9231DEA81946B47500726887 /* VASnippetCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 9231DEA61946B47500726887 /* VASnippetCollection.m */; };
-		9248287F19493CB100E62752 /* VACommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 9248287C19493CB100E62752 /* VACommand.m */; };
-		9248288019493CB100E62752 /* VACommandCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 9248287E19493CB100E62752 /* VACommandCollection.m */; };
 		92A1FEA8194055F40090870B /* VAFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A1FE9D194055270090870B /* VAFoundation.framework */; };
 		92A1FEA9194057770090870B /* VAFoundation.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 92A1FE9D194055270090870B /* VAFoundation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		92A1FF4019405AF20090870B /* VADevUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A1FEE8194057C30090870B /* VADevUIKit.framework */; };
 		92A1FF4119405B980090870B /* VADevUIKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 92A1FEE8194057C30090870B /* VADevUIKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		92C49EE3194AA31200AC3950 /* VACommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 92C49ED6194AA31200AC3950 /* VACommand.m */; };
+		92C49EE4194AA31200AC3950 /* VACommandCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 92C49ED8194AA31200AC3950 /* VACommandCollection.m */; };
+		92C49EE5194AA31200AC3950 /* VAProject.m in Sources */ = {isa = PBXBuildFile; fileRef = 92C49EDA194AA31200AC3950 /* VAProject.m */; };
+		92C49EE6194AA31200AC3950 /* VASnippet.m in Sources */ = {isa = PBXBuildFile; fileRef = 92C49EDC194AA31200AC3950 /* VASnippet.m */; };
+		92C49EE7194AA31200AC3950 /* VASnippetCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 92C49EDE194AA31200AC3950 /* VASnippetCollection.m */; };
+		92C49EE8194AA31200AC3950 /* VFEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = 92C49EE0194AA31200AC3950 /* VFEncoding.m */; };
+		92C49EE9194AA31200AC3950 /* VFSyntaxDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = 92C49EE2194AA31200AC3950 /* VFSyntaxDefinition.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -513,20 +514,22 @@
 		7FD53F120D91A8F30071054F /* Fraise-Manual.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "Fraise-Manual.pdf"; sourceTree = "<group>"; };
 		8D15AC360486D014006FF6A4 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D15AC370486D014006FF6A4 /* Fraise.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Fraise.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		9231DE911946A36800726887 /* VFSyntaxDefinition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VFSyntaxDefinition.h; path = Classes/VFSyntaxDefinition.h; sourceTree = "<group>"; };
-		9231DE921946A36800726887 /* VFSyntaxDefinition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VFSyntaxDefinition.m; path = Classes/VFSyntaxDefinition.m; sourceTree = "<group>"; };
-		9231DEA01946AEB300726887 /* VFEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VFEncoding.h; path = Classes/VFEncoding.h; sourceTree = "<group>"; };
-		9231DEA11946AEB300726887 /* VFEncoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VFEncoding.m; path = Classes/VFEncoding.m; sourceTree = "<group>"; };
-		9231DEA31946B47500726887 /* VASnippet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VASnippet.h; path = Classes/VASnippet.h; sourceTree = "<group>"; };
-		9231DEA41946B47500726887 /* VASnippet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VASnippet.m; path = Classes/VASnippet.m; sourceTree = "<group>"; };
-		9231DEA51946B47500726887 /* VASnippetCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VASnippetCollection.h; path = Classes/VASnippetCollection.h; sourceTree = "<group>"; };
-		9231DEA61946B47500726887 /* VASnippetCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VASnippetCollection.m; path = Classes/VASnippetCollection.m; sourceTree = "<group>"; };
-		9248287B19493CB100E62752 /* VACommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VACommand.h; path = Classes/VACommand.h; sourceTree = "<group>"; };
-		9248287C19493CB100E62752 /* VACommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VACommand.m; path = Classes/VACommand.m; sourceTree = "<group>"; };
-		9248287D19493CB100E62752 /* VACommandCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VACommandCollection.h; path = Classes/VACommandCollection.h; sourceTree = "<group>"; };
-		9248287E19493CB100E62752 /* VACommandCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VACommandCollection.m; path = Classes/VACommandCollection.m; sourceTree = "<group>"; };
 		92A1FE97194055260090870B /* VAFoundation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = VAFoundation.xcodeproj; path = Library/VAFoundation/VAFoundation.xcodeproj; sourceTree = "<group>"; };
 		92A1FEE2194057C20090870B /* VADevUIKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = VADevUIKit.xcodeproj; path = Library/VADevUIKit/VADevUIKit.xcodeproj; sourceTree = "<group>"; };
+		92C49ED5194AA31200AC3950 /* VACommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VACommand.h; sourceTree = "<group>"; };
+		92C49ED6194AA31200AC3950 /* VACommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VACommand.m; sourceTree = "<group>"; };
+		92C49ED7194AA31200AC3950 /* VACommandCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VACommandCollection.h; sourceTree = "<group>"; };
+		92C49ED8194AA31200AC3950 /* VACommandCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VACommandCollection.m; sourceTree = "<group>"; };
+		92C49ED9194AA31200AC3950 /* VAProject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VAProject.h; sourceTree = "<group>"; };
+		92C49EDA194AA31200AC3950 /* VAProject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VAProject.m; sourceTree = "<group>"; };
+		92C49EDB194AA31200AC3950 /* VASnippet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VASnippet.h; sourceTree = "<group>"; };
+		92C49EDC194AA31200AC3950 /* VASnippet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VASnippet.m; sourceTree = "<group>"; };
+		92C49EDD194AA31200AC3950 /* VASnippetCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VASnippetCollection.h; sourceTree = "<group>"; };
+		92C49EDE194AA31200AC3950 /* VASnippetCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VASnippetCollection.m; sourceTree = "<group>"; };
+		92C49EDF194AA31200AC3950 /* VFEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VFEncoding.h; sourceTree = "<group>"; };
+		92C49EE0194AA31200AC3950 /* VFEncoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VFEncoding.m; sourceTree = "<group>"; };
+		92C49EE1194AA31200AC3950 /* VFSyntaxDefinition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VFSyntaxDefinition.h; sourceTree = "<group>"; };
+		92C49EE2194AA31200AC3950 /* VFSyntaxDefinition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VFSyntaxDefinition.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -759,7 +762,7 @@
 				7F85E07A0B7C8AC900DAC8B2 /* FRASplitView.m */,
 				7F980AF80B73B6A2000A9140 /* FRATableView.m */,
 				7F980B000B73B6A2000A9140 /* FRATextView.m */,
-				9237A5DB194703E00049BF32 /* Model */,
+				92C49ED4194AA31200AC3950 /* Model */,
 			);
 			name = Subclasses;
 			sourceTree = "<group>";
@@ -961,25 +964,6 @@
 			name = Headers;
 			sourceTree = "<group>";
 		};
-		9237A5DB194703E00049BF32 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-				9248287B19493CB100E62752 /* VACommand.h */,
-				9248287C19493CB100E62752 /* VACommand.m */,
-				9248287D19493CB100E62752 /* VACommandCollection.h */,
-				9248287E19493CB100E62752 /* VACommandCollection.m */,
-				9231DE911946A36800726887 /* VFSyntaxDefinition.h */,
-				9231DE921946A36800726887 /* VFSyntaxDefinition.m */,
-				9231DEA01946AEB300726887 /* VFEncoding.h */,
-				9231DEA11946AEB300726887 /* VFEncoding.m */,
-				9231DEA31946B47500726887 /* VASnippet.h */,
-				9231DEA41946B47500726887 /* VASnippet.m */,
-				9231DEA51946B47500726887 /* VASnippetCollection.h */,
-				9231DEA61946B47500726887 /* VASnippetCollection.m */,
-			);
-			name = Model;
-			sourceTree = "<group>";
-		};
 		92A1FE98194055260090870B /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -996,6 +980,28 @@
 				92A1FEEA194057C30090870B /* VADevUIKitTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		92C49ED4194AA31200AC3950 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				92C49ED5194AA31200AC3950 /* VACommand.h */,
+				92C49ED6194AA31200AC3950 /* VACommand.m */,
+				92C49ED7194AA31200AC3950 /* VACommandCollection.h */,
+				92C49ED8194AA31200AC3950 /* VACommandCollection.m */,
+				92C49ED9194AA31200AC3950 /* VAProject.h */,
+				92C49EDA194AA31200AC3950 /* VAProject.m */,
+				92C49EDB194AA31200AC3950 /* VASnippet.h */,
+				92C49EDC194AA31200AC3950 /* VASnippet.m */,
+				92C49EDD194AA31200AC3950 /* VASnippetCollection.h */,
+				92C49EDE194AA31200AC3950 /* VASnippetCollection.m */,
+				92C49EDF194AA31200AC3950 /* VFEncoding.h */,
+				92C49EE0194AA31200AC3950 /* VFEncoding.m */,
+				92C49EE1194AA31200AC3950 /* VFSyntaxDefinition.h */,
+				92C49EE2194AA31200AC3950 /* VFSyntaxDefinition.m */,
+			);
+			name = Model;
+			path = Classes/Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1221,19 +1227,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D15AC310486D014006FF6A4 /* FRAProject.m in Sources */,
+				92C49EE9194AA31200AC3950 /* VFSyntaxDefinition.m in Sources */,
 				8D15AC320486D014006FF6A4 /* main.m in Sources */,
 				7F980A920B73B652000A9140 /* FRADataModel3.xcdatamodel in Sources */,
+				92C49EE4194AA31200AC3950 /* VACommandCollection.m in Sources */,
 				7F980B0A0B73B6A2000A9140 /* FRAAdvancedFindController.m in Sources */,
 				7F980B0B0B73B6A2000A9140 /* FRAApplication.m in Sources */,
 				7F980B0C0B73B6A2000A9140 /* FRAApplicationDelegate.m in Sources */,
 				7F980B0D0B73B6A2000A9140 /* FRAApplicationMenuController.m in Sources */,
 				7F980B0E0B73B6A2000A9140 /* FRAAuthenticationController.m in Sources */,
-				9248287F19493CB100E62752 /* VACommand.m in Sources */,
 				7F980B100B73B6A2000A9140 /* FRACommandsController.m in Sources */,
 				7F980B120B73B6A2000A9140 /* FRADocumentsMenuController.m in Sources */,
 				7F980B130B73B6A2000A9140 /* FRADragAndDropController.m in Sources */,
-				9231DEA71946B47500726887 /* VASnippet.m in Sources */,
 				7F980B160B73B6A2000A9140 /* FRAFileMenuController.m in Sources */,
+				92C49EE8194AA31200AC3950 /* VFEncoding.m in Sources */,
 				7F980B190B73B6A2000A9140 /* FRAFullScreenWindow.m in Sources */,
 				7F980B1B0B73B6A2000A9140 /* FRAHelpMenuController.m in Sources */,
 				7F980B1C0B73B6A2000A9140 /* FRAInfoController.m in Sources */,
@@ -1241,25 +1248,23 @@
 				7F980B230B73B6A2000A9140 /* FRAPreferencesController.m in Sources */,
 				7F980B240B73B6A2000A9140 /* FRAPreviewController.m in Sources */,
 				7F980B250B73B6A2000A9140 /* FRAPrintTextView.m in Sources */,
-				9231DE931946A36800726887 /* VFSyntaxDefinition.m in Sources */,
 				7F980B260B73B6A2000A9140 /* FRAProjectsController.m in Sources */,
 				7F980B280B73B6A2000A9140 /* FRAServicesController.m in Sources */,
 				7F980B290B73B6A2000A9140 /* FRAShortcutsController.m in Sources */,
 				7F980B2A0B73B6A2000A9140 /* FRASingleDocumentWindowDelegate.m in Sources */,
 				7F980B2B0B73B6A2000A9140 /* FRASnippetsController.m in Sources */,
 				7F980B2F0B73B6A2000A9140 /* FRASyntaxColouring.m in Sources */,
-				9231DEA21946AEB300726887 /* VFEncoding.m in Sources */,
 				7F980B310B73B6A2000A9140 /* FRATableView.m in Sources */,
 				7F980B320B73B6A2000A9140 /* FRAProject+TableViewDelegate.m in Sources */,
+				92C49EE5194AA31200AC3950 /* VAProject.m in Sources */,
 				7F980B340B73B6A2000A9140 /* FRATextMenuController.m in Sources */,
 				7F980B350B73B6A2000A9140 /* FRATextView.m in Sources */,
 				7F980B370B73B6A2000A9140 /* FRAToolsMenuController.m in Sources */,
 				7F980B380B73B6A2000A9140 /* FRAVariousPerformer.m in Sources */,
 				7F980B390B73B6A2000A9140 /* FRAViewMenuController.m in Sources */,
+				92C49EE7194AA31200AC3950 /* VASnippetCollection.m in Sources */,
 				7F5C287A0B73C49700D2EDDC /* FRABasicPerformer.m in Sources */,
 				7F5C287E0B73C4AA00D2EDDC /* FRAInterfacePerformer.m in Sources */,
-				9231DEA81946B47500726887 /* VASnippetCollection.m in Sources */,
-				9248288019493CB100E62752 /* VACommandCollection.m in Sources */,
 				7F3443260B74CC3500790653 /* FRADocumentManagedObject.m in Sources */,
 				7F08532F0B77B55D009544AD /* FRAExtraInterfaceController.m in Sources */,
 				7FB41E060B7A2A43006ADB1E /* FRAOpenSavePerformer.m in Sources */,
@@ -1270,6 +1275,8 @@
 				7F2B7FBD0C27272E0058BC55 /* FRASingleDocumentPanel.m in Sources */,
 				7FBDDEFC0CF794F8003BAFB5 /* FRAProjectWindow.m in Sources */,
 				7F7444C90CF8DDEC00C947C1 /* FRAAdvancedFindPanel.m in Sources */,
+				92C49EE6194AA31200AC3950 /* VASnippet.m in Sources */,
+				92C49EE3194AA31200AC3950 /* VACommand.m in Sources */,
 				7F79EE370D93D5500034017B /* NSString+Fraise.m in Sources */,
 				7F2B7E330D9463A100C60435 /* FRASearchField.m in Sources */,
 				7FAD46800D9E43A600ECD508 /* FRAPrintViewController.m in Sources */,

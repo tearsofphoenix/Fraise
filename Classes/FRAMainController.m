@@ -70,7 +70,6 @@ VASingletonIMPDefault(FRAMainController)
 {
 	// If the application crashed so these weren't removed, remove them now
 	[FRABasic removeAllObjectsForEntity:@"Document"];
-	[FRABasic removeAllObjectsForEntity:@"Project"];
 	
 	[FRAVarious insertTextEncodings];
 	[FRAVarious insertSyntaxDefinitions];

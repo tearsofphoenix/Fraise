@@ -37,11 +37,11 @@
 		92A1FF2019405A100090870B /* ICUMatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 92A1FEFF194058480090870B /* ICUMatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		92A1FF2119405A100090870B /* ICUPattern.h in Headers */ = {isa = PBXBuildFile; fileRef = 92A1FF01194058480090870B /* ICUPattern.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		92C80D9D194A8C5F0062B54C /* lua.tmbundle in Resources */ = {isa = PBXBuildFile; fileRef = 92C80D9C194A8C5F0062B54C /* lua.tmbundle */; };
-		92C80DA0194A90390062B54C /* VATMPreference.h in Headers */ = {isa = PBXBuildFile; fileRef = 92C80D9E194A90390062B54C /* VATMPreference.h */; };
+		92C80DA0194A90390062B54C /* VATMPreference.h in Headers */ = {isa = PBXBuildFile; fileRef = 92C80D9E194A90390062B54C /* VATMPreference.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		92C80DA1194A90390062B54C /* VATMPreference.m in Sources */ = {isa = PBXBuildFile; fileRef = 92C80D9F194A90390062B54C /* VATMPreference.m */; };
-		92C80DA4194A91710062B54C /* VATMSnippet.h in Headers */ = {isa = PBXBuildFile; fileRef = 92C80DA2194A91710062B54C /* VATMSnippet.h */; };
+		92C80DA4194A91710062B54C /* VATMSnippet.h in Headers */ = {isa = PBXBuildFile; fileRef = 92C80DA2194A91710062B54C /* VATMSnippet.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		92C80DA5194A91710062B54C /* VATMSnippet.m in Sources */ = {isa = PBXBuildFile; fileRef = 92C80DA3194A91710062B54C /* VATMSnippet.m */; };
-		92C80DA8194A92250062B54C /* VATMSyntax.h in Headers */ = {isa = PBXBuildFile; fileRef = 92C80DA6194A92250062B54C /* VATMSyntax.h */; };
+		92C80DA8194A92250062B54C /* VATMSyntax.h in Headers */ = {isa = PBXBuildFile; fileRef = 92C80DA6194A92250062B54C /* VATMSyntax.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		92C80DA9194A92250062B54C /* VATMSyntax.m in Sources */ = {isa = PBXBuildFile; fileRef = 92C80DA7194A92250062B54C /* VATMSyntax.m */; };
 /* End PBXBuildFile section */
 
@@ -251,15 +251,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				9237A5D31946FBA50049BF32 /* NSData+VAExtensions.h in Headers */,
-				92C80DA0194A90390062B54C /* VATMPreference.h in Headers */,
-				92C80DA4194A91710062B54C /* VATMSnippet.h in Headers */,
 				92A1FEA2194055650090870B /* NSString+VAExtensions.h in Headers */,
 				92A1FF1C194058480090870B /* NSStringICUAdditions.h in Headers */,
-				92C80DA8194A92250062B54C /* VATMSyntax.h in Headers */,
 				92A1FF2019405A100090870B /* ICUMatcher.h in Headers */,
 				92A1FF2119405A100090870B /* ICUPattern.h in Headers */,
 				604480901940A5D0000E1820 /* VFBase.h in Headers */,
 				6045898F19420A9C0004DF6B /* VFFontTransformer.h in Headers */,
+				92C80DA0194A90390062B54C /* VATMPreference.h in Headers */,
+				92C80DA4194A91710062B54C /* VATMSnippet.h in Headers */,
+				92C80DA8194A92250062B54C /* VATMSyntax.h in Headers */,
 				60BB1839194A0C9500F0BB4C /* VATMCommand.h in Headers */,
 				60BB183D194A0D5F00F0BB4C /* VATMObject.h in Headers */,
 				60BB1835194A0AC100F0BB4C /* VATMBundle.h in Headers */,

@@ -54,10 +54,6 @@ VASingletonIMPDefault(FRABasicPerformer)
 	[request setSortDescriptors:@[sortDescriptor]];
 	[fetchRequests setValue:request forKey:@"DocumentSortKeyName"];	
 	
-	entityDescription = [NSEntityDescription entityForName:@"Project" inManagedObjectContext:managedObjectContext];
-	request = [[NSFetchRequest alloc] init];
-	[request setEntity:entityDescription];
-	[fetchRequests setValue:request forKey:@"Project"];	
 }
 
 

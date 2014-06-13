@@ -33,19 +33,27 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 #import "FRAPrintViewController.h"
 #import "FRAPrintTextView.h"
+#import "VAProject.h"
 
 #import <VADevUIKit/VADevUIKit.h>
 
+@interface FRAProject ()
+
+
+@end
+
 @implementation FRAProject
 
-@synthesize firstDocument, secondDocument, lastTextViewInFocus, project, documentsArrayController, documentsTableView, firstContentView, secondContentView, statusBarTextField, mainSplitView, contentSplitView, secondContentViewNavigationBar, secondContentViewPopUpButton, leftDocumentsView, leftDocumentsTableView, tabBarControl, tabBarTabView;
+@synthesize firstDocument, secondDocument, lastTextViewInFocus, documentsArrayController, documentsTableView, firstContentView, secondContentView, statusBarTextField, mainSplitView, contentSplitView, secondContentViewNavigationBar, secondContentViewPopUpButton, leftDocumentsView, leftDocumentsTableView, tabBarControl, tabBarTabView;
 
 
 - (instancetype)init
 {
     self = [super init];
-    if (self) {
-		project = [FRABasic createNewObjectForEntity:@"Project"];
+    if (self)
+    {
+		_project = [[VAProject alloc] init];
+
 		[[FRAProjectsController sharedDocumentController] setCurrentProject:self];
     }
     return self;
@@ -91,7 +99,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"sortOrder" ascending:YES];
 	[documentsArrayController setSortDescriptors:@[sortDescriptor]];
 
-	if ([[FRAApplicationDelegate sharedInstance] shouldCreateEmptyDocument] == YES) {
+	if ([[FRAApplicationDelegate sharedInstance] shouldCreateEmptyDocument] == YES)
+    {
 		id document = [self createNewDocumentWithContents:@""];
 		[self insertDefaultIconsInDocument:document];
 		[self selectionDidChange];
@@ -206,9 +215,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 		[self updateTabBar];
 	}
 
-	if ([project valueForKey:@"dividerPosition"] == nil) {
-		[project setValue:[FRADefaults valueForKey:@"DividerPosition"] forKey:@"dividerPosition"];
-	}
+    [_project setDividerPosition: [[FRADefaults valueForKey:@"DividerPosition"] floatValue]];
+
 	[self resizeMainSplitView];
 }
 
@@ -571,8 +579,10 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	NSArray *array = [[self documents] allObjects];
 	NSMutableDictionary *returnDictionary = [NSMutableDictionary dictionary];
 	NSMutableArray *documentsArray = [NSMutableArray array];
-	for (id item in array) {
-		if ([item valueForKey:@"path"] != nil) {
+	for (id item in array)
+    {
+		if ([item valueForKey:@"path"] != nil)
+        {
 			NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
 			[dictionary setValue:[item valueForKey:@"path"] forKey:@"path"];
 			[dictionary setValue:[item valueForKey:@"encoding"] forKey:@"encoding"];
@@ -595,12 +605,17 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	} else {
 		name = [[documentsArrayController selectedObjects][0] valueForKey:@"name"];
 	}
-	[returnDictionary setValue:name forKey:@"selectedDocumentName"];
-	[returnDictionary setValue:NSStringFromRect([[self window] frame]) forKey:@"windowFrame"];
-	[returnDictionary setValue:[project valueForKey:@"view"] forKey:@"view"];
-	[returnDictionary setValue:[project valueForKey:@"viewSize"] forKey:@"viewSize"];
+	[returnDictionary setValue: name
+                        forKey: @"selectedDocumentName"];
+	[returnDictionary setValue: NSStringFromRect([[self window] frame]) forKey:@"windowFrame"];
+	[returnDictionary setValue: @([_project view])
+                        forKey: @"view"];
+	[returnDictionary setValue: @([_project viewSize])
+                        forKey: @"viewSize"];
 	[self saveMainSplitViewFraction];
-	[returnDictionary setValue:[project valueForKey:@"dividerPosition"]  forKey:@"dividerPosition"];
+    
+	[returnDictionary setValue: @([_project dividerPosition])
+                        forKey: @"dividerPosition"];
 	[returnDictionary setValue:@3 forKey:@"version"];
 	
 	return returnDictionary;
@@ -617,19 +632,21 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (NSString *)name
 {
-	if ([self fileURL] == nil) {
+	if ([self fileURL] == nil)
+    {
 		return nil;
 	}
 	
 	NSString *urlString = (NSString*)CFBridgingRelease(CFURLCreateStringByReplacingPercentEscapesUsingEncoding(NULL, (CFStringRef)[[self fileURL] absoluteString], CFSTR(""), kCFStringEncodingUTF8));
-//	NSMakeCollectable(urlString);
+
 	return [[urlString lastPathComponent] stringByDeletingPathExtension];
 }
 
 
 - (void)selectionDidChange
 {
-	[self tableViewSelectionDidChange:[NSNotification notificationWithName:@"NSTableViewSelectionDidChangeNotification" object:documentsTableView]];
+	[self tableViewSelectionDidChange: [NSNotification notificationWithName: NSTableViewSelectionDidChangeNotification
+                                                                     object: documentsTableView]];
 }
 
 
@@ -727,7 +744,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	NSRect leftDocumentsViewFrame = [[mainSplitView subviews][0] frame];
     NSRect contentViewFrame = [[mainSplitView subviews][1] frame];
 	CGFloat totalWidth = leftDocumentsViewFrame.size.width + contentViewFrame.size.width + [mainSplitView dividerThickness];
-    leftDocumentsViewFrame.size.width = [[project valueForKey:@"dividerPosition"] doubleValue] * totalWidth;
+    leftDocumentsViewFrame.size.width = [_project dividerPosition] * totalWidth;
     contentViewFrame.size.width = totalWidth - leftDocumentsViewFrame.size.width - [mainSplitView dividerThickness];
 	
     [[mainSplitView subviews][0] setFrame:leftDocumentsViewFrame];
@@ -739,9 +756,10 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (void)saveMainSplitViewFraction
 {
-	NSNumber *fraction = @([self mainSplitViewFraction]);
-	[project setValue:fraction forKey:@"dividerPosition"];
-	[FRADefaults setValue:fraction forKey:@"DividerPosition"];
+	CGFloat fraction = [self mainSplitViewFraction];
+	[_project setDividerPosition: fraction];
+	[FRADefaults setValue: @(fraction)
+                   forKey: @"DividerPosition"];
 }
 
 
@@ -772,7 +790,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (NSMutableSet *)documents
 {
-	return [project mutableSetValueForKey:@"documents"];
+	return [_project documents];
 }
 
 
@@ -822,9 +840,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 	[[FRAApplicationDelegate sharedInstance] saveAction:nil]; // Make sure the documents objects really are deleted, before deleting the project
 
-	if (project != nil) { // Remove the managed object project
-		[FRAManagedObjectContext deleteObject:project];
-	}
+    _project = nil;
 
 	[[FRAApplicationDelegate sharedInstance] saveAction:nil];
 	[[FRAManagedObjectContext undoManager] removeAllActions];

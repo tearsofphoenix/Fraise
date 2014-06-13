@@ -22,6 +22,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAProject.h"
 #import "FRATextView.h"
 #import "FRAProject+DocumentViewsController.h"
+#import "VAProject.h"
 
 @implementation FRAProjectsController
 
@@ -160,7 +161,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	[project makeWindowControllers];
 
 	[project setFileURL:[NSURL fileURLWithPath:path]];
-	[[project project] setValue:path forKey:@"path"];
+	[[project project] setPath: path];
 	id projectToOpen = [NSUnarchiver unarchiveObjectWithData:[NSData dataWithContentsOfFile:path]];
 	
 	if ([projectToOpen isKindOfClass:[NSArray class]]) { // From version 2

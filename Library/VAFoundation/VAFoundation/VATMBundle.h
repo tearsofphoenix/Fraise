@@ -17,7 +17,7 @@
 @property (strong) NSArray *snippets;
 @property (strong) NSArray *syntaxes;
 
-- (instancetype)initWithPath: (NSString *)path NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithPath: (NSString *)path ;
 
 - (NSString *)path;
 

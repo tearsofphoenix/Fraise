@@ -52,7 +52,7 @@ extern const NSUInteger ICUUnicodeWordBoundaries;
 	@abstract   Returns a pattern with the specified flags set.
 	@discussion Flags are defined as the OR of the constants defined in the class.
 */
--(instancetype)initWithString:(NSString *)aPattern flags:(NSUInteger)flags NS_DESIGNATED_INITIALIZER;
+-(instancetype)initWithString:(NSString *)aPattern flags:(NSUInteger)flags ;
 
 /*!
     @method     initWithString:

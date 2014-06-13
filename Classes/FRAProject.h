@@ -21,10 +21,10 @@ Unless required by applicable law or agreed to in writing, software distributed 
 @class FRATableViewDelegate;
 @class FRASplitViewDelegate;
 @class PSMTabBarControl;
+@class VAProject;
 
 @interface FRAProject : NSDocument <NSTableViewDelegate,NSSplitViewDelegate,NSWindowDelegate,NSMenuDelegate>
 {
-	NSManagedObject *__unsafe_unretained project;
 	
 	IBOutlet NSTextField *__unsafe_unretained statusBarTextField;
 	
@@ -72,7 +72,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 @property (unsafe_unretained) FRADocumentManagedObject *firstDocument;
 @property (unsafe_unretained) FRADocumentManagedObject *secondDocument;
 
-@property (unsafe_unretained, readonly) IBOutlet NSManagedObject *project;
+@property (strong) VAProject *project;
+
 @property (unsafe_unretained, readonly) IBOutlet NSArrayController *documentsArrayController;
 @property (unsafe_unretained, readonly) IBOutlet NSTableView *documentsTableView;
 @property (unsafe_unretained, readonly) IBOutlet NSView *firstContentView;
