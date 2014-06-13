@@ -56,6 +56,8 @@
 		2FC46AFF0BD608C500F209AA /* FRASnippetsIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 2FC46AFD0BD608C500F209AA /* FRASnippetsIcon.icns */; };
 		2FE2F8400B985D0500ADCF8A /* FRAProject+DocumentViewsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FE2F83F0B985D0500ADCF8A /* FRAProject+DocumentViewsController.m */; };
 		2FEC50CB0B96DB86000CF1AD /* MultiMarkdown.pl in Resources */ = {isa = PBXBuildFile; fileRef = 2FEC50CA0B96DB86000CF1AD /* MultiMarkdown.pl */; };
+		6012EB1F194B5A0F00F545AA /* VATMBundleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6012EB1D194B5A0F00F545AA /* VATMBundleManager.m */; };
+		6012EB20194B5A0F00F545AA /* VATMBundleManager.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6012EB1E194B5A0F00F545AA /* VATMBundleManager.xib */; };
 		604589821941C0C60004DF6B /* BWTK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6045897B1941C0B20004DF6B /* BWTK.framework */; };
 		604589831941C0CE0004DF6B /* BWTK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6045897B1941C0B20004DF6B /* BWTK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		7F08532F0B77B55D009544AD /* FRAExtraInterfaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F08532E0B77B55D009544AD /* FRAExtraInterfaceController.m */; };
@@ -119,7 +121,6 @@
 		7F980B370B73B6A2000A9140 /* FRAToolsMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F980B040B73B6A2000A9140 /* FRAToolsMenuController.m */; };
 		7F980B380B73B6A2000A9140 /* FRAVariousPerformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F980B060B73B6A2000A9140 /* FRAVariousPerformer.m */; };
 		7F980B390B73B6A2000A9140 /* FRAViewMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F980B080B73B6A2000A9140 /* FRAViewMenuController.m */; };
-		7F9C38DE0BD29AE200B45805 /* FRADataModel2.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 7F9C38DD0BD29AE200B45805 /* FRADataModel2.xcdatamodel */; };
 		7FAD46800D9E43A600ECD508 /* FRAPrintViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FAD467F0D9E43A600ECD508 /* FRAPrintViewController.m */; };
 		7FB41E060B7A2A43006ADB1E /* FRAOpenSavePerformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FB41E050B7A2A43006ADB1E /* FRAOpenSavePerformer.m */; };
 		7FB9116A101E623F008DB1DA /* Fraise-Manual.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 7FD53F120D91A8F30071054F /* Fraise-Manual.pdf */; };
@@ -398,6 +399,9 @@
 		2FE2F83E0B985D0500ADCF8A /* FRAProject+DocumentViewsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "FRAProject+DocumentViewsController.h"; path = "Classes/FRAProject+DocumentViewsController.h"; sourceTree = "<group>"; };
 		2FE2F83F0B985D0500ADCF8A /* FRAProject+DocumentViewsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "FRAProject+DocumentViewsController.m"; path = "Classes/FRAProject+DocumentViewsController.m"; sourceTree = "<group>"; };
 		2FEC50CA0B96DB86000CF1AD /* MultiMarkdown.pl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.perl; name = MultiMarkdown.pl; path = Other/MultiMarkdown.pl; sourceTree = "<group>"; };
+		6012EB1C194B5A0F00F545AA /* VATMBundleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VATMBundleManager.h; path = Classes/VATMBundleManager.h; sourceTree = "<group>"; };
+		6012EB1D194B5A0F00F545AA /* VATMBundleManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VATMBundleManager.m; path = Classes/VATMBundleManager.m; sourceTree = "<group>"; };
+		6012EB1E194B5A0F00F545AA /* VATMBundleManager.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = VATMBundleManager.xib; path = Classes/VATMBundleManager.xib; sourceTree = "<group>"; };
 		604589741941C0B20004DF6B /* BWToolkit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BWToolkit.xcodeproj; path = bwtoolkit/BWToolkit.xcodeproj; sourceTree = "<group>"; };
 		7F08532D0B77B55D009544AD /* FRAExtraInterfaceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FRAExtraInterfaceController.h; path = Classes/FRAExtraInterfaceController.h; sourceTree = "<group>"; };
 		7F08532E0B77B55D009544AD /* FRAExtraInterfaceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FRAExtraInterfaceController.m; path = Classes/FRAExtraInterfaceController.m; sourceTree = "<group>"; };
@@ -503,7 +507,6 @@
 		7F980B060B73B6A2000A9140 /* FRAVariousPerformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FRAVariousPerformer.m; path = Classes/FRAVariousPerformer.m; sourceTree = "<group>"; };
 		7F980B070B73B6A2000A9140 /* FRAViewMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FRAViewMenuController.h; path = Classes/FRAViewMenuController.h; sourceTree = "<group>"; };
 		7F980B080B73B6A2000A9140 /* FRAViewMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FRAViewMenuController.m; path = Classes/FRAViewMenuController.m; sourceTree = "<group>"; };
-		7F9C38DD0BD29AE200B45805 /* FRADataModel2.xcdatamodel */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.xcdatamodel; name = FRADataModel2.xcdatamodel; path = Other/FRADataModel2.xcdatamodel; sourceTree = "<group>"; };
 		7FAD467E0D9E43A600ECD508 /* FRAPrintViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FRAPrintViewController.h; path = Classes/FRAPrintViewController.h; sourceTree = "<group>"; };
 		7FAD467F0D9E43A600ECD508 /* FRAPrintViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FRAPrintViewController.m; path = Classes/FRAPrintViewController.m; sourceTree = "<group>"; };
 		7FB41E040B7A2A43006ADB1E /* FRAOpenSavePerformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FRAOpenSavePerformer.h; path = Classes/FRAOpenSavePerformer.h; sourceTree = "<group>"; };
@@ -729,6 +732,9 @@
 				7F980AE70B73B6A2000A9140 /* FRAShortcutsController.m */,
 				7F980AEA0B73B6A2000A9140 /* FRASnippetsController.h */,
 				7F980AEB0B73B6A2000A9140 /* FRASnippetsController.m */,
+				6012EB1C194B5A0F00F545AA /* VATMBundleManager.h */,
+				6012EB1D194B5A0F00F545AA /* VATMBundleManager.m */,
+				6012EB1E194B5A0F00F545AA /* VATMBundleManager.xib */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -932,17 +938,8 @@
 			isa = PBXGroup;
 			children = (
 				7F980A910B73B652000A9140 /* FRADataModel3.xcdatamodel */,
-				7F9C38DF0BD29AF500B45805 /* Old model */,
 			);
 			name = Models;
-			sourceTree = "<group>";
-		};
-		7F9C38DF0BD29AF500B45805 /* Old model */ = {
-			isa = PBXGroup;
-			children = (
-				7F9C38DD0BD29AE200B45805 /* FRADataModel2.xcdatamodel */,
-			);
-			name = "Old model";
 			sourceTree = "<group>";
 		};
 		7FC80B920B9C65CF002C3C38 /* Project Categories */ = {
@@ -1156,6 +1153,7 @@
 				7F980A410B73B4F4000A9140 /* Syntax Definitions in Resources */,
 				7F980A420B73B4F4000A9140 /* Toolbar Icons in Resources */,
 				7F980A610B73B5B9000A9140 /* Preferences Icons in Resources */,
+				6012EB20194B5A0F00F545AA /* VATMBundleManager.xib in Resources */,
 				7F980A970B73B660000A9140 /* SyntaxDefinitions.plist in Resources */,
 				7F980A980B73B660000A9140 /* DefaultSnippets.plist in Resources */,
 				7F980A990B73B660000A9140 /* Fraise.sdef in Resources */,
@@ -1243,6 +1241,7 @@
 				92C49EE8194AA31200AC3950 /* VFEncoding.m in Sources */,
 				7F980B190B73B6A2000A9140 /* FRAFullScreenWindow.m in Sources */,
 				7F980B1B0B73B6A2000A9140 /* FRAHelpMenuController.m in Sources */,
+				6012EB1F194B5A0F00F545AA /* VATMBundleManager.m in Sources */,
 				7F980B1C0B73B6A2000A9140 /* FRAInfoController.m in Sources */,
 				7F980B1F0B73B6A2000A9140 /* FRAMainController.m in Sources */,
 				7F980B230B73B6A2000A9140 /* FRAPreferencesController.m in Sources */,
@@ -1271,7 +1270,6 @@
 				7F85E07B0B7C8AC900DAC8B2 /* FRASplitView.m in Sources */,
 				2FE2F8400B985D0500ADCF8A /* FRAProject+DocumentViewsController.m in Sources */,
 				2F69A1BE0BB0406800D23876 /* FRADocumentsListCell.m in Sources */,
-				7F9C38DE0BD29AE200B45805 /* FRADataModel2.xcdatamodel in Sources */,
 				7F2B7FBD0C27272E0058BC55 /* FRASingleDocumentPanel.m in Sources */,
 				7FBDDEFC0CF794F8003BAFB5 /* FRAProjectWindow.m in Sources */,
 				7F7444C90CF8DDEC00C947C1 /* FRAAdvancedFindPanel.m in Sources */,
@@ -1653,6 +1651,7 @@
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = Fraise;
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = YES;
@@ -1677,6 +1676,7 @@
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = Fraise;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1693,7 +1693,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "$(inherited)";
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "-DDEVELOPMENT_STYLE_BUILD";
 				PREBINDING = NO;
@@ -1712,7 +1712,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "$(inherited)";
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PREBINDING = NO;
 				SDKROOT = macosx;
 			};
