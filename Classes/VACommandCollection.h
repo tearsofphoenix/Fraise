@@ -17,5 +17,6 @@
 @property (strong) NSMutableArray *commands;
 
 + (NSArray *)allCommandCollections;
++ (void)removeCollection: (id)collection;
 
 @end

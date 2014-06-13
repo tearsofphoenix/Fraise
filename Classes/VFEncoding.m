@@ -13,7 +13,9 @@
 #import "FRAPreferencesController.h"
 
 @interface VFEncoding ()
-
+{
+    NSString *_name;
+}
 @end
 
 @implementation VFEncoding

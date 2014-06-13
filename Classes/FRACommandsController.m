@@ -154,11 +154,8 @@ VASingletonIMPDefault(FRACommandsController)
 
 - (void)performDeleteCollection
 {
-	id collection = _selectedCollection;
-
-	//TODO
-//	[FRAManagedObjectContext deleteObject:collection];
-	
+    [VACommandCollection removeCollection: _selectedCollection];
+    [_commandCollectionsTableView reloadData];
 	[[FRAToolsMenuController sharedInstance] buildRunCommandMenu];
 }
 
@@ -173,7 +170,8 @@ VASingletonIMPDefault(FRACommandsController)
     [openPanel beginSheetModalForWindow: _commandsWindow
                       completionHandler: (^(NSInteger returnCode)
                                           {
-                                              if (returnCode == NSOKButton) {
+                                              if (returnCode == NSOKButton)
+                                              {
                                                   [self performCommandsImportWithPath: [[openPanel URL] path]];
                                               }
                                               [_commandsWindow makeKeyAndOrderFront:nil];

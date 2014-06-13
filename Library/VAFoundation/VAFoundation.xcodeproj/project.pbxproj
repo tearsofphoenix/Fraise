@@ -10,6 +10,12 @@
 		604480901940A5D0000E1820 /* VFBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 6044808F1940A5D0000E1820 /* VFBase.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6045898F19420A9C0004DF6B /* VFFontTransformer.h in Headers */ = {isa = PBXBuildFile; fileRef = 6045898D19420A9C0004DF6B /* VFFontTransformer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6045899019420A9C0004DF6B /* VFFontTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6045898E19420A9C0004DF6B /* VFFontTransformer.m */; };
+		60BB1835194A0AC100F0BB4C /* VATMBundle.h in Headers */ = {isa = PBXBuildFile; fileRef = 60BB1833194A0AC100F0BB4C /* VATMBundle.h */; };
+		60BB1836194A0AC100F0BB4C /* VATMBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = 60BB1834194A0AC100F0BB4C /* VATMBundle.m */; };
+		60BB1839194A0C9500F0BB4C /* VATMCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 60BB1837194A0C9500F0BB4C /* VATMCommand.h */; };
+		60BB183A194A0C9500F0BB4C /* VATMCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 60BB1838194A0C9500F0BB4C /* VATMCommand.m */; };
+		60BB183D194A0D5F00F0BB4C /* VATMObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 60BB183B194A0D5F00F0BB4C /* VATMObject.h */; };
+		60BB183E194A0D5F00F0BB4C /* VATMObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 60BB183C194A0D5F00F0BB4C /* VATMObject.m */; };
 		9237A5D31946FBA50049BF32 /* NSData+VAExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 9237A5D11946FBA50049BF32 /* NSData+VAExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9237A5D41946FBA50049BF32 /* NSData+VAExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9237A5D21946FBA50049BF32 /* NSData+VAExtensions.m */; };
 		92A1FE6D194055260090870B /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A1FE6C194055260090870B /* Cocoa.framework */; };
@@ -46,6 +52,12 @@
 		6044808F1940A5D0000E1820 /* VFBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VFBase.h; sourceTree = "<group>"; };
 		6045898D19420A9C0004DF6B /* VFFontTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VFFontTransformer.h; sourceTree = "<group>"; };
 		6045898E19420A9C0004DF6B /* VFFontTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VFFontTransformer.m; sourceTree = "<group>"; };
+		60BB1833194A0AC100F0BB4C /* VATMBundle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VATMBundle.h; sourceTree = "<group>"; };
+		60BB1834194A0AC100F0BB4C /* VATMBundle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VATMBundle.m; sourceTree = "<group>"; };
+		60BB1837194A0C9500F0BB4C /* VATMCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VATMCommand.h; sourceTree = "<group>"; };
+		60BB1838194A0C9500F0BB4C /* VATMCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VATMCommand.m; sourceTree = "<group>"; };
+		60BB183B194A0D5F00F0BB4C /* VATMObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VATMObject.h; sourceTree = "<group>"; };
+		60BB183C194A0D5F00F0BB4C /* VATMObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VATMObject.m; sourceTree = "<group>"; };
 		9237A5D11946FBA50049BF32 /* NSData+VAExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+VAExtensions.h"; sourceTree = "<group>"; };
 		9237A5D21946FBA50049BF32 /* NSData+VAExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+VAExtensions.m"; sourceTree = "<group>"; };
 		92A1FE69194055260090870B /* VAFoundation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = VAFoundation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -144,6 +156,12 @@
 				92A1FE79194055260090870B /* VAFoundation.h */,
 				6045898D19420A9C0004DF6B /* VFFontTransformer.h */,
 				6045898E19420A9C0004DF6B /* VFFontTransformer.m */,
+				60BB183B194A0D5F00F0BB4C /* VATMObject.h */,
+				60BB183C194A0D5F00F0BB4C /* VATMObject.m */,
+				60BB1837194A0C9500F0BB4C /* VATMCommand.h */,
+				60BB1838194A0C9500F0BB4C /* VATMCommand.m */,
+				60BB1833194A0AC100F0BB4C /* VATMBundle.h */,
+				60BB1834194A0AC100F0BB4C /* VATMBundle.m */,
 				6044808F1940A5D0000E1820 /* VFBase.h */,
 				92A1FE73194055260090870B /* Supporting Files */,
 			);
@@ -213,11 +231,14 @@
 			files = (
 				9237A5D31946FBA50049BF32 /* NSData+VAExtensions.h in Headers */,
 				92A1FEA2194055650090870B /* NSString+VAExtensions.h in Headers */,
+				60BB1839194A0C9500F0BB4C /* VATMCommand.h in Headers */,
 				92A1FF1C194058480090870B /* NSStringICUAdditions.h in Headers */,
 				92A1FF2019405A100090870B /* ICUMatcher.h in Headers */,
 				92A1FF2119405A100090870B /* ICUPattern.h in Headers */,
 				604480901940A5D0000E1820 /* VFBase.h in Headers */,
 				6045898F19420A9C0004DF6B /* VFFontTransformer.h in Headers */,
+				60BB183D194A0D5F00F0BB4C /* VATMObject.h in Headers */,
+				60BB1835194A0AC100F0BB4C /* VATMBundle.h in Headers */,
 				92A1FEA5194055C50090870B /* VAFoundation.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -318,12 +339,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				60BB1836194A0AC100F0BB4C /* VATMBundle.m in Sources */,
 				92A1FF1A194058480090870B /* ICUPattern.m in Sources */,
 				9237A5D41946FBA50049BF32 /* NSData+VAExtensions.m in Sources */,
 				92A1FF1D194058480090870B /* NSStringICUAdditions.m in Sources */,
 				92A1FF18194058480090870B /* ICUMatcher.m in Sources */,
 				6045899019420A9C0004DF6B /* VFFontTransformer.m in Sources */,
 				92A1FEA3194055650090870B /* NSString+VAExtensions.m in Sources */,
+				60BB183A194A0C9500F0BB4C /* VATMCommand.m in Sources */,
+				60BB183E194A0D5F00F0BB4C /* VATMObject.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -13,7 +13,7 @@
 @property BOOL active;
 @property (nonatomic) NSInteger encoding;
 
-@property (NS_NONATOMIC_IOSONLY, copy) NSString *name;
+- (NSString *)name;
 
 + (NSArray *)allEncodings;
 
