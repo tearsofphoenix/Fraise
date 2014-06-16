@@ -63,8 +63,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	
 	IBOutlet NSView *__unsafe_unretained leftDocumentsTableView;
 	IBOutlet NSTableView *__unsafe_unretained documentsTableView;
-	IBOutlet NSArrayController *__unsafe_unretained documentsArrayController;
-	
 }
 
 @property (nonatomic, unsafe_unretained) FRATextView *lastTextViewInFocus;
@@ -74,7 +72,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 @property (strong) VAProject *project;
 
-@property (unsafe_unretained, readonly) IBOutlet NSArrayController *documentsArrayController;
+- (id)currentDocument;
+
 @property (unsafe_unretained, readonly) IBOutlet NSTableView *documentsTableView;
 @property (unsafe_unretained, readonly) IBOutlet NSView *firstContentView;
 @property (unsafe_unretained, readonly) IBOutlet NSView *secondContentView;
@@ -92,10 +91,15 @@ Unless required by applicable law or agreed to in writing, software distributed 
 @property (unsafe_unretained, readonly) IBOutlet PSMTabBarControl *tabBarControl;
 @property (unsafe_unretained, readonly) IBOutlet NSTabView *tabBarTabView;
 
+- (NSArray *)documents;
+
+@property (strong) id selectedDocument;
 
 - (void)setDefaultAppearanceAtStartup;
-
 - (void)selectDocument:(id)document;
+- (void)addDocument: (id)document;
+- (void)removeDocument: (id)document;
+
 @property (NS_NONATOMIC_IOSONLY, readonly) BOOL areThereAnyDocuments;
 - (void)resizeViewsForDocument:(id)document;
 - (void)setLastTextViewInFocus:(FRATextView *)newLastTextViewInFocus;
@@ -108,8 +112,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 - (void)performCloseDocument:(id)document;
 - (void)cleanUpDocument:(id)document;
 
-
-@property (NS_NONATOMIC_IOSONLY, readonly, copy) NSMutableSet *documents;
 
 @property (NS_NONATOMIC_IOSONLY, readonly, strong) NSManagedObjectContext *managedObjectContext;
 

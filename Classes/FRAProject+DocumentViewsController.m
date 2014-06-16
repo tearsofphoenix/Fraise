@@ -125,7 +125,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	
 	if (view == FRAListView)
     {
-		[documentsArrayController rearrangeObjects];
 		[documentsTableView removeAllToolTips];
 		[documentsTableView reloadData];
 	
@@ -144,8 +143,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	[FRAInterface removeAllTabBarObjectsForTabView:tabBarTabView];
 	
 	[[[FRAApplicationDelegate sharedInstance] managedObjectContext] processPendingChanges];
-	[documentsArrayController rearrangeObjects];
-	NSEnumerator *enumerator = [[documentsArrayController arrangedObjects] reverseObjectEnumerator];
+
+    NSEnumerator *enumerator = [[self documents] reverseObjectEnumerator];
 	for (id item in enumerator) {
 		NSTabViewItem *tabViewItem = [[NSTabViewItem alloc] initWithIdentifier:item];
 		if ([[item valueForKey:@"isEdited"] boolValue] == YES) {
@@ -166,15 +165,18 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	if ([[FRADefaults valueForKey:@"ShowTabBar"] boolValue] == NO) {
 		return;
 	}
-	NSArray *selectedObjects = [documentsArrayController selectedObjects];
-	if ([selectedObjects count] == 0) {
-		return;
-	}
-	
-	id selectedDocument = selectedObjects[0];
+    
+	id selectedDocument = [self selectedDocument];
+    if (!selectedDocument)
+    {
+        return;
+    }
+    
 	NSArray *array = [tabBarTabView tabViewItems];
-	for (id item in array) {
-		if ([item identifier] == selectedDocument) {
+	for (id item in array)
+    {
+		if ([item identifier] == selectedDocument)
+        {
 			[tabBarTabView selectTabViewItem:item];
 			break;
 		}
@@ -202,8 +204,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
 {
 	FRAView view = [[self project] view];
 	
-	if (view == FRAListView) {
-		[documentsArrayController setSelectedObjects:@[[tabViewItem identifier]]];
+	if (view == FRAListView)
+    {
+        [self setSelectedDocument: [tabViewItem identifier]];
 	}
 		
 }
@@ -230,7 +233,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 		index++;
 	}
 	
-	[documentsArrayController rearrangeObjects];
+//	[documentsArrayController rearrangeObjects];
 }
 
 

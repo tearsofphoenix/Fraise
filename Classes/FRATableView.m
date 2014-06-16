@@ -40,7 +40,7 @@
             {
                  if (self == [FRACurrentProject documentsTableView])
                  {
-					id document = [[FRACurrentProject documentsArrayController] selectedObjects][0];
+					id document = [FRACurrentProject selectedDocument];
 					[FRACurrentProject checkIfDocumentIsUnsaved:document keepOpen:NO];
 				}
 			}

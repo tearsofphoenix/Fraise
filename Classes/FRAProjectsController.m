@@ -46,7 +46,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	
 	NSWindow *mainWindow = [NSApp mainWindow];
 	NSWindow *keyWindow = [NSApp keyWindow];
-	id selectedDocument = [[FRACurrentProject documentsArrayController] selectedObjects][0];
+    
+	id selectedDocument = [FRACurrentProject selectedDocument];
 	
 	if ([keyWindow isKindOfClass:[FRASingleDocumentPanel class]]) {
 		if (keyWindow != nil) { // Loop through all single document windows to see if one of those is the key window
@@ -102,7 +103,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 			return nil;
 		}
 		
-		id selectedDocument = [[FRACurrentProject documentsArrayController] selectedObjects][0];
+		id selectedDocument = [FRACurrentProject selectedDocument];
 		
 		returnString = [[selectedDocument valueForKey:@"firstTextView"] string];
 		if (returnString == nil) {
@@ -202,7 +203,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	[project setDefaultViews];
 	[project selectionDidChange];
 
-	[[project documentsArrayController] rearrangeObjects];
+    //TODO
+	//[[project documentsArrayController] rearrangeObjects];
 	
 	[project showWindows];
 	[self setCurrentProject:nil];
@@ -228,10 +230,14 @@ Unless required by applicable law or agreed to in writing, software distributed 
 - (void)selectDocument:(id)document
 {
 	NSArray *projects = [self documents];
-	for (id project in projects) {
-		NSArray *documents = [[(FRAProject *)project documents] allObjects];
-		for (id item in documents) {
-			if (item == document) {
+	for (id project in projects)
+    {
+		NSArray *documents = [(FRAProject *)project documents];
+        
+		for (id item in documents)
+        {
+			if (item == document)
+            {
 				[[project window] makeKeyAndOrderFront:nil];
 				[[project window] makeMainWindow];
 				[[project window] makeFirstResponder:[document valueForKey:@"firstTextView"]];

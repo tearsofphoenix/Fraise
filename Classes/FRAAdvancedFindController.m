@@ -41,8 +41,9 @@ VASingletonIMPDefault(FRAAdvancedFindController)
 	FRAAdvancedFindScope searchScope = [[FRADefaults valueForKey:@"AdvancedFindScope"] integerValue];
 	NSArray *originalDocuments = nil;
 	
-	if (searchScope == FRAParentDirectoryScope) {
-		 originalDocuments = [NSArray arrayWithArray:[[FRACurrentProject documentsArrayController] arrangedObjects]];
+	if (searchScope == FRAParentDirectoryScope)
+    {
+		 originalDocuments = [NSArray arrayWithArray: [FRACurrentProject documents]];
 	}
 	
 	NSString *searchString = [findSearchField stringValue];
@@ -227,8 +228,9 @@ VASingletonIMPDefault(FRAAdvancedFindController)
 	FRAAdvancedFindScope searchScope = [[FRADefaults valueForKey:@"AdvancedFindScope"] integerValue];
 	NSArray *originalDocuments = nil;
 	
-	if (searchScope == FRAParentDirectoryScope) {
-		originalDocuments = [NSArray arrayWithArray:[[FRACurrentProject documentsArrayController] arrangedObjects]];
+	if (searchScope == FRAParentDirectoryScope)
+    {
+		originalDocuments = [NSArray arrayWithArray: [FRACurrentProject documents]];
 	}
 	
 	NSString *searchString = [findSearchField stringValue];
@@ -594,7 +596,7 @@ VASingletonIMPDefault(FRAAdvancedFindController)
 	
 	NSEnumerator *enumerator;
 	if (searchScope == FRACurrentProjectScope) {
-		enumerator = [[[FRACurrentProject documentsArrayController] arrangedObjects] reverseObjectEnumerator];
+		enumerator = [[FRACurrentProject documents] reverseObjectEnumerator];
 	} else if (searchScope == FRAAllDocumentsScope) {
 		enumerator = [[FRABasic fetchAll:@"DocumentSortKeyName"] reverseObjectEnumerator];
 	} else if (searchScope == FRAParentDirectoryScope){
@@ -643,7 +645,7 @@ VASingletonIMPDefault(FRAAdvancedFindController)
 				[directoryEnumerator skipDescendents];
 			}
         }
-		enumerator = [[[FRACurrentProject documentsArrayController] arrangedObjects] reverseObjectEnumerator];
+		enumerator = [[FRACurrentProject documents] reverseObjectEnumerator];
     }
     else
     {

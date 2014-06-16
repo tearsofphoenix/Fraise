@@ -335,7 +335,7 @@ VASingletonIMPDefault(FRAViewMenuController)
 
 - (IBAction)viewDocumentInSeparateWindowAction:(id)sender
 {
-	id document = [[FRACurrentProject documentsArrayController] selectedObjects][0];
+	id document = [FRACurrentProject selectedDocument];
 	[FRAInterface insertDocumentIntoThirdContentView:document orderFront:YES];
 	[FRACurrentProject updateWindowTitleBarForDocument:document];
 	
@@ -349,8 +349,10 @@ VASingletonIMPDefault(FRAViewMenuController)
 			[FRAVarious alertWithMessage:NSLocalizedString(@"Press the Escape-button on the keyboard to return from the full screen mode", @"Press the Escape-button on the keyboard to return from the full screen mode in Show Document In Full Screen") informativeText:NSLocalizedString(@"This message will NOT appear again so try to remember it:-)", @"This message will NOT appear again so try to remember it:-) in Show Document In Full Screen") defaultButton:OK_BUTTON alternateButton:nil otherButton:nil];
 			[FRADefaults setValue:@YES forKey:@"UserHasBeenShownAlertHowToReturnFromFullScreen"];
 		}
-		id currentDocument = [[FRACurrentProject documentsArrayController] selectedObjects][0];
-		if ([currentDocument valueForKey:@"singleDocumentWindow"] == nil) {
+		
+        id currentDocument = [FRACurrentProject selectedDocument];
+		if ([currentDocument valueForKey:@"singleDocumentWindow"] == nil)
+        {
 			[FRAInterface insertDocumentIntoThirdContentView:currentDocument orderFront:NO];
 			[FRAMain setSingleDocumentWindowWasOpenBeforeEnteringFullScreen:NO];
 		} else {
@@ -365,17 +367,20 @@ VASingletonIMPDefault(FRAViewMenuController)
 
 - (IBAction)showTabBarAction:(id)sender
 {
-	NSArray *selectedObjects = [[FRACurrentProject documentsArrayController] selectedObjects];
+	id selectedObject = [FRACurrentProject selectedDocument];
 	id selectedDocument = nil;
-	if ([selectedObjects count] > 0) {
-		selectedDocument = selectedObjects[0];
+	if (selectedObject)
+    {
+		selectedDocument = selectedObject;
 	}
 	
-	if ([[FRADefaults valueForKey:@"ShowTabBar"] boolValue] == YES) {
+	if ([[FRADefaults valueForKey:@"ShowTabBar"] boolValue] == YES)
+    {
 		[FRADefaults setValue:@NO forKey:@"ShowTabBar"];
 		[self performHideTabBar];
 		
-	} else {
+	} else
+    {
 		
 		NSArray *array = [[FRAProjectsController sharedDocumentController] documents];
 		for (id item in array) {
@@ -395,8 +400,9 @@ VASingletonIMPDefault(FRAViewMenuController)
 		}
 	}
 	
-	if (selectedDocument != nil) {
-		[[FRACurrentProject documentsArrayController] setSelectedObjects:@[selectedDocument]]; // Otherwise the selected document gets unselected when showing or hiding the tab bar
+	if (selectedDocument != nil)
+    {
+		[FRACurrentProject setSelectedDocument: selectedDocument]; // Otherwise the selected document gets unselected when showing or hiding the tab bar
 	}
 }
 

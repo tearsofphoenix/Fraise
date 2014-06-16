@@ -15,8 +15,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import <Cocoa/Cocoa.h>
 
 
-@interface FRADragAndDropController : NSObject <NSTableViewDataSource> {
-
+@interface FRADragAndDropController : NSObject <NSTableViewDataSource>
+{
 	NSString *movedDocumentType;
 	NSString *movedSnippetType;
 	NSString *movedCommandType;
@@ -25,6 +25,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 + (FRADragAndDropController *)sharedInstance;
 
-- (void)moveObjects:(NSArray *)objects inArrayController:(NSArrayController *)arrayController fromIndexes:(NSIndexSet *)rowIndexes toIndex:(NSInteger)insertIndex;
+- (NSArray *)moveObjects: (NSArray *)objects
+       inArrayController: (NSArray *)data
+             fromIndexes: (NSIndexSet *)rowIndexes
+                 toIndex: (NSInteger)insertIndex;
 
 @end

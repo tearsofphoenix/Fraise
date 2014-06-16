@@ -61,8 +61,10 @@ Unless required by applicable law or agreed to in writing, software distributed 
 - (void)setNameAndPathForDocument:(id)document path:(NSString *)path;
 
 
-- (void)fixSortOrderNumbersForArrayController:(NSArrayController *)arrayController overIndex:(NSInteger)index;
-- (void)resetSortOrderNumbersForArrayController:(NSArrayController *)arrayController;
+- (void)fixSortOrderNumbersForArrayController:(NSArray *)array
+                                    overIndex:(NSInteger)index;
+
+- (void)resetSortOrderNumbersForArrayController: (NSArray *)array;
 
 
 - (void)insertIconsInBackground:(id)array;

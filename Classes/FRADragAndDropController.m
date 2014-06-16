@@ -52,7 +52,7 @@ VASingletonIMPDefault(FRADragAndDropController)
 		typesArray = @[movedDocumentType];
 		
 		NSMutableArray *uriArray = [NSMutableArray array];
-		NSArray *arrangedObjects = [[FRACurrentProject documentsArrayController] arrangedObjects];
+		NSArray *arrangedObjects = [FRACurrentProject documents];
 		NSInteger currentIndex = [rowIndexes firstIndex];
 		while (currentIndex != NSNotFound) {
 			[uriArray addObject:[FRABasic uriFromObject:arrangedObjects[currentIndex]]];
@@ -105,7 +105,7 @@ VASingletonIMPDefault(FRADragAndDropController)
 			[aTableView setDropRow:row dropOperation:NSTableViewDropAbove];
 			return NSDragOperationMove;
 		} else {
-			[aTableView setDropRow:[[[FRACurrentProject documentsArrayController] arrangedObjects] count] dropOperation:NSTableViewDropAbove];
+			[aTableView setDropRow:[[FRACurrentProject documents] count] dropOperation:NSTableViewDropAbove];
 			return NSDragOperationCopy;
 		}
 		
@@ -141,17 +141,21 @@ VASingletonIMPDefault(FRADragAndDropController)
 	}
 
     // Documents list
-	if (aTableView == [FRACurrentProject documentsTableView]) {
-		if ([info draggingSource] == [FRACurrentProject documentsTableView]) {
-			if (![[[info draggingPasteboard] types] containsObject:movedDocumentType]) {
+	if (aTableView == [FRACurrentProject documentsTableView])
+    {
+		if ([info draggingSource] == [FRACurrentProject documentsTableView])
+        {
+			if (![[[info draggingPasteboard] types] containsObject:movedDocumentType])
+            {
 				return NO;
 			}
-			NSArrayController *arrayController = [FRACurrentProject documentsArrayController];
-			
+            
 			NSArray *pasteboardData = [NSUnarchiver unarchiveObjectWithData:[[info draggingPasteboard] dataForType:movedDocumentType]];
 			NSIndexSet *rowIndexes = pasteboardData[0];
 			NSArray *uriArray = pasteboardData[1];
-			[self moveObjects:uriArray inArrayController:arrayController fromIndexes:rowIndexes toIndex:row];
+			 [self moveObjects: uriArray
+             inArrayController: [FRACurrentProject documents]
+                   fromIndexes: rowIndexes toIndex:row];
 			
 			[FRACurrentProject documentsListHasUpdated];
 			
@@ -243,15 +247,15 @@ VASingletonIMPDefault(FRADragAndDropController)
 			return NO;
 		}
 		
-		NSArrayController *destinationArrayController = [destinationProject documentsArrayController];
 		NSArray *pasteboardData = [NSUnarchiver unarchiveObjectWithData:[[info draggingPasteboard] dataForType:movedDocumentType]];
 		NSArray *uriArray = pasteboardData[1];
 		id document = [FRABasic objectFromURI:uriArray[0]];
 		[(NSMutableSet *)[destinationProject documents] addObject:document];
 		[document setValue:@(row) forKey:@"sortOrder"];
-		[FRAVarious fixSortOrderNumbersForArrayController:destinationArrayController overIndex:row];
-		[destinationArrayController rearrangeObjects];
-		[destinationProject selectDocument:document];
+		[FRAVarious fixSortOrderNumbersForArrayController: [FRACurrentProject documents]
+                                                overIndex: row];
+
+        [destinationProject selectDocument:document];
 		[destinationProject documentsListHasUpdated];
 		[FRACurrentProject documentsListHasUpdated];
 		
@@ -288,12 +292,15 @@ VASingletonIMPDefault(FRADragAndDropController)
 }
 
 
-- (void)moveObjects:(NSArray *)objects inArrayController:(NSArrayController *)arrayController fromIndexes:(NSIndexSet *)rowIndexes toIndex:(NSInteger)insertIndex
+- (NSArray *)moveObjects: (NSArray *)objects
+       inArrayController: (NSArray *)data
+             fromIndexes: (NSIndexSet *)rowIndexes
+                 toIndex: (NSInteger)insertIndex
 {
-	NSMutableArray *arrangedObjects = [NSMutableArray arrayWithArray:[arrayController arrangedObjects]]; 
+	NSMutableArray *arrangedObjects = [NSMutableArray arrayWithArray: data];
 	
 	if (arrangedObjects == nil || objects == nil) {
-		return; 
+		return nil;
 	} 
 	
 	NSUInteger currentIndex = [rowIndexes firstIndex];
@@ -316,7 +323,7 @@ VASingletonIMPDefault(FRADragAndDropController)
 		index++;
 	}
 	
-	[arrayController setContent:arrangedObjects];
+    return arrangedObjects;
 }
 
 @end

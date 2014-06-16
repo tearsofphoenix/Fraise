@@ -129,6 +129,11 @@
 		8D15AC310486D014006FF6A4 /* FRAProject.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37F4ACFDCFA73011CA2CEA /* FRAProject.m */; settings = {ATTRIBUTES = (); }; };
 		8D15AC320486D014006FF6A4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37F4B0FDCFA73011CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */; };
+		92005A7F194AC59F00D04D0E /* BWTK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6045897B1941C0B20004DF6B /* BWTK.framework */; };
+		92005A80194AC59F00D04D0E /* VADevUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A1FEE8194057C30090870B /* VADevUIKit.framework */; };
+		92005A81194AC59F00D04D0E /* VAFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A1FE9D194055270090870B /* VAFoundation.framework */; };
+		92888C87194AF273004DEC4C /* VABundleManager.xib in Resources */ = {isa = PBXBuildFile; fileRef = 92888C85194AF273004DEC4C /* VABundleManager.xib */; };
+		92888C8A194AF3C5004DEC4C /* VATextmateBundleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 92888C89194AF3C5004DEC4C /* VATextmateBundleManager.m */; };
 		92A1FEA8194055F40090870B /* VAFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A1FE9D194055270090870B /* VAFoundation.framework */; };
 		92A1FEA9194057770090870B /* VAFoundation.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 92A1FE9D194055270090870B /* VAFoundation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		92A1FF4019405AF20090870B /* VADevUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A1FEE8194057C30090870B /* VADevUIKit.framework */; };
@@ -514,6 +519,10 @@
 		7FD53F120D91A8F30071054F /* Fraise-Manual.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "Fraise-Manual.pdf"; sourceTree = "<group>"; };
 		8D15AC360486D014006FF6A4 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D15AC370486D014006FF6A4 /* Fraise.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Fraise.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		92888C81194AEEF3004DEC4C /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MyPlayground.playground; sourceTree = "<group>"; };
+		92888C86194AF273004DEC4C /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/VABundleManager.xib; sourceTree = "<group>"; };
+		92888C88194AF3C5004DEC4C /* VATextmateBundleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VATextmateBundleManager.h; path = Classes/VATextmateBundleManager.h; sourceTree = "<group>"; };
+		92888C89194AF3C5004DEC4C /* VATextmateBundleManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VATextmateBundleManager.m; path = Classes/VATextmateBundleManager.m; sourceTree = "<group>"; };
 		92A1FE97194055260090870B /* VAFoundation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = VAFoundation.xcodeproj; path = Library/VAFoundation/VAFoundation.xcodeproj; sourceTree = "<group>"; };
 		92A1FEE2194057C20090870B /* VADevUIKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = VADevUIKit.xcodeproj; path = Library/VADevUIKit/VADevUIKit.xcodeproj; sourceTree = "<group>"; };
 		92C49ED5194AA31200AC3950 /* VACommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VACommand.h; sourceTree = "<group>"; };
@@ -537,6 +546,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				92005A7F194AC59F00D04D0E /* BWTK.framework in Frameworks */,
+				92005A80194AC59F00D04D0E /* VADevUIKit.framework in Frameworks */,
+				92005A81194AC59F00D04D0E /* VAFoundation.framework in Frameworks */,
 				7F5C266D0B73BF6C00D2EDDC /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -729,6 +741,8 @@
 				7F980AE70B73B6A2000A9140 /* FRAShortcutsController.m */,
 				7F980AEA0B73B6A2000A9140 /* FRASnippetsController.h */,
 				7F980AEB0B73B6A2000A9140 /* FRASnippetsController.m */,
+				92888C88194AF3C5004DEC4C /* VATextmateBundleManager.h */,
+				92888C89194AF3C5004DEC4C /* VATextmateBundleManager.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -755,6 +769,7 @@
 				7F980AC70B73B6A2000A9140 /* FRAFullScreenWindow.m */,
 				7F980ADF0B73B6A2000A9140 /* FRAPrintTextView.m */,
 				7FAD467F0D9E43A600ECD508 /* FRAPrintViewController.m */,
+				2A37F4AEFDCFA73011CA2CEA /* FRAProject.h */,
 				2A37F4ACFDCFA73011CA2CEA /* FRAProject.m */,
 				7FBDDEFB0CF794F8003BAFB5 /* FRAProjectWindow.m */,
 				7F2B7E320D9463A100C60435 /* FRASearchField.m */,
@@ -816,7 +831,6 @@
 				7F980AC60B73B6A2000A9140 /* FRAFullScreenWindow.h */,
 				7F980ADE0B73B6A2000A9140 /* FRAPrintTextView.h */,
 				7FAD467E0D9E43A600ECD508 /* FRAPrintViewController.h */,
-				2A37F4AEFDCFA73011CA2CEA /* FRAProject.h */,
 				7FBDDEFA0CF794F8003BAFB5 /* FRAProjectWindow.h */,
 				7F2B7E310D9463A100C60435 /* FRASearchField.h */,
 				7F2B7FBA0C27272E0058BC55 /* FRASingleDocumentPanel.h */,
@@ -889,6 +903,8 @@
 				1FF6CE491155470D002681B2 /* FRASnippets.xib */,
 				1FF6CD31115543F1002681B2 /* FRAPreferences.xib */,
 				1FF6CD32115543F1002681B2 /* FRASingleDocument.xib */,
+				92888C85194AF273004DEC4C /* VABundleManager.xib */,
+				92888C81194AEEF3004DEC4C /* MyPlayground.playground */,
 			);
 			name = Xibs;
 			sourceTree = "<group>";
@@ -1162,6 +1178,7 @@
 				7F980A9A0B73B660000A9140 /* Markdown.pl in Resources */,
 				2F6CF2E20B848515008B0386 /* DefaultCommands.plist in Resources */,
 				2FEC50CB0B96DB86000CF1AD /* MultiMarkdown.pl in Resources */,
+				92888C87194AF273004DEC4C /* VABundleManager.xib in Resources */,
 				7F81FEDC0BA9DDCD00549CDB /* Tab Bar in Resources */,
 				2F7040F90BBBE07F00D43CAF /* Credits.rtf in Resources */,
 				2FC46AFE0BD608C500F209AA /* FRACommandsIcon.icns in Resources */,
@@ -1237,6 +1254,7 @@
 				7F980B0D0B73B6A2000A9140 /* FRAApplicationMenuController.m in Sources */,
 				7F980B0E0B73B6A2000A9140 /* FRAAuthenticationController.m in Sources */,
 				7F980B100B73B6A2000A9140 /* FRACommandsController.m in Sources */,
+				92888C8A194AF3C5004DEC4C /* VATextmateBundleManager.m in Sources */,
 				7F980B120B73B6A2000A9140 /* FRADocumentsMenuController.m in Sources */,
 				7F980B130B73B6A2000A9140 /* FRADragAndDropController.m in Sources */,
 				7F980B160B73B6A2000A9140 /* FRAFileMenuController.m in Sources */,
@@ -1580,6 +1598,14 @@
 			name = FRAAdvancedFind.xib;
 			sourceTree = "<group>";
 		};
+		92888C85194AF273004DEC4C /* VABundleManager.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				92888C86194AF273004DEC4C /* English */,
+			);
+			name = VABundleManager.xib;
+			sourceTree = "<group>";
+		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
@@ -1610,7 +1636,6 @@
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_OBJC_GC = unsupported;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -1626,7 +1651,6 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_OBJC_GC = unsupported;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				INSTALL_PATH = "$(HOME)/bin";
 				PREBINDING = NO;
@@ -1647,7 +1671,6 @@
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_OBJC_GC = unsupported;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				HEADER_SEARCH_PATHS = "$(inherited)";
@@ -1672,7 +1695,6 @@
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../FraiseSource\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)\"";
-				GCC_ENABLE_OBJC_GC = unsupported;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Info.plist;
@@ -1686,7 +1708,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_ENABLE_OBJC_GC = required;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "";
@@ -1706,7 +1727,6 @@
 			buildSettings = {
 				DEAD_CODE_STRIPPING = YES;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_ENABLE_OBJC_GC = required;
 				GCC_MODEL_TUNING = G5;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;

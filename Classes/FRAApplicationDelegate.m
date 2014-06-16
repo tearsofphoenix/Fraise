@@ -143,11 +143,15 @@ VASingletonIMPDefault(FRAApplicationDelegate)
 
 		NSMutableArray *documentsArray = [NSMutableArray array];
 		NSArray *projects = [[FRAProjectsController sharedDocumentController] documents];
-		for (id project in projects) {
-			if ([project fileURL] == nil) {
-				NSArray *documents = [[project documentsArrayController] arrangedObjects];
-				for (id document in documents) {
-					if ([document valueForKey:@"path"] != nil && [[document valueForKey:@"fromExternal"] boolValue] != YES) {
+		for (id project in projects)
+        {
+			if ([project fileURL] == nil)
+            {
+				NSArray *documents = [project documents];
+				for (id document in documents)
+                {
+					if ([document valueForKey:@"path"] != nil && [[document valueForKey:@"fromExternal"] boolValue] != YES)
+                    {
 						[documentsArray addObject:[document valueForKey:@"path"]];
 					}
 				}
@@ -308,7 +312,7 @@ VASingletonIMPDefault(FRAApplicationDelegate)
 	NSMenuItem *menuItem;
 	id document;
 	
-	NSEnumerator *currentProjectEnumerator = [[[FRACurrentProject documentsArrayController] arrangedObjects] reverseObjectEnumerator];
+	NSEnumerator *currentProjectEnumerator = [[FRACurrentProject documents] reverseObjectEnumerator];
 	for (document in currentProjectEnumerator) {
 		menuItem = [[NSMenuItem alloc] initWithTitle:[document valueForKey:@"name"] action:@selector(selectDocumentFromTheDock:) keyEquivalent:@""];
 		[menuItem setTarget:[FRAProjectsController sharedDocumentController]];
@@ -328,8 +332,9 @@ VASingletonIMPDefault(FRAApplicationDelegate)
 			menu = [[NSMenu alloc] initWithTitle:[project valueForKey:@"name"]];
 		}
 		
-		NSEnumerator *documentsEnumerator = [[[(FRAProject *)project documents] allObjects] reverseObjectEnumerator];
-		for (document in documentsEnumerator) {
+		NSEnumerator *documentsEnumerator = [[(FRAProject *)project documents] reverseObjectEnumerator];
+		for (document in documentsEnumerator)
+        {
 			menuItem = [[NSMenuItem alloc] initWithTitle:[document valueForKey:@"name"] action:@selector(selectDocumentFromTheDock:) keyEquivalent:@""];
 			[menuItem setTarget:[FRAProjectsController sharedDocumentController]];
 			[menuItem setRepresentedObject:document];

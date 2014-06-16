@@ -33,12 +33,13 @@ Unless required by applicable law or agreed to in writing, software distributed 
 		if ([[FRAApplicationDelegate sharedInstance] isTerminatingApplication] == YES) {
 			return;
 		}
-		if ([[[self documentsArrayController] arrangedObjects] count] < 1 || [[[self documentsArrayController] selectedObjects] count] < 1) {
+		if ([[self documents] count] < 1 || [self selectedDocument] == nil)
+        {
 			[self updateWindowTitleBarForDocument:nil];
 			return;
 		}
 		
-		id document = [[self documentsArrayController] selectedObjects][0];
+		id document = [self selectedDocument];
 		
 		[self performInsertFirstDocument:document];
 	}
@@ -54,10 +55,12 @@ Unless required by applicable law or agreed to in writing, software distributed 
 		[aCell setFont:[NSFont systemFontOfSize:13.0]];
 	}
 	
-	if (aTableView == [self documentsTableView]) {
-		id document = [[self documentsArrayController] arrangedObjects][rowIndex];
+	if (aTableView == [self documentsTableView])
+    {
+		id document = [self documents][rowIndex];
 		
-		if ([[document valueForKey:@"isNewDocument"] boolValue] == YES) {
+		if ([[document valueForKey:@"isNewDocument"] boolValue] == YES)
+        {
 			[aTableView addToolTipRect:[aTableView rectOfRow:rowIndex] owner:UNSAVED_STRING userData:nil];
 		} else {
 			if ([[document valueForKey:@"fromExternal"] boolValue]) {

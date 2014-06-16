@@ -30,23 +30,25 @@ VASingletonIMPDefault(FRADocumentsMenuController)
 
 - (IBAction)nextDocumentAction:(id)sender
 {
-	NSInteger currentDocument = [[FRACurrentProject documentsArrayController] selectionIndex];
-	if (currentDocument + 2 > [[FRACurrentProject documents] count]) {
-		[[FRACurrentProject documentsArrayController] setSelectedObjects:@[[[FRACurrentProject documentsArrayController] arrangedObjects][0]]];
-	} else {
-		[[FRACurrentProject documentsArrayController] setSelectedObjects:@[[[FRACurrentProject documentsArrayController] arrangedObjects][(currentDocument + 1)]]];
-	}
+//	NSInteger currentDocument = [[FRACurrentProject currentDocument] selectionIndex];
+//	if (currentDocument + 2 > [[FRACurrentProject documents] count])
+//    {
+//		[[FRACurrentProject documentsArrayController] setSelectedObjects:@[[FRACurrentProject documents][0]]];
+//	} else
+//    {
+//		[[FRACurrentProject documentsArrayController] setSelectedObjects:@[[FRACurrentProject documents][(currentDocument + 1)]]];
+//	}
 }
 
 
 - (IBAction)previousDocumentAction:(id)sender
 {
-	NSInteger currentDocument = [[FRACurrentProject documentsArrayController] selectionIndex];
-	if (currentDocument == 0) {
-		[[FRACurrentProject documentsArrayController] setSelectedObjects:@[[[FRACurrentProject documentsArrayController] arrangedObjects][[[FRACurrentProject documents] count] - 1]]];
-	} else {
-		[[FRACurrentProject documentsArrayController] setSelectedObjects:@[[[FRACurrentProject documentsArrayController] arrangedObjects][(currentDocument - 1)]]];
-	}
+//	NSInteger currentDocument = [[FRACurrentProject documentsArrayController] selectionIndex];
+//	if (currentDocument == 0) {
+//		[[FRACurrentProject documentsArrayController] setSelectedObjects:@[[FRACurrentProject documents][[[FRACurrentProject documents] count] - 1]]];
+//	} else {
+//		[[FRACurrentProject documentsArrayController] setSelectedObjects:@[[FRACurrentProject documents][(currentDocument - 1)]]];
+//	}
 }
 
 
@@ -60,10 +62,11 @@ VASingletonIMPDefault(FRADocumentsMenuController)
 		}
 	}
 	
-	array = [[FRACurrentProject documentsArrayController] arrangedObjects];
+	array = [FRACurrentProject documents];
 
 	NSInteger index = 1;
-	for (id document in array) {
+	for (id document in array)
+    {
 		if (index < 10) {
 			menuItem = [[NSMenuItem alloc] initWithTitle:[document valueForKey:@"name"] action:@selector(changeSelectedDocument:) keyEquivalent:[ @(index) stringValue]];
 		} else if (index == 10) {
@@ -90,8 +93,9 @@ VASingletonIMPDefault(FRADocumentsMenuController)
 			menu = [[NSMenu alloc] initWithTitle:[project valueForKey:@"name"]];
 		}
 		
-		NSEnumerator *documentsEnumerator = [[[(FRAProject *)project documents] allObjects] reverseObjectEnumerator];
-		for (id document in documentsEnumerator) {
+		NSEnumerator *documentsEnumerator = [[(FRAProject *)project documents] reverseObjectEnumerator];
+		for (id document in documentsEnumerator)
+        {
 			menuItem = [[NSMenuItem alloc] initWithTitle:[document valueForKey:@"name"] action:@selector(changeSelectedDocument:) keyEquivalent:@""];
 			[menuItem setTarget:self];
 			[menuItem setRepresentedObject:document];

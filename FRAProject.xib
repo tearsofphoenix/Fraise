@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="5056" systemVersion="13D65" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6154.17" systemVersion="13D65" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment version="1070" defaultVersion="1060" identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="5056"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6154.17"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="FRAProject">
             <connections>
                 <outlet property="contentSplitView" destination="174" id="177"/>
-                <outlet property="documentsArrayController" destination="61" id="62"/>
                 <outlet property="documentsTableView" destination="191" id="226"/>
                 <outlet property="firstContentView" destination="172" id="179"/>
                 <outlet property="leftDocumentsTableView" destination="188" id="199"/>
@@ -45,7 +44,6 @@
                         <tabViewItems>
                             <tabViewItem label="Tab" identifier="1" id="259">
                                 <view key="view" id="260">
-                                    <rect key="frame" x="10" y="28" width="497" height="-19"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 </view>
                             </tabViewItem>
@@ -105,27 +103,6 @@
                 <outlet property="delegate" destination="-2" id="17"/>
             </connections>
         </window>
-        <arrayController mode="entity" entityName="Document" automaticallyPreparesContent="YES" clearsFilterPredicateOnInsertion="NO" id="61" userLabel="DocumentsArrayController">
-            <declaredKeys>
-                <string>name</string>
-            </declaredKeys>
-            <connections>
-                <binding destination="82" name="contentSet" keyPath="selection.documents" id="101"/>
-            </connections>
-        </arrayController>
-        <objectController mode="entity" entityName="Project" automaticallyPreparesContent="YES" id="82" userLabel="ProjectController">
-            <declaredKeys>
-                <string>documents</string>
-                <string>project</string>
-                <string>projects</string>
-                <string>document</string>
-                <string>name</string>
-            </declaredKeys>
-            <connections>
-                <binding destination="-2" name="managedObjectContext" keyPath="managedObjectContext" id="83"/>
-                <binding destination="-2" name="contentObject" keyPath="project" id="100"/>
-            </connections>
-        </objectController>
         <customView id="180" userLabel="SecondContentViewNavigationBar" customClass="VIGradientView">
             <rect key="frame" x="0.0" y="0.0" width="418" height="22"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
@@ -157,7 +134,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" columnReordering="NO" columnResizing="NO" multipleSelection="NO" emptySelection="NO" autosaveName="DocumentsList" id="191" customClass="FRATableView">
-                                <rect key="frame" x="0.0" y="0.0" width="215" height="501"/>
+                                <rect key="frame" x="0.0" y="0.0" width="215" height="19"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
                                 <color key="backgroundColor" name="_sourceListBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -176,13 +153,6 @@
                                         </textFieldCell>
                                         <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="sortOrder"/>
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                        <connections>
-                                            <binding destination="61" name="value" keyPath="arrangedObjects.name" id="193">
-                                                <dictionary key="options">
-                                                    <integer key="NSConditionallySetsEditable" value="1"/>
-                                                </dictionary>
-                                            </binding>
-                                        </connections>
                                     </tableColumn>
                                 </tableColumns>
                             </tableView>

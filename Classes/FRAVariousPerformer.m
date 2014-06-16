@@ -594,9 +594,9 @@ VASingletonIMPDefault(FRAVariousPerformer)
 
 
 
-- (void)fixSortOrderNumbersForArrayController:(NSArrayController *)arrayController overIndex:(NSInteger)index
+- (void)fixSortOrderNumbersForArrayController:(NSArray *)array
+                                    overIndex:(NSInteger)index
 {
-	NSArray *array = [arrayController arrangedObjects];
 	for (id item in array) {
 		if ([[item valueForKey:@"sortOrder"] integerValue] >= index) {
 			[item setValue:@([[item valueForKey:@"sortOrder"] integerValue] + 1) forKey:@"sortOrder"];
@@ -605,12 +605,13 @@ VASingletonIMPDefault(FRAVariousPerformer)
 }
 
 
-- (void)resetSortOrderNumbersForArrayController:(NSArrayController *)arrayController
+- (void)resetSortOrderNumbersForArrayController: (NSArray *)array
 {
 	NSInteger index = 0;
-	NSArray *array = [arrayController arrangedObjects];
-	for (id item in array) {
-		[item setValue:@(index) forKey:@"sortOrder"];
+	for (id item in array)
+    {
+		[item setValue: @(index)
+                forKey: @"sortOrder"];
 		index++;
 	}
 }

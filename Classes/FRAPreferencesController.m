@@ -598,8 +598,10 @@ VASingletonIMPDefault(FRAPreferencesController)
                                           })];
 }
 
-- (IBAction)changeGutterWidth:(id)sender {
-	NSEnumerator *documentEnumerator =  [[[FRACurrentProject documentsArrayController] arrangedObjects] objectEnumerator];
+- (IBAction)changeGutterWidth:(id)sender
+{
+	NSEnumerator *documentEnumerator =  [[FRACurrentProject documents] objectEnumerator];
+    
 	for (id document in documentEnumerator)
     {
 		[FRAInterface updateGutterViewForDocument:document];
