@@ -1,16 +1,16 @@
 /*
-Fraise version 3.7 - Based on Smultron by Peter Borg
-Written by Jean-François Moy - jeanfrancois.moy@gmail.com
-Find the latest version at http://github.com/jfmoy/Fraise
-
-Copyright 2010 Jean-François Moy
+ Fraise version 3.7 - Based on Smultron by Peter Borg
+ Written by Jean-François Moy - jeanfrancois.moy@gmail.com
+ Find the latest version at http://github.com/jfmoy/Fraise
  
-Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+ Copyright 2010 Jean-François Moy
  
-http://www.apache.org/licenses/LICENSE-2.0
+ Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
  
-Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
-*/
+ http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+ */
 
 #import "FRAStandardHeader.h"
 
@@ -31,224 +31,227 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (id)currentDocument
 {
-	if ([self currentProject] != nil) {
-		return [self currentProject];
-	} else {
-		return [super currentDocument];
-	}
+    if ([self currentProject] != nil) {
+        return [self currentProject];
+    } else {
+        return [super currentDocument];
+    }
 }
 
 
 - (id)currentFRADocument
 {
-	if ([FRACurrentProject areThereAnyDocuments] == NO) {
-		return nil;
-	}
-	
-	NSWindow *mainWindow = [NSApp mainWindow];
-	NSWindow *keyWindow = [NSApp keyWindow];
+    if ([FRACurrentProject areThereAnyDocuments] == NO) {
+        return nil;
+    }
     
-	id selectedDocument = [FRACurrentProject selectedDocument];
-	
-	if ([keyWindow isKindOfClass:[FRASingleDocumentPanel class]])
+    NSWindow *mainWindow = [NSApp mainWindow];
+    NSWindow *keyWindow = [NSApp keyWindow];
+    
+    id selectedDocument = [FRACurrentProject selectedDocument];
+    
+    if ([keyWindow isKindOfClass:[FRASingleDocumentPanel class]])
     {
-		if (keyWindow != nil) { // Loop through all single document windows to see if one of those is the key window
-			NSArray *array = [VADocument allDocuments];
-			for (id item in array) {
-				if (keyWindow == [item singleDocumentWindow])
+        if (keyWindow != nil) { // Loop through all single document windows to see if one of those is the key window
+            NSArray *array = [VADocument allDocuments];
+            for (id item in array) {
+                if (keyWindow == [item singleDocumentWindow])
                 {
-					return item;
-				}
-			}
-		}
-	} else if (mainWindow == FRACurrentWindow) {
-		id firstResponder = [mainWindow firstResponder];		
-		if (firstResponder == [selectedDocument valueForKey:@"firstTextView"]) { // Guess that it is the firstTextView as it is usually correct
-			return selectedDocument;
-		}
-		
-		if ([firstResponder isKindOfClass:[FRATextView class]])
+                    return item;
+                }
+            }
+        }
+    } else if (mainWindow == FRACurrentWindow) {
+        id firstResponder = [mainWindow firstResponder];
+        if (firstResponder == [selectedDocument firstTextView]) { // Guess that it is the firstTextView as it is usually correct
+            return selectedDocument;
+        }
+        
+        if ([firstResponder isKindOfClass:[FRATextView class]])
         {
-			NSArray *array = [VADocument allDocuments];
-			for (id item in array) {
-				if (firstResponder == [item valueForKey:@"firstTextView"] || firstResponder == [item secondTextView] || firstResponder == [item thirdTextView]) {
-					return item;
-				}
-			}
-		}
-	} else {
-		
-	}
-	
-	// Hasn't found the document so return the selected
-	return selectedDocument;	
-	
+            NSArray *array = [VADocument allDocuments];
+            for (id item in array) {
+                if (firstResponder == [item firstTextView] || firstResponder == [item secondTextView] || firstResponder == [item thirdTextView]) {
+                    return item;
+                }
+            }
+        }
+    } else {
+        
+    }
+    
+    // Hasn't found the document so return the selected
+    return selectedDocument;
+    
 }
 
 
 - (FRATextView *)currentTextView
 {
-	id firstResponder = [[NSApp mainWindow] firstResponder];
-	
-	if ([firstResponder isKindOfClass:[FRATextView class]]) {
-		return firstResponder;
-	}
-	
-	// If the firstResponder isn't a FRATextView there isn't a current text view so return nil 
-	return nil;
+    id firstResponder = [[NSApp mainWindow] firstResponder];
+    
+    if ([firstResponder isKindOfClass:[FRATextView class]]) {
+        return firstResponder;
+    }
+    
+    // If the firstResponder isn't a FRATextView there isn't a current text view so return nil
+    return nil;
 }
 
 
 - (NSString *)currentText
 {
-	NSString *returnString = [[self currentTextView] string];
-	if (returnString == nil) {
-		if ([FRACurrentProject areThereAnyDocuments] == NO) {
-			return nil;
-		}
-		
-		id selectedDocument = [FRACurrentProject selectedDocument];
-		
-		returnString = [[selectedDocument valueForKey:@"firstTextView"] string];
-		if (returnString == nil) {
-			returnString = @"";
-		}
-	}
-	
-	return returnString;
+    NSString *returnString = [[self currentTextView] string];
+    if (returnString == nil) {
+        if ([FRACurrentProject areThereAnyDocuments] == NO) {
+            return nil;
+        }
+        
+        id selectedDocument = [FRACurrentProject selectedDocument];
+        
+        returnString = [[selectedDocument firstTextView] string];
+        if (returnString == nil) {
+            returnString = @"";
+        }
+    }
+    
+    return returnString;
 }
 
 
 - (void)selectDocumentFromTheDock:(id)sender
 {
-	[NSApp activateIgnoringOtherApps:YES];
-	[self selectDocument:[sender representedObject]];
+    [NSApp activateIgnoringOtherApps:YES];
+    [self selectDocument:[sender representedObject]];
 }
 
 
 - (void)putInRecentWithPath:(NSString *)path
-{	
-	//Log([NSURL fileURLWithPath:path]);
-	[self noteNewRecentDocumentURL:[NSURL fileURLWithPath:path]];
+{
+    //Log([NSURL fileURLWithPath:path]);
+    [self noteNewRecentDocumentURL:[NSURL fileURLWithPath:path]];
 }
 
 
 - (IBAction)openProjectAction:(id)sender
 {
-	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
-	[openPanel setResolvesAliases:YES];
+    NSOpenPanel *openPanel = [NSOpenPanel openPanel];
+    [openPanel setResolvesAliases:YES];
     [openPanel setDirectoryURL: [NSURL fileURLWithPath: [FRAInterface whichDirectoryForOpen]]];
     [openPanel setAllowedFileTypes: @[@"smlp", @"fraiseProject"]];
     
-	NSInteger result = [openPanel runModal];
-	if (result == NSOKButton)
+    NSInteger result = [openPanel runModal];
+    if (result == NSOKButton)
     {
-		[self performOpenProjectWithPath: [[openPanel URLs][0] path]];
-	}
+        [self performOpenProjectWithPath: [[openPanel URLs][0] path]];
+    }
 }
 
 
 - (void)performOpenProjectWithPath:(NSString *)path
 {
-	[self putInRecentWithPath:path];
-	
-	id item;
-	NSArray *array = [self documents];
-	for (item in array) {
-		if ([[[item valueForKey:@"project"] valueForKey:@"path"] isEqualToString:path]) {
-			[[item window] makeKeyAndOrderFront:nil];
-			return;
-		}
-	}
-	
-	id project = [self openUntitledDocumentAndDisplay:NO error:nil];
-	[self setCurrentProject:project];
-	[project makeWindowControllers];
-
-	[project setFileURL:[NSURL fileURLWithPath:path]];
-	[[project project] setPath: path];
-	id projectToOpen = [NSUnarchiver unarchiveObjectWithData:[NSData dataWithContentsOfFile:path]];
-	
-	if ([projectToOpen isKindOfClass:[NSArray class]]) { // From version 2
-		[self insertDocumentsFromProjectArray:projectToOpen];
-	} else { // From version 3
-		
-		if ([projectToOpen valueForKey:@"windowFrame"] != nil) {
-			[[project window] setFrame:NSRectFromString([projectToOpen valueForKey:@"windowFrame"]) display:NO animate:NO];
-		}
-		
-		NSArray *documents = [projectToOpen valueForKey:@"documentsArray"];
-		[self insertDocumentsFromProjectArray:documents];
-		
-		if ([projectToOpen valueForKey:@"selectedDocumentName"] != nil) {
-			NSString *name = [projectToOpen valueForKey:@"selectedDocumentName"];
-			NSArray *array = [project documents];
-			for (id item in array) {
-				if ([[item valueForKey:@"name"] isEqualToString:name]) {
-					[project selectDocument:item];
-					break;
-				}
-			}		
-		}
-		
-		if ([projectToOpen valueForKey:@"view"] != nil) {
-			[[project project] setValue:[projectToOpen valueForKey:@"view"] forKey:@"view"];
-		}
-		if ([projectToOpen valueForKey:@"viewSize"] != nil) {
-			[[project project] setValue:[projectToOpen valueForKey:@"viewSize"] forKey:@"viewSize"];
-		}
-		if ([projectToOpen valueForKey:@"dividerPosition"] != nil) {
-			[[project project] setValue:[projectToOpen valueForKey:@"dividerPosition"] forKey:@"dividerPosition"];
-			[project resizeMainSplitView];
-		}
-		
-	}
-	
-	[project setDefaultViews];
-	[project selectionDidChange];
-
+    [self putInRecentWithPath:path];
+    
+    NSArray *array = [self documents];
+    for (VADocument *item in array)
+    {
+        if ([[[item project] path] isEqualToString:path])
+        {
+            [[(id)item window] makeKeyAndOrderFront:nil];
+            return;
+        }
+    }
+    
+    FRAProject *project = [self openUntitledDocumentAndDisplay: NO
+                                                         error: nil];
+    [self setCurrentProject: project];
+    [project makeWindowControllers];
+    
+    [project setFileURL:[NSURL fileURLWithPath:path]];
+    [[project project] setPath: path];
+    id projectToOpen = [NSUnarchiver unarchiveObjectWithData:[NSData dataWithContentsOfFile:path]];
+        
+    if ([projectToOpen valueForKey:@"windowFrame"] != nil)
+    {
+        [[project window] setFrame:NSRectFromString([projectToOpen valueForKey:@"windowFrame"]) display:NO animate:NO];
+    }
+    
+    NSArray *documents = [projectToOpen valueForKey:@"documentsArray"];
+    [self insertDocumentsFromProjectArray:documents];
+    
+    if ([projectToOpen valueForKey:@"selectedDocumentName"] != nil) {
+        NSString *name = [projectToOpen valueForKey:@"selectedDocumentName"];
+        NSArray *array = [project documents];
+        for (VADocument *item in array)
+        {
+            if ([[item name] isEqualToString: name])
+            {
+                [project selectDocument:item];
+                break;
+            }
+        }
+    }
+    
+    if ([projectToOpen valueForKey:@"view"] != nil) {
+        [[project project] setValue:[projectToOpen valueForKey:@"view"] forKey:@"view"];
+    }
+    if ([projectToOpen valueForKey:@"viewSize"] != nil) {
+        [[project project] setValue:[projectToOpen valueForKey:@"viewSize"] forKey:@"viewSize"];
+    }
+    if ([projectToOpen valueForKey:@"dividerPosition"] != nil) {
+        [[project project] setValue:[projectToOpen valueForKey:@"dividerPosition"] forKey:@"dividerPosition"];
+        [project resizeMainSplitView];
+    }
+    
+    [project setDefaultViews];
+    [project selectionDidChange];
+    
     //TODO
-	//[[project documentsArrayController] rearrangeObjects];
-	
-	[project showWindows];
-	[self setCurrentProject:nil];
+    //[[project documentsArrayController] rearrangeObjects];
+    
+    [project showWindows];
+    [self setCurrentProject:nil];
 }
 
 
 - (void)insertDocumentsFromProjectArray:(NSArray *)array
 {
-	id item;
-	for (item in array) {	
-		[FRAOpenSave shouldOpen:[item valueForKey:@"path"] withEncoding:[[item valueForKey:@"encoding"] unsignedIntegerValue]];
-		id document = FRACurrentDocument;
-		if ([item valueForKey:@"selectedRange"] != nil && document != nil) {
-			[[document firstTextView] setSelectedRange:NSRangeFromString([item valueForKey:@"selectedRange"])];
-			[[document firstTextView] scrollRangeToVisible:NSRangeFromString([item valueForKey:@"selectedRange"])];
-		}
-		
-		[FRACurrentDocument setValue:[item valueForKey:@"sortOrder"] forKey:@"sortOrder"];
-	}
+    for (VADocument *item in array)
+    {
+        [FRAOpenSave shouldOpen: [item path]
+                   withEncoding: [item encoding]];
+        VADocument *document = FRACurrentDocument;
+        
+        NSRange range = [item selectedRange];
+        if (document != nil)
+        {
+            [[document firstTextView] setSelectedRange: range];
+            [[document firstTextView] scrollRangeToVisible: range];
+        }
+        
+        [FRACurrentDocument setSortOrder: [item sortOrder]];
+    }
 }
-	
+
 
 - (void)selectDocument:(id)document
 {
-	NSArray *projects = [self documents];
-	for (id project in projects)
+    NSArray *projects = [self documents];
+    for (id project in projects)
     {
-		NSArray *documents = [(FRAProject *)project documents];
+        NSArray *documents = [(FRAProject *)project documents];
         
-		for (id item in documents)
+        for (id item in documents)
         {
-			if (item == document)
+            if (item == document)
             {
-				[[project window] makeKeyAndOrderFront:nil];
-				[[project window] makeMainWindow];
-				[[project window] makeFirstResponder:[document firstTextView]];
-				[project selectDocument:document];
-				return;
-			}
-		}
-	}
+                [[project window] makeKeyAndOrderFront:nil];
+                [[project window] makeMainWindow];
+                [[project window] makeFirstResponder:[document firstTextView]];
+                [project selectDocument:document];
+                return;
+            }
+        }
+    }
 }
 @end

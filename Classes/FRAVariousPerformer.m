@@ -142,7 +142,7 @@ VASingletonIMPDefault(FRAVariousPerformer)
             {
 				if ([[changedObject valueForKey:@"name"] isEqualToString:name])
                 {
-					[syntaxDefinition setExtensions: [changedObject valueForKey:@"extensions"]];
+					[syntaxDefinition setExtensions: changedObject[@"extensions"]];
 					hasInsertedAChangedValue = YES;
 					break;
 				}					
@@ -151,7 +151,7 @@ VASingletonIMPDefault(FRAVariousPerformer)
 		
 		if (hasInsertedAChangedValue == NO)
         {
-			[syntaxDefinition setExtensions: [item valueForKey:@"extensions"]];
+            [syntaxDefinition setExtensions: item[@"extensions"]];
 		}		
 	}
 
@@ -361,25 +361,30 @@ VASingletonIMPDefault(FRAVariousPerformer)
 	NSArray *array = [VADocument allDocuments];
 	for (VADocument *item in array)
     {
-		if ([item isNewDocument] || [[item valueForKey:@"ignoreAnotherApplicationHasUpdatedDocument"] boolValue] == YES)
+		if ([item isNewDocument] || [item ignoreAnotherApplicationHasUpdatedDocument])
         {
 			continue;
 		}
-		NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[item valueForKey:@"path"] error:nil];
+		NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath: [item path]
+                                                                                    error: nil];
 		if ([attributes fileModificationDate] == nil) {
 			continue; // If fileModificationDate is nil the file has been removed or renamed there's no need to check the dates then
 		}
-		if (![[[item fileAttributes] fileModificationDate] isEqualToDate:[attributes fileModificationDate]]) {
-			if ([[FRADefaults valueForKey:@"UpdateDocumentAutomaticallyWithoutWarning"] boolValue] == YES) {
+		if (![[[item fileAttributes] fileModificationDate] isEqualToDate:[attributes fileModificationDate]])
+        {
+			if ([[FRADefaults valueForKey:@"UpdateDocumentAutomaticallyWithoutWarning"] boolValue] == YES)
+            {
 				[[FRAFileMenuController sharedInstance] performRevertOfDocument:item];
-				[item setValue:[[NSFileManager defaultManager] attributesOfItemAtPath:[item valueForKey:@"path"] error:nil] forKey:@"fileAttributes"];
-			} else {
+				[item setFileAttributes: [[NSFileManager defaultManager] attributesOfItemAtPath: [item path]
+                                                                                error: nil]];
+			} else
+            {
 				if ([NSApp isHidden]) { // To display the sheet properly if the application is hidden
 					[NSApp activateIgnoringOtherApps:YES]; 
 					[FRACurrentWindow makeKeyAndOrderFront:self];
 				}
 				
-				NSString *title = [NSString stringWithFormat:NSLocalizedString(@"The document %@ has been updated by another application", @"Indicate that the document %@ has been updated by another application in Document-has-been-updated-alert sheet"), [item valueForKey:@"path"]];
+				NSString *title = [NSString stringWithFormat:NSLocalizedString(@"The document %@ has been updated by another application", @"Indicate that the document %@ has been updated by another application in Document-has-been-updated-alert sheet"), [item path]];
 				NSString *message;
 				if ([item isEdited] == YES) {
 					message = NSLocalizedString(@"Do you want to ignore the updates the other application has made or reload the document and destroy any changes you have made to this document?", @"Ask whether they want to ignore the updates the other application has made or reload the document and destroy any changes you have made to this document Document-has-been-updated-alert sheet");
@@ -576,9 +581,11 @@ VASingletonIMPDefault(FRAVariousPerformer)
 - (void)fixSortOrderNumbersForArrayController:(NSArray *)array
                                     overIndex:(NSInteger)index
 {
-	for (id item in array) {
-		if ([[item valueForKey:@"sortOrder"] integerValue] >= index) {
-			[item setValue:@([[item valueForKey:@"sortOrder"] integerValue] + 1) forKey:@"sortOrder"];
+	for (id item in array)
+    {
+		if ([item sortOrder] >= index)
+        {
+			[item setSortOrder: [item sortOrder] + 1];
 		}
 	}
 }
@@ -589,8 +596,7 @@ VASingletonIMPDefault(FRAVariousPerformer)
 	NSInteger index = 0;
 	for (id item in array)
     {
-		[item setValue: @(index)
-                forKey: @"sortOrder"];
+		[item setSortOrder: index];
 		index++;
 	}
 }

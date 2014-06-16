@@ -115,7 +115,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 		}
 		
 		if ([[FRACurrentDocument valueForKey:@"isSyntaxColoured"] boolValue] == YES && [[FRADefaults valueForKey:@"PrintSyntaxColours"] boolValue] == YES) {
-			FRATextView *textView = [FRACurrentDocument valueForKey:@"firstTextView"];
+			FRATextView *textView = [FRACurrentDocument firstTextView];
 			VILayoutManager *layoutManager = (VILayoutManager *)[textView layoutManager];
 			NSTextStorage *textStorage = [self textStorage];
 			NSInteger lastCharacter = [[textView string] length];

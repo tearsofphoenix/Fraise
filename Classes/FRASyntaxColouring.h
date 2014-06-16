@@ -32,7 +32,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 @property (readonly) NSUndoManager *undoManager;
 
 
-- (instancetype)initWithDocument:(id)document ;
+- (instancetype)initWithDocument:(id)document  NS_DESIGNATED_INITIALIZER;
 
 - (void)setColours;
 - (void)setSyntaxDefinition;

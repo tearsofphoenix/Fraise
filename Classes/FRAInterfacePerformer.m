@@ -320,36 +320,41 @@ VASingletonIMPDefault(FRAInterfacePerformer)
  * Update gutter views to adjust its size to newly defined width for the specified
  * document. It refreshes every views used to display the document afterwards.
  **/
-- (void) updateGutterViewForDocument:(id)document {
+- (void) updateGutterViewForDocument:(id)document
+{
 	NSArray *viewNumbers = @[@"first",@"second", @"third"];
 	NSView *contentView = nil;
 	u_int16_t gutterWidth = [[FRADefaults valueForKey:@"GutterWidth"] integerValue];
 	NSRect frame;
 	
 	// Update document value first.
-	[document setValue: @(gutterWidth)
-                forKey:@"gutterWidth"];
+	[document setGutterWidth: gutterWidth];
 	
-	for (NSString* viewNumber in viewNumbers) {
-		NSScrollView *gutterScrollView = (NSScrollView *) [document valueForKey:[NSString stringWithFormat:@"%@GutterScrollView", viewNumber]];
+	for (NSString* viewNumber in viewNumbers)
+    {
+		NSScrollView *gutterScrollView = (NSScrollView *) [document valueForKey: [NSString stringWithFormat:@"%@GutterScrollView", viewNumber]];
 		NSTextView *textView = (NSTextView *)[document valueForKey:[NSString stringWithFormat:@"%@TextView", viewNumber]];
 		NSScrollView *textScrollView = (NSScrollView *)[document valueForKey:[NSString stringWithFormat:@"%@TextScrollView", viewNumber]];
 		
-		if ([viewNumber isEqualToString:@"first"]) {
+		if ([viewNumber isEqualToString:@"first"])
+        {
 			contentView = [FRACurrentProject firstContentView];
-		}
-		else if ([viewNumber isEqualToString:@"second"]) {
+		}else if ([viewNumber isEqualToString:@"second"])
+        {
 			contentView = [FRACurrentProject secondContentView];
-		}
-		else if ([viewNumber isEqualToString:@"third"]) {
-			if ([document singleDocumentWindow] == nil) {
+            
+		}else if ([viewNumber isEqualToString:@"third"])
+        {
+			if ([document singleDocumentWindow] == nil)
+            {
 				continue;
 			}
 			contentView = [[document singleDocumentWindow] contentView];
 		}
 				   
 		// Text Scroll View
-		if (textScrollView != nil) {
+		if (textScrollView != nil)
+        {
 			frame = [textScrollView frame];
 			[textScrollView setFrame:NSMakeRect(gutterWidth, frame.origin.y, [contentView bounds].size.width - gutterWidth, frame.size.height)];
 			[textScrollView setNeedsDisplay:YES];
@@ -363,7 +368,8 @@ VASingletonIMPDefault(FRAInterfacePerformer)
 		}
 		
 		// Gutter Scroll View
-		if (gutterScrollView != nil) {
+		if (gutterScrollView != nil)
+        {
 			frame = [gutterScrollView frame];
 			[gutterScrollView setFrame:NSMakeRect(frame.origin.x, frame.origin.y, gutterWidth, frame.size.height)];
 			[gutterScrollView setNeedsDisplay:YES];

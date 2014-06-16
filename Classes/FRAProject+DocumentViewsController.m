@@ -146,15 +146,15 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	[[[FRAApplicationDelegate sharedInstance] managedObjectContext] processPendingChanges];
 
     NSEnumerator *enumerator = [[self documents] reverseObjectEnumerator];
-	for (id item in enumerator)
+	for (VADocument *item in enumerator)
     {
 		NSTabViewItem *tabViewItem = [[NSTabViewItem alloc] initWithIdentifier:item];
 		if ([item isEdited])
         {
-			[tabViewItem setLabel:[NSString stringWithFormat:@"%@ %C", [item valueForKey:@"name"], 0x270E]];
+			[tabViewItem setLabel:[NSString stringWithFormat:@"%@ %C", [item name], 0x270E]];
 		} else
         {
-			[tabViewItem setLabel:[item valueForKey:@"name"]];
+			[tabViewItem setLabel: [item name]];
 		}
         
 		[tabBarTabView insertTabViewItem:tabViewItem atIndex:0];

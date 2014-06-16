@@ -30,6 +30,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAAdvancedFindController.h"
 #import "FRAProject+DocumentViewsController.h"
 #import "VADocument.h"
+#import "FRATextView.h"
 
 #import "FRAPrintViewController.h"
 #import "FRAPrintTextView.h"
@@ -574,48 +575,52 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	NSArray *array = [self documents];
 	NSMutableDictionary *returnDictionary = [NSMutableDictionary dictionary];
 	NSMutableArray *documentsArray = [NSMutableArray array];
-	for (id item in array)
+	for (VADocument *item in array)
     {
-		if ([item valueForKey:@"path"] != nil)
+		if ([item path] != nil)
         {
 			NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
-			[dictionary setValue:[item valueForKey:@"path"] forKey:@"path"];
-			[dictionary setValue:[item valueForKey:@"encoding"] forKey:@"encoding"];
-			[dictionary setValue:[item valueForKey:@"sortOrder"] forKey:@"sortOrder"];
-			NSRange selectedRange = [[item valueForKey:@"firstTextView"] selectedRange];
+			[dictionary setObject:[item path] forKey:@"path"];
+			[dictionary setObject: @([item encoding])
+                          forKey: @"encoding"];
+			[dictionary setObject: @([item sortOrder])
+                          forKey: @"sortOrder"];
+			NSRange selectedRange = [[item firstTextView] selectedRange];
+            
 			if (selectedRange.location == NSNotFound)
             {
-				[dictionary setValue:NSStringFromRange(NSMakeRange(0, 0)) forKey:@"selectedRange"];
+				[dictionary setObject:NSStringFromRange(NSMakeRange(0, 0)) forKey:@"selectedRange"];
 			} else
             {
-				[dictionary setValue:NSStringFromRange(selectedRange) forKey:@"selectedRange"];
+				[dictionary setObject:NSStringFromRange(selectedRange) forKey:@"selectedRange"];
 			}
             
 			[documentsArray addObject:dictionary];
 		}
 	}
 	
-	[returnDictionary setValue:documentsArray forKey:@"documentsArray"];
+	[returnDictionary setObject:documentsArray forKey:@"documentsArray"];
 	NSString *name;
 	
-	if ([self areThereAnyDocuments] == NO || [_selectedDocument valueForKey:@"name"] == nil) {
+	if ([self areThereAnyDocuments] == NO || [_selectedDocument name] == nil)
+    {
 		name = @"";
 	} else
     {
-		name = [_selectedDocument  valueForKey:@"name"];
+		name = [_selectedDocument  name];
 	}
-	[returnDictionary setValue: name
+	[returnDictionary setObject: name
                         forKey: @"selectedDocumentName"];
-	[returnDictionary setValue: NSStringFromRect([[self window] frame]) forKey:@"windowFrame"];
-	[returnDictionary setValue: @([_project view])
+	[returnDictionary setObject: NSStringFromRect([[self window] frame]) forKey:@"windowFrame"];
+	[returnDictionary setObject: @([_project view])
                         forKey: @"view"];
-	[returnDictionary setValue: @([_project viewSize])
+	[returnDictionary setObject: @([_project viewSize])
                         forKey: @"viewSize"];
 	[self saveMainSplitViewFraction];
     
-	[returnDictionary setValue: @([_project dividerPosition])
+	[returnDictionary setObject: @([_project dividerPosition])
                         forKey: @"dividerPosition"];
-	[returnDictionary setValue:@3 forKey:@"version"];
+	[returnDictionary setObject:@3 forKey:@"version"];
 	
 	return returnDictionary;
 }
@@ -623,7 +628,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 - (void)autosave
 {
-	if ([self fileURL] != nil) {
+	if ([self fileURL] != nil)
+    {
 		[self saveDocument:nil];
 	}
 }
@@ -707,9 +713,11 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	
 	id menuItemToSelect = nil;
 	NSEnumerator *enumerator = [[self documents] reverseObjectEnumerator];
-	for (id item in enumerator)
+	for (VADocument *item in enumerator)
     {
-		NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:[item valueForKey:@"name"] action:@selector(secondContentViewDocumentChanged:) keyEquivalent:@""];
+		NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle: [item name]
+                                                          action: @selector(secondContentViewDocumentChanged:)
+                                                   keyEquivalent: @""];
 		[menuItem setRepresentedObject:item];
 		[menuItem setTarget:self];
 		[menu insertItem:menuItem atIndex:0];

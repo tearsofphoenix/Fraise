@@ -10,7 +10,7 @@
 
 @interface VATMBundleManager : NSObject
 
-+ (id)manager;
++ (instancetype)manager;
 
 - (void)showWindow;
 

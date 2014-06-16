@@ -28,7 +28,7 @@ static NSImage *defaultUnsavedIcon = nil;
     defaultUnsavedIcon = [[NSImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"FRADefaultUnsavedIcon" ofType:@"png"]];
 }
 
-- (id)initWithPath: (NSString *)path
+- (instancetype)initWithPath: (NSString *)path
            content: (NSString *)content
       contentFrame: (NSRect)frame
 {

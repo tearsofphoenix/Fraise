@@ -68,13 +68,13 @@
 
 @property NSRange selectedRange;
 
-- (BOOL)hasChildren;
+@property (NS_NONATOMIC_IOSONLY, readonly) BOOL hasChildren;
 
 + (NSArray *)allDocuments;
 
-- (id)initWithPath: (NSString *)path
+- (instancetype)initWithPath: (NSString *)path
            content: (NSString *)content
-      contentFrame: (NSRect)frame;
+      contentFrame: (NSRect)frame NS_DESIGNATED_INITIALIZER;
 
 @end
 

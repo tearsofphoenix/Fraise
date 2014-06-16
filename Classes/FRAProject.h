@@ -70,7 +70,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 @property (strong) VAProject *project;
 
-- (id)currentDocument;
+@property (NS_NONATOMIC_IOSONLY, readonly, strong) id currentDocument;
 
 @property (unsafe_unretained, readonly) IBOutlet NSTableView *documentsTableView;
 @property (unsafe_unretained, readonly) IBOutlet NSView *firstContentView;
@@ -89,7 +89,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 @property (unsafe_unretained, readonly) IBOutlet PSMTabBarControl *tabBarControl;
 @property (unsafe_unretained, readonly) IBOutlet NSTabView *tabBarTabView;
 
-- (NSArray *)documents;
+@property (NS_NONATOMIC_IOSONLY, readonly, copy) NSArray *documents;
 
 @property (strong) id selectedDocument;
 

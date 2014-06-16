@@ -189,27 +189,25 @@ VASingletonIMPDefault(FRACommandsController)
 		return;
 	}
 	
-	id collection = [[VACommandCollection alloc] init];
-	[collection setValue:[commands[0] valueForKey:@"collectionName"] forKey:@"name"];
+	VACommandCollection *collection = [[VACommandCollection alloc] init];
+	[collection setName: commands[0][@"collectionName"]];
 	
-	id item;
-	for (item in commands)
+	for (NSDictionary *item in commands)
     {
-		id command = [[VACommand alloc] init];
-		[command setValue:[item valueForKey:@"name"] forKey:@"name"];
-		[command setValue:[item valueForKey:@"text"] forKey:@"text"];
-		[command setValue:[item valueForKey:@"collectionName"] forKey:@"collectionName"];
-		[command setValue:[item valueForKey:@"shortcutDisplayString"] forKey:@"shortcutDisplayString"];
-		[command setValue:[item valueForKey:@"shortcutMenuItemKeyString"] forKey:@"shortcutMenuItemKeyString"];
-		[command setValue:[item valueForKey:@"shortcutModifier"] forKey:@"shortcutModifier"];
-		[command setValue:[item valueForKey:@"sortOrder"] forKey:@"sortOrder"];
-		if ([item valueForKey:@"inline"] != nil) {
-			[command setValue:[item valueForKey:@"inline"] forKey:@"inline"];
-		}
-		if ([item valueForKey:@"interpreter"] != nil) {
-			[command setValue:[item valueForKey:@"interpreter"] forKey:@"interpreter"];
-		}
-		[[collection mutableSetValueForKey:@"commands"] addObject:command];
+		VACommand *command = [[VACommand alloc] init];
+		[command setName:item[@"name"]];
+		[command setText:item[@"text"]];
+		[command setCollectionName: item[@"collectionName"]];
+		[command setShortcutDisplayString: item[@"shortcutDisplayString"]];
+		[command setShortcutMenuItemKeyString: item[@"shortcutMenuItemKeyString"]];
+		[command setShortcutModifier: [item[@"shortcutModifier"] integerValue]];
+		[command setSortOrder: [item[@"sortOrder"] integerValue]];
+		
+        [command setIsInline: [item[@"inline"] boolValue]];
+
+        [command setInterpreter: item[@"interpreter"]];
+
+        [[collection commands] addObject: command];
 	}
 		
     _selectedCollection = collection;

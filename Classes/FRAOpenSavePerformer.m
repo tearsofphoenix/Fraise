@@ -158,8 +158,8 @@ VASingletonIMPDefault(FRAOpenSavePerformer)
 			if (lineNumber > -1) {
 				[[FRATextMenuController sharedInstance] performGoToLine:lineNumber];
 			} else {
-				[[FRACurrentDocument valueForKey:@"firstTextView"] setSelectedRange:NSMakeRange((NSInteger)selectionRange.startRange, (NSInteger)selectionRange.endRange - (NSInteger)selectionRange.startRange)];
-				[[FRACurrentDocument valueForKey:@"firstTextView"] scrollRangeToVisible:NSMakeRange((NSInteger)selectionRange.startRange, (NSInteger)selectionRange.endRange - (NSInteger)selectionRange.startRange)];
+				[[FRACurrentDocument firstTextView] setSelectedRange:NSMakeRange((NSInteger)selectionRange.startRange, (NSInteger)selectionRange.endRange - (NSInteger)selectionRange.startRange)];
+				[[FRACurrentDocument firstTextView] scrollRangeToVisible:NSMakeRange((NSInteger)selectionRange.startRange, (NSInteger)selectionRange.endRange - (NSInteger)selectionRange.startRange)];
 			}
 		}
 	}

@@ -31,6 +31,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "VACommand.h"
 #import "VACommandCollection.h"
 #import "VATMBundleManager.h"
+#import "VADocument.h"
 
 #define SNIPPET_TAG		100
 
@@ -108,7 +109,7 @@ VASingletonIMPDefault(FRAToolsMenuController)
 	}
 	NSString *textPath = [FRABasic genererateTemporaryPath];
 	
-	id document = FRACurrentDocument;
+	VADocument *document = FRACurrentDocument;
     
 	NSData *data = [[NSData alloc] initWithData:[[text stringByConvertToLineEndings: VADefaultsLineEndings] dataUsingEncoding: [document encoding] allowLossyConversion:YES]];
     
@@ -118,7 +119,9 @@ VASingletonIMPDefault(FRAToolsMenuController)
 		NSString *resultPath = [FRABasic genererateTemporaryPath];
 		system([[NSString stringWithFormat:@"%@ %@ > %@", [FRADefaults valueForKey:@"RunText"], textPath, resultPath] UTF8String]);
 		if ([[NSFileManager defaultManager] fileExistsAtPath:resultPath]) {
-			result = [NSString stringWithContentsOfFile:resultPath encoding:[document encoding] error:nil];
+			result = [NSString stringWithContentsOfFile: resultPath
+                                               encoding: [document encoding]
+                                                  error: nil];
 			[[NSFileManager defaultManager] removeItemAtPath:resultPath error:nil];
 			[[[FRAExtraInterfaceController sharedInstance] commandResultWindow] makeKeyAndOrderFront:nil];
 			[[[FRAExtraInterfaceController sharedInstance] commandResultTextView] setString:result];
@@ -282,8 +285,9 @@ VASingletonIMPDefault(FRAToolsMenuController)
 	
 	id item;
 	NSInteger previousFunctionLineNumber = 0;
-	for (item in functions) {
-		NSInteger functionLineNumber = [[item valueForKey:@"lineNumber"] integerValue];
+	for (item in functions)
+    {
+		NSInteger functionLineNumber = [[item valueForKey: @"lineNumber"] integerValue];
 		if (functionLineNumber >= lineNumber) {
 			if (previousFunctionLineNumber != 0) {
 				[[FRATextMenuController sharedInstance] performGoToLine:previousFunctionLineNumber];
@@ -311,7 +315,7 @@ VASingletonIMPDefault(FRAToolsMenuController)
 	id item;
 	BOOL hasFoundNextFunction = NO;
 	for (item in functions) {
-		NSInteger functionLineNumber = [[item valueForKey:@"lineNumber"] integerValue];
+		NSInteger functionLineNumber = [[item valueForKey: @"lineNumber"] integerValue];
 		if (functionLineNumber > lineNumber) {
 			[[FRATextMenuController sharedInstance] performGoToLine:functionLineNumber];
 			hasFoundNextFunction = YES;
@@ -442,7 +446,7 @@ VASingletonIMPDefault(FRAToolsMenuController)
 	}
 	NSString *textPath = [FRABasic genererateTemporaryPath];
 	
-	id document = FRACurrentDocument;
+	VADocument *document = FRACurrentDocument;
 	NSData *data = [[NSData alloc] initWithData:[[text stringByConvertToLineEndings: VADefaultsLineEndings] dataUsingEncoding:[document encoding] allowLossyConversion:YES]];
 	if ([data writeToFile:textPath atomically:YES]) {
 		NSString *result;
