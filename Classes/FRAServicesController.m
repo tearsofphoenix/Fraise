@@ -61,7 +61,7 @@ VASingletonIMPDefault(FRAServicesController)
 	
 	id document = [FRACurrentProject createNewDocumentWithContents:@""];
 
-	if (![[document valueForKey:@"firstTextView"] readSelectionFromPasteboard:pboard type:NSStringPboardType]) {
+	if (![[document firstTextView] readSelectionFromPasteboard:pboard type:NSStringPboardType]) {
 		NSBeep();
 	}
 }

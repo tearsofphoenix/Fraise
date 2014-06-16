@@ -36,23 +36,6 @@ VASingletonIMPDefault(FRABasicPerformer)
 
 - (void)insertFetchRequests
 {
-	NSManagedObjectContext *managedObjectContext = FRAManagedObjectContext;
-	NSEntityDescription *entityDescription;
-	NSFetchRequest *request;
-	NSSortDescriptor *sortDescriptor;
-	fetchRequests = [[NSMutableDictionary alloc] init];
-		
-	entityDescription = [NSEntityDescription entityForName:@"Document" inManagedObjectContext:managedObjectContext];
-	request = [[NSFetchRequest alloc] init];
-	[request setEntity:entityDescription];
-	[fetchRequests setValue:request forKey:@"Document"];
-	
-	entityDescription = [NSEntityDescription entityForName:@"Document" inManagedObjectContext:managedObjectContext];
-	request = [[NSFetchRequest alloc] init];
-	[request setEntity:entityDescription];
-	sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
-	[request setSortDescriptors:@[sortDescriptor]];
-	[fetchRequests setValue:request forKey:@"DocumentSortKeyName"];	
 	
 }
 
@@ -76,16 +59,7 @@ VASingletonIMPDefault(FRABasicPerformer)
 	return object;
 }
 
-
-- (void)removeAllObjectsForEntity:(NSString *)entity
-{
-	NSArray *array = [self fetchAll:entity];
-	for (id item in array) {
-		[FRAManagedObjectContext deleteObject:item];
-	}
-}
-
-
+ 
 - (NSURL *)uriFromObject:(id)object
 {
 	if ([[object objectID] isTemporaryID] == YES) {

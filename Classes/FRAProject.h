@@ -17,11 +17,12 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 @class FRATextView;
 @class FRAProjectManagedObject;
-@class FRADocumentManagedObject;
+
 @class FRATableViewDelegate;
 @class FRASplitViewDelegate;
 @class PSMTabBarControl;
 @class VAProject;
+@class VADocument;
 
 @interface FRAProject : NSDocument <NSTableViewDelegate,NSSplitViewDelegate,NSWindowDelegate,NSMenuDelegate>
 {
@@ -43,10 +44,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	IBOutlet NSTabView *__unsafe_unretained tabBarTabView;
 	
 	FRATextView *__unsafe_unretained lastTextViewInFocus;
-	
-	FRADocumentManagedObject *__unsafe_unretained firstDocument;
-	FRADocumentManagedObject *__unsafe_unretained secondDocument;
-	
+ 
 	BOOL shouldWindowClose;
 		
 	IBOutlet NSButton *functionButton;
@@ -67,8 +65,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 @property (nonatomic, unsafe_unretained) FRATextView *lastTextViewInFocus;
 
-@property (unsafe_unretained) FRADocumentManagedObject *firstDocument;
-@property (unsafe_unretained) FRADocumentManagedObject *secondDocument;
+@property (strong) VADocument *firstDocument;
+@property (strong) VADocument *secondDocument;
 
 @property (strong) VAProject *project;
 

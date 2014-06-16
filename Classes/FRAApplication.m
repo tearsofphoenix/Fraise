@@ -28,6 +28,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRACommandsController.h"
 
 #import "FRAProject.h"
+#import "VADocument.h"
 
 #import "FRASearchField.h"
 #import "FRASyntaxColouring.h"
@@ -237,14 +238,14 @@ Unless required by applicable law or agreed to in writing, software distributed 
 		[textView didChangeText];
 	}
     
-    [[FRACurrentDocument valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth: YES];
-    [[FRACurrentDocument valueForKey: @"syntaxColouring"] pageRecolour];
+    [[FRACurrentDocument lineNumbers] updateLineNumbersCheckWidth: YES];
+    [[FRACurrentDocument syntaxColouring] pageRecolour];
 }
 
 
 - (BOOL)edited
 {
-    return [[FRACurrentDocument valueForKey:@"isEdited"] boolValue];
+    return [FRACurrentDocument isEdited];
 }
 
 

@@ -28,6 +28,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAProject.h"
 #import "VFSyntaxDefinition.h"
 #import "VFEncoding.h"
+#import "VADocument.h"
 
 #import <VADevUIKit/VADevUIKit.h>
 
@@ -119,13 +120,12 @@ static id sharedInstance = nil;
 {	
 	NSUInteger encoding = [sender tag];
 	
-	id document = FRACurrentDocument;
+	VADocument *document = FRACurrentDocument;
 	
-	[[[document valueForKey:@"syntaxColouring"] undoManager] registerUndoWithTarget:self selector:@selector(performUndoChangeEncoding:) object:@[[document valueForKey:@"encoding"]]];
-	[[[document valueForKey:@"syntaxColouring"] undoManager] setActionName:NAME_FOR_UNDO_CHANGE_ENCODING];
+	[[[document syntaxColouring] undoManager] registerUndoWithTarget:self selector:@selector(performUndoChangeEncoding:) object:@[ @([document encoding]) ]];
+	[[[document syntaxColouring] undoManager] setActionName:NAME_FOR_UNDO_CHANGE_ENCODING];
 	
-	[document setValue: @(encoding) forKey:@"encoding"];
-	[document setValue:[NSString localizedNameOfStringEncoding:encoding] forKey:@"encodingName"];
+	[document setEncoding: encoding];
 	
 	[FRAInterface updateStatusBar];
 
@@ -143,9 +143,9 @@ static id sharedInstance = nil;
 			for (object in subMenuArray) {
 				[object setState:NSOffState];
 			}
-			[[[anItem submenu] itemWithTag:[[FRACurrentDocument valueForKey:@"encoding"] integerValue]] setState:NSOnState];
+			[[[anItem submenu] itemWithTag: [(VADocument *)FRACurrentDocument encoding]] setState: NSOnState];
 		} else if (tag == 104) { // Encodings, reload
-			if ([[FRACurrentDocument valueForKey:@"isEdited"] boolValue] == YES || [FRACurrentDocument valueForKey:@"path"] == nil) {
+			if ([FRACurrentDocument isEdited] || [FRACurrentDocument valueForKey:@"path"] == nil) {
 				return NO;
 			}			
 			
@@ -161,7 +161,7 @@ static id sharedInstance = nil;
 				enableMenuItem = NO;
 			}
 		} else if (tag == 103) { // Comment Or Uncomment
-			if ([[[FRACurrentDocument valueForKey:@"syntaxColouring"] valueForKey:@"firstSingleLineComment"] isEqualToString:@""]) {
+			if ([[[FRACurrentDocument syntaxColouring] valueForKey:@"firstSingleLineComment"] isEqualToString:@""]) {
 				enableMenuItem = NO;
 			}
 		} else if (tag == 150) { // Line endings
@@ -170,7 +170,7 @@ static id sharedInstance = nil;
 			for (object in subMenuArray) {
 				[object setState:NSOffState];
 			}
-			NSInteger lineEndings = [[FRACurrentDocument valueForKey:@"lineEndings"] integerValue];
+			NSInteger lineEndings = [FRACurrentDocument lineEndings];
 			if (lineEndings != 0) {
 				[[[anItem submenu] itemWithTag:(lineEndings + 150)] setState:NSOnState];
 			}
@@ -178,7 +178,7 @@ static id sharedInstance = nil;
 			NSArray *subMenuArray = [NSArray arrayWithArray:[[anItem submenu] itemArray]];
 			id document = FRACurrentDocument;
 			id item;
-			NSString *syntaxDefinition = [document valueForKey:@"syntaxDefinition"];
+			NSString *syntaxDefinition = [document syntaxDefinition];
 			for (item in subMenuArray) {
 				if ([[item title] isEqualToString:syntaxDefinition]) {
 					[item setState:NSOnState];
@@ -198,10 +198,10 @@ static id sharedInstance = nil;
 
 -(void)performUndoChangeEncoding:(id)sender
 {
-	id document = FRACurrentDocument;
+	VADocument *document = FRACurrentDocument;
 	
-	[[[document valueForKey:@"syntaxColouring"] undoManager] registerUndoWithTarget:self selector:@selector(performUndoChangeEncoding:) object:@[[document valueForKey:@"encoding"]]];
-	[[[document valueForKey:@"syntaxColouring"] undoManager] setActionName:NAME_FOR_UNDO_CHANGE_ENCODING];
+	[[[document syntaxColouring] undoManager] registerUndoWithTarget:self selector:@selector(performUndoChangeEncoding:) object:@[ @([document encoding])]];
+	[[[document syntaxColouring] undoManager] setActionName:NAME_FOR_UNDO_CHANGE_ENCODING];
 	
 	[document setValue:sender[0] forKey:@"encoding"];
 	[document setValue:[NSString localizedNameOfStringEncoding:[sender[0] unsignedIntegerValue]] forKey:@"encodingName"];
@@ -218,7 +218,7 @@ static id sharedInstance = nil;
 	if ([completeString length] < 1) {
 		return;
 	}
-	[[FRACurrentDocument valueForKey:@"syntaxColouring"] setReactToChanges:NO];
+	[[FRACurrentDocument syntaxColouring] setReactToChanges:NO];
 	NSRange selectedRange;
 	
 	NSArray *array = [FRACurrentTextView selectedRanges];
@@ -311,17 +311,17 @@ static id sharedInstance = nil;
 		}
 		sumOfAllCharactersRemoved = sumOfAllCharactersRemoved + charactersRemoved;
 	}
-	[[FRACurrentDocument valueForKey:@"syntaxColouring"] setReactToChanges:YES];
+	[[FRACurrentDocument syntaxColouring] setReactToChanges:YES];
 	
-	[[FRACurrentDocument valueForKey:@"syntaxColouring"] pageRecolour];
+	[[FRACurrentDocument syntaxColouring] pageRecolour];
 	
 	if (sumOfAllCharactersRemoved == 0) {
 		NSBeep();
 	} else {
-		if ([[FRACurrentDocument valueForKey:@"isEdited"] boolValue] == NO) {
+		if ([FRACurrentDocument isEdited] == NO) {
 			[FRAVarious hasChangedDocument:FRACurrentDocument];
 		}
-		[[FRACurrentDocument valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth: NO];
+		[[FRACurrentDocument lineNumbers] updateLineNumbersCheckWidth: NO];
 	}
 	
 	if ([updatedSelectionsArray count] > 0) {
@@ -337,7 +337,7 @@ static id sharedInstance = nil;
 	if ([completeString length] < 1) {
 		return;
 	}
-	[[FRACurrentDocument valueForKey:@"syntaxColouring"] setReactToChanges:NO];
+	[[FRACurrentDocument syntaxColouring] setReactToChanges:NO];
 	NSRange selectedRange;
 	
 	NSMutableString *replacementString;
@@ -407,15 +407,15 @@ static id sharedInstance = nil;
 
 	}
 	
-	[[FRACurrentDocument valueForKey:@"syntaxColouring"] setReactToChanges:YES];
+	[[FRACurrentDocument syntaxColouring] setReactToChanges:YES];
 	
-	[[FRACurrentDocument valueForKey:@"syntaxColouring"] pageRecolour];
+	[[FRACurrentDocument syntaxColouring] pageRecolour];
 	
-	if ([[FRACurrentDocument valueForKey:@"isEdited"] boolValue] == NO) {
+	if ([FRACurrentDocument isEdited] == NO) {
 		[FRAVarious hasChangedDocument:FRACurrentDocument];
 	}
 	
-	[[FRACurrentDocument valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth: NO];
+	[[FRACurrentDocument lineNumbers] updateLineNumbersCheckWidth: NO];
 	
 	if ([updatedSelectionsArray count] > 0) {
 		[textView setSelectedRanges:updatedSelectionsArray];
@@ -432,7 +432,7 @@ static id sharedInstance = nil;
 	if ([completeString length] < 1) {
 		return;
 	}
-	[[FRACurrentDocument valueForKey:@"syntaxColouring"] setReactToChanges:NO];
+	[[FRACurrentDocument syntaxColouring] setReactToChanges:NO];
 	NSRange selectedRange;
 	
 	NSArray *array = [FRACurrentTextView selectedRanges];
@@ -488,16 +488,16 @@ static id sharedInstance = nil;
 		sumOfAllCharactersRemoved = sumOfAllCharactersRemoved + charactersRemoved;
 	}
 	
-	[[FRACurrentDocument valueForKey:@"syntaxColouring"] setReactToChanges:YES];
-	[[FRACurrentDocument valueForKey:@"syntaxColouring"] pageRecolour];
+	[[FRACurrentDocument syntaxColouring] setReactToChanges:YES];
+	[[FRACurrentDocument syntaxColouring] pageRecolour];
 	
 	if (sumOfAllCharactersRemoved == 0) {
 		NSBeep();
 	} else {
-		if ([[FRACurrentDocument valueForKey:@"isEdited"] boolValue] == NO) {
+		if ([FRACurrentDocument isEdited] == NO) {
 			[FRAVarious hasChangedDocument:FRACurrentDocument];
 		}
-		[[FRACurrentDocument valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth: NO];
+		[[FRACurrentDocument lineNumbers] updateLineNumbersCheckWidth: NO];
 	}
 	
 	if ([updatedSelectionsArray count] > 0) {
@@ -563,7 +563,7 @@ static id sharedInstance = nil;
 - (void)performEntab
 {	
 	NSTextView *textView = FRACurrentTextView;
-	[[FRACurrentDocument valueForKey:@"syntaxColouring"] setReactToChanges:NO];
+	[[FRACurrentDocument syntaxColouring] setReactToChanges:NO];
 	NSRange selectedRange;
 	NSRange savedRange = [textView selectedRange];
 	
@@ -587,13 +587,13 @@ static id sharedInstance = nil;
 
 	}
 	
-	[[FRACurrentDocument valueForKey:@"syntaxColouring"] setReactToChanges:YES];
+	[[FRACurrentDocument syntaxColouring] setReactToChanges:YES];
 	
-	if ([[FRACurrentDocument valueForKey:@"isEdited"] boolValue] == NO) {
+	if ([FRACurrentDocument isEdited] == NO) {
 		[FRAVarious hasChangedDocument:FRACurrentDocument];
 	}
 	
-	[[FRACurrentDocument valueForKey:@"syntaxColouring"] pageRecolour]; 
+	[[FRACurrentDocument syntaxColouring] pageRecolour]; 
 
 	[textView setSelectedRange:NSMakeRange(savedRange.location, 0)];
 }
@@ -602,7 +602,7 @@ static id sharedInstance = nil;
 - (void)performDetab
 {	
 	NSTextView *textView = FRACurrentTextView;
-	[[FRACurrentDocument valueForKey:@"syntaxColouring"] setReactToChanges:NO];
+	[[FRACurrentDocument syntaxColouring] setReactToChanges:NO];
 	NSRange selectedRange;
 	NSRange savedRange = [textView selectedRange];
 	
@@ -626,13 +626,13 @@ static id sharedInstance = nil;
 		
 	}
 	
-	[[FRACurrentDocument valueForKey:@"syntaxColouring"] setReactToChanges:YES];
+	[[FRACurrentDocument syntaxColouring] setReactToChanges:YES];
 	
-	if ([[FRACurrentDocument valueForKey:@"isEdited"] boolValue] == NO) {
+	if ([FRACurrentDocument isEdited] == NO) {
 		[FRAVarious hasChangedDocument:FRACurrentDocument];
 	}
 	
-	[[FRACurrentDocument valueForKey:@"syntaxColouring"] pageRecolour]; 
+	[[FRACurrentDocument syntaxColouring] pageRecolour]; 
 	[textView setSelectedRange:NSMakeRange(savedRange.location, 0)];
 }
 
@@ -812,13 +812,13 @@ static id sharedInstance = nil;
 {
 	NSTextView *textView = FRACurrentTextView;
 	NSString *completeString = [textView string];
-	NSString *commentString = [[FRACurrentDocument valueForKey:@"syntaxColouring"] valueForKey:@"firstSingleLineComment"];
+	NSString *commentString = [[FRACurrentDocument syntaxColouring] valueForKey:@"firstSingleLineComment"];
 	NSInteger commentStringLength = [commentString length];
 	if ([commentString isEqualToString:@""] || [completeString length] < commentStringLength) {
 		NSBeep();
 		return;
 	}
-	[[FRACurrentDocument valueForKey:@"syntaxColouring"] setReactToChanges:NO];	
+	[[FRACurrentDocument syntaxColouring] setReactToChanges:NO];	
 	
 	NSArray *array = [textView selectedRanges];
 	NSRange selectedRange;
@@ -891,15 +891,15 @@ static id sharedInstance = nil;
 		[updatedSelectionsArray addObject:[NSValue valueWithRange:NSMakeRange(locationOfFirstLine, locationOfLastLine - locationOfFirstLine + charactersInserted)]];
 	}
 	
-	[[FRACurrentDocument valueForKey:@"syntaxColouring"] setReactToChanges:YES];
+	[[FRACurrentDocument syntaxColouring] setReactToChanges:YES];
 	
-	[[FRACurrentDocument valueForKey:@"syntaxColouring"] pageRecolour];
+	[[FRACurrentDocument syntaxColouring] pageRecolour];
 	
-	if ([[FRACurrentDocument valueForKey:@"isEdited"] boolValue] == NO) {
+	if ([FRACurrentDocument isEdited] == NO) {
 		[FRAVarious hasChangedDocument:FRACurrentDocument];
 	}
 	
-	[[FRACurrentDocument valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth: NO];
+	[[FRACurrentDocument lineNumbers] updateLineNumbersCheckWidth: NO];
 	
 	if (selectedRange.length > 0) {
 		[textView setSelectedRanges:updatedSelectionsArray];
@@ -927,7 +927,7 @@ static id sharedInstance = nil;
 {
 	NSTextView *textView = FRACurrentTextView;
 	NSString *text = [textView string];
-	[[FRACurrentDocument valueForKey:@"syntaxColouring"] setReactToChanges:NO];	
+	[[FRACurrentDocument syntaxColouring] setReactToChanges:NO];	
 	NSArray *array = [textView selectedRanges];
 	NSInteger sumOfDeletedLineEndings = 0;
 	NSMutableArray *updatedSelectionsArray = [NSMutableArray array];
@@ -946,14 +946,14 @@ static id sharedInstance = nil;
 		[updatedSelectionsArray addObject:[NSValue valueWithRange:NSMakeRange(selectedRange.location, newLength)]];
 	}
 	
-	[[FRACurrentDocument valueForKey:@"syntaxColouring"] setReactToChanges:YES];
+	[[FRACurrentDocument syntaxColouring] setReactToChanges:YES];
 	
-	if ([[FRACurrentDocument valueForKey:@"isEdited"] boolValue] == NO) {
+	if ([FRACurrentDocument isEdited] == NO) {
 		[FRAVarious hasChangedDocument:FRACurrentDocument];
 	}
 	
-	[[FRACurrentDocument valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth: YES];
-    [[FRACurrentDocument valueForKey: @"syntaxColouring"] pageRecolour];
+	[[FRACurrentDocument lineNumbers] updateLineNumbersCheckWidth: YES];
+    [[FRACurrentDocument syntaxColouring] pageRecolour];
 
 	if ([updatedSelectionsArray count] > 0) {
 		[textView setSelectedRanges:updatedSelectionsArray];
@@ -965,8 +965,10 @@ static id sharedInstance = nil;
 {
 	id document = FRACurrentDocument;
 	
-	[[[document valueForKey:@"syntaxColouring"] undoManager] registerUndoWithTarget:self selector:@selector(performUndoChangeLineEndings:) object:@[[document valueForKey:@"lineEndings"]]];
-	[[[document valueForKey:@"syntaxColouring"] undoManager] setActionName:NAME_FOR_UNDO_CHANGE_LINE_ENDINGS];
+	[[[document syntaxColouring] undoManager] registerUndoWithTarget: self
+                                                            selector: @selector(performUndoChangeLineEndings:)
+                                                              object: @[@([document lineEndings])]];
+	[[[document syntaxColouring] undoManager] setActionName:NAME_FOR_UNDO_CHANGE_LINE_ENDINGS];
 	
 	[document setValue:@([sender tag] - 150) forKey:@"lineEndings"];
 	
@@ -977,7 +979,7 @@ static id sharedInstance = nil;
 	[textView replaceCharactersInRange:NSMakeRange(0, [text length]) withString:convertedString];
 	[textView setSelectedRange:selectedRange];
 	
-	[[document valueForKey:@"syntaxColouring"] pageRecolour];
+	[[document syntaxColouring] pageRecolour];
 	
 	[FRAVarious hasChangedDocument:document];
 }
@@ -987,8 +989,9 @@ static id sharedInstance = nil;
 {
 	id document = FRACurrentDocument;
 	
-	[[[document valueForKey:@"syntaxColouring"] undoManager] registerUndoWithTarget:self selector:@selector(performUndoChangeLineEndings:) object:@[[document valueForKey:@"lineEndings"]]];
-	[[[document valueForKey:@"syntaxColouring"] undoManager] setActionName:NAME_FOR_UNDO_CHANGE_LINE_ENDINGS];
+	[[[document syntaxColouring] undoManager] registerUndoWithTarget:self selector:@selector(performUndoChangeLineEndings:)
+                                                              object: @[ @([document lineEndings]) ]];
+	[[[document syntaxColouring] undoManager] setActionName:NAME_FOR_UNDO_CHANGE_LINE_ENDINGS];
 	
 	[document setValue:sender[0] forKey:@"lineEndings"];
 	
@@ -999,7 +1002,7 @@ static id sharedInstance = nil;
 	[textView replaceCharactersInRange:NSMakeRange(0, [text length]) withString:convertedString];
 	[textView setSelectedRange:selectedRange];
 	
-	[[document valueForKey:@"syntaxColouring"] pageRecolour];
+	[[document syntaxColouring] pageRecolour];
 	
 	[FRAVarious hasChangedDocument:document];
 }
@@ -1039,7 +1042,7 @@ static id sharedInstance = nil;
 		return;
 	}
 	
-	[[FRACurrentDocument valueForKey:@"syntaxColouring"] setReactToChanges:NO];
+	[[FRACurrentDocument syntaxColouring] setReactToChanges:NO];
 	
 	NSArray *selectedArray = [FRACurrentTextView selectedRanges];
 	
@@ -1060,10 +1063,10 @@ static id sharedInstance = nil;
 	}
 	else {
 		NSInteger lineEndings;
-		if ([[FRACurrentDocument valueForKey:@"lineEndings"] integerValue] == 0) { // It hasn't been changed by the user so use the one from the defaults
+		if ([FRACurrentDocument lineEndings] == 0) { // It hasn't been changed by the user so use the one from the defaults
 			lineEndings = [[FRADefaults valueForKey:@"LineEndingsPopUp"] integerValue] + 1;
 		} else {
-			lineEndings = [[FRACurrentDocument valueForKey:@"lineEndings"] integerValue];
+			lineEndings = [FRACurrentDocument lineEndings];
 		}
 		
 		if (lineEndings == VADarkSideLineEndings)
@@ -1084,15 +1087,15 @@ static id sharedInstance = nil;
 		[textView didChangeText];
 	}
 	
-	[[FRACurrentDocument valueForKey:@"syntaxColouring"] setReactToChanges:YES];
+	[[FRACurrentDocument syntaxColouring] setReactToChanges:YES];
 	
-	[[FRACurrentDocument valueForKey:@"syntaxColouring"] pageRecolour];
+	[[FRACurrentDocument syntaxColouring] pageRecolour];
 	
-	if ([[FRACurrentDocument valueForKey:@"isEdited"] boolValue] == NO) {
+	if ([FRACurrentDocument isEdited] == NO) {
 		[FRAVarious hasChangedDocument:FRACurrentDocument];
 	}
 	
-	[[FRACurrentDocument valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth: NO];
+	[[FRACurrentDocument lineNumbers] updateLineNumbersCheckWidth: NO];
 		
 }
 
@@ -1102,9 +1105,9 @@ static id sharedInstance = nil;
 	id document = FRACurrentDocument;
 	[document setValue:[sender title] forKey:@"syntaxDefinition"];
 	[document setValue:@YES forKey:@"hasManuallyChangedSyntaxDefinition"];
-	[[document valueForKey:@"syntaxColouring"] setSyntaxDefinition];
+	[[document syntaxColouring] setSyntaxDefinition];
 	
-	[[document valueForKey:@"syntaxColouring"] pageRecolour];
+	[[document syntaxColouring] pageRecolour];
 	[FRAInterface updateStatusBar];
 }
 @end

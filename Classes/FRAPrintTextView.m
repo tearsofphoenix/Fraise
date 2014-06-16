@@ -19,6 +19,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAProject.h"
 #import "FRASyntaxColouring.h"
 #import "FRATextView.h"
+#import "VADocument.h"
 
 #import <VADevUIKit/VADevUIKit.h>
 
@@ -123,9 +124,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
 			if (printOnlySelection == YES) {
 				index = [FRACurrentTextView selectedRange].location;
 				lastCharacter = NSMaxRange([FRACurrentTextView selectedRange]);
-				[[FRACurrentDocument valueForKey:@"syntaxColouring"] recolourRange:[FRACurrentTextView selectedRange]];
+				[[FRACurrentDocument syntaxColouring] recolourRange:[FRACurrentTextView selectedRange]];
 			} else {
-				[[FRACurrentDocument valueForKey:@"syntaxColouring"] recolourRange:NSMakeRange(0, lastCharacter)];
+				[[FRACurrentDocument syntaxColouring] recolourRange:NSMakeRange(0, lastCharacter)];
 			}
 			NSRange range;
 			NSDictionary *attributes;

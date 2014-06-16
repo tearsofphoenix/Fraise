@@ -23,6 +23,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRASyntaxColouring.h"
 #import "VASnippetCollection.h"
 #import "VASnippet.h"
+#import "VADocument.h"
 
 #import <VADevUIKit/VADevUIKit.h>
 
@@ -115,9 +116,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
     [self setFont: font];
     
     NSClipView *clipView = [[self enclosingScrollView] contentView];
-    [[FRACurrentDocument valueForKey:@"lineNumbers"] updateLineNumbersForClipView: clipView
+    [[FRACurrentDocument lineNumbers] updateLineNumbersForClipView: clipView
                                                                        checkWidth: NO];
-    [[FRACurrentDocument valueForKey: @"syntaxColouring"] pageRecolourTextView: [clipView documentView]];
+    [[FRACurrentDocument syntaxColouring] pageRecolourTextView: [clipView documentView]];
 
     [self setPageGuideValues];
 }

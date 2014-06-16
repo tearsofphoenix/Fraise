@@ -68,11 +68,11 @@ VASingletonIMPDefault(FRADocumentsMenuController)
 	for (id document in array)
     {
 		if (index < 10) {
-			menuItem = [[NSMenuItem alloc] initWithTitle:[document valueForKey:@"name"] action:@selector(changeSelectedDocument:) keyEquivalent:[ @(index) stringValue]];
+			menuItem = [[NSMenuItem alloc] initWithTitle:[document name] action:@selector(changeSelectedDocument:) keyEquivalent:[ @(index) stringValue]];
 		} else if (index == 10) {
-			menuItem = [[NSMenuItem alloc] initWithTitle:[document valueForKey:@"name"] action:@selector(changeSelectedDocument:) keyEquivalent:@"0"];
+			menuItem = [[NSMenuItem alloc] initWithTitle:[document name] action:@selector(changeSelectedDocument:) keyEquivalent:@"0"];
 		} else {
-			menuItem = [[NSMenuItem alloc] initWithTitle:[document valueForKey:@"name"] action:@selector(changeSelectedDocument:) keyEquivalent:@""];
+			menuItem = [[NSMenuItem alloc] initWithTitle:[document name] action:@selector(changeSelectedDocument:) keyEquivalent:@""];
 		}
 
 		[menuItem setTarget:self];
@@ -96,7 +96,7 @@ VASingletonIMPDefault(FRADocumentsMenuController)
 		NSEnumerator *documentsEnumerator = [[(FRAProject *)project documents] reverseObjectEnumerator];
 		for (id document in documentsEnumerator)
         {
-			menuItem = [[NSMenuItem alloc] initWithTitle:[document valueForKey:@"name"] action:@selector(changeSelectedDocument:) keyEquivalent:@""];
+			menuItem = [[NSMenuItem alloc] initWithTitle:[document name] action:@selector(changeSelectedDocument:) keyEquivalent:@""];
 			[menuItem setTarget:self];
 			[menuItem setRepresentedObject:document];
 			[menu insertItem:menuItem atIndex:0];

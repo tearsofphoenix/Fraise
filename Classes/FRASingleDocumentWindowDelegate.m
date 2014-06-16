@@ -17,6 +17,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRASingleDocumentWindowDelegate.h"
 #import "FRABasicPerformer.h"
 #import "FRASyntaxColouring.h"
+#import "VADocument.h"
+
 #import <VADevUIKit/VADevUIKit.h>
 
 @implementation FRASingleDocumentWindowDelegate
@@ -26,10 +28,10 @@ VASingletonIMPDefault(FRASingleDocumentWindowDelegate)
 - (void)windowDidResize:(NSNotification *)aNotification
 {
 	NSWindow *window = [aNotification object];
-	NSArray *array = [FRABasic fetchAll:@"Document"];
+	NSArray *array = [VADocument allDocuments];
 	id document;
 	for (document in array) {
-		if ([document valueForKey:@"singleDocumentWindow"] == window) {
+		if ([document singleDocumentWindow] == window) {
 			break;
 		}
 	}
@@ -41,11 +43,11 @@ VASingletonIMPDefault(FRASingleDocumentWindowDelegate)
 	array = [[window contentView] subviews];
 	for (id view in array)
     {
-		if (view == [document valueForKey:@"thirdTextScrollView"])
+		if (view == [document thirdTextScrollView])
         {
-			[[document valueForKey:@"lineNumbers"] updateLineNumbersForClipView: [view contentView] checkWidth: NO];
+			[[document lineNumbers] updateLineNumbersForClipView: [view contentView] checkWidth: NO];
             
-            [[document valueForKey: @"syntaxColouring"] pageRecolourTextView: [[view contentView] documentView]];
+            [[document syntaxColouring] pageRecolourTextView: [[view contentView] documentView]];
 
 		}
 	}
@@ -56,13 +58,15 @@ VASingletonIMPDefault(FRASingleDocumentWindowDelegate)
 
 - (BOOL)windowShouldClose:(id)sender
 {
-	NSArray *array = [FRABasic fetchAll:@"Document"];
-	for (id item in array) {
-		if ([item valueForKey:@"singleDocumentWindow"] == sender) {
+	NSArray *array = [VADocument allDocuments];
+	for (id item in array)
+    {
+		if ([item singleDocumentWindow] == sender)
+        {
 			[item setValue:nil forKey:@"singleDocumentWindow"];
 			[item setValue:nil forKey:@"singleDocumentWindow"];
 			[item setValue:nil forKey:@"thirdTextView"];
-			[[item valueForKey:@"syntaxColouring"] setThirdLayoutManager:nil];
+			[[item syntaxColouring] setThirdLayoutManager:nil];
 			break;
 		}
 	}

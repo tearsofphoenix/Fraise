@@ -25,7 +25,8 @@
 #import "FRASyntaxColouring.h"
 #import "FRAProject.h"
 #import "VFEncoding.h"
-
+#import "VADocument.h"
+#import "FRATextView.h"
 
 #import <VADevUIKit/VADevUIKit.h>
 
@@ -116,10 +117,12 @@ VASingletonIMPDefault(FRAFileMenuController)
 
 - (IBAction)saveAction:(id)sender
 {
-	if ([[FRACurrentDocument valueForKey:@"isNewDocument"] boolValue] == YES) {
+	if ([FRACurrentDocument isNewDocument])
+    {
 		[[FRAProjectsController sharedDocumentController] selectDocument:FRACurrentDocument]; // If one has saved from a single document window it should select the proper document in the project
 		[self saveAsAction:sender];
-	} else {
+	} else
+    {
 		[FRAOpenSave performSaveOfDocument:FRACurrentDocument fromSaveAs:NO];
 	}
 }
@@ -163,9 +166,9 @@ VASingletonIMPDefault(FRAFileMenuController)
                                                   [FRADefaults setValue: [path stringByDeletingLastPathComponent]
                                                                  forKey: @"LastSaveAsDirectory"];
                                                   
-                                                  [[FRACurrentDocument valueForKey:@"syntaxColouring"] setSyntaxDefinition];
+                                                  [[FRACurrentDocument syntaxColouring] setSyntaxDefinition];
                                                   
-                                                  [[FRACurrentDocument valueForKey:@"syntaxColouring"] pageRecolour];
+                                                  [[FRACurrentDocument syntaxColouring] pageRecolour];
                                                   
                                                   [FRAInterface updateStatusBar];
                                               }
@@ -202,13 +205,13 @@ VASingletonIMPDefault(FRAFileMenuController)
 {
 	id document = FRACurrentDocument;
 	NSFileManager *fileManager = [NSFileManager defaultManager];
-	if (![fileManager fileExistsAtPath:[document valueForKey:@"path"]]) { // Check if original file exists
-		NSString *title = [NSString stringWithFormat:NSLocalizedString(@"You cannot revert this document because the file %@ doesn't exist anymore", @"Indicate that you cannot revert this document because the file %@ doesn't exist anymore Revert-file-doesn't-exist sheet"), [document valueForKey:@"path"]];
+	if (![fileManager fileExistsAtPath:[document path]]) { // Check if original file exists
+		NSString *title = [NSString stringWithFormat:NSLocalizedString(@"You cannot revert this document because the file %@ doesn't exist anymore", @"Indicate that you cannot revert this document because the file %@ doesn't exist anymore Revert-file-doesn't-exist sheet"), [document path]];
 		[FRAVarious standardAlertSheetWithTitle:title message:NSLocalizedString(@"Please check if you've moved or deleted the original file", @"Indicate that they should please check if you've moved or deleted the original file in Revert-file-doesn't-exist sheet") window:FRACurrentWindow];
 		return;
 	}
 	
-	if ([[document valueForKey:@"isEdited"] boolValue] == NO) {
+	if ([document isEdited] == NO) {
 		[self performRevertOfDocument:document]; // I.e an update of the document
 	} else {
 		if ([FRACurrentWindow attachedSheet]) {
@@ -237,12 +240,12 @@ VASingletonIMPDefault(FRAFileMenuController)
 }
 
 
-- (void)performRevertOfDocument:(id)document
+- (void)performRevertOfDocument: (VADocument *)document
 {
-	NSData *textData = [[NSData alloc] initWithContentsOfFile:[document valueForKey:@"path"]];
+	NSData *textData = [[NSData alloc] initWithContentsOfFile:[document path]];
 	
 	// UTF-8 e.g. encoding returns nil if the file is not properly formed so check for that and try others if it's nil
-	NSString *string = [[NSString alloc] initWithData:textData encoding:[[document valueForKey:@"encoding"] integerValue]];
+	NSString *string = [[NSString alloc] initWithData:textData encoding:[document encoding]];
 	
 	if (string == nil) { // Test if encoding worked, else try NSISOLatin1StringEncoding
 		string = [[NSString alloc] initWithData:textData encoding:NSISOLatin1StringEncoding];
@@ -253,12 +256,13 @@ VASingletonIMPDefault(FRAFileMenuController)
 			}
 		}
 	}
-	[[[document valueForKey:@"firstTextView"] undoManager] removeAllActions];
-	[[document valueForKey:@"firstTextView"] setString:string];
-	[[document valueForKey:@"syntaxColouring"] pageRecolour];
-	[[document valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth: NO];
-	[[document valueForKey:@"firstTextView"] setSelectedRange:NSMakeRange(0,0)];
-	[document setValue:@NO forKey:@"isEdited"];
+	[[[document firstTextView] undoManager] removeAllActions];
+	[[document firstTextView] setString:string];
+	[[document syntaxColouring] pageRecolour];
+	[[document lineNumbers] updateLineNumbersCheckWidth: NO];
+	[[document firstTextView] setSelectedRange:NSMakeRange(0,0)];
+	[document setEdited: NO];
+    
 	[FRACurrentProject updateEditedBlobStatus];
 	[FRACurrentProject reloadData];
 	[FRAInterface updateStatusBar];
@@ -273,7 +277,7 @@ VASingletonIMPDefault(FRAFileMenuController)
 		if (tag == 2) { // Save All
 			NSArray *array = [FRACurrentProject documents];
 			for (id item in array) {
-				if ([[item valueForKey:@"isEdited"] boolValue] == YES) {
+				if ([item isEdited] == YES) {
 					enableMenuItem = YES;
 					break;
 				}
@@ -281,7 +285,7 @@ VASingletonIMPDefault(FRAFileMenuController)
 			}
             
 		} else if (tag == 4 || tag == 8 ) { // Revert & Reveal In Finder
-			enableMenuItem = ![[FRACurrentDocument valueForKey:@"isNewDocument"] boolValue];
+			enableMenuItem = ![FRACurrentDocument isNewDocument];
 		} else if (tag == 5) { // Save Documents As Project
 			if ([FRACurrentProject fileURL] != nil) {
 				enableMenuItem = NO;
@@ -326,9 +330,12 @@ VASingletonIMPDefault(FRAFileMenuController)
 - (IBAction)saveAllAction:(id)sender
 {
 	NSArray *array = [FRACurrentProject documents];
-	for (id item in array) {
-		if ([[item valueForKey:@"isEdited"] boolValue] == YES) {
-			if ([[item valueForKey:@"isNewDocument"] boolValue] == YES) {
+	for (id item in array)
+    {
+		if ([item isEdited] == YES)
+        {
+			if ([item isNewDocument])
+            {
 				[[FRAProjectsController sharedDocumentController] selectDocument:item];
 				[self saveAsInSaveAllForDocument:item];
 			} else {
@@ -344,7 +351,7 @@ VASingletonIMPDefault(FRAFileMenuController)
 {
 	NSSavePanel *savePanel = [NSSavePanel savePanel];
     [savePanel setDirectoryURL: [NSURL fileURLWithPath: [FRAInterface whichDirectoryForSave]]];
-    [savePanel setAllowedFileTypes: @[ [document valueForKey:@"name"] ]];
+    [savePanel setAllowedFileTypes: @[ [document name] ]];
     
 	[savePanel beginSheetModalForWindow: FRACurrentWindow
                       completionHandler: (^(NSInteger returnCode)
@@ -360,8 +367,8 @@ VASingletonIMPDefault(FRAFileMenuController)
                                                       [[FRAProjectsController sharedDocumentController] putInRecentWithPath:path];
                                                   }
                                                   [FRADefaults setValue:[path stringByDeletingLastPathComponent] forKey:@"LastSaveAsDirectory"];
-                                                  [[document valueForKey:@"syntaxColouring"] setSyntaxDefinition];
-                                                  [[document valueForKey:@"syntaxColouring"] pageRecolour];
+                                                  [[document syntaxColouring] setSyntaxDefinition];
+                                                  [[document syntaxColouring] pageRecolour];
                                               }
                                           })];
     

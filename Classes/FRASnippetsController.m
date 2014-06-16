@@ -27,6 +27,7 @@
 #import "FRAProjectsController.h"
 #import "VASnippet.h"
 #import "VASnippetCollection.h"
+#import "VADocument.h"
 
 #import <VADevUIKit/VADevUIKit.h>
 
@@ -146,7 +147,7 @@ VASingletonIMPDefault(FRASnippetsController)
 	FRATextView *textView = FRACurrentTextView;
 	if ([FRAMain isInFullScreenMode])
     {
-		textView = [[FRAInterface fullScreenDocument] valueForKey:@"thirdTextView"];
+		textView = [[FRAInterface fullScreenDocument] thirdTextView];
 	}
 	if (textView == nil)
     {

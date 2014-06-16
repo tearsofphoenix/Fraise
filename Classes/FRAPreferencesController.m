@@ -29,6 +29,7 @@
 #import "FRAProject.h"
 #import "VFSyntaxDefinition.h"
 #import "VFEncoding.h"
+#import "VADocument.h"
 
 #import "FRASyntaxColouring.h"
 #import <VADevUIKit/VADevUIKit.h>
@@ -221,21 +222,27 @@ VASingletonIMPDefault(FRAPreferencesController)
 	if ([(__bridge NSString *)context isEqualToString:@"StatusBarChanged"]) {
 		[FRAInterface updateStatusBar];
 		
-	} else if ([(__bridge NSString *)context isEqualToString:@"StatusBarLastSavedFormatChanged"]) {
-		NSArray *array = [FRABasic fetchAll:@"Document"];
-		for (id item in array) {
-			if ([[item valueForKey:@"isNewDocument"] boolValue] == NO) {
-				[FRAVarious setLastSavedDateForDocument:item date:[[item valueForKey:@"fileAttributes"] fileModificationDate]];
+	} else if ([(__bridge NSString *)context isEqualToString:@"StatusBarLastSavedFormatChanged"])
+    {
+		NSArray *array = [VADocument allDocuments];
+		for (id item in array)
+        {
+			if ([item isNewDocument] == NO)
+            {
+				[FRAVarious setLastSavedDateForDocument:item date:[[item fileAttributes] fileModificationDate]];
 			}
 		}
 		[FRAInterface updateStatusBar];
 		
-	} else if ([(__bridge NSString *)context isEqualToString:@"ShowFullPathInWindowTitleChanged"]) {
+	} else if ([(__bridge NSString *)context isEqualToString:@"ShowFullPathInWindowTitleChanged"])
+    {
 		NSArray *projectsArray = [[FRAProjectsController sharedDocumentController] documents];
-		for (id project in projectsArray) {
-			NSArray *documentsArray = [FRABasic fetchAll:@"Document"];
-			for (id document in documentsArray) {
-				[project updateWindowTitleBarForDocument:document];
+		for (id project in projectsArray)
+        {
+			NSArray *documentsArray = [VADocument allDocuments];
+			for (id document in documentsArray)
+            {
+				[project updateWindowTitleBarForDocument: document];
 			}
 		}
 		
@@ -605,8 +612,8 @@ VASingletonIMPDefault(FRAPreferencesController)
 	for (id document in documentEnumerator)
     {
 		[FRAInterface updateGutterViewForDocument:document];
-		[[document valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth: YES];
-        [[FRACurrentDocument valueForKey: @"syntaxColouring"] pageRecolour];
+		[[document lineNumbers] updateLineNumbersCheckWidth: YES];
+        [[FRACurrentDocument syntaxColouring] pageRecolour];
 	}
 }
 

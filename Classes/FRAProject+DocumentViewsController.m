@@ -21,9 +21,10 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 #import "FRAOpenSavePerformer.h"
 #import "FRASyntaxColouring.h"
-#import "FRADocumentManagedObject.h"
+
 #import "FRAProjectsController.h"
 #import "VAProject.h"
+#import "VADocument.h"
 
 @implementation FRAProject (DocumentViewsController)
 
@@ -145,13 +146,17 @@ Unless required by applicable law or agreed to in writing, software distributed 
 	[[[FRAApplicationDelegate sharedInstance] managedObjectContext] processPendingChanges];
 
     NSEnumerator *enumerator = [[self documents] reverseObjectEnumerator];
-	for (id item in enumerator) {
+	for (id item in enumerator)
+    {
 		NSTabViewItem *tabViewItem = [[NSTabViewItem alloc] initWithIdentifier:item];
-		if ([[item valueForKey:@"isEdited"] boolValue] == YES) {
+		if ([item isEdited])
+        {
 			[tabViewItem setLabel:[NSString stringWithFormat:@"%@ %C", [item valueForKey:@"name"], 0x270E]];
-		} else {
+		} else
+        {
 			[tabViewItem setLabel:[item valueForKey:@"name"]];
 		}
+        
 		[tabBarTabView insertTabViewItem:tabViewItem atIndex:0];
 	}
 	
@@ -243,13 +248,13 @@ Unless required by applicable law or agreed to in writing, software distributed 
 {
 	if ([aNotification object] == contentSplitView)
     {
-		[[[self firstDocument] valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth: NO];
-        [[[self firstDocument] valueForKey: @"syntaxColouring"] pageRecolour];
+		[[[self firstDocument] lineNumbers] updateLineNumbersCheckWidth: NO];
+        [[[self firstDocument] syntaxColouring] pageRecolour];
 
 		if ([self secondDocument] != nil)
         {
-			[[[self secondDocument] valueForKey:@"lineNumbers"] updateLineNumbersCheckWidth: NO];
-            [[[self secondDocument] valueForKey: @"syntaxColouring"] pageRecolour];
+			[[[self secondDocument] lineNumbers] updateLineNumbersCheckWidth: NO];
+            [[[self secondDocument] syntaxColouring] pageRecolour];
 		}
 	} else if ([aNotification object] == mainSplitView) {
 		[self resizeViewSizeSlider];		
@@ -303,7 +308,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 	NSRect secondViewFrame = [[contentSplitView subviews][1] frame];
 	secondViewFrame.size.width = contentRect.size.width;
-	if (secondDocument == nil) {
+	if ([self secondDocument] == nil)
+    {
 		secondViewFrame.size.height = 0.0;
 	}
 	[[contentSplitView subviews][1] setFrame:secondViewFrame];

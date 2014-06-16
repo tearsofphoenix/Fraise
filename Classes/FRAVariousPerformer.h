@@ -54,11 +54,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 @property (NS_NONATOMIC_IOSONLY, getter=isChangingSyntaxDefinitionsProgrammatically, readonly) BOOL changingSyntaxDefinitionsProgrammatically;
 
-- (void)setUnsavedAsLastSavedDateForDocument:(id)document;
+
 - (void)setLastSavedDateForDocument:(id)document date:(NSDate *)lastSavedDate;
 - (void)hasChangedDocument:(id)document;
-
-- (void)setNameAndPathForDocument:(id)document path:(NSString *)path;
 
 
 - (void)fixSortOrderNumbersForArrayController:(NSArray *)array

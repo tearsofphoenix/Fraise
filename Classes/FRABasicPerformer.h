@@ -24,11 +24,11 @@ Unless required by applicable law or agreed to in writing, software distributed 
 + (FRABasicPerformer *)sharedInstance;
 
 - (void)insertFetchRequests;
-- (NSArray *)fetchAll:(NSString *)key;
+
 - (NSFetchRequest *)fetchRequest:(NSString *)key;
 
 - (id)createNewObjectForEntity:(NSString *)entity;
-- (void)removeAllObjectsForEntity:(NSString *)entity;
+
 - (NSURL *)uriFromObject:(id)object;
 - (id)objectFromURI:(NSURL *)uri;
 - (void)removeAllItemsFromMenu:(NSMenu *)menu;

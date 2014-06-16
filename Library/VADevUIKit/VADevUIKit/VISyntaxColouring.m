@@ -1090,7 +1090,7 @@
 	
 	VITextView *textView = (VITextView *)[notification object];
 	
-	if ([[document valueForKey:@"isEdited"] boolValue] == NO)
+	if ([document isEdited] == NO)
     {
 //		[FRAVarious hasChangedDocument:document];
 	}

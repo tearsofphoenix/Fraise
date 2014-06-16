@@ -69,7 +69,6 @@ VASingletonIMPDefault(FRAMainController)
 - (void)awakeFromNib
 {
 	// If the application crashed so these weren't removed, remove them now
-	[FRABasic removeAllObjectsForEntity:@"Document"];
 	
 	[FRAVarious insertTextEncodings];
 	[FRAVarious insertSyntaxDefinitions];

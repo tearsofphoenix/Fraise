@@ -23,6 +23,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAToolsMenuController.h"
 #import "FRAProject.h"
 #import "FRAVariousPerformer.h"
+#import "VAProject.h"
+#import "VADocument.h"
 
 #import "ODBEditorSuite.h"
 
@@ -126,11 +128,12 @@ VASingletonIMPDefault(FRAApplicationDelegate)
  
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender
 {
-	id item;
 	NSArray *array = [[FRAProjectsController sharedDocumentController] documents];
-	for (item in array) {
+	for (FRAProject *item in array)
+    {
 		[item autosave];
-		if ([item areAllDocumentsSaved] == NO) {
+		if ([item areAllDocumentsSaved] == NO)
+        {
 			return NSTerminateCancel;
 		}
 	}
@@ -150,9 +153,9 @@ VASingletonIMPDefault(FRAApplicationDelegate)
 				NSArray *documents = [project documents];
 				for (id document in documents)
                 {
-					if ([document valueForKey:@"path"] != nil && [[document valueForKey:@"fromExternal"] boolValue] != YES)
+					if ([document path] != nil && [document fromExternal] != YES)
                     {
-						[documentsArray addObject:[document valueForKey:@"path"]];
+						[documentsArray addObject:[document path]];
 					}
 				}
 			}
@@ -173,15 +176,15 @@ VASingletonIMPDefault(FRAApplicationDelegate)
 		[FRADefaults setValue:projectsArray forKey:@"OpenProjects"];
 	}
 	
-	array = [FRABasic fetchAll:@"Document"]; // Mark any external documents as closed
-	for (item in array) {
-		if ([[item valueForKey:@"fromExternal"] boolValue] == YES) {
-			[FRAVarious sendClosedEventToExternalDocument:item];
+	array = [VADocument allDocuments]; // Mark any external documents as closed
+	for (VADocument *item in array)
+    {
+		if ([item fromExternal])
+        {
+			[FRAVarious sendClosedEventToExternalDocument: item];
 		}
 	}
-	
-	[FRABasic removeAllObjectsForEntity:@"Document"];
-	
+		
 	NSError *error;
     NSInteger reply = NSTerminateNow;
     
@@ -241,10 +244,13 @@ VASingletonIMPDefault(FRAApplicationDelegate)
 
 - (void)markItAsTrulyFinishedWithLaunching
 {
-	if (filesToOpenArray != nil && [filesToOpenArray count] > 0) {
-		NSArray *openDocument = [FRABasic fetchAll:@"Document"];
-		if ([openDocument count] != 0) {
-			if (FRACurrentProject != nil) {
+	if (filesToOpenArray != nil && [filesToOpenArray count] > 0)
+    {
+		NSArray *openDocument = [VADocument allDocuments];
+		if ([openDocument count] != 0)
+        {
+			if (FRACurrentProject != nil)
+            {
 				[FRACurrentProject performCloseDocument:openDocument[0]];
 			}
 		}
@@ -254,11 +260,14 @@ VASingletonIMPDefault(FRAApplicationDelegate)
 		filesToOpenArray = nil;
 	} else { // Open previously opened documents/projects only if Fraise wasn't opened by e.g. dragging a document onto the icon
 		
-		if ([[FRADefaults valueForKey:@"OpenAllDocumentsIHadOpen"] boolValue] == YES && [[FRADefaults valueForKey:@"OpenDocuments"] count] > 0) {
+		if ([[FRADefaults valueForKey:@"OpenAllDocumentsIHadOpen"] boolValue] == YES && [[FRADefaults valueForKey:@"OpenDocuments"] count] > 0)
+        {
 			shouldCreateEmptyDocument = NO;
-			NSArray *openDocument = [FRABasic fetchAll:@"Document"];
-			if ([openDocument count] != 0) {
-				if (FRACurrentProject != nil) {
+			NSArray *openDocument = [VADocument allDocuments];
+			if ([openDocument count] != 0)
+            {
+				if (FRACurrentProject != nil)
+                {
 					filesToOpenArray = [[NSMutableArray alloc] init]; // A hack so that -[FRAProject performCloseDocument:] won't close the window
 					[FRACurrentProject performCloseDocument:openDocument[0]];
 					filesToOpenArray = nil;
@@ -314,7 +323,7 @@ VASingletonIMPDefault(FRAApplicationDelegate)
 	
 	NSEnumerator *currentProjectEnumerator = [[FRACurrentProject documents] reverseObjectEnumerator];
 	for (document in currentProjectEnumerator) {
-		menuItem = [[NSMenuItem alloc] initWithTitle:[document valueForKey:@"name"] action:@selector(selectDocumentFromTheDock:) keyEquivalent:@""];
+		menuItem = [[NSMenuItem alloc] initWithTitle:[document name] action:@selector(selectDocumentFromTheDock:) keyEquivalent:@""];
 		[menuItem setTarget:[FRAProjectsController sharedDocumentController]];
 		[menuItem setRepresentedObject:document];
 		[returnMenu insertItem:menuItem atIndex:0];
@@ -335,7 +344,7 @@ VASingletonIMPDefault(FRAApplicationDelegate)
 		NSEnumerator *documentsEnumerator = [[(FRAProject *)project documents] reverseObjectEnumerator];
 		for (document in documentsEnumerator)
         {
-			menuItem = [[NSMenuItem alloc] initWithTitle:[document valueForKey:@"name"] action:@selector(selectDocumentFromTheDock:) keyEquivalent:@""];
+			menuItem = [[NSMenuItem alloc] initWithTitle:[document name] action:@selector(selectDocumentFromTheDock:) keyEquivalent:@""];
 			[menuItem setTarget:[FRAProjectsController sharedDocumentController]];
 			[menuItem setRepresentedObject:document];
 			[menu insertItem:menuItem atIndex:0];

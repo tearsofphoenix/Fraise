@@ -23,6 +23,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRATextView.h"
 #import "FRAProject+DocumentViewsController.h"
 #import "VAProject.h"
+#import "VADocument.h"
 
 @implementation FRAProjectsController
 
@@ -49,11 +50,13 @@ Unless required by applicable law or agreed to in writing, software distributed 
     
 	id selectedDocument = [FRACurrentProject selectedDocument];
 	
-	if ([keyWindow isKindOfClass:[FRASingleDocumentPanel class]]) {
+	if ([keyWindow isKindOfClass:[FRASingleDocumentPanel class]])
+    {
 		if (keyWindow != nil) { // Loop through all single document windows to see if one of those is the key window
-			NSArray *array = [FRABasic fetchAll:@"Document"];
+			NSArray *array = [VADocument allDocuments];
 			for (id item in array) {
-				if (keyWindow == [item valueForKey:@"singleDocumentWindow"]) {
+				if (keyWindow == [item singleDocumentWindow])
+                {
 					return item;
 				}
 			}
@@ -64,10 +67,11 @@ Unless required by applicable law or agreed to in writing, software distributed 
 			return selectedDocument;
 		}
 		
-		if ([firstResponder isKindOfClass:[FRATextView class]]) {		
-			NSArray *array = [FRABasic fetchAll:@"Document"];
+		if ([firstResponder isKindOfClass:[FRATextView class]])
+        {
+			NSArray *array = [VADocument allDocuments];
 			for (id item in array) {
-				if (firstResponder == [item valueForKey:@"firstTextView"] || firstResponder == [item valueForKey:@"secondTextView"] || firstResponder == [item valueForKey:@"thirdTextView"]) {
+				if (firstResponder == [item valueForKey:@"firstTextView"] || firstResponder == [item secondTextView] || firstResponder == [item thirdTextView]) {
 					return item;
 				}
 			}
@@ -218,8 +222,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 		[FRAOpenSave shouldOpen:[item valueForKey:@"path"] withEncoding:[[item valueForKey:@"encoding"] unsignedIntegerValue]];
 		id document = FRACurrentDocument;
 		if ([item valueForKey:@"selectedRange"] != nil && document != nil) {
-			[[document valueForKey:@"firstTextView"] setSelectedRange:NSRangeFromString([item valueForKey:@"selectedRange"])];
-			[[document valueForKey:@"firstTextView"] scrollRangeToVisible:NSRangeFromString([item valueForKey:@"selectedRange"])];
+			[[document firstTextView] setSelectedRange:NSRangeFromString([item valueForKey:@"selectedRange"])];
+			[[document firstTextView] scrollRangeToVisible:NSRangeFromString([item valueForKey:@"selectedRange"])];
 		}
 		
 		[FRACurrentDocument setValue:[item valueForKey:@"sortOrder"] forKey:@"sortOrder"];
@@ -240,7 +244,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
             {
 				[[project window] makeKeyAndOrderFront:nil];
 				[[project window] makeMainWindow];
-				[[project window] makeFirstResponder:[document valueForKey:@"firstTextView"]];
+				[[project window] makeFirstResponder:[document firstTextView]];
 				[project selectDocument:document];
 				return;
 			}

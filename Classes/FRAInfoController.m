@@ -21,6 +21,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAInterfacePerformer.h"
 #import "FRATextView.h"
 #import "FRAVariousPerformer.h"
+#import "VADocument.h"
 
 
 @implementation FRAInfoController
@@ -47,14 +48,14 @@ VASingletonIMPDefault(FRAInfoController)
 
 - (void)refreshInfo
 {
-	id document = FRACurrentDocument;
+	VADocument *document = FRACurrentDocument;
 	if (document == nil) {
 		NSBeep();
 		return;			
 	}
 	
-	[titleTextField setStringValue:[document valueForKey:@"name"]];
-	if ([[document valueForKey:@"isNewDocument"] boolValue] == YES || [document valueForKey:@"path"] == nil) {
+	[titleTextField setStringValue:[document name]];
+	if ([document isNewDocument] || [document path] == nil) {
 		NSImage *image = [NSImage imageNamed:@"FRADocumentIcon"];
 		[image setSize:NSMakeSize(64.0, 64.0)];
 		NSArray *array = [image representations];
@@ -64,14 +65,14 @@ VASingletonIMPDefault(FRAInfoController)
 		[iconImageView setImage:image];
 		
 	} else {
-		[iconImageView setImage:[[NSWorkspace sharedWorkspace] iconForFile:[document valueForKey:@"path"]]];
+		[iconImageView setImage:[[NSWorkspace sharedWorkspace] iconForFile:[document path]]];
 	}
 	
-	NSDictionary *fileAttributes = [document valueForKey:@"fileAttributes"];
+	NSDictionary *fileAttributes = [document fileAttributes];
 	
 	if (fileAttributes != nil) {
 		[fileSizeTextField setStringValue:[NSString stringWithFormat:@"%@ %@", [FRABasic thousandFormatedStringFromNumber: @([fileAttributes fileSize])], NSLocalizedString(@"bytes", @"The name for bytes in the info window")]];
-		[whereTextField setStringValue:[[document valueForKey:@"path"] stringByDeletingLastPathComponent]];
+		[whereTextField setStringValue:[[document path] stringByDeletingLastPathComponent]];
 		[createdTextField setStringValue:[NSString dateStringForDate:(NSCalendarDate *)[fileAttributes fileCreationDate] formatIndex:[[FRADefaults valueForKey:@"StatusBarLastSavedFormatPopUp"] integerValue]]];
 		[modifiedTextField setStringValue:[NSString dateStringForDate:(NSCalendarDate *)[fileAttributes fileModificationDate] formatIndex:[[FRADefaults valueForKey:@"StatusBarLastSavedFormatPopUp"] integerValue]]];
 		[creatorTextField setStringValue:NSFileTypeForHFSTypeCode([fileAttributes fileHFSCreatorCode])];
@@ -83,8 +84,9 @@ VASingletonIMPDefault(FRAInfoController)
 	
 	
 	FRATextView *textView = FRACurrentTextView;
-	if (textView == nil) {
-		textView = [document valueForKey:@"firstTextView"];
+	if (textView == nil)
+    {
+		textView = [document firstTextView];
 	}
 	NSString *text = [textView string];;
 	
@@ -145,12 +147,12 @@ VASingletonIMPDefault(FRAInfoController)
 		[wordsTextField setStringValue:[NSString stringWithFormat:@"%@", [FRABasic thousandFormatedStringFromNumber:@([[NSSpellChecker sharedSpellChecker] countWordsInString:text language:nil])]]];
 	}
 
-	[encodingTextField setStringValue:[document valueForKey:@"encodingName"]];
+	[encodingTextField setStringValue:[document encodingName]];
 	
-	[syntaxTextField setStringValue:[document valueForKey:@"syntaxDefinition"]];
+	[syntaxTextField setStringValue:[document syntaxDefinition]];
 
-	if ([document valueForKey:@"path"] != nil) {
-		[spotlightTextField setStringValue:[FRAVarious performCommand:[NSString stringWithFormat:@"/usr/bin/mdls '%@'", [document valueForKey:@"path"]]]];
+	if ([document path] != nil) {
+		[spotlightTextField setStringValue:[FRAVarious performCommand:[NSString stringWithFormat:@"/usr/bin/mdls '%@'", [document path]]]];
 	} else {
 		[spotlightTextField setStringValue:@""];
 	}

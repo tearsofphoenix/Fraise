@@ -26,6 +26,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAProject.h"
 #import "FRASyntaxColouring.h"
 #import "FRAFullScreenWindow.h"
+#import "VADocument.h"
 
 #import <VAFoundation/VAFoundation.h>
 #import <VADevUIKit/VADevUIKit.h>
@@ -63,70 +64,13 @@ VASingletonIMPDefault(FRAInterfacePerformer)
 	[[FRATextMenuController sharedInstance] performGoToLine:lineToGoTo];
 }
 
-
-- (void)createFirstViewForDocument:(id)document
-{
-	NSView *firstContentView = [FRACurrentProject firstContentView];
-	VIScrollView *textScrollView = [[VIScrollView alloc] initWithFrame:NSMakeRect([[FRADefaults valueForKey:@"GutterWidth"] integerValue], 0, [firstContentView bounds].size.width - [[FRADefaults valueForKey:@"GutterWidth"] integerValue], [firstContentView bounds].size.height)];
-	NSSize contentSize = [textScrollView contentSize];
-	
-	VILineNumbers *lineNumbers = [[VILineNumbers alloc] init];
-    
-    NSDictionary *attributes = (@{ NSFontAttributeName : [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextFont"]]});
-    [lineNumbers setAttributes: attributes];
-    
-	[[NSNotificationCenter defaultCenter] addObserver: lineNumbers
-                                             selector: @selector(viewBoundsDidChange:)
-                                                 name: NSViewBoundsDidChangeNotification
-                                               object: [textScrollView contentView]];
-	[document setValue:lineNumbers forKey:@"lineNumbers"];
-	
-	FRATextView *textView;
-	if ([[FRADefaults valueForKey:@"LineWrapNewDocuments"] boolValue] == YES) {
-		textView = [[FRATextView alloc] initWithFrame:NSMakeRect([[FRADefaults valueForKey:@"GutterWidth"] integerValue], 0, contentSize.width, contentSize.height)];
-		[textView setMinSize:contentSize];
-		[textScrollView setHasHorizontalScroller:NO];
-		[textView setHorizontallyResizable:YES];
-		[[textView textContainer] setWidthTracksTextView:YES];
-		[[textView textContainer] setContainerSize:NSMakeSize(contentSize.width, CGFLOAT_MAX)];		 
-	} else {
-		textView = [[FRATextView alloc] initWithFrame:NSMakeRect([[FRADefaults valueForKey:@"GutterWidth"] integerValue], 0, contentSize.width, contentSize.height)];
-		[textView setMinSize:contentSize];
-		[textScrollView setHasHorizontalScroller:YES];
-		[textView setHorizontallyResizable:YES];
-		[[textView textContainer] setContainerSize:NSMakeSize(CGFLOAT_MAX, CGFLOAT_MAX)];
-		[[textView textContainer] setWidthTracksTextView:NO];
-	}
-	
-	[textScrollView setDocumentView:textView];
-
-	NSScrollView *gutterScrollView = [[NSScrollView alloc] initWithFrame:NSMakeRect(0, 0, [[FRADefaults valueForKey:@"GutterWidth"] integerValue], contentSize.height)];
-	[gutterScrollView setBorderType:NSNoBorder];
-	[gutterScrollView setHasVerticalScroller:NO];
-	[gutterScrollView setHasHorizontalScroller:NO];
-	[gutterScrollView setAutoresizingMask:NSViewHeightSizable];
-	[[gutterScrollView contentView] setAutoresizesSubviews:YES];
-	
-	VIGutterTextView *gutterTextView = [[VIGutterTextView alloc] initWithFrame:NSMakeRect(0, 0, [[FRADefaults valueForKey:@"GutterWidth"] integerValue], contentSize.height - 50)];
-	[gutterScrollView setDocumentView:gutterTextView];
-	
-    [textScrollView setGutterScrollView: gutterScrollView];
-    
-    [lineNumbers addScrollView: textScrollView];
-    
-	[document setValue:textView forKey:@"firstTextView"];
-	[document setValue:textScrollView forKey:@"firstTextScrollView"];
-	[document setValue:gutterScrollView forKey:@"firstGutterScrollView"];
-}
-
-
 - (void)insertDocumentIntoSecondContentView:(id)document
 {
 	[FRACurrentProject setSecondDocument:document];
 	NSView *secondContentView = [FRACurrentProject secondContentView];
 	[self removeAllSubviewsFromView:secondContentView];
 	
-	NSTextStorage *textStorage = [[[document valueForKey:@"firstTextScrollView"] documentView] textStorage];
+	NSTextStorage *textStorage = [[[document firstTextScrollView] documentView] textStorage];
     
     NSDictionary *attributes = (@{
                                   NSFontAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextFont"]],
@@ -139,9 +83,9 @@ VASingletonIMPDefault(FRAInterfacePerformer)
     [layoutManager setShowInvisibleCharacters: showInvisibleCharacters];
     
 	[textStorage addLayoutManager: layoutManager];
-	[[document valueForKey:@"syntaxColouring"] setSecondLayoutManager:layoutManager];
+	[[document syntaxColouring] setSecondLayoutManager:layoutManager];
 	
-	u_int16_t gutterWidth = [[document valueForKey:@"firstGutterScrollView"] bounds].size.width;
+	u_int16_t gutterWidth = [[document firstGutterScrollView] bounds].size.width;
 	
 	NSView *secondContentViewNavigationBar = [FRACurrentProject secondContentViewNavigationBar];
 	CGFloat secondContentViewNavigationBarHeight = [secondContentViewNavigationBar bounds].size.height;
@@ -152,10 +96,10 @@ VASingletonIMPDefault(FRAInterfacePerformer)
 	NSTextContainer *container = [[NSTextContainer alloc] initWithContainerSize:contentSize];
 	[layoutManager addTextContainer:container];
 		
-	[[NSNotificationCenter defaultCenter] addObserver:[document valueForKey:@"lineNumbers"] selector:@selector(viewBoundsDidChange:) name:NSViewBoundsDidChangeNotification object:[textScrollView contentView]];
+	[[NSNotificationCenter defaultCenter] addObserver:[document lineNumbers] selector:@selector(viewBoundsDidChange:) name:NSViewBoundsDidChangeNotification object:[textScrollView contentView]];
 	
 	FRATextView *textView;
-	if ([[document valueForKey:@"isLineWrapped"] boolValue] == YES) {
+	if ([document isLineWrapped] == YES) {
 		textView = [[FRATextView alloc] initWithFrame:NSMakeRect(gutterWidth, 0, contentSize.width - 2, contentSize.height) textContainer:container]; // - 2 to remove slight movement left and right
 		[textView setMinSize:contentSize];
 		[textScrollView setHasHorizontalScroller:NO];
@@ -186,22 +130,22 @@ VASingletonIMPDefault(FRAInterfacePerformer)
 	
 	[secondContentView addSubview:textScrollView];
 	
-	[textView setDelegate:[document valueForKey:@"syntaxColouring"]];
+	[textView setDelegate:[document syntaxColouring]];
     
     [textScrollView setGutterScrollView: gutterScrollView];
     
-    [[document valueForKey: @"lineNumbers"] addScrollView: textScrollView];
+    [[document lineNumbers] addScrollView: textScrollView];
 
-	[document setValue:textView forKey:@"secondTextView"];
-	[document setValue:textScrollView forKey:@"secondTextScrollView"];
-	[document setValue:gutterScrollView forKey:@"secondGutterScrollView"];
+	[document setSecondTextView: textView];
+	[document setSecondTextScrollView: textScrollView];
+	[document setSecondGutterScrollView: gutterScrollView];
 	
 	[secondContentViewNavigationBar setFrame:NSMakeRect(0, 0, [secondContentView bounds].size.width, secondContentViewNavigationBarHeight)];
 	[secondContentViewNavigationBar setAutoresizingMask:NSViewWidthSizable];
 	[secondContentView addSubview:secondContentViewNavigationBar];
 	
-	NSRect visibleRect = [[[[document valueForKey:@"firstTextView"] enclosingScrollView] contentView] documentVisibleRect];
-	NSRange visibleRange = [[[document valueForKey:@"firstTextView"] layoutManager] glyphRangeForBoundingRect:visibleRect inTextContainer:[[document valueForKey:@"firstTextView"] textContainer]];
+	NSRect visibleRect = [[[[document firstTextView] enclosingScrollView] contentView] documentVisibleRect];
+	NSRange visibleRange = [[[document firstTextView] layoutManager] glyphRangeForBoundingRect:visibleRect inTextContainer:[[document firstTextView] textContainer]];
 	[textView scrollRangeToVisible:visibleRange];
 	
 	[FRACurrentProject resizeViewsForDocument:document]; // To properly set the width of the line number gutter and to recolour the document
@@ -210,8 +154,8 @@ VASingletonIMPDefault(FRAInterfacePerformer)
 
 - (void)insertDocumentIntoThirdContentView:(id)document orderFront:(BOOL)orderFront
 {
-	if ([document valueForKey:@"singleDocumentWindow"] != nil) {
-		[[document valueForKey:@"singleDocumentWindow"] makeKeyAndOrderFront:nil];
+	if ([document singleDocumentWindow] != nil) {
+		[[document singleDocumentWindow] makeKeyAndOrderFront:nil];
 		return;
 	}
 	
@@ -229,7 +173,7 @@ VASingletonIMPDefault(FRAInterfacePerformer)
 	
 	NSView *thirdContentView = [window contentView];
 	
-	NSTextStorage *textStorage = [[[document valueForKey:@"firstTextScrollView"] documentView] textStorage];
+	NSTextStorage *textStorage = [[[document firstTextScrollView] documentView] textStorage];
     
     NSDictionary *attributes = (@{
                                   NSFontAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextFont"]],
@@ -242,19 +186,19 @@ VASingletonIMPDefault(FRAInterfacePerformer)
     [layoutManager setShowInvisibleCharacters: showInvisibleCharacters];
     
 	[textStorage addLayoutManager:layoutManager];
-	[[document valueForKey:@"syntaxColouring"] setThirdLayoutManager:layoutManager];
+	[[document syntaxColouring] setThirdLayoutManager:layoutManager];
 	
-	u_int16_t gutterWidth = [[document valueForKey:@"firstGutterScrollView"] bounds].size.width;	
+	u_int16_t gutterWidth = [[document firstGutterScrollView] bounds].size.width;	
 	
 	VIScrollView *textScrollView = [[VIScrollView alloc] initWithFrame:NSMakeRect(gutterWidth, -1, [thirdContentView bounds].size.width - gutterWidth, [thirdContentView bounds].size.height + 2)]; // +2 and -1 to remove extra line at the top and bottom
 	NSSize contentSize = [textScrollView contentSize];
 	NSTextContainer *container = [[NSTextContainer alloc] initWithContainerSize:contentSize];
 	[layoutManager addTextContainer:container];
 
-	[[NSNotificationCenter defaultCenter] addObserver:[document valueForKey:@"lineNumbers"] selector:@selector(viewBoundsDidChange:) name:NSViewBoundsDidChangeNotification object:[textScrollView contentView]];
+	[[NSNotificationCenter defaultCenter] addObserver:[document lineNumbers] selector:@selector(viewBoundsDidChange:) name:NSViewBoundsDidChangeNotification object:[textScrollView contentView]];
 	
 	FRATextView *textView;
-	if ([[document valueForKey:@"isLineWrapped"] boolValue] == YES) {
+	if ([document isLineWrapped] == YES) {
 		textView = [[FRATextView alloc] initWithFrame:NSMakeRect(gutterWidth, 0, contentSize.width, contentSize.height) textContainer:container];
 		[textView setMinSize:contentSize];
 		[textScrollView setHasHorizontalScroller:NO];
@@ -286,14 +230,14 @@ VASingletonIMPDefault(FRAInterfacePerformer)
 	[thirdContentView addSubview:textScrollView];
 	
     [textScrollView setGutterScrollView: gutterScrollView];
-    [[document valueForKey: @"lineNumbers"] addScrollView: textScrollView];
+    [[document lineNumbers] addScrollView: textScrollView];
 
-	[textView setDelegate:[document valueForKey:@"syntaxColouring"]];
-	[document setValue:textView forKey:@"thirdTextView"];
-	[document setValue:textScrollView forKey:@"thirdTextScrollView"];
-	[document setValue:gutterScrollView forKey:@"thirdGutterScrollView"];
-	[document setValue:window forKey:@"singleDocumentWindow"];
-	[document setValue:windowController forKey:@"singleDocumentWindowController"];
+	[textView setDelegate:[document syntaxColouring]];
+	[document setThirdTextView: textView];
+	[document setThirdTextScrollView: textScrollView];
+	[document setThirdGutterScrollView: gutterScrollView];
+	[document setSingleDocumentWindow: window];
+	[document setSingleDocumentWindowController: windowController];
 	
 	[FRACurrentProject resizeViewsForDocument:document]; // To properly set the width of the line number gutter and to recolour the document
 	
@@ -304,7 +248,7 @@ VASingletonIMPDefault(FRAInterfacePerformer)
 
 - (void)insertDocumentIntoFourthContentView:(id)document
 {	
-	NSTextStorage *textStorage = [[[document valueForKey:@"firstTextScrollView"] documentView] textStorage];
+	NSTextStorage *textStorage = [[[document firstTextScrollView] documentView] textStorage];
     
     NSDictionary *attributes = (@{
                                   NSFontAttributeName: [NSUnarchiver unarchiveObjectWithData:[FRADefaults valueForKey:@"TextFont"]],
@@ -317,9 +261,9 @@ VASingletonIMPDefault(FRAInterfacePerformer)
     [layoutManager setShowInvisibleCharacters: showInvisibleCharacters];
     
 	[textStorage addLayoutManager:layoutManager];
-	[[document valueForKey:@"syntaxColouring"] setFourthLayoutManager:layoutManager];
+	[[document syntaxColouring] setFourthLayoutManager:layoutManager];
 	
-	u_int16_t gutterWidth = [[document valueForKey:@"firstGutterScrollView"] bounds].size.width;
+	u_int16_t gutterWidth = [[document firstGutterScrollView] bounds].size.width;
 	
 	NSView *fourthContentView = [[FRAAdvancedFindController sharedInstance] resultDocumentContentView];
 	
@@ -329,10 +273,10 @@ VASingletonIMPDefault(FRAInterfacePerformer)
 	NSTextContainer *container = [[NSTextContainer alloc] initWithContainerSize:contentSize];
 	[layoutManager addTextContainer:container];
 		
-	[[NSNotificationCenter defaultCenter] addObserver:[document valueForKey:@"lineNumbers"] selector:@selector(viewBoundsDidChange:) name:NSViewBoundsDidChangeNotification object:[textScrollView contentView]];
+	[[NSNotificationCenter defaultCenter] addObserver:[document lineNumbers] selector:@selector(viewBoundsDidChange:) name:NSViewBoundsDidChangeNotification object:[textScrollView contentView]];
 	
 	FRATextView *textView;
-	if ([[document valueForKey:@"isLineWrapped"] boolValue] == YES) {
+	if ([document isLineWrapped] == YES) {
 		textView = [[FRATextView alloc] initWithFrame:NSMakeRect(gutterWidth, 0, contentSize.width, contentSize.height) textContainer:container];
 		[textView setMinSize:contentSize];
 		[textScrollView setHasHorizontalScroller:NO];
@@ -350,7 +294,7 @@ VASingletonIMPDefault(FRAInterfacePerformer)
 	[textView setDefaults];
 	
 	[textScrollView setDocumentView:textView];
-    [[document valueForKey: @"lineNumbers"] addScrollView: textScrollView];
+    [[document lineNumbers] addScrollView: textScrollView];
 
 	NSScrollView *gutterScrollView = [[NSScrollView alloc] initWithFrame:NSMakeRect(0, 0, gutterWidth, contentSize.height)];
 	[gutterScrollView setBorderType:NSNoBorder];
@@ -366,10 +310,10 @@ VASingletonIMPDefault(FRAInterfacePerformer)
     
 	[textScrollView setGutterScrollView: gutterScrollView];
 	
-    [textView setDelegate:[document valueForKey:@"syntaxColouring"]];
-	[document setValue:textView forKey:@"fourthTextView"];
-	[document setValue:textScrollView forKey:@"fourthTextScrollView"];
-	[document setValue:gutterScrollView forKey:@"fourthGutterScrollView"];
+    [textView setDelegate:[document syntaxColouring]];
+	[document setFourthTextView: textView];
+	[document setFourthTextScrollView: textScrollView];
+	[document setFourthGutterScrollView: gutterScrollView];
 }
 
 /**
@@ -398,10 +342,10 @@ VASingletonIMPDefault(FRAInterfacePerformer)
 			contentView = [FRACurrentProject secondContentView];
 		}
 		else if ([viewNumber isEqualToString:@"third"]) {
-			if ([document valueForKey:@"singleDocumentWindow"] == nil) {
+			if ([document singleDocumentWindow] == nil) {
 				continue;
 			}
-			contentView = [[document valueForKey:@"singleDocumentWindow"] contentView];
+			contentView = [[document singleDocumentWindow] contentView];
 		}
 				   
 		// Text Scroll View
@@ -440,7 +384,7 @@ VASingletonIMPDefault(FRAInterfacePerformer)
 	NSString *text = FRACurrentText;
 	
 	if ([[FRADefaults valueForKey:@"StatusBarShowWhenLastSaved"] boolValue] == YES)
-		[statusBarString appendFormat:@"%@: %@", statusBarLastSavedString, [document valueForKey:@"lastSaved"]];
+		[statusBarString appendFormat:@"%@: %@", statusBarLastSavedString, [document lastSaved]];
 	
 	if ([[FRADefaults valueForKey:@"StatusBarShowLength"] boolValue] == YES) {
 		if ([[FRADefaults valueForKey:@"StatusBarShowWhenLastSaved"] boolValue] == YES) {
@@ -479,14 +423,14 @@ VASingletonIMPDefault(FRAInterfacePerformer)
 		if ([[FRADefaults valueForKey:@"StatusBarShowWhenLastSaved"] boolValue] == YES || [[FRADefaults valueForKey:@"StatusBarShowLength"] boolValue] == YES || ([[FRADefaults valueForKey:@"StatusBarShowSelection"] boolValue] == YES && selection > 1) || [[FRADefaults valueForKey:@"StatusBarShowPosition"] boolValue] == YES) {
 			[statusBarString appendString:statusBarBetweenString];
 		}
-		[statusBarString appendFormat:@"%@: %@", statusBarEncodingString, [document valueForKey:@"encodingName"]];
+		[statusBarString appendFormat:@"%@: %@", statusBarEncodingString, [document encodingName]];
 	}
 	
-	if ([[FRADefaults valueForKey:@"StatusBarShowSyntax"] boolValue] == YES && [[document valueForKey:@"isSyntaxColoured"] boolValue]) {
+	if ([[FRADefaults valueForKey:@"StatusBarShowSyntax"] boolValue] == YES && [document isSyntaxColoured]) {
 		if ([[FRADefaults valueForKey:@"StatusBarShowWhenLastSaved"] boolValue] == YES || ([[FRADefaults valueForKey:@"StatusBarShowSelection"] boolValue] == YES && selection > 1) || [[FRADefaults valueForKey:@"StatusBarShowPosition"] boolValue] == YES || [[FRADefaults valueForKey:@"StatusBarShowEncoding"] boolValue] == YES) {
 			[statusBarString appendString:statusBarBetweenString];
 		}
-		[statusBarString appendFormat:@"%@: %@", statusBarSyntaxDefinitionString, [document valueForKey:@"syntaxDefinition"]];
+		[statusBarString appendFormat:@"%@: %@", statusBarSyntaxDefinitionString, [document syntaxDefinition]];
 	}
 	
 	[[FRACurrentProject statusBarTextField] setStringValue:statusBarString];
@@ -532,10 +476,14 @@ VASingletonIMPDefault(FRAInterfacePerformer)
 - (NSString *)whichDirectoryForSave
 {
 	NSString *directory;
-	if ([[FRADefaults valueForKey:@"SaveMatrix"] integerValue] == FRAOpenSaveRemember) {
+	
+    if ([[FRADefaults valueForKey:@"SaveMatrix"] integerValue] == FRAOpenSaveRemember)
+    {
 		directory = [FRADefaults valueForKey:@"LastSaveAsDirectory"];
-	} else if ([[FRADefaults valueForKey:@"SaveMatrix"] integerValue] == FRAOpenSaveCurrent) {
-		if ([[FRACurrentDocument valueForKey:@"isNewDocument"] boolValue] == NO) {
+	} else if ([[FRADefaults valueForKey:@"SaveMatrix"] integerValue] == FRAOpenSaveCurrent)
+    {
+		if ([FRACurrentDocument isNewDocument] == NO)
+        {
 			directory = [[FRACurrentDocument valueForKey:@"path"] stringByDeletingLastPathComponent];
 		} else { 
 			directory = NSHomeDirectory();
@@ -567,18 +515,18 @@ VASingletonIMPDefault(FRAInterfacePerformer)
 	fullScreenRect = [[NSScreen mainScreen] frame];	
 	CGFloat width;
 	if ([FRAMain singleDocumentWindowWasOpenBeforeEnteringFullScreen] == YES) {
-		width = [[document valueForKey:@"thirdTextView"] bounds].size.width * [[NSScreen mainScreen] backingScaleFactor];
+		width = [[document thirdTextView] bounds].size.width * [[NSScreen mainScreen] backingScaleFactor];
 	} else {
-		width = [[document valueForKey:@"firstTextView"] bounds].size.width * [[NSScreen mainScreen] backingScaleFactor];
+		width = [[document firstTextView] bounds].size.width * [[NSScreen mainScreen] backingScaleFactor];
 	}
-	fullScreenRect = NSMakeRect(fullScreenRect.origin.x - ((width - fullScreenRect.size.width + [[document valueForKey:@"gutterWidth"] doubleValue]) / 2), fullScreenRect.origin.y, width + [[document valueForKey:@"gutterWidth"] doubleValue], fullScreenRect.size.height);
+	fullScreenRect = NSMakeRect(fullScreenRect.origin.x - ((width - fullScreenRect.size.width + [document gutterWidth]) / 2), fullScreenRect.origin.y, width + [document gutterWidth], fullScreenRect.size.height);
 
 	fullScreenWindow = [[FRAFullScreenWindow alloc] initWithContentRect:[[NSScreen mainScreen] frame] styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO screen:[NSScreen mainScreen]];
 	
 	if ([FRAMain singleDocumentWindowWasOpenBeforeEnteringFullScreen] == NO) {
-		NSRange sell = [[document valueForKey:@"firstTextView"] selectedRange];
-		[[document valueForKey:@"thirdTextView"] scrollRangeToVisible:sell];
-		[[document valueForKey:@"thirdTextView"] setSelectedRange:sell];
+		NSRange sell = [[document firstTextView] selectedRange];
+		[[document thirdTextView] scrollRangeToVisible:sell];
+		[[document thirdTextView] setSelectedRange:sell];
 	}
 	
 	fullScreenDocument = document;
@@ -591,17 +539,17 @@ VASingletonIMPDefault(FRAInterfacePerformer)
 {
 	CGDisplayCapture(kCGDirectMainDisplay);
 	[fullScreenWindow setLevel:CGShieldingWindowLevel()];
-	[fullScreenWindow setContentView:[[fullScreenDocument valueForKey:@"singleDocumentWindow"] contentView]];
+	[fullScreenWindow setContentView:[[fullScreenDocument singleDocumentWindow] contentView]];
 	[fullScreenWindow makeKeyAndOrderFront:nil];
 	[fullScreenWindow setFrame:fullScreenRect display:YES animate:YES];
 	
-    NSClipView *clipView = [[fullScreenDocument valueForKey:@"thirdTextScrollView"] contentView];
-	[[fullScreenDocument valueForKey:@"lineNumbers"] updateLineNumbersForClipView: clipView
+    NSClipView *clipView = [[fullScreenDocument thirdTextScrollView] contentView];
+	[[fullScreenDocument lineNumbers] updateLineNumbersForClipView: clipView
                                                                        checkWidth: YES];
-    [[fullScreenDocument valueForKey:@"syntaxColouring"] pageRecolourTextView: [clipView documentView]];
+    [[fullScreenDocument syntaxColouring] pageRecolourTextView: [clipView documentView]];
 
-	[[fullScreenDocument valueForKey:@"singleDocumentWindow"] orderOut:nil];
-	[fullScreenWindow makeFirstResponder:[fullScreenDocument valueForKey:@"thirdTextView"]];
+	[[fullScreenDocument singleDocumentWindow] orderOut:nil];
+	[fullScreenWindow makeFirstResponder:[fullScreenDocument thirdTextView]];
 }
 
 
@@ -610,7 +558,7 @@ VASingletonIMPDefault(FRAInterfacePerformer)
 	SetSystemUIMode(kUIModeNormal, 0);
 	[NSApp setMainMenu:savedMainMenu];
 	
-	[[fullScreenDocument valueForKey:@"singleDocumentWindow"] setContentView:[fullScreenWindow contentView]];
+	[[fullScreenDocument singleDocumentWindow] setContentView:[fullScreenWindow contentView]];
 	
 	[fullScreenWindow orderOut:self];
 	fullScreenWindow = nil;
@@ -618,15 +566,15 @@ VASingletonIMPDefault(FRAInterfacePerformer)
 	CGDisplayRelease(kCGDirectMainDisplay);
 	
 	if ([FRAMain singleDocumentWindowWasOpenBeforeEnteringFullScreen] == NO) {
-		[[fullScreenDocument valueForKey:@"singleDocumentWindow"] performClose:nil];
+		[[fullScreenDocument singleDocumentWindow] performClose:nil];
 	} else
     {
-		[[fullScreenDocument valueForKey:@"singleDocumentWindow"] makeKeyAndOrderFront:nil];
+		[[fullScreenDocument singleDocumentWindow] makeKeyAndOrderFront:nil];
         
-        NSClipView *clipView = [[fullScreenDocument valueForKey:@"thirdTextScrollView"] contentView];
-		[[fullScreenDocument valueForKey:@"lineNumbers"] updateLineNumbersForClipView: clipView
+        NSClipView *clipView = [[fullScreenDocument thirdTextScrollView] contentView];
+		[[fullScreenDocument lineNumbers] updateLineNumbersForClipView: clipView
                                                                            checkWidth: YES];
-        [[fullScreenDocument valueForKey:@"syntaxColouring"] pageRecolourTextView: [clipView documentView]];
+        [[fullScreenDocument syntaxColouring] pageRecolourTextView: [clipView documentView]];
 
 	}
 	
@@ -678,11 +626,11 @@ VASingletonIMPDefault(FRAInterfacePerformer)
 
 - (NSArray *)allFunctions
 {
-	NSString *functionDefinition = [[FRACurrentDocument valueForKey:@"syntaxColouring"] functionDefinition];
+	NSString *functionDefinition = [[FRACurrentDocument syntaxColouring] functionDefinition];
 	if (functionDefinition == nil || [functionDefinition isEqualToString:@""]) {
 		return @[];
 	}
-	NSString *removeFromFunction = [[FRACurrentDocument valueForKey:@"syntaxColouring"] removeFromFunction];
+	NSString *removeFromFunction = [[FRACurrentDocument syntaxColouring] removeFromFunction];
 	NSString *text = FRACurrentText;
 	if (text == nil || [text isEqualToString:@""]) {
 		return @[];

@@ -18,6 +18,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "FRAProjectsController.h"
 #import "FRABasicPerformer.h"
 #import "FRAProject.h"
+#import "VADocument.h"
 
 @implementation FRAPreviewController
 
@@ -51,7 +52,8 @@ VASingletonIMPDefault(FRAPreviewController)
 
 		NSURL *baseURL;
 		if ([[FRADefaults valueForKey:@"BaseURL"] isEqualToString:@""]) { // If no base URL is supplied use the document path
-			if ([[FRACurrentDocument valueForKey:@"isNewDocument"] boolValue] == NO) {
+			if ([FRACurrentDocument isNewDocument] == NO)
+            {
 				NSString *path = [NSString stringWithString:[FRACurrentDocument valueForKey:@"path"]];
 				baseURL = [NSURL fileURLWithPath:path];
 			} else {

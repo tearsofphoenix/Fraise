@@ -28,6 +28,7 @@
 
 #import "VACommand.h"
 #import "VACommandCollection.h"
+#import "VADocument.h"
 
 #import <VADevUIKit/VADevUIKit.h>
 
@@ -270,24 +271,24 @@ VASingletonIMPDefault(FRACommandsController)
 - (IBAction)insertPathAction:(id)sender
 {
 	id document = FRACurrentDocument;
-	if (document == nil || [document valueForKey:@"path"] == nil) {
+	if (document == nil || [document path] == nil) {
 		NSBeep();
 		return;
 	}
 	
-	[_commandsTextView insertText:[document valueForKey:@"path"]];
+	[_commandsTextView insertText:[document path]];
 }
 
 
 - (IBAction)insertDirectoryAction:(id)sender
 {
 	id document = FRACurrentDocument;
-	if (document == nil || [document valueForKey:@"path"] == nil) {
+	if (document == nil || [document path] == nil) {
 		NSBeep();
 		return;
 	}
 	
-	[_commandsTextView insertText:[[document valueForKey:@"path"] stringByDeletingLastPathComponent]];
+	[_commandsTextView insertText:[[document path] stringByDeletingLastPathComponent]];
 }
 
 
@@ -295,16 +296,16 @@ VASingletonIMPDefault(FRACommandsController)
 {
 	NSMutableString *returnString = [NSMutableString stringWithString:string];
 	id document = FRACurrentDocument;
-	if (document == nil || [[document valueForKey:@"isNewDocument"] boolValue] == YES || [document valueForKey:@"path"] == nil) {
+	if (document == nil || [document isNewDocument] || [document path] == nil) {
 		[returnString replaceOccurrencesOfString:@"%%p" withString:@"" options:NSLiteralSearch range:NSMakeRange(0, [returnString length])];
 		[returnString replaceOccurrencesOfString:@"%%d" withString:@"" options:NSLiteralSearch range:NSMakeRange(0, [returnString length])];
 	} else {
-		NSString *path = [NSString stringWithFormat:@"\"%@\"", [document valueForKey:@"path"]]; // If there's a space in the path
+		NSString *path = [NSString stringWithFormat:@"\"%@\"", [document path]]; // If there's a space in the path
 		NSString *directory;
 		if ([[FRADefaults valueForKey:@"PutQuotesAroundDirectory"] boolValue] == YES) {
-			directory = [NSString stringWithFormat:@"\"%@\"", [[document valueForKey:@"path"] stringByDeletingLastPathComponent]];
+			directory = [NSString stringWithFormat:@"\"%@\"", [[document path] stringByDeletingLastPathComponent]];
 		} else {
-			directory = [NSString stringWithFormat:@"%@", [[document valueForKey:@"path"] stringByDeletingLastPathComponent]];
+			directory = [NSString stringWithFormat:@"%@", [[document path] stringByDeletingLastPathComponent]];
 		}
 		[returnString replaceOccurrencesOfString:@"%%p" withString:path options:NSLiteralSearch range:NSMakeRange(0, [returnString length])];
 		[returnString replaceOccurrencesOfString:@"%%d" withString:directory options:NSLiteralSearch range:NSMakeRange(0, [returnString length])];
@@ -355,8 +356,8 @@ VASingletonIMPDefault(FRACommandsController)
 		}
 		
 		id document = FRACurrentDocument;
-		NSString *path = [NSString stringWithFormat:@"\"%@\"", [document valueForKey:@"path"]]; // If there's a space in the path
-		NSString *directory = [NSString stringWithFormat:@"\"%@\"", [[document valueForKey:@"path"] stringByDeletingLastPathComponent]];
+		NSString *path = [NSString stringWithFormat:@"\"%@\"", [document path]]; // If there's a space in the path
+		NSString *directory = [NSString stringWithFormat:@"\"%@\"", [[document path] stringByDeletingLastPathComponent]];
 		[commandToWrite replaceOccurrencesOfString:@"%%p" withString:path options:NSLiteralSearch range:NSMakeRange(0, [commandToWrite length])];
 		[commandToWrite replaceOccurrencesOfString:@"%%d" withString:directory options:NSLiteralSearch range:NSMakeRange(0, [commandToWrite length])];
 		
