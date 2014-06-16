@@ -1,25 +1,29 @@
 //
-//  VATextmateBundleManager.m
+//  VATMBundleManager.m
 //  Fraise
 //
-//  Created by Mac003 on 14-6-13.
+//  Created by Lei on 14-6-14.
 //
 //
 
-#import "VATextmateBundleManager.h"
+#import "VATMBundleManager.h"
 #import "VASnippetCollection.h"
 #import <VAFoundation/VAFoundation.h>
 
-@interface VATextmateBundleManager ()<NSOutlineViewDataSource, NSOutlineViewDelegate>
+@interface VATMBundleManager ()<NSOutlineViewDataSource, NSOutlineViewDelegate>
 
-@property (unsafe_unretained) IBOutlet NSOutlineView *sourceListView;
-@property (strong) IBOutlet NSWindow *window;
+@property (weak) IBOutlet NSOutlineView *sourceListView;
+@property (weak) IBOutlet NSView *contentView;
+
+@property (strong) NSArray *draggedNodes;
+@property (strong) NSArray *draggedSnippetNodes;
+@property (weak) IBOutlet NSWindow *window;
 
 @end
 
-@implementation VATextmateBundleManager
+@implementation VATMBundleManager
 
-VASingletonIMP(VATextmateBundleManager, manager)
+VASingletonIMP(VATMBundleManager, manager)
 
 - (id)init
 {
@@ -34,12 +38,13 @@ VASingletonIMP(VATextmateBundleManager, manager)
 {
     if (!_window)
     {
-        [NSBundle loadNibNamed: @"VABundleManager"
-                         owner: self];
+        [NSBundle loadNibNamed:@"VATMBundleManager" owner:self];
+        
     }
     
-    [_window makeKeyAndOrderFront: self];
+    [_window makeKeyAndOrderFront:self];
 }
+
 
 #pragma mark - NSOutlineView data source methods. (The required ones)
 
@@ -56,12 +61,17 @@ VASingletonIMP(VATextmateBundleManager, manager)
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
 {
+    if ([item isKindOfClass: [VASnippetCollection class]])
+    {
+        return YES;
+    }
+    
     return NO;
 }
 
 - (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
 {
-    
+    // 'item' may potentially be nil for the root item.
     if (!item)
     {
         return [[VASnippetCollection allSnippetCollections] count];
@@ -83,6 +93,8 @@ objectValueForTableColumn: (NSTableColumn *)tableColumn
     {
         objectValue = [collection name];
     }
+    
+    NSLog(@"in func:%s value: %@", __func__, [tableColumn identifier]);
     
     return objectValue;
 }
@@ -122,19 +134,43 @@ objectValueForTableColumn: (NSTableColumn *)tableColumn
     return YES;
 }
 
+- (NSView *)outlineView: (NSOutlineView *)outlineView
+     viewForTableColumn: (NSTableColumn *)tableColumn
+                   item: (id)item
+{
+    NSTableCellView *cellView = nil;
+    
+    if ([item isKindOfClass: [VASnippetCollection class]])
+    {
+        VASnippetCollection *collection = item;
+        cellView = [outlineView makeViewWithIdentifier: @"groupcell"
+                                             owner: nil];
+        [[cellView textField] setStringValue: [collection name]];
+    }else
+    {
+        cellView = [outlineView makeViewWithIdentifier: @"DataCell"
+                                                 owner: nil];
+    }
+    
+    return cellView;
+}
+
 - (void)outlineView: (NSOutlineView *)outlineView
     willDisplayCell: (NSCell *)cell
      forTableColumn: (NSTableColumn *)tableColumn
                item: (id)item
 {
-    NSString *tabColumnID = [tableColumn identifier];
+    //    NSString *tabColumnID = [tableColumn identifier];
     
     VASnippetCollection *collection = item;
     
-    if ((tableColumn == nil) || [tabColumnID isEqualToString: @"collection"])
+    if ([[cell identifier] isEqualToString: @"groupcell"])
     {
         [cell setStringValue: [collection name]];
     }
+    
+    NSLog(@"in func:%s value: %@ %@", __func__, [tableColumn identifier], [cell identifier]);
+
 }
 
 - (BOOL)outlineView: (NSOutlineView *)ov
@@ -164,7 +200,7 @@ objectValueForTableColumn: (NSTableColumn *)tableColumn
     } else
     {
         // Only allow tracking on selected rows. This is what NSTableView does by default.
-        return [ov isRowSelected: [ov rowForItem: item]];
+        return [ov isRowSelected:[ov rowForItem: item]];
     }
 }
 
@@ -178,7 +214,47 @@ objectValueForTableColumn: (NSTableColumn *)tableColumn
 - (void)outlineViewSelectionDidChange: (NSNotification *)notification
 {
     //    NSOutlineView *outlineView = [notification object];
-    //        VASnippetCollection *collection = [outlineView itemAtRow: [outlineView selectedRow]];
+    //
+    //    VASnippetCollection *collection = [outlineView itemAtRow: [outlineView selectedRow]];
+}
+
+#pragma mark - drag
+
+- (void)outlineView: (NSOutlineView *)outlineView
+    draggingSession: (NSDraggingSession *)session
+   willBeginAtPoint: (NSPoint)screenPoint
+           forItems: (NSArray *)draggedItems
+{
+    _draggedNodes = draggedItems;
+    [session.draggingPasteboard setData: [NSData data]
+                                forType: @"com.veritas.fraise.pasteboard.data"];
+}
+
+- (void)outlineView: (NSOutlineView *)outlineView
+    draggingSession: (NSDraggingSession *)session
+       endedAtPoint: (NSPoint)screenPoint
+          operation: (NSDragOperation)operation
+{
+    // If the session ended in the trash, then delete all the items
+    if (operation == NSDragOperationDelete)
+    {
+        [outlineView beginUpdates];
+        
+        [_draggedNodes enumerateObjectsWithOptions: NSEnumerationReverse
+                                        usingBlock: (^(id node, NSUInteger index, BOOL *stop)
+                                                     {
+                                                         id parent = [node parentNode];
+                                                         NSMutableArray *children = [parent mutableChildNodes];
+                                                         NSInteger childIndex = [children indexOfObject:node];
+                                                         [children removeObjectAtIndex:childIndex];
+                                                         [outlineView removeItemsAtIndexes: [NSIndexSet indexSetWithIndex:childIndex]
+                                                                                  inParent: nil
+                                                                             withAnimation: NSTableViewAnimationEffectFade];
+                                                     })];
+        
+        [outlineView endUpdates];
+    }
+    _draggedNodes = nil;
 }
 
 @end

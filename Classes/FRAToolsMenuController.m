@@ -30,7 +30,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "VASnippet.h"
 #import "VACommand.h"
 #import "VACommandCollection.h"
-#import "VATextmateBundleManager.h"
+#import "VATMBundleManager.h"
 
 #define SNIPPET_TAG		100
 
@@ -133,7 +133,8 @@ VASingletonIMPDefault(FRAToolsMenuController)
 - (IBAction)showSnippetsWindowAction:(id)sender
 {
 //	[[FRASnippetsController sharedInstance] openSnippetsWindow];
-    [[VATextmateBundleManager manager] showWindow];
+
+    [[VATMBundleManager manager] showWindow];
 }
 
 
