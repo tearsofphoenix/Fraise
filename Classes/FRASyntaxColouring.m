@@ -272,12 +272,11 @@
 			if (foundSyntaxDefinition)
             {
 				fileToUse = [foundSyntaxDefinition file];
-				[document setValue: [foundSyntaxDefinition name]
-                            forKey: @"syntaxDefinition"];
+				[document setSyntaxDefinition: [foundSyntaxDefinition name]];
 			} else
             {
-				fileToUse = [syntaxDefinitions[0] valueForKey:@"file"];
-				[document setValue:[syntaxDefinitions[0] valueForKey:@"name"] forKey:@"syntaxDefinition"];
+				fileToUse = syntaxDefinitions[0][@"file"];
+				[document setSyntaxDefinition: syntaxDefinitions[0][@"name"]];
 			}
 		} else {
 			NSString *lowercaseExtension;
@@ -298,16 +297,16 @@
 			for (item in syntaxDefinitions)
             {
 				NSString *name = [item valueForKey:@"name"];
-				if ([name isEqualToString:@"Standard"] || [name isEqualToString:@"None"] || [item valueForKey:@"extensions"] == nil)
+				if ([name isEqualToString:@"Standard"] || [name isEqualToString:@"None"] || item[@"extensions"] == nil)
                 {
 					continue;
 				}
-				NSMutableString *extensionsString = [NSMutableString stringWithString:[item valueForKey:@"extensions"]];
+				NSMutableString *extensionsString = [NSMutableString stringWithString: item[@"extensions"]];
 				[extensionsString replaceOccurrencesOfString:@"." withString:@"" options:NSLiteralSearch range:NSMakeRange(0, [extensionsString length])];
 				if ([[extensionsString componentsSeparatedByString:@" "] containsObject:lowercaseExtension])
                 {
-					fileToUse = [item valueForKey:@"file"];
-					[document setValue:name forKey:@"syntaxDefinition"];
+					fileToUse = item[@"file"];
+					[document setSyntaxDefinition: name];
 					break;
 				}
 				index++;
@@ -315,8 +314,7 @@
 			if (fileToUse == nil && foundSyntaxDefinition)
             {
 				fileToUse = [foundSyntaxDefinition file];
-				[document setValue: [foundSyntaxDefinition name]
-                            forKey: @"syntaxDefinition"];
+				[document setSyntaxDefinition: [foundSyntaxDefinition name]];
 			}
 		}
 	}

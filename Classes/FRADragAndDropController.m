@@ -28,6 +28,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #import "VASnippetCollection.h"
 #import "VACommand.h"
 #import "VACommandCollection.h"
+#import "VADocument.h"
 
 @implementation FRADragAndDropController
 
@@ -181,16 +182,15 @@ VASingletonIMPDefault(FRADragAndDropController)
 		NSString *textToImport = (NSString *)[[info draggingPasteboard] stringForType:NSStringPboardType];
 		if (textToImport != nil) {
 			
-			id item = [[FRACommandsController sharedInstance] performInsertNewCommand];
+			VACommand *item = [[FRACommandsController sharedInstance] performInsertNewCommand];
 			
-			[item setValue:textToImport forKey:@"text"];
+			[item setText: textToImport];
 			if ([textToImport length] > SNIPPET_NAME_LENGTH)
             {
-				[item setValue: [[textToImport substringWithRange:NSMakeRange(0, SNIPPET_NAME_LENGTH)] stringByReplaceAllNewLineCharactersWithSymbol]
-                        forKey: @"name"];
+				[item setName: [[textToImport substringWithRange:NSMakeRange(0, SNIPPET_NAME_LENGTH)] stringByReplaceAllNewLineCharactersWithSymbol]];
 			} else
             {
-				[item setValue:textToImport forKey:@"name"];
+				[item setName: textToImport];
 			}
 			
 			return YES;
@@ -249,9 +249,9 @@ VASingletonIMPDefault(FRADragAndDropController)
 		
 		NSArray *pasteboardData = [NSUnarchiver unarchiveObjectWithData:[[info draggingPasteboard] dataForType:movedDocumentType]];
 		NSArray *uriArray = pasteboardData[1];
-		id document = [FRABasic objectFromURI:uriArray[0]];
+		VADocument *document = [FRABasic objectFromURI:uriArray[0]];
 		[(NSMutableSet *)[destinationProject documents] addObject:document];
-		[document setValue:@(row) forKey:@"sortOrder"];
+		[document setSortOrder: row];
 		[FRAVarious fixSortOrderNumbersForArrayController: [FRACurrentProject documents]
                                                 overIndex: row];
 
@@ -318,8 +318,9 @@ VASingletonIMPDefault(FRADragAndDropController)
 	[arrangedObjects removeObject:[NSNull null]];
 	
 	NSInteger index = 0;
-	for (item in arrangedObjects) {
-		[item setValue:@(index) forKey:@"sortOrder"];
+	for (item in arrangedObjects)
+    {
+		[item setSortOrder: index];
 		index++;
 	}
 	

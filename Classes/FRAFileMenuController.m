@@ -150,7 +150,7 @@ VASingletonIMPDefault(FRAFileMenuController)
                                                   if ([[FRACurrentDocument valueForKey:@"fromExternal"] boolValue] == YES)
                                                   {
                                                       [FRAVarious sendClosedEventToExternalDocument:FRACurrentDocument];
-                                                      [FRACurrentDocument setValue:@NO forKey:@"fromExternal"]; // If it is "fromExternal" it shouldn't be that after it has gone through a Save As, but rather, it should be a normal document
+                                                      [FRACurrentDocument setFromExternal: NO]; // If it is "fromExternal" it shouldn't be that after it has gone through a Save As, but rather, it should be a normal document
                                                   }
                                                   
                                                   NSString *path = [[savePanel URL] path];

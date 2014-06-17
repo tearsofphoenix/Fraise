@@ -40,7 +40,7 @@
 
 @property (strong) NSWindow *singleDocumentWindow;
 
-@property NSInteger encoding;
+@property (nonatomic) NSInteger encoding;
 @property (strong) id syntaxColouring;
 @property (strong) id lineNumbers;
 @property (strong) id externalToken;

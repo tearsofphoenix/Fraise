@@ -262,23 +262,26 @@ VASingletonIMPDefault(FRAOpenSavePerformer)
 		}
 		
 		document = [FRACurrentProject createNewDocumentWithPath:externalPath andContents:textString];
-		[document setValue:@YES forKey:@"fromExternal"];
+		[document setFromExternal: YES];
 		
 		if (!isKeyAEPropData) {
-			[document setValue:[appleEventDescriptor paramDescriptorForKeyword:keyFileSender] forKey:@"externalSender"];
+			[document setExternalSender: [appleEventDescriptor paramDescriptorForKeyword:keyFileSender]];
 		} else {
-			[document setValue:[keyAEPropDataDescriptor paramDescriptorForKeyword:keyFileSender] forKey:@"externalSender"];
+			[document setExternalSender: [keyAEPropDataDescriptor paramDescriptorForKeyword:keyFileSender]];
 		}
 		
-		[document setValue:externalPath forKey:@"externalPath"];
+		[document setExternalPath: externalPath];
 		//Log(appleEventDescriptor);
-		if (!isKeyAEPropData) {
-			if ([appleEventDescriptor paramDescriptorForKeyword:keyFileSenderToken]) {
-				[document setValue:[appleEventDescriptor paramDescriptorForKeyword:keyFileSenderToken] forKey:@"externalToken"];
+		if (!isKeyAEPropData)
+        {
+			if ([appleEventDescriptor paramDescriptorForKeyword:keyFileSenderToken])
+            {
+				[document setExternalToken: [appleEventDescriptor paramDescriptorForKeyword:keyFileSenderToken]];
 			}
 		} else {
-			if ([appleEventDescriptor paramDescriptorForKeyword:keyFileSenderToken]) {
-				[document setValue:[keyAEPropDataDescriptor paramDescriptorForKeyword:keyFileSenderToken] forKey:@"externalToken"];
+			if ([appleEventDescriptor paramDescriptorForKeyword:keyFileSenderToken])
+            {
+				[document setExternalToken: [keyAEPropDataDescriptor paramDescriptorForKeyword:keyFileSenderToken]];
 			}
 		}
 		
@@ -290,20 +293,16 @@ VASingletonIMPDefault(FRAOpenSavePerformer)
 	[[FRAApplicationDelegate sharedInstance] setAppleEventDescriptor:nil];
 	
 	
-	[document setValue: @(encoding) forKey:@"encoding"];
-	[document setValue:[NSString localizedNameOfStringEncoding: [document encoding]] forKey:@"encodingName"];
-	[document setValue:path forKey:@"path"];
+	[document setEncoding: encoding];
+	[document setPath: path];
 	[FRACurrentProject updateWindowTitleBarForDocument:document];
 	
 	[[document firstTextView] setSelectedRange:NSMakeRange(0,0)];
 	
 	[FRAVarious insertIconsInBackground:@[document, path]];
-	//NSArray *icons = [NSImage iconsForPath:path];
-//	[document setValue:[icons objectAtIndex:0] forKey:@"icon"];
-//	[document setValue:[icons objectAtIndex:1] forKey:@"unsavedIcon"];
-	
+
 	NSDictionary *fileAttributes = [NSDictionary dictionaryWithDictionary:[[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil]];
-	[document setValue:fileAttributes forKey:@"fileAttributes"];
+	[document setFileAttributes: fileAttributes];
 	[FRAVarious setLastSavedDateForDocument:document date:[fileAttributes fileModificationDate]];
 	[FRAInterface updateStatusBar];
 	[FRACurrentWindow makeFirstResponder:[document firstTextView]];
@@ -419,12 +418,13 @@ VASingletonIMPDefault(FRAOpenSavePerformer)
 			
 			if ([[FRADefaults valueForKey:@"AssignDocumentToFraiseWhenSaving"] boolValue] == YES || [document isNewDocument])
             {
-				[attributes setValue: @('SMUL') forKey:@"NSFileHFSCreatorCode"];
-				[attributes setValue: @('FRAd') forKey:@"NSFileHFSTypeCode"];
+				[attributes setObject: @('SMUL') forKey:@"NSFileHFSCreatorCode"];
+				[attributes setObject: @('FRAd') forKey:@"NSFileHFSTypeCode"];
 			}
 			
 			[fileManager setAttributes:attributes ofItemAtPath:path error:nil];
-			if (!aCopy) {
+			if (!aCopy)
+            {
 				[self updateAfterSaveForDocument:document path:path];
 			}
 		}

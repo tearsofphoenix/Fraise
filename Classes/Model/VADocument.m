@@ -156,6 +156,17 @@ static NSImage *defaultUnsavedIcon = nil;
 	[self setFirstGutterScrollView: gutterScrollView];
 }
 
+- (void)setEncoding: (NSInteger)encoding
+{
+    if (_encoding != encoding)
+    {
+        _encoding = encoding;
+        
+        _encodingName = [NSString localizedNameOfStringEncoding: _encoding];
+    }
+}
+
+
 + (NSArray *)allDocuments
 {
     return gsAllDocuments;
